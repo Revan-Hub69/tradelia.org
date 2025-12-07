@@ -46,6 +46,14 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [userPage, setUserPage] = useState(1);
   const [tablePage, setTablePage] = useState(1);
+  const [adminEmails, setAdminEmails] = useState<any[]>([]);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [creatingAdmins, setCreatingAdmins] = useState(false);
+
+  // Carica email admin
+  useEffect(() => {
+    loadAdminEmails();
+  }, []);
 
   // Carica statistiche
   useEffect(() => {
@@ -147,6 +155,49 @@ export default function AdminPage() {
     }
   };
 
+  const loadAdminEmails = async () => {
+    try {
+      const res = await fetch('/api/admin/create-admin-users');
+      if (!res.ok) throw new Error('Errore nel caricamento email admin');
+      const data = await res.json();
+      setAdminEmails(data.admin_emails || []);
+    } catch (err) {
+      console.error('Error loading admin emails:', err);
+    }
+  };
+
+  const handleCreateAdminUsers = async () => {
+    if (!adminPassword || adminPassword.length < 8) {
+      setError('La password deve essere di almeno 8 caratteri');
+      return;
+    }
+
+    setCreatingAdmins(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/admin/create-admin-users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Errore nella creazione utenti admin');
+      }
+
+      const data = await res.json();
+      alert(`Utenti admin creati/aggiornati:\n${data.results.map((r: any) => `- ${r.email}: ${r.status} - ${r.message}`).join('\n')}`);
+      setAdminPassword('');
+      loadAdminEmails();
+      loadUsers();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
+    } finally {
+      setCreatingAdmins(false);
+    }
+  };
+
   const handleDeleteUser = async (userId: string) => {
     if (!confirm('Sei sicuro di voler eliminare questo utente?')) return;
     
@@ -178,6 +229,72 @@ export default function AdminPage() {
             <span>{error}</span>
           </div>
         )}
+
+        {/* Admin Users Section */}
+        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+          <h2 className="text-lg font-semibold text-text-primary mb-4">Gestione Utenti Admin</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-2">
+                Password per utenti admin
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Inserisci password (min 8 caratteri)"
+                  className="flex-1 px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary"
+                />
+                <button
+                  onClick={handleCreateAdminUsers}
+                  disabled={creatingAdmins || !adminPassword || adminPassword.length < 8}
+                  className="px-6 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {creatingAdmins ? 'Creazione...' : 'Crea/Resetta Utenti Admin'}
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-text-tertiary">
+                Crea o resetta la password per tutte le email admin configurate
+              </p>
+            </div>
+            {adminEmails.length > 0 && (
+              <div>
+                <h3 className="text-sm font-medium text-text-secondary mb-2">Email Admin Configurate:</h3>
+                <div className="space-y-2">
+                  {adminEmails.map((ae) => (
+                    <div
+                      key={ae.email}
+                      className="flex items-center justify-between p-2 bg-bg-surface rounded text-sm"
+                    >
+                      <span className="text-text-primary">{ae.email}</span>
+                      <div className="flex items-center gap-2">
+                        {ae.has_user ? (
+                          <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                            ✓ Utente creato
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">
+                            ✗ Utente non creato
+                          </span>
+                        )}
+                        {ae.role === 'admin' ? (
+                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                            Admin
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-amber-500/20 text-amber-400 rounded text-xs">
+                            Ruolo non assegnato
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Tabs */}
         <div className="mb-6 flex gap-2 border-b border-border-subtle">
