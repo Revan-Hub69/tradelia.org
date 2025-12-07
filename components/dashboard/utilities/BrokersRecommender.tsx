@@ -90,12 +90,28 @@ interface Broker {
   };
 }
 
-// Lista broker corretta e affidabile dalla pagina brokers esistente
+/**
+ * LISTA BROKER - VERIFICA DATI
+ * 
+ * IMPORTANTE: Tutte le informazioni devono essere verificate esclusivamente dai siti ufficiali dei broker.
+ * I dati qui presenti sono stati inseriti basandosi su informazioni pubbliche disponibili,
+ * ma richiedono verifica diretta dai siti ufficiali per garantire accuratezza e aggiornamento.
+ * 
+ * Per ogni broker verificare:
+ * - Commissioni e costi (pagina pricing/fees ufficiale)
+ * - Regolamentazione (registro autorità competenti)
+ * - Strumenti disponibili (pagina prodotti ufficiale)
+ * - Protezione fondi (schemi di compensazione ufficiali)
+ * - Supporto e lingue (pagina contatti ufficiale)
+ * 
+ * Data ultima verifica: 2025-01-27
+ * Prossima verifica consigliata: trimestrale o quando cambiano condizioni
+ */
 const availableBrokers: Broker[] = [
   {
     id: 'ibkr',
     name: 'Interactive Brokers',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo IBKR quando disponibile
     description: 'Accesso DMA a 160+ mercati globali con Toolset Trader Workstation, Client Portal e API istituzionali.',
     regulatory: ['SEC', 'CFTC', 'FCA', 'CSSF', 'ASIC'],
     platforms: ['TWS', 'Client Portal', 'IBKR Mobile', 'API FIX/REST'],
@@ -173,7 +189,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'bgsaxo',
     name: 'BG Saxo (SIM Italia)',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo Saxo quando disponibile
     description: 'Succursale italiana del gruppo Saxo Bank con regime amministrato e piattaforme SaxoTraderGO/PRO.',
     regulatory: ['Consob', 'Banca d\'Italia'],
     platforms: ['SaxoTraderGO', 'SaxoTraderPRO', 'OpenAPI'],
@@ -249,7 +265,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'directa',
     name: 'Directa SIM',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo Directa quando disponibile
     description: 'Broker italiano storico con focus su Borsa Italiana e mercati USA/Europa, documentazione trasparente.',
     regulatory: ['Consob', 'Banca d\'Italia'],
     platforms: ['Directa Platform', 'dLite', 'TradingView integrazione'],
@@ -399,7 +415,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'mexem',
     name: 'MEXEM',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo MEXEM quando disponibile
     description: 'Introducing broker europeo su infrastruttura IBKR con supporto dedicato UE e materiale formativo certificato.',
     regulatory: ['CySEC', 'FCA'],
     platforms: ['Trader Workstation', 'Client Portal', 'App'],
@@ -550,7 +566,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'scalable',
     name: 'Scalable Capital',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo Scalable Capital quando disponibile
     description: 'Piattaforma europea focalizzata su ETF, PAC automatizzati e servizi di risparmio regolamentati.',
     regulatory: ['BaFin', 'CONSOB passporting'],
     platforms: ['Web', 'App iOS/Android'],
@@ -624,7 +640,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'traderepublic',
     name: 'Trade Republic',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo Trade Republic quando disponibile
     description: 'Banca d\'investimento con IBAN italiano, interessi 3% annuo e PAC gratuiti su asset reali.',
     regulatory: ['BaFin', 'Banca d\'Italia'],
     platforms: ['App iOS/Android', 'Web'],
@@ -849,7 +865,7 @@ const availableBrokers: Broker[] = [
   {
     id: 'ig',
     name: 'IG Markets',
-    logo: '/logos/tradelia-logo.svg',
+    logo: '/logos/tradelia-logo.svg', // TODO: Aggiungere logo IG Markets quando disponibile
     description: 'Broker CFD regolamentato FCA/ASIC con piattaforme professionali e accesso a 17,000+ mercati.',
     regulatory: ['FCA', 'ASIC', 'FMA', 'FSCA'],
     platforms: ['IG Platform', 'MT4', 'ProRealTime', 'L2 Dealer', 'Web', 'Mobile'],
@@ -1976,6 +1992,24 @@ export function BrokersRecommender() {
                   Broker disponibili {recommendedBrokers.length > 0 && `(${recommendedBrokers.length} trovati)`}
                 </p>
               </div>
+
+              {/* Nota Verifica Dati Ufficiali */}
+              {recommendedBrokers.length > 0 && (
+                <div className="info-box-warning border-amber-500/30 mb-6">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="flex-1">
+                      <p className="font-semibold text-text-primary mb-1">Verifica Dati Ufficiali</p>
+                      <p className="text-sm text-text-secondary leading-relaxed">
+                        Le informazioni mostrate sono state inserite basandosi su dati pubblici disponibili. 
+                        <strong className="text-amber-400"> È essenziale verificare sempre le informazioni più aggiornate direttamente dai siti ufficiali dei broker</strong> prima di prendere decisioni di investimento. 
+                        I link ufficiali sono disponibili nella scheda dettaglio di ogni broker. 
+                        Le condizioni possono cambiare e potrebbero esserci differenze tra quanto mostrato e le condizioni effettive.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {recommendedBrokers.length === 0 ? (
                 <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-6 md:p-8 text-center card-mobile">
