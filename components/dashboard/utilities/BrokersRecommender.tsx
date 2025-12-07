@@ -8,20 +8,49 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
+interface InstrumentDetails {
+  name: string; // es. "EUR/USD", "S&P 500", "Bitcoin"
+  spread?: string; // es. "0.1 pip", "0.4 punti", "0.05%"
+  commission?: string; // es. "Spread incluso", "$0.005 per azione"
+  leverage?: string; // es. "30:1", "500:1"
+  minTradeSize?: string; // es. "0.01 lotti", "1 azione"
+  markets?: string[]; // es. ["NYSE", "NASDAQ", "LSE"]
+}
+
 interface BrokerCosts {
-  // Commissioni specifiche
+  // Commissioni specifiche per strumento
   commissionStocks?: string; // es. "0.1% min €1"
   commissionForex?: string; // es. "Da 0.0 pip"
   commissionOptions?: string; // es. "€0.70 per contratto"
   commissionFutures?: string; // es. "€2.50 per contratto"
-  // Spread tipici
-  spreadForex?: string; // es. "0.1 pip EUR/USD"
-  spreadIndices?: string; // es. "0.4 punti"
+  commissionCrypto?: string; // es. "0.1% per trade"
+  commissionETF?: string; // es. "0.1% min €1"
+  commissionBonds?: string; // es. "0.05% min €5"
+  // Spread tipici per categoria (DETTAGLIATI)
+  spreadForex?: string; // es. "0.1 pip EUR/USD, 0.2 pip GBP/USD"
+  spreadIndices?: string; // es. "0.4 punti S&P 500, 0.6 punti DAX"
+  spreadCommodities?: string; // es. "0.03$ oro, 0.04$ petrolio"
+  spreadCrypto?: string; // es. "0.05% Bitcoin, 0.1% altcoin"
+  spreadStocks?: string; // es. "Spread di mercato (DMA)"
+  spreadETF?: string; // es. "Spread di mercato (DMA)"
+  // Dettagli strumenti negoziati (NUOVO - FOCUS UTENTE)
+  instrumentsDetails?: {
+    forex?: InstrumentDetails[];
+    stocks?: InstrumentDetails[];
+    indices?: InstrumentDetails[];
+    commodities?: InstrumentDetails[];
+    crypto?: InstrumentDetails[];
+    etf?: InstrumentDetails[];
+    bonds?: InstrumentDetails[];
+    options?: InstrumentDetails[];
+    futures?: InstrumentDetails[];
+  };
   // Costi aggiuntivi
   inactivityFee?: string; // es. "€10/mese dopo 12 mesi"
   withdrawalFee?: string; // es. "Gratuito"
   currencyConversionFee?: string; // es. "0.2%"
   marketDataFee?: string; // es. "€10/mese per dati real-time"
+  swapFee?: string; // es. "Tasso swap di mercato"
   // Costi minimi
   minCommission?: string; // es. "€1 per ordine"
   maxCommission?: string; // es. "1% del valore"
@@ -145,12 +174,47 @@ const availableBrokers: Broker[] = [
       commissionForex: '0.08-0.20 pip (EUR/USD)',
       commissionOptions: 'Da $0.70 per contratto',
       commissionFutures: 'Da $0.85 per contratto',
-      spreadForex: 'DMA - Spread di mercato',
+      commissionETF: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
+      commissionBonds: '0.1% (min $1)',
+      spreadForex: 'DMA - Spread di mercato: EUR/USD 0.1-0.2 pip, GBP/USD 0.2-0.4 pip, USD/JPY 0.1-0.3 pip',
+      spreadIndices: 'DMA - Spread di mercato: S&P 500 0.25 punti, NASDAQ 0.5 punti, DAX 0.3 punti',
+      spreadStocks: 'DMA - Spread di mercato (zero spread aggiuntivo)',
+      spreadETF: 'DMA - Spread di mercato (zero spread aggiuntivo)',
+      spreadCommodities: 'DMA - Spread di mercato: Oro 0.20$, Petrolio 0.03$',
       inactivityFee: '$20/mese se account < $2,000 e nessuna attività',
       withdrawalFee: 'Gratuito (1 prelievo/mese), poi $10',
       currencyConversionFee: '0.002% (2 bps)',
       marketDataFee: 'Da $4.50/mese per dati real-time (gratuito per dati ritardati)',
-      minCommission: '$1 per ordine'
+      swapFee: 'Tasso swap di mercato (variabile)',
+      minCommission: '$1 per ordine',
+      instrumentsDetails: {
+        forex: [
+          { name: 'EUR/USD', spread: '0.1-0.2 pip', commission: '0.08-0.20 pip', leverage: '50:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: '0.2-0.4 pip', commission: '0.10-0.25 pip', leverage: '50:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'USD/JPY', spread: '0.1-0.3 pip', commission: '0.08-0.20 pip', leverage: '50:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'AUD/USD', spread: '0.2-0.4 pip', commission: '0.10-0.25 pip', leverage: '50:1 (retail)', minTradeSize: '0.01 lotti' }
+        ],
+        stocks: [
+          { name: 'Azioni USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ', 'AMEX'] },
+          { name: 'Azioni Europa', spread: 'DMA (zero spread)', commission: '0.05% (min €1)', markets: ['LSE', 'XETR', 'Euronext'] },
+          { name: 'Azioni Asia', spread: 'DMA (zero spread)', commission: 'Variabile per mercato', markets: ['TSE', 'HKEX', 'ASX'] }
+        ],
+        indices: [
+          { name: 'S&P 500', spread: '0.25 punti', commission: 'Da $0.85 per contratto', leverage: '20:1 (retail)' },
+          { name: 'NASDAQ 100', spread: '0.5 punti', commission: 'Da $0.85 per contratto', leverage: '20:1 (retail)' },
+          { name: 'DAX', spread: '0.3 punti', commission: 'Da €0.85 per contratto', leverage: '20:1 (retail)' },
+          { name: 'FTSE 100', spread: '0.4 punti', commission: 'Da £0.85 per contratto', leverage: '20:1 (retail)' }
+        ],
+        commodities: [
+          { name: 'Oro (XAU/USD)', spread: '0.20$', commission: 'Spread incluso', leverage: '50:1 (retail)' },
+          { name: 'Petrolio (WTI)', spread: '0.03$', commission: 'Da $0.85 per contratto', leverage: '20:1 (retail)' },
+          { name: 'Argento (XAG/USD)', spread: '0.02$', commission: 'Spread incluso', leverage: '50:1 (retail)' }
+        ],
+        etf: [
+          { name: 'ETF USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'ETF Europa', spread: 'DMA (zero spread)', commission: '0.05% (min €1)', markets: ['Euronext', 'XETR', 'LSE'] }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'SIPC',
@@ -222,11 +286,38 @@ const availableBrokers: Broker[] = [
       commissionForex: 'Spread incluso (da 0.4 pip EUR/USD)',
       commissionOptions: 'Da €1.50 per contratto',
       commissionFutures: 'Da €2.50 per contratto',
-      spreadForex: 'Da 0.4 pip (EUR/USD)',
+      commissionETF: '0.1% (min €3)',
+      spreadForex: 'EUR/USD: 0.4 pip, GBP/USD: 0.6 pip, USD/JPY: 0.4 pip, AUD/USD: 0.5 pip',
+      spreadIndices: 'S&P 500: 0.5 punti, DAX: 0.6 punti, FTSE 100: 0.7 punti',
+      spreadStocks: 'Spread di mercato + commissione',
+      spreadETF: 'Spread di mercato + commissione',
+      spreadCommodities: 'Oro: 0.30$, Petrolio: 0.05$',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso',
-      marketDataFee: 'Gratuito per dati base, premium a pagamento'
+      marketDataFee: 'Gratuito per dati base, premium a pagamento',
+      swapFee: 'Tasso swap di mercato (variabile)',
+      instrumentsDetails: {
+        forex: [
+          { name: 'EUR/USD', spread: '0.4 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: '0.6 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'USD/JPY', spread: '0.4 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' }
+        ],
+        stocks: [
+          { name: 'Azioni Italia', spread: 'Spread di mercato', commission: '0.1% (min €3)', markets: ['Borsa Italiana'] },
+          { name: 'Azioni USA', spread: 'Spread di mercato', commission: '0.1% (min €3)', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'Azioni Europa', spread: 'Spread di mercato', commission: '0.1% (min €3)', markets: ['Euronext', 'XETR', 'LSE'] }
+        ],
+        indices: [
+          { name: 'S&P 500', spread: '0.5 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'DAX', spread: '0.6 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'FTSE 100', spread: '0.7 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' }
+        ],
+        commodities: [
+          { name: 'Oro', spread: '0.30$', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'Petrolio', spread: '0.05$', commission: 'Spread incluso', leverage: '10:1 (retail)' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'Fondo Interbancario di Tutela dei Depositi',
@@ -295,11 +386,28 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionStocks: 'Borsa Italiana: 0.19% (min €2.95), USA: $0.005 per azione (min $1)',
+      commissionETF: 'Borsa Italiana: 0.19% (min €2.95), USA: $0.005 per azione (min $1)',
       spreadForex: 'N/A - Non offre forex',
+      spreadStocks: 'DMA - Spread di mercato (zero spread aggiuntivo)',
+      spreadETF: 'DMA - Spread di mercato (zero spread aggiuntivo)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread applicato su cambio valuta',
-      minCommission: '€2.95 (Borsa Italiana), $1 (USA)'
+      minCommission: '€2.95 (Borsa Italiana), $1 (USA)',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni Borsa Italiana', spread: 'DMA (zero spread)', commission: '0.19% (min €2.95)', markets: ['Borsa Italiana'] },
+          { name: 'Azioni USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'Azioni Europa', spread: 'DMA (zero spread)', commission: 'Variabile per mercato', markets: ['Euronext', 'XETR'] }
+        ],
+        etf: [
+          { name: 'ETF Borsa Italiana', spread: 'DMA (zero spread)', commission: '0.19% (min €2.95)', markets: ['Borsa Italiana'] },
+          { name: 'ETF USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ'] }
+        ],
+        bonds: [
+          { name: 'BTP', spread: 'DMA (zero spread)', commission: '0.19% (min €2.95)', markets: ['Borsa Italiana'] }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'Fondo Interbancario di Tutela dei Depositi',
@@ -372,11 +480,35 @@ const availableBrokers: Broker[] = [
       commissionForex: 'Spread incluso (da 0.3 pip)',
       commissionOptions: 'Da €1.50 per contratto',
       commissionFutures: 'Da €2.00 per contratto',
-      spreadForex: 'Da 0.3 pip (EUR/USD)',
+      commissionETF: '0.1% (min €1)',
+      commissionBonds: '0.05% (min €5)',
+      spreadForex: 'EUR/USD: 0.3 pip, GBP/USD: 0.5 pip, USD/JPY: 0.4 pip',
+      spreadIndices: 'S&P 500: 0.4 punti, DAX: 0.5 punti',
+      spreadCommodities: 'Oro: 0.25$, Petrolio: 0.04$',
+      spreadStocks: 'DMA - Spread di mercato',
+      spreadETF: 'DMA - Spread di mercato',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito (1/mese), poi €25',
       currencyConversionFee: 'Spread incluso',
-      marketDataFee: 'Gratuito per dati base, premium a pagamento'
+      marketDataFee: 'Gratuito per dati base, premium a pagamento',
+      swapFee: 'Tasso swap di mercato (variabile)',
+      instrumentsDetails: {
+        forex: [
+          { name: 'EUR/USD', spread: '0.3 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: '0.5 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'USD/JPY', spread: '0.4 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' }
+        ],
+        stocks: [
+          { name: 'Azioni globali', spread: 'DMA (zero spread)', commission: '0.1% (min €1)', markets: ['NYSE', 'NASDAQ', 'LSE', 'Euronext'] }
+        ],
+        bonds: [
+          { name: 'Bond globali', spread: 'DMA (zero spread)', commission: '0.05% (min €5)', markets: ['Mercati globali'] }
+        ],
+        indices: [
+          { name: 'S&P 500', spread: '0.4 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'DAX', spread: '0.5 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'ICF (Investor Compensation Fund)',
@@ -449,12 +581,29 @@ const availableBrokers: Broker[] = [
       commissionForex: '0.08-0.20 pip (EUR/USD)',
       commissionOptions: 'Da $0.70 per contratto',
       commissionFutures: 'Da $0.85 per contratto',
-      spreadForex: 'DMA - Spread di mercato',
+      commissionETF: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
+      spreadForex: 'DMA - Spread di mercato: EUR/USD 0.1-0.2 pip, GBP/USD 0.2-0.4 pip',
+      spreadIndices: 'DMA - Spread di mercato: S&P 500 0.25 punti, NASDAQ 0.5 punti',
+      spreadStocks: 'DMA - Spread di mercato (zero spread aggiuntivo)',
+      spreadETF: 'DMA - Spread di mercato (zero spread aggiuntivo)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito (1/mese), poi €10',
       currencyConversionFee: '0.002% (2 bps)',
       marketDataFee: 'Da $4.50/mese per dati real-time (come IBKR)',
-      minCommission: '$1 per ordine'
+      swapFee: 'Tasso swap di mercato (variabile)',
+      minCommission: '$1 per ordine',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'Azioni Europa', spread: 'DMA (zero spread)', commission: 'Variabile per mercato', markets: ['LSE', 'Euronext', 'XETR'] }
+        ],
+        etf: [
+          { name: 'ETF USA', spread: 'DMA (zero spread)', commission: '$0.005 per azione (min $1)', markets: ['NYSE', 'NASDAQ'] }
+        ],
+        forex: [
+          { name: 'EUR/USD', spread: '0.1-0.2 pip', commission: '0.08-0.20 pip', leverage: '50:1 (retail)', minTradeSize: '0.01 lotti' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'ICF (Investor Compensation Fund)',
@@ -524,10 +673,25 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionStocks: '€0.99 per ordine (fino a €1,000), poi 0.1%',
+      commissionETF: '€0.99 per ordine (fino a €1,000), poi 0.1%',
+      spreadStocks: 'Spread incluso nel prezzo (non trasparente)',
+      spreadETF: 'Spread incluso nel prezzo (non trasparente)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso nel prezzo',
-      minCommission: '€0.99 per ordine'
+      minCommission: '€0.99 per ordine',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni USA', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'Azioni Europa', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['Euronext', 'XETR', 'LSE'] }
+        ],
+        etf: [
+          { name: 'ETF', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['NYSE', 'NASDAQ', 'Euronext'] }
+        ],
+        bonds: [
+          { name: 'Bond', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['Mercati globali'] }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'ICF (Investor Compensation Fund)',
@@ -598,10 +762,24 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionStocks: '€0.99 per ordine (fino a €250,000), poi 0.1%',
+      commissionETF: '€0.99 per ordine (fino a €250,000), poi 0.1%',
+      spreadStocks: 'Spread incluso nel prezzo (non trasparente)',
+      spreadETF: 'Spread incluso nel prezzo (non trasparente)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso nel prezzo',
-      minCommission: '€0.99 per ordine'
+      minCommission: '€0.99 per ordine',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni Europa', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['Euronext', 'XETR', 'LSE'] }
+        ],
+        etf: [
+          { name: 'ETF Europa', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['Euronext', 'XETR', 'LSE'] }
+        ],
+        bonds: [
+          { name: 'Bond', spread: 'Incluso (non trasparente)', commission: '€0.99 per ordine', markets: ['Mercati europei'] }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'Einlagensicherungsfonds',
@@ -671,11 +849,33 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionStocks: '€1 per ordine (fino a €1,000), poi 0.1%',
+      commissionETF: '€1 per ordine (fino a €1,000), poi 0.1%',
+      commissionCrypto: 'Spread incluso (non trasparente)',
       commissionForex: 'N/A - Non offre forex',
+      spreadStocks: 'Spread incluso nel prezzo (non trasparente)',
+      spreadETF: 'Spread incluso nel prezzo (non trasparente)',
+      spreadCrypto: 'Bitcoin: ~0.3%, Ethereum: ~0.4%, Altcoin: ~0.5% (non trasparente)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso nel prezzo',
-      minCommission: '€1 per ordine'
+      minCommission: '€1 per ordine',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni Europa', spread: 'Incluso (non trasparente)', commission: '€1 per ordine', markets: ['Euronext', 'XETR', 'LSE'] },
+          { name: 'Azioni USA', spread: 'Incluso (non trasparente)', commission: '€1 per ordine', markets: ['NYSE', 'NASDAQ'] }
+        ],
+        etf: [
+          { name: 'ETF', spread: 'Incluso (non trasparente)', commission: '€1 per ordine', markets: ['Euronext', 'XETR', 'LSE', 'NYSE', 'NASDAQ'] }
+        ],
+        bonds: [
+          { name: 'Bond', spread: 'Incluso (non trasparente)', commission: '€1 per ordine', markets: ['Mercati europei'] }
+        ],
+        crypto: [
+          { name: 'Bitcoin (spot)', spread: '~0.3%', commission: 'Spread incluso', leverage: 'N/A (spot)' },
+          { name: 'Ethereum (spot)', spread: '~0.4%', commission: 'Spread incluso', leverage: 'N/A (spot)' },
+          { name: 'Altcoin (spot)', spread: '~0.5%', commission: 'Spread incluso', leverage: 'N/A (spot)' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'Einlagensicherungsfonds',
@@ -746,11 +946,40 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionForex: 'Raw: $3.50 per lotto round-turn, Standard: spread incluso',
-      spreadForex: 'Raw: da 0.0 pip, Standard: da 1.0 pip',
+      commissionCrypto: 'Spread incluso (variabile)',
+      spreadForex: 'Raw: EUR/USD 0.0 pip, GBP/USD 0.0 pip, USD/JPY 0.0 pip | Standard: EUR/USD 1.0 pip, GBP/USD 1.2 pip, USD/JPY 0.9 pip',
+      spreadIndices: 'S&P 500: 0.4 punti, NASDAQ: 0.6 punti, DAX: 0.5 punti, FTSE 100: 0.8 punti',
+      spreadCommodities: 'Oro: 0.25$, Petrolio: 0.04$, Argento: 0.03$',
+      spreadCrypto: 'Bitcoin: 0.05%, Ethereum: 0.08%, Altcoin: 0.1-0.2%',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso',
-      minCommission: '$3.50 per lotto (Raw)'
+      swapFee: 'Tasso swap di mercato (variabile)',
+      minCommission: '$3.50 per lotto (Raw)',
+      instrumentsDetails: {
+        forex: [
+          { name: 'EUR/USD', spread: 'Raw: 0.0 pip, Standard: 1.0 pip', commission: 'Raw: $3.50/lotto, Standard: incluso', leverage: '500:1 (forex major)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: 'Raw: 0.0 pip, Standard: 1.2 pip', commission: 'Raw: $3.50/lotto, Standard: incluso', leverage: '500:1 (forex major)', minTradeSize: '0.01 lotti' },
+          { name: 'USD/JPY', spread: 'Raw: 0.0 pip, Standard: 0.9 pip', commission: 'Raw: $3.50/lotto, Standard: incluso', leverage: '500:1 (forex major)', minTradeSize: '0.01 lotti' },
+          { name: 'AUD/USD', spread: 'Raw: 0.0 pip, Standard: 1.1 pip', commission: 'Raw: $3.50/lotto, Standard: incluso', leverage: '500:1 (forex major)', minTradeSize: '0.01 lotti' }
+        ],
+        indices: [
+          { name: 'S&P 500', spread: '0.4 punti', commission: 'Spread incluso', leverage: '200:1' },
+          { name: 'NASDAQ 100', spread: '0.6 punti', commission: 'Spread incluso', leverage: '200:1' },
+          { name: 'DAX', spread: '0.5 punti', commission: 'Spread incluso', leverage: '200:1' },
+          { name: 'FTSE 100', spread: '0.8 punti', commission: 'Spread incluso', leverage: '200:1' }
+        ],
+        commodities: [
+          { name: 'Oro (XAU/USD)', spread: '0.25$', commission: 'Spread incluso', leverage: '200:1' },
+          { name: 'Petrolio (WTI)', spread: '0.04$', commission: 'Spread incluso', leverage: '100:1' },
+          { name: 'Argento (XAG/USD)', spread: '0.03$', commission: 'Spread incluso', leverage: '200:1' }
+        ],
+        crypto: [
+          { name: 'Bitcoin (BTC/USD)', spread: '0.05%', commission: 'Spread incluso', leverage: '2:1 (retail)' },
+          { name: 'Ethereum (ETH/USD)', spread: '0.08%', commission: 'Spread incluso', leverage: '2:1 (retail)' },
+          { name: 'Altcoin', spread: '0.1-0.2%', commission: 'Spread incluso', leverage: '2:1 (retail)' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'FSCS',
@@ -822,10 +1051,36 @@ const availableBrokers: Broker[] = [
     costs: {
       commissionStocks: '0% commissioni su azioni reali',
       commissionForex: 'Spread incluso (non trasparente)',
+      commissionCrypto: 'Spread incluso (non trasparente)',
+      spreadForex: 'EUR/USD: ~1.0 pip, GBP/USD: ~1.5 pip, USD/JPY: ~1.2 pip (non trasparente)',
+      spreadStocks: 'Spread incluso nel prezzo (non trasparente)',
+      spreadETF: 'Spread incluso nel prezzo (non trasparente)',
+      spreadCrypto: 'Bitcoin: ~0.5%, Ethereum: ~0.7%, Altcoin: ~1% (non trasparente)',
+      spreadIndices: 'S&P 500: ~1.5 punti, NASDAQ: ~2 punti (non trasparente)',
+      spreadCommodities: 'Oro: ~0.50$, Petrolio: ~0.10$ (non trasparente)',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: '$5 per prelievo',
       currencyConversionFee: 'Spread incluso nel prezzo',
-      minCommission: 'Nessuna commissione su azioni reali'
+      swapFee: 'Tasso swap di mercato (variabile)',
+      minCommission: 'Nessuna commissione su azioni reali',
+      instrumentsDetails: {
+        stocks: [
+          { name: 'Azioni reali USA', spread: 'Incluso (non trasparente)', commission: '0%', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'Azioni reali Europa', spread: 'Incluso (non trasparente)', commission: '0%', markets: ['LSE', 'Euronext', 'XETR'] }
+        ],
+        etf: [
+          { name: 'ETF reali', spread: 'Incluso (non trasparente)', commission: '0%', markets: ['NYSE', 'NASDAQ', 'Euronext'] }
+        ],
+        crypto: [
+          { name: 'Bitcoin (spot)', spread: '~0.5%', commission: 'Spread incluso', leverage: 'N/A (spot)' },
+          { name: 'Ethereum (spot)', spread: '~0.7%', commission: 'Spread incluso', leverage: 'N/A (spot)' },
+          { name: 'Altcoin (spot)', spread: '~1%', commission: 'Spread incluso', leverage: 'N/A (spot)' }
+        ],
+        forex: [
+          { name: 'EUR/USD', spread: '~1.0 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: '~1.5 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'ICF (Investor Compensation Fund)',
@@ -896,12 +1151,46 @@ const availableBrokers: Broker[] = [
     mifid2Compliant: true,
     costs: {
       commissionForex: 'Spread incluso (da 0.6 pip EUR/USD)',
-      spreadForex: 'Da 0.6 pip (EUR/USD)',
+      commissionCrypto: 'Spread incluso (variabile)',
+      spreadForex: 'EUR/USD: 0.6 pip, GBP/USD: 0.8 pip, USD/JPY: 0.7 pip, AUD/USD: 0.7 pip',
+      spreadIndices: 'S&P 500: 0.8 punti, NASDAQ: 1.0 punti, DAX: 0.9 punti, FTSE 100: 1.0 punti',
+      spreadCommodities: 'Oro: 0.40$, Petrolio: 0.06$, Argento: 0.04$',
+      spreadCrypto: 'Bitcoin: 0.08%, Ethereum: 0.12%, Altcoin: 0.15-0.25%',
+      spreadStocks: 'Spread incluso (variabile per azione)',
       commissionStocks: 'Spread incluso su CFD azioni',
       inactivityFee: 'Nessun costo di inattività',
       withdrawalFee: 'Gratuito',
       currencyConversionFee: 'Spread incluso',
-      minCommission: 'Nessuna commissione (spread incluso)'
+      swapFee: 'Tasso swap di mercato (variabile)',
+      minCommission: 'Nessuna commissione (spread incluso)',
+      instrumentsDetails: {
+        forex: [
+          { name: 'EUR/USD', spread: '0.6 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'GBP/USD', spread: '0.8 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'USD/JPY', spread: '0.7 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' },
+          { name: 'AUD/USD', spread: '0.7 pip', commission: 'Spread incluso', leverage: '30:1 (retail)', minTradeSize: '0.01 lotti' }
+        ],
+        indices: [
+          { name: 'S&P 500', spread: '0.8 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'NASDAQ 100', spread: '1.0 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'DAX', spread: '0.9 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'FTSE 100', spread: '1.0 punti', commission: 'Spread incluso', leverage: '20:1 (retail)' }
+        ],
+        commodities: [
+          { name: 'Oro (XAU/USD)', spread: '0.40$', commission: 'Spread incluso', leverage: '20:1 (retail)' },
+          { name: 'Petrolio (WTI)', spread: '0.06$', commission: 'Spread incluso', leverage: '10:1 (retail)' },
+          { name: 'Argento (XAG/USD)', spread: '0.04$', commission: 'Spread incluso', leverage: '20:1 (retail)' }
+        ],
+        crypto: [
+          { name: 'Bitcoin (BTC/USD)', spread: '0.08%', commission: 'Spread incluso', leverage: '2:1 (retail)' },
+          { name: 'Ethereum (ETH/USD)', spread: '0.12%', commission: 'Spread incluso', leverage: '2:1 (retail)' },
+          { name: 'Altcoin', spread: '0.15-0.25%', commission: 'Spread incluso', leverage: '2:1 (retail)' }
+        ],
+        stocks: [
+          { name: 'CFD Azioni USA', spread: 'Variabile per azione', commission: 'Spread incluso', markets: ['NYSE', 'NASDAQ'] },
+          { name: 'CFD Azioni Europa', spread: 'Variabile per azione', commission: 'Spread incluso', markets: ['LSE', 'Euronext', 'XETR'] }
+        ]
+      }
     },
     fundProtection: {
       scheme: 'FSCS',
@@ -2656,6 +2945,42 @@ export function BrokersRecommender() {
                               <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadForex}</span>
                             </div>
                           )}
+                          {showDrawer.costs.spreadIndices && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread Indici:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadIndices}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.spreadCommodities && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread Commodities:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadCommodities}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.spreadCrypto && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread Crypto:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadCrypto}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.spreadStocks && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread Azioni:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadStocks}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.spreadETF && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread ETF:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadETF}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.swapFee && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Swap/Overnight:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.swapFee}</span>
+                            </div>
+                          )}
                           {showDrawer.costs.inactivityFee && (
                             <div className="flex justify-between items-start">
                               <span className="text-sm text-text-tertiary">Costo Inattività:</span>
@@ -2678,6 +3003,217 @@ export function BrokersRecommender() {
                             <div className="flex justify-between items-start">
                               <span className="text-sm text-text-tertiary">Costo Dati Mercato:</span>
                               <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.marketDataFee}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Strumenti Negoziati e Spread Dettagliati - FOCUS UTENTE */}
+                    {showDrawer.costs?.instrumentsDetails && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-accent" aria-hidden="true" />
+                          Strumenti Negoziati e Spread Dettagliati
+                        </h4>
+                        <div className="space-y-4">
+                          {showDrawer.costs.instrumentsDetails.forex && showDrawer.costs.instrumentsDetails.forex.length > 0 && (
+                            <div className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <Globe className="w-4 h-4 text-blue-400" aria-hidden="true" />
+                                Forex
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.forex.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-blue-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                      {inst.leverage && (
+                                        <span className="badge-accent text-xs">Leverage: {inst.leverage}</span>
+                                      )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                      {inst.minTradeSize && (
+                                        <div className="col-span-2">
+                                          <span className="text-text-tertiary">Min Trade: </span>
+                                          <span className="font-semibold text-text-primary">{inst.minTradeSize}</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {showDrawer.costs.instrumentsDetails.stocks && showDrawer.costs.instrumentsDetails.stocks.length > 0 && (
+                            <div className="bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border border-green-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <TrendingUp className="w-4 h-4 text-green-400" aria-hidden="true" />
+                                Azioni
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.stocks.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-green-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm mb-2">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                    {inst.markets && inst.markets.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-2">
+                                        {inst.markets.map((market, mIdx) => (
+                                          <span key={mIdx} className="badge-success text-xs">{market}</span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {showDrawer.costs.instrumentsDetails.indices && showDrawer.costs.instrumentsDetails.indices.length > 0 && (
+                            <div className="bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border border-purple-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <BarChart3 className="w-4 h-4 text-purple-400" aria-hidden="true" />
+                                Indici
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.indices.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-purple-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                      {inst.leverage && (
+                                        <span className="badge-accent text-xs">Leverage: {inst.leverage}</span>
+                                      )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {showDrawer.costs.instrumentsDetails.commodities && showDrawer.costs.instrumentsDetails.commodities.length > 0 && (
+                            <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <Activity className="w-4 h-4 text-amber-400" aria-hidden="true" />
+                                Commodities
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.commodities.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-amber-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                      {inst.leverage && (
+                                        <span className="badge-accent text-xs">Leverage: {inst.leverage}</span>
+                                      )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {showDrawer.costs.instrumentsDetails.crypto && showDrawer.costs.instrumentsDetails.crypto.length > 0 && (
+                            <div className="bg-gradient-to-br from-cyan-500/10 via-cyan-500/5 to-transparent border border-cyan-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <Zap className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+                                Criptovalute
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.crypto.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-cyan-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                      {inst.leverage && (
+                                        <span className="badge-accent text-xs">Leverage: {inst.leverage}</span>
+                                      )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {showDrawer.costs.instrumentsDetails.etf && showDrawer.costs.instrumentsDetails.etf.length > 0 && (
+                            <div className="bg-gradient-to-br from-indigo-500/10 via-indigo-500/5 to-transparent border border-indigo-500/20 rounded-lg p-4">
+                              <h5 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                                <Layers className="w-4 h-4 text-indigo-400" aria-hidden="true" />
+                                ETF
+                              </h5>
+                              <div className="space-y-2">
+                                {showDrawer.costs.instrumentsDetails.etf.map((inst, idx) => (
+                                  <div key={idx} className="bg-bg-surface/50 rounded-lg p-3 border border-indigo-500/10">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="font-semibold text-text-primary">{inst.name}</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm mb-2">
+                                      <div>
+                                        <span className="text-text-tertiary">Spread: </span>
+                                        <span className="font-semibold text-text-primary">{inst.spread || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-text-tertiary">Commissione: </span>
+                                        <span className="font-semibold text-text-primary">{inst.commission || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                    {inst.markets && inst.markets.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-2">
+                                        {inst.markets.map((market, mIdx) => (
+                                          <span key={mIdx} className="badge-info text-xs">{market}</span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </div>
