@@ -33,9 +33,15 @@ export async function GET() {
       return acc;
     }, {} as Record<string, number>) || {};
 
-    // Conta reports
+    // Conta reports (solo report pubblici/generati, NON richieste personali)
     const { count: totalReports } = await supabaseAdmin
       .from('reports')
+      .select('*', { count: 'exact', head: true })
+      .catch(() => ({ count: 0 }));
+
+    // Conta richieste di analisi (a personam - separate dai report)
+    const { count: totalAnalysisRequests } = await supabaseAdmin
+      .from('analysis_requests')
       .select('*', { count: 'exact', head: true })
       .catch(() => ({ count: 0 }));
 
@@ -63,7 +69,8 @@ export async function GET() {
         total: totalUsers || 0,
         byRole: usersByRole,
       },
-      reports: totalReports || 0,
+      reports: totalReports || 0, // Solo report pubblici/generati
+      analysisRequests: totalAnalysisRequests || 0, // Richieste personali (a personam)
       watchlist: totalWatchlist || 0,
       notifications: totalNotifications || 0,
       completedCourses: completedCourses || 0,

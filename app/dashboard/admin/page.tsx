@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Users, BarChart3, Search, RefreshCw, AlertCircle, CreditCard, FileText, Database, Shield, Edit2, Save, X } from 'lucide-react';
+import { Users, BarChart3, Search, RefreshCw, AlertCircle, CreditCard, FileText, Database, Shield, Edit2, Save, X, FileSearch } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface User {
@@ -49,7 +49,8 @@ interface Stats {
     total: number;
     byRole: Record<string, number>;
   };
-  reports: number;
+  reports: number; // Solo report pubblici/generati
+  analysisRequests: number; // Richieste personali (a personam)
   watchlist: number;
   notifications: number;
   completedCourses: number;
@@ -57,11 +58,13 @@ interface Stats {
 
 export default function AdminPage() {
   const { t } = useTranslations();
-  const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'payments' | 'reports' | 'sql'>('stats');
+  const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'payments' | 'reports' | 'analysis-requests' | 'sql'>('stats');
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDetail | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [reports, setReports] = useState<Report[]>([]);
+  const [analysisRequests, setAnalysisRequests] = useState<any[]>([]);
+  const [analysisRequestPage, setAnalysisRequestPage] = useState(1);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,6 +103,13 @@ export default function AdminPage() {
       loadReports();
     }
   }, [activeTab, reportPage]);
+
+  // Carica richieste di analisi
+  useEffect(() => {
+    if (activeTab === 'analysis-requests') {
+      loadAnalysisRequests();
+    }
+  }, [activeTab, analysisRequestPage]);
 
   const loadStats = async () => {
     setLoading(true);
@@ -186,6 +196,26 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Errore nel caricamento report');
       const data = await res.json();
       setReports(data.reports || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadAnalysisRequests = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        page: analysisRequestPage.toString(),
+        limit: '20',
+      });
+      
+      const res = await fetch(`/api/admin/analysis-requests?${params}`);
+      if (!res.ok) throw new Error('Errore nel caricamento richieste di analisi');
+      const data = await res.json();
+      setAnalysisRequests(data.analysisRequests || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore sconosciuto');
     } finally {
@@ -319,6 +349,17 @@ export default function AdminPage() {
             Report
           </button>
           <button
+            onClick={() => setActiveTab('analysis-requests')}
+            className={`px-4 py-2 font-medium transition-colors whitespace-nowrap ${
+              activeTab === 'analysis-requests'
+                ? 'text-accent border-b-2 border-accent'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            <FileSearch className="w-4 h-4 inline mr-2" />
+            Richieste Analisi
+          </button>
+          <button
             onClick={() => setActiveTab('sql')}
             className={`px-4 py-2 font-medium transition-colors whitespace-nowrap ${
               activeTab === 'sql'
@@ -354,8 +395,14 @@ export default function AdminPage() {
               </div>
             </div>
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
-              <h3 className="text-sm text-text-secondary mb-2">Report</h3>
+              <h3 className="text-sm text-text-secondary mb-2">Report Pubblici</h3>
               <p className="text-3xl font-bold text-text-primary">{stats.reports}</p>
+              <p className="text-xs text-text-tertiary mt-1">Report generati (non a personam)</p>
+            </div>
+            <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
+              <h3 className="text-sm text-text-secondary mb-2">Richieste Analisi</h3>
+              <p className="text-3xl font-bold text-text-primary">{stats.analysisRequests || 0}</p>
+              <p className="text-xs text-text-tertiary mt-1">Richieste personali (a personam)</p>
             </div>
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
               <h3 className="text-sm text-text-secondary mb-2">Watchlist</h3>
@@ -615,6 +662,90 @@ export default function AdminPage() {
               <button
                 onClick={() => setPaymentPage(paymentPage + 1)}
                 disabled={payments.length < 20}
+                className="px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg disabled:opacity-50"
+              >
+                Successivo
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Analysis Requests Tab */}
+        {!loading && activeTab === 'analysis-requests' && (
+          <div className="space-y-4">
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+              <div className="flex items-start gap-2">
+                <FileSearch className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-blue-400 mb-1">Richieste di Analisi (a personam)</h3>
+                  <p className="text-xs text-text-secondary">
+                    Queste sono richieste personali degli utenti, separate dai report pubblici. 
+                    Non vengono conteggiate nei report totali.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-bg-surface border border-border-subtle rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-bg-soft border-b border-border-subtle">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">ID</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Utente</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Asset</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Tipo</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Stato</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {analysisRequests.map((request) => (
+                    <tr key={request.id} className="border-b border-border-subtle hover:bg-bg-soft">
+                      <td className="px-4 py-3 text-sm text-text-primary font-mono text-xs">
+                        {request.id.slice(0, 8)}...
+                      </td>
+                      <td className="px-4 py-3 text-sm text-text-primary font-mono text-xs">
+                        {request.user_id.slice(0, 8)}...
+                      </td>
+                      <td className="px-4 py-3 text-sm text-text-primary">
+                        {request.asset_symbol || '-'}
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                          {request.request_type || 'analysis'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          request.status === 'completed' ? 'bg-green-500/20 text-green-400' :
+                          request.status === 'processing' ? 'bg-amber-500/20 text-amber-400' :
+                          request.status === 'failed' ? 'bg-red-500/20 text-red-400' :
+                          'bg-bg-soft text-text-secondary'
+                        }`}>
+                          {request.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-text-secondary">
+                        {new Date(request.created_at).toLocaleDateString('it-IT')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <button
+                onClick={() => setAnalysisRequestPage(Math.max(1, analysisRequestPage - 1))}
+                disabled={analysisRequestPage === 1}
+                className="px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg disabled:opacity-50"
+              >
+                Precedente
+              </button>
+              <span className="text-text-secondary">Pagina {analysisRequestPage}</span>
+              <button
+                onClick={() => setAnalysisRequestPage(analysisRequestPage + 1)}
+                disabled={analysisRequests.length < 20}
                 className="px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg disabled:opacity-50"
               >
                 Successivo
