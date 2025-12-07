@@ -131,12 +131,7 @@ export async function getDashboardStats(userId: string) {
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
 
-  // Get active courses count
-  const { count: activeCoursesCount } = await supabase
-    .from("course_progress")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .neq("progress", 100);
+  // Active courses removed - focus on analysis only
 
   // Get pending requests count
   const { count: pendingRequestsCount } = await supabase
@@ -156,7 +151,6 @@ export async function getDashboardStats(userId: string) {
 
   return {
     totalReports: reportsCount || 0,
-    activeCourses: activeCoursesCount || 0,
     pendingRequests: pendingRequestsCount || 0,
     recentActivity: recentActivity || null,
   };
