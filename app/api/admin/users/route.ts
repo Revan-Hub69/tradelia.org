@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     let filteredUsers = users || [];
     if (search) {
       filteredUsers = filteredUsers.filter(
-        (u) =>
+        (u: { email?: string; user_metadata?: { full_name?: string } }) =>
           u.email?.toLowerCase().includes(search.toLowerCase()) ||
           u.user_metadata?.full_name?.toLowerCase().includes(search.toLowerCase())
       );
