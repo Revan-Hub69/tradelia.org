@@ -124,7 +124,16 @@ const nextConfig = {
 
   // Optimize for modern browsers - reduce polyfills
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion", "@supabase/supabase-js"],
+    optimizePackageImports: [
+      "lucide-react", 
+      "framer-motion", 
+      "@supabase/supabase-js",
+      "chart.js",
+      "react-chartjs-2",
+      "recharts",
+    ],
+    // Ottimizzazione bundle: code splitting più aggressivo
+    optimizeCss: true,
   },
 
   // SWC minification - better tree shaking and dead code elimination
@@ -177,6 +186,8 @@ const nextConfig = {
         splitChunks: {
           ...config.optimization.splitChunks,
           chunks: 'all',
+          minSize: 20000, // Ridotto da default per chunk più piccoli
+          maxSize: 244000, // Limite massimo per chunk (244KB)
           cacheGroups: {
             ...config.optimization.splitChunks?.cacheGroups,
             // Separate Supabase into its own chunk for lazy loading
@@ -186,12 +197,32 @@ const nextConfig = {
               chunks: 'async', // Load only when needed
               priority: 10,
             },
+            // Separate chart libraries (pesanti)
+            charts: {
+              test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|recharts)[\\/]/,
+              name: 'charts',
+              chunks: 'async',
+              priority: 15,
+            },
+            // Separate framer-motion (usato solo per animazioni)
+            animations: {
+              test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+              name: 'animations',
+              chunks: 'async',
+              priority: 12,
+            },
             // Separate polyfills (if any remain) into separate chunk
             polyfills: {
               test: /[\\/]node_modules[\\/](core-js|regenerator-runtime|@babel[\\/]runtime)[\\/]/,
               name: 'polyfills',
               chunks: 'async',
               priority: 20,
+            },
+            // Default vendor chunk (più piccolo)
+            default: {
+              minChunks: 2,
+              priority: -10,
+              reuseExistingChunk: true,
             },
           },
         },

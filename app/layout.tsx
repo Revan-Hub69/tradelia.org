@@ -26,13 +26,15 @@ const TradeliaAIChat = dynamic(() => import('@/components/ui/TradeliaAIChat').th
 
 const inter = Inter({ 
   subsets: ['latin'], // Solo latin per ridurre dimensioni font
-  display: 'swap',
-  preload: false, // Disabled to avoid preload warnings when font isn't used immediately
+  display: 'swap', // Mostra fallback immediatamente, swap quando font è pronto
+  preload: true, // Abilita preload per migliorare LCP
   variable: '--font-inter',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
   adjustFontFallback: true,
   // Optimize font loading - solo pesi necessari per ridurre @font-face
   weight: ['400', '600', '700'], // Rimossi 500 (usato raramente)
+  // Ottimizzazione aggiuntiva: ridurre subset a solo caratteri necessari
+  // Next.js ottimizza automaticamente il subset
 });
 
 export async function generateMetadata() {
@@ -124,56 +126,19 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
-        {/* Critical CSS inline to prevent render blocking - Expanded for LCP optimization */}
-        {/* This CSS is loaded immediately to prevent render blocking from external CSS */}
+        {/* Critical CSS inline to prevent render blocking - Ottimizzato per ridurre dimensioni */}
+        {/* Questo CSS è caricato immediatamente per prevenire render blocking da CSS esterno */}
         <style dangerouslySetInnerHTML={{
           __html: `
-            :root{
-              --bg-base:#0a0e1a;--bg-soft:#131720;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;--bg-hover:#242a38;
-              --text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-tertiary:#8b95a5;--text-muted:#a8b0bc;
-              --accent:#1e40af;--accent-hover:#1e3a8a;--accent-active:#1e3a8a;
-              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12);--border-accent:rgba(59,130,246,0.2);
-              --dash-bg-soft:#131720;--dash-surface:#1a1f2e;--dash-surface-elev:#1f2533;
-              --dash-text:#e8edf3;--dash-text-soft:#b8c5d1;--dash-text-muted:#a8b0bc;
-              --dash-accent:#1e40af;--dash-accent-hover:#1e3a8a;
-              --dash-border:rgba(255,255,255,0.08);--dash-border-strong:rgba(255,255,255,0.12);--dash-border-accent:rgba(59,130,246,0.2);--dash-border-soft:rgba(255,255,255,0.05)
-            }
+            :root{--bg-base:#0a0e1a;--bg-soft:#131720;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;--bg-hover:#242a38;--text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-tertiary:#8b95a5;--text-muted:#a8b0bc;--accent:#1e40af;--accent-hover:#1e3a8a;--accent-active:#1e3a8a;--border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12);--border-accent:rgba(59,130,246,0.2);--dash-bg-soft:#131720;--dash-surface:#1a1f2e;--dash-surface-elev:#1f2533;--dash-text:#e8edf3;--dash-text-soft:#b8c5d1;--dash-text-muted:#a8b0bc;--dash-accent:#1e40af;--dash-accent-hover:#1e3a8a;--dash-border:rgba(255,255,255,0.08);--dash-border-strong:rgba(255,255,255,0.12);--dash-border-accent:rgba(59,130,246,0.2);--dash-border-soft:rgba(255,255,255,0.05)}
             *{box-sizing:border-box;margin:0;padding:0}
-            html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto;font-size:16px}
-            body{
-              background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;
-              font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-              overflow-y:auto;line-height:1.75;-webkit-font-smoothing:antialiased;
-              -moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility
-            }
+            html{background-color:var(--bg-base);scroll-behavior:smooth;font-size:16px}
+            body{background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
             section{display:block}
-            .relative{position:relative}
-            .min-h-\[90vh\]{min-height:90vh}
-            .flex{display:flex}
-            .items-center{align-items:center}
-            .overflow-hidden{overflow:hidden}
-            .py-24{padding-top:6rem;padding-bottom:6rem}
-            #hero-title{
-              color:var(--text-primary);font-weight:800;line-height:1.1;margin:0 0 1.5rem;
-              max-width:80rem;margin-left:auto;margin-right:auto;text-align:center;
-              letter-spacing:-0.025em;font-size:2.25rem;opacity:1;transform:none
-            }
-            #hero-title+p{
-              color:var(--text-secondary);font-size:1.125rem;line-height:1.75rem;
-              margin:0 0 2.5rem;max-width:48rem;margin-left:auto;margin-right:auto;
-              text-align:center;font-weight:300;letter-spacing:-0.01em;opacity:1;transform:none
-            }
-            .gradient-text{background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a78bfa 100%);
-              -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-            @media(min-width:768px){
-              .py-24{padding-top:8rem;padding-bottom:8rem}
-              #hero-title{font-size:3.75rem}
-              #hero-title+p{font-size:1.5rem}
-            }
-            @media(min-width:1024px){
-              #hero-title{font-size:4.5rem}
-              #hero-title+p{font-size:2.25rem}
-            }
+            #hero-title{color:var(--text-primary);font-weight:800;line-height:1.1;margin:0 0 1.5rem;max-width:80rem;margin-left:auto;margin-right:auto;text-align:center;letter-spacing:-0.025em;font-size:2.25rem}
+            #hero-title+p{color:var(--text-secondary);font-size:1.125rem;line-height:1.75rem;margin:0 0 2.5rem;max-width:48rem;margin-left:auto;margin-right:auto;text-align:center;font-weight:300;letter-spacing:-0.01em}
+            @media(min-width:768px){#hero-title{font-size:3.75rem}#hero-title+p{font-size:1.5rem}}
+            @media(min-width:1024px){#hero-title{font-size:4.5rem}#hero-title+p{font-size:2.25rem}}
           `
         }} />
         
@@ -188,6 +153,28 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.svg" />
         
         {/* Preload critical resources - Best Practice 2024-2025 */}
+        {/* Preload font for LCP optimization */}
+        <link
+          rel="preload"
+          href="/_next/static/media/inter-latin-400-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/_next/static/media/inter-latin-600-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/_next/static/media/inter-latin-700-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         {/* Preload logo for LCP optimization (used in header) */}
         <link
           rel="preload"
