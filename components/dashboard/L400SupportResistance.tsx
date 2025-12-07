@@ -71,28 +71,154 @@ export function L400SupportResistance() {
       try {
         setLoading(true);
 
-        // Fetch order book L400 from Binance
-        const orderBookResponse = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=400`);
-        if (!orderBookResponse.ok) throw new Error('Failed to fetch order book');
+        // Fetch multi-exchange order book (aggregated from Binance, Coinbase, Kraken, OKX)
+        const multiExchangeResponse = await fetch(`/api/crypto/multi-exchange-depth?symbol=${symbol}`);
+        if (!multiExchangeResponse.ok) {
+          // Fallback to Binance only if multi-exchange fails
+          const orderBookResponse = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=400`);
+          if (!orderBookResponse.ok) throw new Error('Failed to fetch order book');
+          const orderBook = await orderBookResponse.json();
+          
+          const tickerResponse = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`);
+          const ticker = tickerResponse.ok ? await tickerResponse.json() : { price: '0' };
+          const currentPrice = parseFloat(ticker.price);
 
-        const orderBook = await orderBookResponse.json();
-        
-        // Fetch current price
-        const tickerResponse = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`);
-        const ticker = tickerResponse.ok ? await tickerResponse.json() : { price: '0' };
-        const currentPrice = parseFloat(ticker.price);
+          const bids: OrderBookLevel[] = orderBook.bids.map(([price, qty]: [string, string]) => ({
+            price: parseFloat(price),
+            volume: parseFloat(qty) * parseFloat(price),
+          }));
 
-        // Process bids (support levels)
-        const bids: OrderBookLevel[] = orderBook.bids.map(([price, qty]: [string, string]) => ({
-          price: parseFloat(price),
-          volume: parseFloat(qty) * parseFloat(price), // Volume in USD
+          const asks: OrderBookLevel[] = orderBook.asks.map(([price, qty]: [string, string]) => ({
+            price: parseFloat(price),
+            volume: parseFloat(qty) * parseFloat(price),
+          }));
+          
+          // Continue with existing logic...
+          const bidVolumes = bids.map(b => b.volume);
+          const meanBid = bidVolumes.reduce((a, b) => a + b, 0) / bidVolumes.length;
+          const stdDevBid = Math.sqrt(
+            bidVolumes.reduce((sum, v) => sum + Math.pow(v - meanBid, 2), 0) / bidVolumes.length
+          );
+          const thresholdBid = meanBid + 2 * stdDevBid;
+
+          const askVolumes = asks.map(a => a.volume);
+          const meanAsk = askVolumes.reduce((a, b) => a + b, 0) / askVolumes.length;
+          const stdDevAsk = Math.sqrt(
+            askVolumes.reduce((sum, v) => sum + Math.pow(v - meanAsk, 2), 0) / askVolumes.length
+          );
+          const thresholdAsk = meanAsk + 2 * stdDevAsk;
+
+          const supportLevels: SupportResistanceLevel[] = bids
+            .filter(b => b.volume > thresholdBid && b.price < currentPrice)
+            .map(b => ({ ...b, type: 'support' as const }))
+            .sort((a, b) => b.price - a.price)
+            .slice(0, 10);
+
+          const resistanceLevels: SupportResistanceLevel[] = asks
+            .filter(a => a.volume > thresholdAsk && a.price > currentPrice)
+            .map(a => ({ ...a, type: 'resistance' as const }))
+            .sort((a, b) => a.price - b.price)
+            .slice(0, 10);
+
+          const totalBidVolume = bids.reduce((sum, b) => sum + b.volume, 0);
+          const totalAskVolume = asks.reduce((sum, a) => sum + a.volume, 0);
+          const imbalance = totalBidVolume > 0 && totalAskVolume > 0
+            ? (totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume)
+            : 0;
+
+          setData({
+            currentPrice,
+            supportLevels,
+            resistanceLevels,
+            imbalance,
+            totalBidVolume,
+            totalAskVolume,
+          });
+
+          // Fetch price history for chart
+          const klinesResponse = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=24`);
+          if (klinesResponse.ok) {
+            const klines = await klinesResponse.json();
+            setPriceHistory(klines.map((k: any[]) => ({
+              timestamp: new Date(k[0]).toISOString(),
+              price: parseFloat(k[4]), // Close price
+            })));
+          }
+
+          setLoading(false);
+          return;
+        }
+
+        const multiExchangeData = await multiExchangeResponse.json();
+        if (!multiExchangeData.success || !multiExchangeData.data) {
+          throw new Error('Invalid multi-exchange data');
+        }
+
+        const aggregated = multiExchangeData.data.aggregated;
+        const currentPrice = aggregated.bids[0]?.price || aggregated.asks[0]?.price || 0;
+
+        // Process aggregated bids and asks
+        const bids: OrderBookLevel[] = aggregated.bids.map((level: { price: number; quantity: number }) => ({
+          price: level.price,
+          volume: level.quantity * level.price, // Volume in USD
         }));
 
-        // Process asks (resistance levels)
-        const asks: OrderBookLevel[] = orderBook.asks.map(([price, qty]: [string, string]) => ({
-          price: parseFloat(price),
-          volume: parseFloat(qty) * parseFloat(price), // Volume in USD
+        const asks: OrderBookLevel[] = aggregated.asks.map((level: { price: number; quantity: number }) => ({
+          price: level.price,
+          volume: level.quantity * level.price, // Volume in USD
         }));
+
+        // Calculate mean and std dev for bids
+        const bidVolumes = bids.map(b => b.volume);
+        const meanBid = bidVolumes.reduce((a, b) => a + b, 0) / bidVolumes.length;
+        const stdDevBid = Math.sqrt(
+          bidVolumes.reduce((sum, v) => sum + Math.pow(v - meanBid, 2), 0) / bidVolumes.length
+        );
+        const thresholdBid = meanBid + 2 * stdDevBid;
+
+        const askVolumes = asks.map(a => a.volume);
+        const meanAsk = askVolumes.reduce((a, b) => a + b, 0) / askVolumes.length;
+        const stdDevAsk = Math.sqrt(
+          askVolumes.reduce((sum, v) => sum + Math.pow(v - meanAsk, 2), 0) / askVolumes.length
+        );
+        const thresholdAsk = meanAsk + 2 * stdDevAsk;
+
+        const supportLevels: SupportResistanceLevel[] = bids
+          .filter(b => b.volume > thresholdBid && b.price < currentPrice)
+          .map(b => ({ ...b, type: 'support' as const }))
+          .sort((a, b) => b.price - a.price)
+          .slice(0, 10);
+
+        const resistanceLevels: SupportResistanceLevel[] = asks
+          .filter(a => a.volume > thresholdAsk && a.price > currentPrice)
+          .map(a => ({ ...a, type: 'resistance' as const }))
+          .sort((a, b) => a.price - b.price)
+          .slice(0, 10);
+
+        const totalBidVolume = aggregated.totalBidVolume;
+        const totalAskVolume = aggregated.totalAskVolume;
+        const imbalance = aggregated.imbalance / 100; // Convert from percentage to ratio
+
+        setData({
+          currentPrice,
+          supportLevels,
+          resistanceLevels,
+          imbalance,
+          totalBidVolume,
+          totalAskVolume,
+        });
+
+        // Fetch price history for chart
+        const klinesResponse = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=24`);
+        if (klinesResponse.ok) {
+          const klines = await klinesResponse.json();
+          setPriceHistory(klines.map((k: any[]) => ({
+            timestamp: new Date(k[0]).toISOString(),
+            price: parseFloat(k[4]), // Close price
+          })));
+        }
+
+        setLoading(false);
 
         // Calculate mean and std dev for bids
         const bidVolumes = bids.map(b => b.volume);

@@ -11,6 +11,10 @@ import { MultiAssetCharts } from './MultiAssetCharts';
 import { L400SupportResistance } from './L400SupportResistance';
 import { NewsFeed } from './NewsFeed';
 import { EconomicCalendar } from './EconomicCalendar';
+import { TrendingCoins } from './TrendingCoins';
+import { SocialSentiment } from './SocialSentiment';
+import { RedditSentiment } from './RedditSentiment';
+import { DeveloperActivity } from './DeveloperActivity';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
 // WidgetsSection rimossa - richiede API real-time non disponibili
@@ -320,6 +324,54 @@ export function DashboardShell() {
           >
             <ErrorBoundary>
               <EconomicCalendar />
+            </ErrorBoundary>
+          </section>
+
+          {/* Trending Coins - Early Signals */}
+          <section 
+            aria-label="Trending Coins" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="trending-coins"
+          >
+            <ErrorBoundary>
+              <TrendingCoins />
+            </ErrorBoundary>
+          </section>
+
+          {/* Social Sentiment - Multi-Asset Sentiment */}
+          <section 
+            aria-label="Social Sentiment" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="social-sentiment"
+          >
+            <ErrorBoundary>
+              <SocialSentiment />
+            </ErrorBoundary>
+          </section>
+
+          {/* Reddit Sentiment - Retail Sentiment */}
+          <section 
+            aria-label="Reddit Sentiment" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="reddit-sentiment"
+          >
+            <ErrorBoundary>
+              <RedditSentiment />
+            </ErrorBoundary>
+          </section>
+
+          {/* Developer Activity - GitHub Metrics */}
+          <section 
+            aria-label="Developer Activity" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="developer-activity"
+          >
+            <ErrorBoundary>
+              <DeveloperActivity />
             </ErrorBoundary>
           </section>
 
