@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Target, ArrowRight, BookOpen } from 'lucide-react';
+import { Sparkles, ShieldCheck, Target, ArrowRight } from 'lucide-react';
 import styles from './dashboard.module.css';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -70,14 +70,14 @@ export function DashboardHero() {
         </p>
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
-            <Link href="/dashboard/education">
-              <span>{t('dashboard.hero.ctaPrimary')}</span>
+            <Link href="/dashboard/analysis">
+              <span>{t('dashboard.hero.ctaPrimary') || 'Vai alle Analisi'}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>
           </Button>
           <div className={styles.dashboardHeroSupportText}>
-            <BookOpen className={styles.dashboardHeroSupportIcon} aria-hidden="true" />
-            <span>{t('dashboard.hero.supportingText')}</span>
+            <Target className={styles.dashboardHeroSupportIcon} aria-hidden="true" />
+            <span>{t('dashboard.hero.supportingText') || 'Strumenti professionali per analisi di mercato'}</span>
           </div>
         </div>
         {chips.length > 0 && (

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, memo, useMemo } from 'react';
-import { Clock, FileText, BookOpen, TrendingUp, ArrowRight, Filter } from 'lucide-react';
+import { Clock, FileText, TrendingUp, ArrowRight, Filter } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsClient } from '@/lib/hooks/useIsClient';
 import { cn } from '@/lib/utils/cn';
@@ -18,7 +18,7 @@ import { ErrorState } from './ErrorState';
 
 interface Activity {
   id: string;
-  type: 'report_viewed' | 'course_started' | 'course_completed' | 'analysis_requested';
+  type: 'report_viewed' | 'analysis_requested';
   title: string;
   description: string;
   timestamp: string;
@@ -34,7 +34,7 @@ export const RecentActivity = memo(function RecentActivity() {
 
   interface ActivityData {
     id: string;
-    type: 'report_viewed' | 'course_started' | 'course_completed' | 'analysis_requested';
+    type: 'report_viewed' | 'analysis_requested';
     title: string;
     description: string | null;
     created_at: string;
@@ -69,11 +69,6 @@ export const RecentActivity = memo(function RecentActivity() {
           icon = <FileText className="w-4 h-4" />;
           href = `/dashboard/analysis`;
           break;
-        case 'course_started':
-        case 'course_completed':
-          icon = <BookOpen className="w-4 h-4" />;
-          href = `/dashboard/education`;
-          break;
         case 'analysis_requested':
           icon = <TrendingUp className="w-4 h-4" />;
           href = `/dashboard/analysis`;
@@ -97,10 +92,6 @@ export const RecentActivity = memo(function RecentActivity() {
       switch (type) {
         case 'report_viewed':
           return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
-        case 'course_started':
-          return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
-        case 'course_completed':
-          return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
         case 'analysis_requested':
           return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
       }
@@ -187,7 +178,6 @@ export const RecentActivity = memo(function RecentActivity() {
           >
             <option value="all">{t('dashboard.activity.filterAll') || 'Tutte'}</option>
             <option value="report_viewed">{t('dashboard.activity.filterReports') || 'Report'}</option>
-            <option value="course_started">{t('dashboard.activity.filterCourses') || 'Corsi'}</option>
             <option value="analysis_requested">{t('dashboard.activity.filterAnalysis') || 'Analisi'}</option>
           </select>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, BookOpen, ArrowRight } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -357,7 +357,7 @@ export function HelpAssistant() {
                           <p className="text-sm text-text-secondary">
                             {locale === 'it' 
                               ? 'Chiedi qualsiasi domanda finanziaria e ricevi risposte accurate basate sul nostro knowledge base Tradelia. L\'AI è personalizzata per fornire informazioni educative conformi MIFID II.'
-                              : 'Ask any financial question and get accurate answers based on our Tradelia knowledge base. The AI is customized to provide MIFID II compliant educational information.'}
+                              : 'Ask any financial question and get accurate answers based on our Tradelia knowledge base. The AI is customized to provide MIFID II compliant analysis information.'}
                           </p>
                           <div className="flex items-center justify-center gap-2 text-xs text-text-tertiary mt-4">
                             <Sparkles className="w-4 h-4 text-accent" />
