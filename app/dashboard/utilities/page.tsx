@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, lazy, Suspense } from 'react';
+import Link from 'next/link';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout, Settings, Clock } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout, Settings, Clock, ChevronRight } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -59,9 +60,6 @@ const StrategyBuilder = lazy(() =>
 const PaperTrading = lazy(() => 
   import('@/components/dashboard/utilities/PaperTrading').then(m => ({ default: m.PaperTrading }))
 );
-const BrokersRecommender = lazy(() => 
-  import('@/components/dashboard/utilities/BrokersRecommender').then(m => ({ default: m.BrokersRecommender }))
-);
 
 // Loading fallback component
 const CalculatorSkeleton = () => (
@@ -72,7 +70,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets' | 'brokers';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
 
 interface Utility {
   id: UtilityTab;
@@ -266,14 +264,6 @@ export default function UtilitiesPage() {
       comingSoon: true,
       reason: 'Richiede integrazione con API real-time per prezzi di mercato',
     },
-    {
-      id: 'brokers',
-      label: 'Brokers Consigliati',
-      icon: Target,
-      category: 'base',
-      description: 'Trova il broker ideale per le tue esigenze con form intelligente',
-      available: true,
-    },
   ];
 
   const handleUtilityClick = (utility: Utility) => {
@@ -295,8 +285,7 @@ export default function UtilitiesPage() {
 
   // Raggruppa per categoria
   // Best Practice: Separare strumenti disponibili da quelli in arrivo
-  const baseUtilities = allUtilities.filter(u => u.category === 'base' && u.available && u.id !== 'brokers');
-  const brokersUtility = allUtilities.find(u => u.id === 'brokers' && u.available);
+  const baseUtilities = allUtilities.filter(u => u.category === 'base' && u.available);
   const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk' && u.available);
   const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance' && u.available);
   const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced' && u.available);
@@ -387,9 +376,6 @@ export default function UtilitiesPage() {
                 {selectedUtility === 'strategy-builder' && (
                   isPro ? <StrategyBuilder /> : <ProLockOverlay><StrategyBuilder /></ProLockOverlay>
                 )}
-                {selectedUtility === 'brokers' && (
-                  <BrokersRecommender />
-                )}
                 {selectedUtility === 'watchlist' && (
                   <div className="relative">
                     <div className="opacity-50 pointer-events-none">
@@ -438,29 +424,31 @@ export default function UtilitiesPage() {
         ) : (
           // Vista griglia strumenti
           <div className="space-y-8">
-            {/* Brokers Consigliati - Sezione speciale */}
-            {brokersUtility && (
-              <section className="mb-8">
-                <div className="bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border border-accent/20 rounded-xl p-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
-                      <Target className="w-6 h-6 text-accent" aria-hidden="true" />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-semibold text-text-primary mb-2">{brokersUtility.label}</h2>
-                      <p className="text-text-secondary">{brokersUtility.description}</p>
-                    </div>
+            {/* Brokers - Link a sezione dedicata */}
+            <section className="mb-8">
+              <Link
+                href="/dashboard/brokers"
+                className="block bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-premium shadow-premium rounded-xl p-6 hover:border-accent/40 hover:shadow-premium-hover transition-all group interaction-smooth card-mobile"
+                aria-label="Vai alla sezione Brokers"
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-accent/20 group-hover:bg-accent/30 flex items-center justify-center flex-shrink-0 transition-colors">
+                    <Target className="w-6 h-6 text-accent" aria-hidden="true" />
                   </div>
-                  <button
-                    onClick={() => handleUtilityClick(brokersUtility)}
-                    className="w-full sm:w-auto px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-medium"
-                    aria-label={`Apri ${brokersUtility.label}`}
-                  >
-                    Trova il Broker Ideale
-                  </button>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-semibold text-text-primary mb-2 flex items-center gap-2">
+                      Brokers Disponibili
+                      <ChevronRight className="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+                    </h2>
+                    <p className="text-text-secondary">Strumento informativo per confrontare broker regolamentati. Trova il broker ideale attraverso un percorso guidato basato su criteri accademici e conformità MiFID II</p>
+                  </div>
                 </div>
-              </section>
-            )}
+                <div className="flex items-center gap-2 text-sm text-accent font-medium underline-selection">
+                  <span>Esplora i Broker</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </div>
+              </Link>
+            </section>
 
             {/* Strumenti Base */}
             <section>
