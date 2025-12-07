@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Users, Database, BarChart3, Search, RefreshCw, AlertCircle } from 'lucide-react';
+import { Users, BarChart3, Search, RefreshCw, AlertCircle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface User {
@@ -14,13 +14,6 @@ interface User {
   last_sign_in_at?: string;
 }
 
-interface TableData {
-  table: string;
-  data: any[];
-  total: number;
-  page: number;
-  limit: number;
-}
 
 interface Stats {
   users: {
@@ -42,7 +35,6 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [userPage, setUserPage] = useState(1);
-  const [tablePage, setTablePage] = useState(1);
 
   // Carica statistiche
   useEffect(() => {
@@ -254,116 +246,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {!loading && activeTab === 'tables' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-1">
-                <h3 className="text-sm font-medium text-text-secondary mb-2">Tabelle</h3>
-                <div className="bg-bg-surface border border-border-subtle rounded-lg p-2 max-h-[600px] overflow-y-auto">
-                  {tables.map((table) => (
-                    <button
-                      key={table}
-                      onClick={() => {
-                        setSelectedTable(table);
-                        setTablePage(1);
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                        selectedTable === table
-                          ? 'bg-accent/20 text-accent'
-                          : 'text-text-secondary hover:bg-bg-soft hover:text-text-primary'
-                      }`}
-                    >
-                      {table}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="md:col-span-2">
-                {selectedTable ? (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold text-text-primary">{selectedTable}</h3>
-                      <button
-                        onClick={loadTableData}
-                        className="p-2 bg-bg-surface border border-border-subtle rounded-lg hover:bg-bg-soft transition-colors"
-                      >
-                        <RefreshCw className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {tableData && (
-                      <>
-                        <div className="bg-bg-surface border border-border-subtle rounded-lg overflow-hidden">
-                          <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                              <thead className="bg-bg-soft border-b border-border-subtle">
-                                <tr>
-                                  {tableData.data.length > 0 &&
-                                    Object.keys(tableData.data[0]).map((key) => (
-                                      <th
-                                        key={key}
-                                        className="px-3 py-2 text-left text-xs font-medium text-text-secondary"
-                                      >
-                                        {key}
-                                      </th>
-                                    ))}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {tableData.data.map((row, idx) => (
-                                  <tr
-                                    key={idx}
-                                    className="border-b border-border-subtle hover:bg-bg-soft"
-                                  >
-                                    {Object.values(row).map((value: any, cellIdx) => (
-                                      <td
-                                        key={cellIdx}
-                                        className="px-3 py-2 text-text-primary text-xs"
-                                      >
-                                        {typeof value === 'object'
-                                          ? JSON.stringify(value)
-                                          : String(value)}
-                                      </td>
-                                    ))}
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <div className="flex justify-between items-center text-sm text-text-secondary">
-                          <span>
-                            Mostrando {tableData.data.length} di {tableData.total} record
-                          </span>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => setTablePage(Math.max(1, tablePage - 1))}
-                              disabled={tablePage === 1}
-                              className="px-3 py-1 bg-bg-surface border border-border-subtle rounded disabled:opacity-50"
-                            >
-                              Precedente
-                            </button>
-                            <span>Pagina {tablePage}</span>
-                            <button
-                              onClick={() => setTablePage(tablePage + 1)}
-                              disabled={tableData.data.length < 50}
-                              className="px-3 py-1 bg-bg-surface border border-border-subtle rounded disabled:opacity-50"
-                            >
-                              Successivo
-                            </button>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-64 text-text-secondary">
-                    Seleziona una tabella per visualizzare i dati
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
