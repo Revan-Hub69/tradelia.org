@@ -26,7 +26,7 @@ export function UserBenefits() {
   // Guest: mostra perché registrarsi
   if (!isAuthenticated) {
     return (
-      <Card className="p-6 md:p-8 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-accent/20">
+      <Card className="p-6 md:p-8 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-accent/20" style={{ minHeight: '280px' }}>
         <div className="flex items-start gap-4 mb-6">
           <div className="w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-6 h-6 text-accent" />
@@ -87,7 +87,7 @@ export function UserBenefits() {
   // Base user: mostra perché upgradare a Pro
   if (!isPro) {
     return (
-      <Card className="p-6 md:p-8 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20">
+      <Card className="p-6 md:p-8 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20" style={{ minHeight: '280px' }}>
         <div className="flex items-start gap-4 mb-6">
           <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
             <Zap className="w-6 h-6 text-amber-400" />
@@ -140,7 +140,7 @@ export function UserBenefits() {
 
   // Pro user: mostra che ha accesso completo
   return (
-    <Card className="p-6 md:p-8 bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border-green-500/20">
+    <Card className="p-6 md:p-8 bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border-green-500/20" style={{ minHeight: '120px' }}>
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
           <Shield className="w-6 h-6 text-green-400" />

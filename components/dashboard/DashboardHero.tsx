@@ -35,13 +35,13 @@ export function DashboardHero() {
   }, [isClient]);
 
   return (
-    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title">
+    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title" style={{ minHeight: '280px' }}>
       <div className={styles.dashboardHeroContent}>
         <Badge variant="default" className={styles.dashboardHeroBadge}>
           <Sparkles className={styles.dashboardHeroBadgeIcon} aria-hidden="true" />
           <span>{t('dashboard.hero.badge')}</span>
         </Badge>
-        <p className={styles.dashboardHeroSubtitle}>
+        <p className={styles.dashboardHeroSubtitle} style={{ minHeight: '24px' }}>
           {frameworkTerm ? (
             <TooltipGlossary term={frameworkTerm} icon={true}>
               <span className="text-accent hover:text-accent-hover underline decoration-dotted">
@@ -52,7 +52,7 @@ export function DashboardHero() {
             t('dashboard.hero.subtitle')
           )}
         </p>
-        <h1 id="dashboard-hero-title" className={styles.dashboardHeroTitle}>
+        <h1 id="dashboard-hero-title" className={styles.dashboardHeroTitle} style={{ minHeight: '120px' }}>
           {t('dashboard.hero.title')}
         </h1>
         <p className={styles.dashboardHeroDescription}>

@@ -173,6 +173,28 @@ const nextConfig = {
         // Better tree shaking to remove unused code
         usedExports: true,
         sideEffects: false,
+        // Split chunks more aggressively to reduce initial bundle
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          chunks: 'all',
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            // Separate Supabase into its own chunk for lazy loading
+            supabase: {
+              test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+              name: 'supabase',
+              chunks: 'async', // Load only when needed
+              priority: 10,
+            },
+            // Separate polyfills (if any remain) into separate chunk
+            polyfills: {
+              test: /[\\/]node_modules[\\/](core-js|regenerator-runtime|@babel[\\/]runtime)[\\/]/,
+              name: 'polyfills',
+              chunks: 'async',
+              priority: 20,
+            },
+          },
+        },
       };
 
       // Exclude polyfills for modern JavaScript features

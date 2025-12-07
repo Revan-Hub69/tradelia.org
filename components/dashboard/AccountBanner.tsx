@@ -88,6 +88,7 @@ export function AccountBanner() {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full mb-6"
+        style={{ minHeight: '80px' }} // Fissa altezza per evitare CLS
       >
         <div
           className={`

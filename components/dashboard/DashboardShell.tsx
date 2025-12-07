@@ -168,7 +168,7 @@ export function DashboardShell() {
         aria-label="Dashboard principale"
         suppressHydrationWarning
       >
-        <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard">
+        <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard" style={{ minHeight: '600px' }}>
           {/* Breadcrumb è già in DashboardTabs - non duplicare */}
           
           {/* Account Banner - Best Practice: Posizionato dopo Hero per non interferire con first impression */}

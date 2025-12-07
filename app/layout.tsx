@@ -25,14 +25,14 @@ const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m 
 const TradeliaAIChat = dynamic(() => import('@/components/ui/TradeliaAIChat').then(m => ({ default: m.TradeliaAIChat })));
 
 const inter = Inter({ 
-  subsets: ['latin'],
+  subsets: ['latin'], // Solo latin per ridurre dimensioni font
   display: 'swap',
   preload: false, // Disabled to avoid preload warnings when font isn't used immediately
   variable: '--font-inter',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
   adjustFontFallback: true,
-  // Optimize font loading for LCP
-  weight: ['400', '500', '600', '700'],
+  // Optimize font loading - solo pesi necessari per ridurre @font-face
+  weight: ['400', '600', '700'], // Rimossi 500 (usato raramente)
 });
 
 export async function generateMetadata() {
