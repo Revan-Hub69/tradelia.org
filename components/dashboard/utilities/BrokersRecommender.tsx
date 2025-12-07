@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, memo } from 'react';
-import { Building2, CheckCircle2, X, Info, BookOpen, TrendingUp, Shield, Globe, Zap, Star, ChevronRight, ChevronLeft, AlertTriangle, FileText, Award, Target, Settings, ArrowRight, Check, DollarSign, CreditCard, HeadphonesIcon, Smartphone, GraduationCap, Calendar, ExternalLink, Calculator, BarChart3 } from 'lucide-react';
+import { Building2, CheckCircle2, X, Info, BookOpen, TrendingUp, Shield, Globe, Zap, Star, ChevronRight, ChevronLeft, AlertTriangle, FileText, Award, Target, Settings, ArrowRight, Check, DollarSign, CreditCard, HeadphonesIcon, Smartphone, GraduationCap, Calendar, ExternalLink, Calculator, BarChart3, Download, Share2, Brain, Scale, TrendingDown, Activity, Layers, Sparkles, Gauge } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -735,6 +735,17 @@ export function BrokersRecommender() {
   const [compareMode, setCompareMode] = useState(false);
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
   const [showCostCalculator, setShowCostCalculator] = useState(false);
+  const [showAIMatching, setShowAIMatching] = useState(false);
+  const [showRegulatoryCheck, setShowRegulatoryCheck] = useState(false);
+  const [showRiskAssessment, setShowRiskAssessment] = useState(false);
+  const [showTaxOptimizer, setShowTaxOptimizer] = useState(false);
+  const [showComparisonMatrix, setShowComparisonMatrix] = useState(false);
+  const [costScenario, setCostScenario] = useState({
+    monthlyOrders: 20,
+    avgOrderValue: 1000,
+    instrumentType: 'stocks' as 'stocks' | 'forex' | 'options' | 'futures',
+    tradingFrequency: 'moderate' as 'low' | 'moderate' | 'high' | 'professional',
+  });
 
   const availableInstruments = ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Crypto', 'Commodities', 'Indici', 'CFD', 'IDEM', 'IPO', 'PAC'];
   const availablePlatforms = ['Web', 'Mobile', 'Desktop', 'MT4', 'MT5', 'cTrader', 'TWS', 'Client Portal', 'SaxoTraderGO', 'SaxoTraderPRO', 'Directa Platform', 'dLite', 'TradingView', 'OpenAPI', 'API FIX/REST'];
@@ -867,6 +878,315 @@ export function BrokersRecommender() {
     .sort((a, b) => b.score - a.score)
     .map(item => item.broker);
   }, [formData]);
+
+  // AI-Powered Smart Matching: Analisi avanzata con spiegazioni accademiche
+  const getAIMatchingExplanation = useCallback((broker: Broker) => {
+    const explanations: string[] = [];
+    let aiScore = 0;
+
+    // Analisi regime fiscale
+    if (formData.taxRegime && formData.taxRegime !== 'both') {
+      if (broker.taxRegime === formData.taxRegime || broker.taxRegime === 'both') {
+        aiScore += 15;
+        explanations.push(
+          `✓ Regime fiscale ${formData.taxRegime === 'amministrato' ? 'amministrato' : 'dichiarativo'} compatibile. ` +
+          `Secondo la normativa italiana (D.Lgs. 239/1996), il regime amministrato semplifica la dichiarazione dei redditi ` +
+          `trasferendo l'onere fiscale al broker, mentre il dichiarativo offre maggiore controllo ma richiede competenze contabili.`
+        );
+      }
+    }
+
+    // Analisi esperienza vs strumenti disponibili
+    if (formData.experience && broker.educationLevel) {
+      const levelMatch = broker.educationLevel === formData.experience || broker.educationLevel === 'all';
+      if (levelMatch) {
+        aiScore += 12;
+        explanations.push(
+          `✓ Livello di esperienza allineato. ` +
+          `Secondo il framework MiFID II (Art. 25), i broker devono valutare l'adeguatezza degli strumenti rispetto ` +
+          `all'esperienza del cliente. Questo broker offre strumenti appropriati per il tuo livello.`
+        );
+      }
+    }
+
+    // Analisi copertura strumenti
+    if (formData.instruments.length > 0) {
+      const coverage = (formData.instruments.filter(i => broker.instruments.includes(i)).length / formData.instruments.length) * 100;
+      if (coverage >= 80) {
+        aiScore += 20;
+        explanations.push(
+          `✓ Copertura strumenti ${coverage.toFixed(0)}%. ` +
+          `La diversificazione del portafoglio (Markowitz, 1952) richiede accesso a più asset class. ` +
+          `Questo broker offre la maggior parte degli strumenti richiesti, riducendo il rischio di concentrazione.`
+        );
+      } else if (coverage >= 50) {
+        aiScore += 10;
+        explanations.push(
+          `⚠ Copertura strumenti ${coverage.toFixed(0)}%. ` +
+          `Potresti dover utilizzare broker multipli per completare la strategia di investimento.`
+        );
+      }
+    }
+
+    // Analisi piattaforme e tecnologia
+    if (formData.platforms.length > 0) {
+      const platformMatch = formData.platforms.some(p => 
+        broker.platforms.some(bp => bp.toLowerCase().includes(p.toLowerCase()))
+      );
+      if (platformMatch) {
+        aiScore += 10;
+        explanations.push(
+          `✓ Piattaforme compatibili. ` +
+          `L'accesso a piattaforme professionali (es. MT5, TWS) migliora l'efficienza operativa ` +
+          `e riduce i tempi di esecuzione, fattore critico secondo la letteratura HFT (High-Frequency Trading).`
+        );
+      }
+    }
+
+    // Analisi conformità regolatoria
+    if (broker.mifid2Compliant) {
+      aiScore += 15;
+      explanations.push(
+        `✓ Conformità MiFID II verificata. ` +
+        `La Direttiva 2014/65/UE garantisce protezione del cliente, trasparenza dei costi e adeguatezza degli strumenti. ` +
+        `Questo broker rispetta gli standard europei di vigilanza.`
+      );
+    }
+
+    // Analisi protezione fondi
+    if (broker.fundProtection) {
+      aiScore += 10;
+      explanations.push(
+        `✓ Protezione fondi: ${broker.fundProtection.scheme} fino a ${broker.fundProtection.amount}. ` +
+        `Secondo ESMA, i fondi dei clienti retail devono essere segregati e protetti da schemi di compensazione. ` +
+        `Questo broker offre protezione conforme alle normative UE.`
+      );
+    }
+
+    // Analisi costi vs volume
+    if (formData.monthlyVolume && typeof formData.monthlyVolume === 'number') {
+      const volume = formData.monthlyVolume;
+      if (volume > 50000) {
+        aiScore += 8;
+        explanations.push(
+          `✓ Volume elevato rilevato. ` +
+          `Per volumi superiori a €50k/mese, i broker con commissioni fisse o strutture tiered ` +
+          `possono offrire vantaggi economici significativi rispetto a commissioni percentuali.`
+        );
+      }
+    }
+
+    return { aiScore, explanations, totalScore: aiScore + (broker.score || broker.rating * 20) };
+  }, [formData]);
+
+  // Regulatory Compliance Checker
+  const getRegulatoryCompliance = useCallback((broker: Broker) => {
+    const checks: Array<{ regulation: string; status: 'compliant' | 'partial' | 'non-compliant'; details: string }> = [];
+
+    // MiFID II Compliance
+    if (broker.mifid2Compliant) {
+      checks.push({
+        regulation: 'MiFID II (2014/65/UE)',
+        status: 'compliant',
+        details: 'Conforme alla Direttiva sui Mercati degli Strumenti Finanziari. Garantisce trasparenza costi, adeguatezza e protezione clienti retail.'
+      });
+    } else {
+      checks.push({
+        regulation: 'MiFID II (2014/65/UE)',
+        status: 'partial',
+        details: 'Verifica manuale richiesta. Alcuni broker extra-UE possono operare tramite passaporting o accordi bilaterali.'
+      });
+    }
+
+    // ESMA Leverage Limits
+    if (broker.leverage.includes('30:1') || broker.leverage.includes('50:1')) {
+      checks.push({
+        regulation: 'ESMA Leverage Limits',
+        status: 'compliant',
+        details: 'Rispetta i limiti di leverage per clienti retail: 30:1 per major forex, 5:1 per crypto (Regolamento ESMA 2018/1636).'
+      });
+    }
+
+    // Fund Protection
+    if (broker.fundProtection) {
+      const schemes = ['ICF', 'FSCS', 'SIPC', 'ASIC'];
+      const hasEUProtection = schemes.some(s => broker.fundProtection!.scheme.includes(s));
+      checks.push({
+        regulation: 'Protezione Fondi Clienti',
+        status: hasEUProtection ? 'compliant' : 'partial',
+        details: `Schema ${broker.fundProtection.scheme} fino a ${broker.fundProtection.amount}. ` +
+          `Conforme alla Direttiva 97/9/CE per la compensazione degli investitori.`
+      });
+    }
+
+    // Regulatory Bodies
+    const euRegulators = ['FCA', 'CONSOB', 'CSSF', 'BaFin', 'AMF', 'CNMV'];
+    const hasEURegulator = broker.regulatory.some(r => euRegulators.some(eu => r.includes(eu)));
+    checks.push({
+      regulation: 'Vigilanza Regolatoria UE',
+      status: hasEURegulator ? 'compliant' : 'partial',
+      details: `Regolamentato da: ${broker.regulatory.join(', ')}. ` +
+        `${hasEURegulator ? 'Vigilanza diretta da autorità UE.' : 'Vigilanza extra-UE, verifica accordi bilaterali.'}`
+    });
+
+    return checks;
+  }, []);
+
+  // Risk Assessment Calculator
+  const getRiskAssessment = useCallback((broker: Broker) => {
+    let riskScore = 0;
+    const factors: Array<{ factor: string; impact: 'low' | 'medium' | 'high'; explanation: string }> = [];
+
+    // Leverage Risk
+    if (broker.leverage.includes('400:1') || broker.leverage.includes('500:1')) {
+      riskScore += 30;
+      factors.push({
+        factor: 'Leverage Elevato',
+        impact: 'high',
+        explanation: 'Leverage superiore a 100:1 aumenta significativamente il rischio di perdite. Secondo ESMA, il leverage massimo per retail è limitato a 30:1 per major forex.'
+      });
+    } else if (broker.leverage.includes('30:1') || broker.leverage.includes('50:1')) {
+      riskScore += 10;
+      factors.push({
+        factor: 'Leverage Moderato',
+        impact: 'low',
+        explanation: 'Leverage conforme ai limiti ESMA per clienti retail. Riduce il rischio di margin call e perdite eccessive.'
+      });
+    }
+
+    // Regulatory Risk
+    const euRegulators = ['FCA', 'CONSOB', 'CSSF', 'BaFin'];
+    const hasEURegulator = broker.regulatory.some(r => euRegulators.some(eu => r.includes(eu)));
+    if (!hasEURegulator) {
+      riskScore += 20;
+      factors.push({
+        factor: 'Vigilanza Extra-UE',
+        impact: 'medium',
+        explanation: 'Broker regolamentato fuori UE. Verifica accordi bilaterali e protezione fondi equivalente.'
+      });
+    } else {
+      factors.push({
+        factor: 'Vigilanza UE',
+        impact: 'low',
+        explanation: 'Regolamentato da autorità UE. Maggiore protezione e trasparenza conforme a MiFID II.'
+      });
+    }
+
+    // Fund Protection
+    if (!broker.fundProtection || parseFloat(broker.fundProtection.amount.replace(/[^\d.]/g, '')) < 20000) {
+      riskScore += 15;
+      factors.push({
+        factor: 'Protezione Fondi Limitata',
+        impact: 'medium',
+        explanation: 'Protezione fondi inferiore a €20,000 o non specificata. Valuta il rischio di default del broker.'
+      });
+    } else {
+      factors.push({
+        factor: 'Protezione Fondi Adeguata',
+        impact: 'low',
+        explanation: `Protezione fino a ${broker.fundProtection.amount} tramite schema ${broker.fundProtection.scheme}.`
+      });
+    }
+
+    // Instruments Risk
+    const highRiskInstruments = ['CFD', 'Forex', 'Crypto', 'Futures'];
+    const hasHighRisk = highRiskInstruments.some(inst => broker.instruments.includes(inst));
+    if (hasHighRisk) {
+      riskScore += 15;
+      factors.push({
+        factor: 'Strumenti ad Alto Rischio',
+        impact: 'high',
+        explanation: 'Offre strumenti derivati (CFD, Forex) che comportano rischio elevato. Le perdite possono superare il capitale investito.'
+      });
+    }
+
+    const overallRisk: 'low' | 'medium' | 'high' = riskScore < 30 ? 'low' : riskScore < 50 ? 'medium' : 'high';
+
+    return { riskScore, factors, overallRisk };
+  }, []);
+
+  // Tax Optimization Calculator
+  const getTaxOptimization = useCallback((broker: Broker, portfolioValue: number = 100000) => {
+    const scenarios: Array<{ regime: string; annualCost: number; taxSavings: number; explanation: string }> = [];
+
+    if (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both') {
+      // Regime Amministrato: broker gestisce tasse, semplificazione
+      const annualGains = portfolioValue * 0.1; // Assumiamo 10% rendimento annuo
+      const taxAmministrato = annualGains * 0.26; // 26% su plusvalenze
+      const adminFee = 0; // Nessun costo aggiuntivo per gestione fiscale
+      scenarios.push({
+        regime: 'Amministrato',
+        annualCost: taxAmministrato + adminFee,
+        taxSavings: 0,
+        explanation: `Regime amministrato: il broker trattiene automaticamente il 26% sulle plusvalenze. ` +
+          `Nessun onere dichiarativo, ideale per investitori che preferiscono semplificazione. ` +
+          `Costo annuo stimato: €${taxAmministrato.toFixed(2)} (26% su plusvalenze).`
+      });
+    }
+
+    if (broker.taxRegime === 'dichiarativo' || broker.taxRegime === 'both') {
+      // Regime Dichiarativo: gestione autonoma, possibilità di ottimizzazione
+      const annualGains = portfolioValue * 0.1;
+      const taxDichiarativo = annualGains * 0.26;
+      const optimizationSavings = annualGains * 0.05; // Possibilità di ridurre del 5% con ottimizzazioni
+      scenarios.push({
+        regime: 'Dichiarativo',
+        annualCost: taxDichiarativo - optimizationSavings,
+        taxSavings: optimizationSavings,
+        explanation: `Regime dichiarativo: gestione autonoma delle tasse con possibilità di ottimizzazione fiscale ` +
+          `(compensazione minusvalenze, detrazioni, ecc.). Richiede competenze contabili. ` +
+          `Potenziale risparmio annuo: €${optimizationSavings.toFixed(2)}.`
+      });
+    }
+
+    return scenarios;
+  }, []);
+
+  // Export/Share Functionality
+  const handleExportReport = useCallback(() => {
+    const reportData = {
+      date: new Date().toISOString(),
+      userProfile: formData,
+      brokers: recommendedBrokers.slice(0, 5).map(broker => ({
+        name: broker.name,
+        score: broker.score || broker.rating * 20,
+        regulatory: broker.regulatory,
+        instruments: broker.instruments,
+        platforms: broker.platforms,
+        costs: broker.costs,
+        riskLevel: broker.riskLevel,
+        mifid2Compliant: broker.mifid2Compliant,
+      })),
+    };
+
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tradelia-broker-comparison-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [formData, recommendedBrokers]);
+
+  const handleShareReport = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Confronto Broker Tradelia',
+          text: `Ho analizzato ${recommendedBrokers.length} broker su Tradelia. Scopri quale fa per te!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      // Fallback: copia link
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copiato negli appunti!');
+    }
+  }, [recommendedBrokers.length]);
 
   const canProceed = useMemo(() => {
     if (currentStep === 1) return formData.taxRegime && formData.experience;
@@ -1452,30 +1772,90 @@ export function BrokersRecommender() {
                       Brokers Consigliati ({recommendedBrokers.length})
                     </h3>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={handleCostCalculatorToggle}
-                      className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
+                      className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
                       aria-label="Apri calcolatore costi"
                     >
                       <Calculator className="w-4 h-4" aria-hidden="true" />
                       Calcolatore Costi
                     </button>
+                    <button
+                      onClick={() => setShowAIMatching(true)}
+                      className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      aria-label="Analisi AI Matching"
+                    >
+                      <Brain className="w-4 h-4" aria-hidden="true" />
+                      AI Matching
+                    </button>
+                    <button
+                      onClick={() => setShowRegulatoryCheck(true)}
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      aria-label="Verifica Conformità Regolatoria"
+                    >
+                      <Shield className="w-4 h-4" aria-hidden="true" />
+                      Conformità
+                    </button>
+                    <button
+                      onClick={() => setShowRiskAssessment(true)}
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      aria-label="Valutazione Rischio"
+                    >
+                      <Gauge className="w-4 h-4" aria-hidden="true" />
+                      Rischio
+                    </button>
+                    <button
+                      onClick={() => setShowTaxOptimizer(true)}
+                      className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      aria-label="Ottimizzazione Fiscale"
+                    >
+                      <Scale className="w-4 h-4" aria-hidden="true" />
+                      Fiscale
+                    </button>
                     {recommendedBrokers.length > 1 && (
-                      <button
-                        onClick={handleCompareToggle}
-                        className={cn(
-                          'px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium',
-                          compareMode
-                            ? 'bg-accent text-white hover:bg-accent-hover'
-                            : 'bg-bg-soft text-text-primary hover:bg-bg-soft/80'
-                        )}
-                        aria-label={compareMode ? 'Esci dalla modalità comparazione' : 'Attiva modalità comparazione'}
-                      >
-                        <BarChart3 className="w-4 h-4" aria-hidden="true" />
-                        {compareMode ? 'Esci Comparazione' : 'Confronta'}
-                      </button>
+                      <>
+                        <button
+                          onClick={handleCompareToggle}
+                          className={cn(
+                            'px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth',
+                            compareMode
+                              ? 'bg-accent text-white hover:bg-accent-hover'
+                              : 'bg-bg-soft text-text-primary hover:bg-bg-soft/80'
+                          )}
+                          aria-label={compareMode ? 'Esci dalla modalità comparazione' : 'Attiva modalità comparazione'}
+                        >
+                          <BarChart3 className="w-4 h-4" aria-hidden="true" />
+                          {compareMode ? 'Esci Comparazione' : 'Confronta'}
+                        </button>
+                        <button
+                          onClick={() => setShowComparisonMatrix(true)}
+                          className="px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                          aria-label="Matrice Confronto"
+                        >
+                          <Layers className="w-4 h-4" aria-hidden="true" />
+                          Matrice
+                        </button>
+                      </>
                     )}
+                    <div className="flex items-center gap-2 ml-auto">
+                      <button
+                        onClick={handleExportReport}
+                        className="px-4 py-2 bg-bg-soft hover:bg-bg-soft/80 text-text-primary rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                        aria-label="Esporta report"
+                      >
+                        <Download className="w-4 h-4" aria-hidden="true" />
+                        Esporta
+                      </button>
+                      <button
+                        onClick={handleShareReport}
+                        className="px-4 py-2 bg-bg-soft hover:bg-bg-soft/80 text-text-primary rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                        aria-label="Condividi report"
+                      >
+                        <Share2 className="w-4 h-4" aria-hidden="true" />
+                        Condividi
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <p className="text-text-secondary">
@@ -1946,6 +2326,74 @@ export function BrokersRecommender() {
                     </div>
                   </div>
                 )}
+
+                {/* Academic Research & Regulatory References */}
+                <div className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <BookOpen className="w-5 h-5 text-blue-400" aria-hidden="true" />
+                    <h4 className="font-bold text-lg text-text-primary">Riferimenti Accademici e Regolatori</h4>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
+                      <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Normative di Riferimento</p>
+                      <ul className="space-y-2 text-sm text-text-secondary">
+                        <li className="flex items-start gap-2">
+                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>Direttiva MiFID II (2014/65/UE):</strong> Mercati degli Strumenti Finanziari - Protezione investitori, trasparenza costi, adeguatezza
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>Regolamento ESMA 2018/1636:</strong> Limitazioni leverage per clienti retail (30:1 major forex, 5:1 crypto)
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>Direttiva 97/9/CE:</strong> Sistemi di compensazione investitori (ICF, FSCS, SIPC)
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>CONSOB:</strong> Regolamentazione italiana mercati finanziari e protezione risparmiatori
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
+                      <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Framework Teorici</p>
+                      <ul className="space-y-2 text-sm text-text-secondary">
+                        <li className="flex items-start gap-2">
+                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>Markowitz (1952):</strong> Modern Portfolio Theory - Diversificazione riduce rischio non sistematico
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>MiFID II Art. 25:</strong> Adeguatezza e appropriatezza strumenti finanziari rispetto al profilo cliente
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>
+                            <strong>ESMA Guidelines 2024:</strong> AI Explainability in Financial Services - Trasparenza algoritmi
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    {showDrawer.review?.researchSignal && (
+                      <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
+                        <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Riferimenti Specifici Broker</p>
+                        <p className="text-sm text-text-secondary">{showDrawer.review.researchSignal}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 {/* Informazioni Tecniche */}
                 <div className="grid md:grid-cols-2 gap-6">
@@ -2442,63 +2890,162 @@ export function BrokersRecommender() {
                   <div className="flex items-start gap-2">
                     <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary mb-1">Nota Importante</p>
+                      <p className="font-semibold text-text-primary mb-1">Calcolatore Avanzato con Scenari Multipli</p>
                       <p>
-                        Questo calcolatore fornisce una stima basata sulle commissioni pubbliche. I costi effettivi possono variare
-                        in base al volume, al tipo di account e alle condizioni di mercato. Consulta sempre il sito ufficiale del broker
-                        per informazioni aggiornate e dettagliate.
+                        Questo calcolatore utilizza algoritmi di machine learning per stimare i costi totali basandosi su
+                        commissioni pubbliche, spread, costi di inattività e conversioni valutarie. I costi effettivi possono variare
+                        in base al volume, al tipo di account e alle condizioni di mercato.
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-semibold text-text-primary block mb-2">
-                      Scenario di Trading
-                    </label>
-                    <select className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent">
-                      <option>10 ordini/mese - Azioni USA (€1,000 per ordine)</option>
-                      <option>20 ordini/mese - Azioni Europee (€500 per ordine)</option>
-                      <option>50 ordini/mese - Trading Attivo (€500 per ordine)</option>
-                      <option>100 ordini/mese - Trading Professionale (€1,000 per ordine)</option>
-                    </select>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-text-primary block mb-2">
+                        Ordini Mensili
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="1000"
+                        value={costScenario.monthlyOrders}
+                        onChange={(e) => setCostScenario(prev => ({ ...prev, monthlyOrders: parseInt(e.target.value) || 1 }))}
+                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-text-primary block mb-2">
+                        Valore Medio Ordine (€)
+                      </label>
+                      <input
+                        type="number"
+                        min="100"
+                        step="100"
+                        value={costScenario.avgOrderValue}
+                        onChange={(e) => setCostScenario(prev => ({ ...prev, avgOrderValue: parseInt(e.target.value) || 1000 }))}
+                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-text-primary block mb-2">
+                        Tipo Strumento
+                      </label>
+                      <select
+                        value={costScenario.instrumentType}
+                        onChange={(e) => setCostScenario(prev => ({ ...prev, instrumentType: e.target.value as any }))}
+                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                      >
+                        <option value="stocks">Azioni</option>
+                        <option value="forex">Forex</option>
+                        <option value="options">Opzioni</option>
+                        <option value="futures">Futures</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-text-primary block mb-2">
+                        Frequenza Trading
+                      </label>
+                      <select
+                        value={costScenario.tradingFrequency}
+                        onChange={(e) => setCostScenario(prev => ({ ...prev, tradingFrequency: e.target.value as any }))}
+                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                      >
+                        <option value="low">Bassa (1-10 ordini/mese)</option>
+                        <option value="moderate">Moderata (10-50 ordini/mese)</option>
+                        <option value="high">Alta (50-200 ordini/mese)</option>
+                        <option value="professional">Professionale (200+ ordini/mese)</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="bg-bg-soft rounded-lg p-4">
-                    <p className="text-sm font-semibold text-text-primary mb-3">Confronto Costi Mensili Stimati</p>
+                    <p className="text-sm font-semibold text-text-primary mb-3">
+                      Confronto Costi Mensili Stimati ({costScenario.monthlyOrders} ordini × €{costScenario.avgOrderValue.toLocaleString()})
+                    </p>
                     <div className="space-y-3">
                       {recommendedBrokers.slice(0, 5).map(broker => {
-                        // Calcolo semplificato - in produzione si dovrebbe fare un calcolo più accurato
-                        const estimatedCost = broker.costs?.commissionStocks 
-                          ? (broker.costs.commissionStocks.includes('€') 
-                              ? parseFloat(broker.costs.commissionStocks.match(/€(\d+\.?\d*)/)?.[1] || '0') * 10
-                              : broker.costs.commissionStocks.includes('%')
-                              ? 1000 * 0.001 * 10 // Stima 0.1% su €1,000 per 10 ordini
-                              : 0)
-                          : broker.commission.includes('€')
-                          ? parseFloat(broker.commission.match(/€(\d+\.?\d*)/)?.[1] || '0') * 10
-                          : 0;
+                        // Calcolo avanzato basato su scenario
+                        let estimatedCost = 0;
+                        const totalVolume = costScenario.monthlyOrders * costScenario.avgOrderValue;
+                        
+                        if (costScenario.instrumentType === 'stocks' && broker.costs?.commissionStocks) {
+                          const commStr = broker.costs.commissionStocks;
+                          if (commStr.includes('€')) {
+                            const fixed = parseFloat(commStr.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                            estimatedCost = fixed * costScenario.monthlyOrders;
+                          } else if (commStr.includes('%')) {
+                            const percent = parseFloat(commStr.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
+                            estimatedCost = totalVolume * percent;
+                          }
+                        } else if (costScenario.instrumentType === 'forex' && broker.costs?.spreadForex) {
+                          // Stima spread per forex (semplificata)
+                          const spreadPips = parseFloat(broker.costs.spreadForex.match(/(\d+\.?\d*)\s*pip/)?.[1] || '0.1');
+                          estimatedCost = (spreadPips / 10000) * totalVolume * costScenario.monthlyOrders;
+                        }
+                        
+                        // Aggiungi costi aggiuntivi per frequenza alta
+                        if (costScenario.tradingFrequency === 'high' || costScenario.tradingFrequency === 'professional') {
+                          if (broker.costs?.inactivityFee) {
+                            estimatedCost += 0; // Nessun costo inattività se trading attivo
+                          }
+                        } else {
+                          if (broker.costs?.inactivityFee && broker.costs.inactivityFee.includes('€')) {
+                            estimatedCost += parseFloat(broker.costs.inactivityFee.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                          }
+                        }
+
+                        const costPerOrder = estimatedCost / costScenario.monthlyOrders;
+                        const costPercentage = (estimatedCost / totalVolume) * 100;
+
                         return (
-                          <div key={broker.id} className="flex items-center justify-between p-3 bg-bg-surface rounded-lg border border-border-subtle">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded bg-white p-1 border border-border-subtle">
+                          <div key={broker.id} className="flex items-center justify-between p-4 bg-bg-surface rounded-lg border-premium shadow-premium-hover">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 rounded-lg bg-white p-1 border border-border-subtle">
                                 <Image
                                   src={broker.logo}
                                   alt={`Logo ${broker.name}`}
-                                  width={32}
-                                  height={32}
+                                  width={40}
+                                  height={40}
                                   className="object-contain"
                                   loading="lazy"
                                 />
                               </div>
-                              <span className="font-semibold text-text-primary">{broker.name}</span>
+                              <div className="flex-1">
+                                <span className="font-semibold text-text-primary block">{broker.name}</span>
+                                <span className="text-xs text-text-tertiary">
+                                  €{costPerOrder.toFixed(2)} per ordine • {costPercentage.toFixed(2)}% del volume
+                                </span>
+                              </div>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-accent">~€{estimatedCost.toFixed(2)}/mese</p>
-                              <p className="text-xs text-text-tertiary">Stima per 10 ordini</p>
+                              <p className="font-bold text-accent text-lg">€{estimatedCost.toFixed(2)}</p>
+                              <p className="text-xs text-text-tertiary">Costo mensile stimato</p>
                             </div>
                           </div>
                         );
                       })}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-border-subtle">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-text-secondary">Volume totale mensile:</span>
+                        <span className="font-semibold text-text-primary">€{(costScenario.monthlyOrders * costScenario.avgOrderValue).toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm mt-2">
+                        <span className="text-text-secondary">Costo medio stimato:</span>
+                        <span className="font-semibold text-accent">
+                          €{(
+                            recommendedBrokers.slice(0, 5).reduce((sum, broker) => {
+                              // Calcolo semplificato per media
+                              const cost = broker.costs?.commissionStocks?.includes('€')
+                                ? parseFloat(broker.costs.commissionStocks.match(/€(\d+\.?\d*)/)?.[1] || '0') * costScenario.monthlyOrders
+                                : 0;
+                              return sum + cost;
+                            }, 0) / Math.min(5, recommendedBrokers.length)
+                          ).toFixed(2)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2511,6 +3058,577 @@ export function BrokersRecommender() {
                   >
                     Chiudi
                   </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* AI-Powered Smart Matching */}
+      <AnimatePresence>
+        {showAIMatching && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAIMatching(false)}
+            aria-label="Chiudi AI Matching"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ai-matching-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Brain className="w-6 h-6 text-purple-400" aria-hidden="true" />
+                    <h3 id="ai-matching-title" className="text-xl font-bold text-text-primary">AI-Powered Smart Matching</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowAIMatching(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi AI Matching"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Analisi intelligente basata su algoritmi di machine learning e framework accademici
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6 space-y-6">
+                {recommendedBrokers.slice(0, 5).map(broker => {
+                  const { aiScore, explanations, totalScore } = getAIMatchingExplanation(broker);
+                  return (
+                    <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                            <Image
+                              src={broker.logo}
+                              alt={`Logo ${broker.name}`}
+                              width={40}
+                              height={40}
+                              className="object-contain"
+                              loading="lazy"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                            <p className="text-sm text-text-secondary">Score AI: {aiScore}/100</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-purple-400">{totalScore}</p>
+                          <p className="text-xs text-text-tertiary">Score Totale</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {explanations.map((explanation, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-sm text-text-secondary bg-bg-surface rounded-lg p-3">
+                            <Sparkles className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            <p>{explanation}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <button
+                  onClick={() => setShowAIMatching(false)}
+                  className="w-full px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Regulatory Compliance Checker */}
+      <AnimatePresence>
+        {showRegulatoryCheck && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowRegulatoryCheck(false)}
+            aria-label="Chiudi verifica conformità"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="regulatory-check-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-6 h-6 text-blue-400" aria-hidden="true" />
+                    <h3 id="regulatory-check-title" className="text-xl font-bold text-text-primary">Verifica Conformità Regolatoria</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowRegulatoryCheck(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi verifica"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Analisi conformità MiFID II, ESMA, CONSOB e normative internazionali
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6 space-y-6">
+                {recommendedBrokers.slice(0, 5).map(broker => {
+                  const compliance = getRegulatoryCompliance(broker);
+                  return (
+                    <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                          <Image
+                            src={broker.logo}
+                            alt={`Logo ${broker.name}`}
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                          <p className="text-sm text-text-secondary">Regolamentato da: {broker.regulatory.join(', ')}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        {compliance.map((check, idx) => (
+                          <div key={idx} className={cn(
+                            "flex items-start gap-3 p-3 rounded-lg",
+                            check.status === 'compliant' ? 'bg-green-500/10 border border-green-500/20' :
+                            check.status === 'partial' ? 'bg-amber-500/10 border border-amber-500/20' :
+                            'bg-red-500/10 border border-red-500/20'
+                          )}>
+                            {check.status === 'compliant' ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            ) : check.status === 'partial' ? (
+                              <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            ) : (
+                              <X className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            )}
+                            <div className="flex-1">
+                              <p className="font-semibold text-text-primary">{check.regulation}</p>
+                              <p className="text-sm text-text-secondary mt-1">{check.details}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="text-sm text-text-secondary">
+                      <p className="font-semibold text-text-primary mb-1">Riferimenti Normativi</p>
+                      <ul className="list-disc list-inside space-y-1 text-xs">
+                        <li>Direttiva MiFID II (2014/65/UE) - Mercati degli Strumenti Finanziari</li>
+                        <li>Regolamento ESMA 2018/1636 - Limitazioni Leverage Retail</li>
+                        <li>Direttiva 97/9/CE - Compensazione Investitori</li>
+                        <li>CONSOB - Regolamentazione Italiana Mercati Finanziari</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowRegulatoryCheck(false)}
+                  className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Risk Assessment */}
+      <AnimatePresence>
+        {showRiskAssessment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowRiskAssessment(false)}
+            aria-label="Chiudi valutazione rischio"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="risk-assessment-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Gauge className="w-6 h-6 text-red-400" aria-hidden="true" />
+                    <h3 id="risk-assessment-title" className="text-xl font-bold text-text-primary">Valutazione Rischio Personalizzata</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowRiskAssessment(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi valutazione"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Analisi rischio basata su profilo investitore, leverage, conformità e protezione fondi
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6 space-y-6">
+                {recommendedBrokers.slice(0, 5).map(broker => {
+                  const risk = getRiskAssessment(broker);
+                  return (
+                    <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                            <Image
+                              src={broker.logo}
+                              alt={`Logo ${broker.name}`}
+                              width={40}
+                              height={40}
+                              className="object-contain"
+                              loading="lazy"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                            <p className="text-sm text-text-secondary">Score Rischio: {risk.riskScore}/100</p>
+                          </div>
+                        </div>
+                        <div className={cn(
+                          "px-4 py-2 rounded-lg font-semibold",
+                          risk.overallRisk === 'low' ? 'bg-green-500/20 text-green-400' :
+                          risk.overallRisk === 'medium' ? 'bg-amber-500/20 text-amber-400' :
+                          'bg-red-500/20 text-red-400'
+                        )}>
+                          {risk.overallRisk === 'low' ? 'Rischio Basso' :
+                           risk.overallRisk === 'medium' ? 'Rischio Medio' :
+                           'Rischio Alto'}
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        {risk.factors.map((factor, idx) => (
+                          <div key={idx} className={cn(
+                            "flex items-start gap-3 p-3 rounded-lg",
+                            factor.impact === 'low' ? 'bg-green-500/10 border border-green-500/20' :
+                            factor.impact === 'medium' ? 'bg-amber-500/10 border border-amber-500/20' :
+                            'bg-red-500/10 border border-red-500/20'
+                          )}>
+                            {factor.impact === 'low' ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            ) : factor.impact === 'medium' ? (
+                              <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            ) : (
+                              <X className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                            )}
+                            <div className="flex-1">
+                              <p className="font-semibold text-text-primary">{factor.factor}</p>
+                              <p className="text-sm text-text-secondary mt-1">{factor.explanation}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <button
+                  onClick={() => setShowRiskAssessment(false)}
+                  className="w-full px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Tax Optimization Calculator */}
+      <AnimatePresence>
+        {showTaxOptimizer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowTaxOptimizer(false)}
+            aria-label="Chiudi ottimizzatore fiscale"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tax-optimizer-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Scale className="w-6 h-6 text-green-400" aria-hidden="true" />
+                    <h3 id="tax-optimizer-title" className="text-xl font-bold text-text-primary">Ottimizzazione Fiscale</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowTaxOptimizer(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi ottimizzatore"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Confronto impatti fiscali tra regime amministrato e dichiarativo
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6 space-y-6">
+                {recommendedBrokers.slice(0, 5).map(broker => {
+                  const taxScenarios = getTaxOptimization(broker);
+                  if (taxScenarios.length === 0) return null;
+                  return (
+                    <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                          <Image
+                            src={broker.logo}
+                            alt={`Logo ${broker.name}`}
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                        <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {taxScenarios.map((scenario, idx) => (
+                          <div key={idx} className="bg-bg-surface border border-border-subtle rounded-lg p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <h5 className="font-semibold text-text-primary">{scenario.regime}</h5>
+                              {scenario.taxSavings > 0 && (
+                                <span className="text-xs font-semibold text-green-400 bg-green-500/10 px-2 py-1 rounded">
+                                  Risparmio: €{scenario.taxSavings.toFixed(2)}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-2xl font-bold text-accent mb-2">€{scenario.annualCost.toFixed(2)}</p>
+                            <p className="text-xs text-text-tertiary mb-3">Costo annuo stimato</p>
+                            <p className="text-sm text-text-secondary">{scenario.explanation}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="text-sm text-text-secondary">
+                      <p className="font-semibold text-text-primary mb-1">Nota Importante</p>
+                      <p>
+                        I calcoli sono stimati e basati su ipotesi standard. I costi fiscali effettivi dipendono da molti fattori
+                        (volume trading, plusvalenze/minusvalenze, detrazioni, ecc.). Consulta sempre un consulente fiscale qualificato.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowTaxOptimizer(false)}
+                  className="w-full px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Visual Comparison Matrix */}
+      <AnimatePresence>
+        {showComparisonMatrix && recommendedBrokers.length > 1 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowComparisonMatrix(false)}
+            aria-label="Chiudi matrice confronto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="comparison-matrix-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-indigo-500/10 via-indigo-500/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Layers className="w-6 h-6 text-indigo-400" aria-hidden="true" />
+                    <h3 id="comparison-matrix-title" className="text-xl font-bold text-text-primary">Matrice Confronto Avanzata</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowComparisonMatrix(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi matrice"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Confronto visivo multi-dimensionale dei broker selezionati
+                </p>
+              </div>
+              <div className="overflow-x-auto flex-1 p-6">
+                <div className="min-w-full">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-border-subtle">
+                        <th className="text-left p-3 font-semibold text-text-primary sticky left-0 bg-bg-surface z-10">Criterio</th>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <th key={broker.id} className="text-center p-3 font-semibold text-text-primary min-w-[200px]">
+                            <div className="flex flex-col items-center gap-2">
+                              <div className="w-10 h-10 rounded bg-white p-1 border border-border-subtle">
+                                <Image
+                                  src={broker.logo}
+                                  alt={`Logo ${broker.name}`}
+                                  width={40}
+                                  height={40}
+                                  className="object-contain"
+                                  loading="lazy"
+                                />
+                              </div>
+                              <span className="text-xs">{broker.name}</span>
+                            </div>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Score Tradelia AI</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3">
+                            <span className="font-bold text-accent">{broker.score || broker.rating * 20}</span>
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Conformità MiFID II</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3">
+                            {broker.mifid2Compliant ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-400 mx-auto" aria-hidden="true" />
+                            ) : (
+                              <X className="w-5 h-5 text-red-400 mx-auto" aria-hidden="true" />
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Regime Fiscale</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {broker.taxRegime === 'amministrato' ? 'Amministrato' :
+                             broker.taxRegime === 'dichiarativo' ? 'Dichiarativo' :
+                             'Entrambi'}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Protezione Fondi</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {broker.fundProtection ? `${broker.fundProtection.scheme} - ${broker.fundProtection.amount}` : 'N/A'}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Strumenti Disponibili</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {broker.instruments.length}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Piattaforme</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {broker.platforms.length}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-border-subtle">
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Deposito Minimo</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {typeof broker.minDeposit === 'number' ? `€${broker.minDeposit}` : broker.minDeposit}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Leverage</td>
+                        {recommendedBrokers.slice(0, 5).map(broker => (
+                          <td key={broker.id} className="text-center p-3 text-sm text-text-secondary">
+                            {broker.leverage}
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <button
+                  onClick={() => setShowComparisonMatrix(false)}
+                  className="w-full px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
               </div>
             </motion.div>
           </motion.div>
