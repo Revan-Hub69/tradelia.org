@@ -709,12 +709,10 @@ interface FormData {
   supportChannels?: string[]; // Canali preferiti (Email, Chat, Telefono)
 }
 
+// Semplificato: solo 2 step essenziali
 const STEPS = [
-  { id: 1, title: 'Profilo Investitore', icon: Target },
-  { id: 2, title: 'Obiettivi di Investimento', icon: TrendingUp },
-  { id: 3, title: 'Preferenze Tecniche', icon: Settings },
-  { id: 4, title: 'Budget e Supporto', icon: DollarSign },
-  { id: 5, title: 'Risultati', icon: Award },
+  { id: 1, title: 'Preferenze', icon: Target },
+  { id: 2, title: 'Risultati', icon: Award },
 ] as const;
 
 export function BrokersRecommender() {
@@ -1181,18 +1179,16 @@ export function BrokersRecommender() {
   }, [recommendedBrokers.length]);
 
   const canProceed = useMemo(() => {
-    if (currentStep === 1) return formData.taxRegime && formData.experience;
-    if (currentStep === 2) return formData.instruments.length > 0;
-    if (currentStep === 3) return true;
-    if (currentStep === 4) return true; // Step budget/supporto è opzionale
+    // Step 1: almeno regime fiscale o esperienza (opzionali, ma meglio avere qualcosa)
+    if (currentStep === 1) return true; // Tutto opzionale per approccio publisher
     return false;
-  }, [currentStep, formData.taxRegime, formData.experience, formData.instruments.length]);
+  }, [currentStep]);
 
   const nextStep = useCallback(() => {
-    if (canProceed && currentStep < 5) {
+    if (currentStep < 2) {
       setCurrentStep(prev => prev + 1);
     }
-  }, [canProceed, currentStep]);
+  }, [currentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -1455,91 +1451,40 @@ export function BrokersRecommender() {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {currentStep === 2 && (
-            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
-              <div>
-                <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-accent" aria-hidden="true" />
-                  Obiettivi di Investimento
-                </h3>
-                <p className="text-text-secondary">
-                  Seleziona gli strumenti finanziari che desideri tradare. Puoi selezionare più opzioni.
-                </p>
-              </div>
-
-              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-4">
-                <div className="flex items-start gap-2">
-                  <FileText className="w-5 h5 text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                  <div className="space-y-2 text-sm text-text-secondary">
-                    <p className="font-semibold text-text-primary">Diversificazione Portafoglio - Teoria Moderna</p>
-                    <p>
-                      Secondo il Modello di Markowitz (1952) e le linee guida MiFID II, la diversificazione riduce il rischio non sistematico.
-                      La selezione degli strumenti deve allinearsi al tuo profilo di rischio e obiettivi di investimento.
-                    </p>
-                    <p>
-                      <strong>Nota:</strong> Gli strumenti derivati (Opzioni, Futures, CFD) comportano rischi elevati e possono comportare
-                      perdite superiori al capitale investito. Conforme all'Art. 25 MiFID II, è richiesta adeguata valutazione dell'adeguatezza.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 spacing-mobile">
-                {availableInstruments.map(instrument => {
-                  const isSelected = formData.instruments.includes(instrument);
-                  return (
-                    <button
-                      key={instrument}
-                      onClick={() => handleInstrumentToggle(instrument)}
-                      className={cn(
-                        'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm font-medium relative underline-selection',
-                        isSelected
-                          ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
-                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
-                      )}
-                      aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} ${instrument}`}
-                      aria-pressed={isSelected}
-                    >
-                      {isSelected && (
-                        <CheckCircle2 className="w-4 h-4 absolute top-1 right-1 text-accent" aria-hidden="true" />
-                      )}
-                      {instrument}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {formData.instruments.length > 0 && (
-                <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
-                  <p className="text-sm text-text-secondary">
-                    <strong>Strumenti selezionati:</strong> {formData.instruments.join(', ')}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {currentStep === 3 && (
-            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
-              <div>
-                <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-accent" aria-hidden="true" />
-                  Preferenze Tecniche
-                </h3>
-                <p className="text-text-secondary">
-                  Definisci le tue preferenze per piattaforme, deposito minimo e leverage
-                </p>
-              </div>
-
-              {/* Piattaforme */}
-              <div>
+              
+              {/* Sezione 2: Strumenti - Inline */}
+              <div className="mt-6">
                 <label className="text-sm font-semibold text-text-primary block mb-3">
-                  Piattaforme Preferite (opzionale)
+                  Strumenti di Interesse (Opzionale)
                 </label>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 spacing-mobile">
+                  {availableInstruments.map(instrument => {
+                    const isSelected = formData.instruments.includes(instrument);
+                    return (
+                      <button
+                        key={instrument}
+                        onClick={() => handleInstrumentToggle(instrument)}
+                        className={cn(
+                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm',
+                          isSelected
+                            ? 'bg-accent/20 border-accent text-accent font-semibold shadow-premium-hover'
+                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
+                        )}
+                        aria-pressed={isSelected}
+                      >
+                        {instrument}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Sezione 3: Piattaforme - Inline */}
+              <div className="mt-6">
+                <label className="text-sm font-semibold text-text-primary block mb-3">
+                  Piattaforme Preferite (Opzionale)
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 spacing-mobile">
                   {availablePlatforms.map(platform => {
                     const isSelected = formData.platforms.includes(platform);
                     return (
@@ -1547,12 +1492,11 @@ export function BrokersRecommender() {
                         key={platform}
                         onClick={() => handlePlatformToggle(platform)}
                         className={cn(
-                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
+                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm',
                           isSelected
-                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
+                            ? 'bg-accent/20 border-accent text-accent font-semibold shadow-premium-hover'
+                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
-                        aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} ${platform}`}
                         aria-pressed={isSelected}
                       >
                         {platform}
@@ -1561,211 +1505,10 @@ export function BrokersRecommender() {
                   })}
                 </div>
               </div>
-
-              {/* Deposito Minimo */}
-              <div>
-                <label className="text-sm font-semibold text-text-primary block mb-2">
-                  Deposito Minimo Massimo (€) - Opzionale
-                </label>
-                <input
-                  type="number"
-                  value={formData.minDeposit}
-                  onChange={(e) => handleMinDepositChange(e.target.value)}
-                  placeholder="Es: 1000"
-                  className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                  aria-label="Inserisci deposito minimo massimo desiderato in euro"
-                />
-              </div>
-
-              {/* Leverage */}
-              <div>
-                <label className="text-sm font-semibold text-text-primary block mb-3">
-                  Leverage Desiderato (opzionale)
-                </label>
-                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-4">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <div className="space-y-2 text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary">Avviso Rischio - Leverage</p>
-                      <p>
-                        <strong>IMPORTANTE - Conformità MiFID II Art. 25:</strong> Il trading con leverage comporta rischi elevati.
-                        Secondo ESMA, il leverage massimo per clienti retail è limitato (es. 30:1 per major forex, 5:1 per crypto).
-                        Le perdite possono superare il capitale investito.
-                      </p>
-                      <p>
-                        <strong>Nota:</strong> I broker regolamentati UE applicano automaticamente i limiti ESMA per clienti retail.
-                        I clienti professionali possono accedere a leverage più elevato previa adeguata valutazione.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {(['low', 'medium', 'high'] as const).map(lev => (
-                    <button
-                      key={lev}
-                      onClick={() => handleLeverageSelect(lev)}
-                      className={cn(
-                        'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
-                        formData.leverage === lev
-                          ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
-                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
-                      )}
-                      aria-label={`Seleziona leverage ${lev}`}
-                      aria-pressed={formData.leverage === lev}
-                    >
-                      <div className="font-semibold mb-1">
-                        {lev === 'low' ? 'Basso (fino a 30:1)' : lev === 'medium' ? 'Medio (fino a 200:1)' : 'Alto (fino a 500:1)'}
-                      </div>
-                      <div className="text-xs">
-                        {lev === 'low' && 'Conforme limiti ESMA retail'}
-                        {lev === 'medium' && 'Per trader esperti'}
-                        {lev === 'high' && 'Solo clienti professionali'}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
 
-          {currentStep === 4 && (
-            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
-              <div>
-                <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-accent" aria-hidden="true" />
-                  Budget e Preferenze Supporto
-                </h3>
-                <p className="text-text-secondary">
-                  Definisci il tuo volume di trading mensile e le preferenze per il supporto clienti (opzionale)
-                </p>
-              </div>
-
-              {/* Volume Mensile */}
-              <div>
-                <label className="text-sm font-semibold text-text-primary block mb-3">
-                  Volume di Trading Mensile Stimato (€) - Opzionale
-                </label>
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
-                  <div className="flex items-start gap-2">
-                    <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <div className="space-y-2 text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary">Spiegazione - Volume di Trading</p>
-                      <p>
-                        Il volume mensile di trading influisce sui costi totali. Broker con commissioni fisse (es. €1/ordine)
-                        sono più convenienti per volumi bassi, mentre broker con commissioni percentuali possono essere
-                        più costosi per volumi elevati. Questo dato ci aiuta a calcolare i costi stimati mensili.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="number"
-                  value={formData.monthlyVolume}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const numValue = value === '' ? '' : Number(value);
-                    // Validazione: solo numeri positivi, max €10M
-                    if (value === '' || (typeof numValue === 'number' && !isNaN(numValue) && numValue >= 0 && numValue <= 10000000)) {
-                      setFormData(prev => ({ ...prev, monthlyVolume: numValue }));
-                    }
-                  }}
-                  placeholder="Es: 5000"
-                  className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                  aria-label="Inserisci volume di trading mensile stimato in euro"
-                />
-              </div>
-
-              {/* Lingue Supporto */}
-              <div>
-                <label className="text-sm font-semibold text-text-primary block mb-3">
-                  Lingue Preferite per Supporto (opzionale)
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {['Italiano', 'Inglese', 'Tedesco', 'Francese', 'Spagnolo', 'Cinese'].map(lang => {
-                    const isSelected = formData.supportLanguage?.includes(lang) || false;
-                    return (
-                      <button
-                        key={lang}
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            supportLanguage: prev.supportLanguage?.includes(lang)
-                              ? prev.supportLanguage.filter(l => l !== lang)
-                              : [...(prev.supportLanguage || []), lang],
-                          }));
-                        }}
-                        className={cn(
-                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
-                          isSelected
-                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
-                        )}
-                        aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} lingua ${lang}`}
-                        aria-pressed={isSelected}
-                      >
-                        {lang}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Canali Supporto */}
-              <div>
-                <label className="text-sm font-semibold text-text-primary block mb-3">
-                  Canali di Supporto Preferiti (opzionale)
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {['Telefono', 'Chat', 'Email', 'Ticket'].map(channel => {
-                    const isSelected = formData.supportChannels?.includes(channel) || false;
-                    return (
-                      <button
-                        key={channel}
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            supportChannels: prev.supportChannels?.includes(channel)
-                              ? prev.supportChannels.filter(c => c !== channel)
-                              : [...(prev.supportChannels || []), channel],
-                          }));
-                        }}
-                        className={cn(
-                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm flex items-center gap-2 underline-selection',
-                          isSelected
-                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
-                        )}
-                        aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} canale ${channel}`}
-                        aria-pressed={isSelected}
-                      >
-                        {channel === 'Telefono' && <HeadphonesIcon className="w-4 h-4" aria-hidden="true" />}
-                        {channel === 'Chat' && <Zap className="w-4 h-4" aria-hidden="true" />}
-                        {channel === 'Email' && <FileText className="w-4 h-4" aria-hidden="true" />}
-                        {channel === 'Ticket' && <FileText className="w-4 h-4" aria-hidden="true" />}
-                        {channel}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {(formData.supportLanguage && formData.supportLanguage.length > 0) || (formData.supportChannels && formData.supportChannels.length > 0) ? (
-                <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
-                  <p className="text-sm text-text-secondary">
-                    <strong>Preferenze selezionate:</strong>
-                    {formData.supportLanguage && formData.supportLanguage.length > 0 && (
-                      <span className="ml-2">Lingue: {formData.supportLanguage.join(', ')}</span>
-                    )}
-                    {formData.supportChannels && formData.supportChannels.length > 0 && (
-                      <span className="ml-2">Canali: {formData.supportChannels.join(', ')}</span>
-                    )}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          )}
-
-          {currentStep === 5 && (
+          {currentStep === 2 && (
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border border-green-500/20 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-2">
@@ -1869,14 +1612,17 @@ export function BrokersRecommender() {
                   </p>
                   <div className="flex items-center justify-center gap-3">
                     <button
-                      onClick={resetForm}
+                      onClick={() => {
+                        resetForm();
+                        setCurrentStep(1);
+                      }}
                       className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors interaction-smooth"
                       aria-label="Ricomincia il form"
                     >
                       Mostra Tutti i Broker
                     </button>
                     <button
-                      onClick={prevStep}
+                      onClick={() => setCurrentStep(1)}
                       className="px-4 py-2 bg-bg-soft hover:bg-bg-elevated border-premium shadow-premium text-text-primary rounded-lg transition-colors interaction-smooth"
                       aria-label="Torna indietro"
                     >
@@ -2190,7 +1936,7 @@ export function BrokersRecommender() {
             )}
             aria-label="Passo successivo"
           >
-            {currentStep === 4 ? 'Vedi Risultati' : 'Avanti'}
+            Vedi Risultati
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
