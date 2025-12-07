@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, ArrowRight, BookOpen } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
