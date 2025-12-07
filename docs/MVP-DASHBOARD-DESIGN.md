@@ -432,12 +432,12 @@ const CACHE_TTL = {
 ## ✅ Checklist MVP
 
 ### Must Have (MVP)
-- [x] Market Pulse Widget (8 indicatori)
-- [ ] L400 Support/Resistance (KILLER)
-- [ ] Multi-Asset Charts (4 chart)
-- [ ] News Feed con Impact Score
-- [ ] Whale Activity (estendere)
-- [ ] Top Movers (estendere)
+- [x] Market Pulse Widget (8 indicatori) ✅ IMPLEMENTATO
+- [x] L400 Support/Resistance (KILLER) ✅ IMPLEMENTATO
+- [x] Multi-Asset Charts (4 chart) ✅ IMPLEMENTATO
+- [ ] News Feed con Impact Score 🔨 PROSSIMO
+- [x] Whale Activity (estendere) ✅ GIÀ FATTO
+- [x] Top Movers (estendere) ✅ GIÀ FATTO
 
 ### Nice to Have (Post-MVP)
 - [ ] Analyst Ratings (richiede API paid)
