@@ -34,17 +34,6 @@ const DEFAULT_MODULES = {
       badge_count: 0,
     },
     {
-      id: 'glossary',
-      title: 'Glossario',
-      description: 'Definizioni accademiche di termini finanziari con spiegazioni Tradelia AI',
-      href: '/glossary',
-      icon: 'book',
-      priority: 'primary' as const,
-      is_active: true,
-      order_index: 3,
-      badge_count: 0,
-    },
-    {
       id: 'utilities',
       title: 'Utilities',
       description: 'Strumenti finanziari professionali: calcolatori, simulatori e analisi avanzate',

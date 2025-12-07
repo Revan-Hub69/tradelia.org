@@ -164,7 +164,6 @@ export default function RootLayout({
         {/* Prefetch critical routes for faster navigation */}
         <link rel="prefetch" href="/pricing" as="document" />
         <link rel="prefetch" href="/dashboard" as="document" />
-        <link rel="prefetch" href="/glossary" as="document" />
         
         {/* Note: CSS is automatically optimized by Next.js with code splitting */}
         {/* Critical CSS is already inlined above to prevent render blocking */}

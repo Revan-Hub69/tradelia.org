@@ -121,32 +121,6 @@ export default function EducationContent() {
           <ProgressTracking />
         </div>
 
-        {/* Glossario Section */}
-        <div className="mb-8">
-          <div className="bg-bg-surface border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all duration-200">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-6 h-6 text-accent" aria-hidden="true" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-text-primary mb-2">
-                  {t('dashboard.education.glossary.title') || 'Glossario Finanziario'}
-                </h3>
-                <p className="text-sm text-text-secondary mb-4">
-                  {t('dashboard.education.glossary.description') || 'Definizioni accademiche di termini finanziari con spiegazioni Tradelia AI. Esplora oltre 300 termini con esempi pratici e contesto accademico.'}
-                </p>
-                <Link
-                  href={buildLocalePath(locale, '/glossary')}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors text-sm font-medium"
-                  aria-label={t('dashboard.education.glossary.ariaLabel') || 'Apri il glossario finanziario'}
-                >
-                  <BookOpen className="w-4 h-4" aria-hidden="true" />
-                  {t('dashboard.education.glossary.button') || 'Esplora Glossario'}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Courses List */}
         {filteredCourses.length === 0 ? (

@@ -178,14 +178,6 @@ export function TradeliaAIChat() {
   // Quick Actions - Input predisposti
   const quickActions: QuickAction[] = useMemo(() => [
     {
-      id: 'glossary',
-      label: currentLocale === 'it' ? 'Aprire Glossario' : 'Open Glossary',
-      icon: BookOpen,
-      action: currentLocale === 'it' 
-        ? 'Apri il glossario finanziario'
-        : 'Open the financial glossary',
-    },
-    {
       id: 'about',
       label: currentLocale === 'it' ? 'Sapere di più su Tradelia' : 'Learn more about Tradelia',
       icon: Sparkles,
@@ -559,13 +551,6 @@ export function TradeliaAIChat() {
       return; // Non fare nulla se è Pro-only e l'utente non è Pro
     }
     
-    // Best Practice: Glossario linka direttamente alla pagina, non alla chat
-    if (action.id === 'glossary') {
-      const glossaryPath = buildLocalePath(currentLocale, '/glossary');
-      router.push(glossaryPath);
-      setIsOpen(false); // Chiudi chat quando navighi
-      return;
-    }
     
     setMessage(action.action);
     // Trigger send dopo un breve delay per permettere al messaggio di essere settato
