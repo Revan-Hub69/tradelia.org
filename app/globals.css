@@ -708,7 +708,6 @@
   .btn-selection:not(.active):not(.selected):not([aria-pressed="true"]) {
     @apply text-text-secondary;
   }
-}
 
 @keyframes patternShift {
   0% {
