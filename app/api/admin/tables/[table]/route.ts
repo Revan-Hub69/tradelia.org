@@ -5,12 +5,22 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
 
 // GET - Dati tabella
 export async function GET(
   request: NextRequest,
   { params }: { params: { table: string } }
 ) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const table = params.table;
     const searchParams = request.nextUrl.searchParams;
@@ -48,37 +58,5 @@ export async function GET(
   }
 }
 
-// POST - Inserisci dati
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { table: string } }
-) {
-  try {
-    const table = params.table;
-    const body = await request.json();
-
-    const { data, error } = await supabaseAdmin
-      .from(table)
-      .insert(body)
-      .select()
-      .single();
-
-    if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      data,
-    });
-  } catch (error) {
-    console.error('Error inserting data:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
-}
+// POST - Inserisci dati (RIMOSSO - troppo pericoloso)
+// export async function POST(...) { ... }

@@ -11,9 +11,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
 
 // GET - Lista tutte le tabelle
 export async function GET(request: NextRequest) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const tableName = searchParams.get('table');

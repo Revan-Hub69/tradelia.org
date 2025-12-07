@@ -5,8 +5,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
 
 export async function GET() {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     // Conta utenti totali
     const { count: totalUsers } = await supabaseAdmin

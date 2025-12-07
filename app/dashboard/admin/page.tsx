@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Users, Database, BarChart3, Search, Plus, Edit, Trash2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Users, Database, BarChart3, Search, RefreshCw, AlertCircle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface User {
@@ -35,25 +35,14 @@ interface Stats {
 
 export default function AdminPage() {
   const { t } = useTranslations();
-  const [activeTab, setActiveTab] = useState<'users' | 'tables' | 'stats'>('stats');
+  const [activeTab, setActiveTab] = useState<'users' | 'stats'>('stats');
   const [users, setUsers] = useState<User[]>([]);
-  const [tables, setTables] = useState<string[]>([]);
-  const [selectedTable, setSelectedTable] = useState<string>('');
-  const [tableData, setTableData] = useState<TableData | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [userPage, setUserPage] = useState(1);
   const [tablePage, setTablePage] = useState(1);
-  const [adminEmails, setAdminEmails] = useState<any[]>([]);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [creatingAdmins, setCreatingAdmins] = useState(false);
-
-  // Carica email admin
-  useEffect(() => {
-    loadAdminEmails();
-  }, []);
 
   // Carica statistiche
   useEffect(() => {
@@ -69,19 +58,6 @@ export default function AdminPage() {
     }
   }, [activeTab, userPage, searchTerm]);
 
-  // Carica tabelle
-  useEffect(() => {
-    if (activeTab === 'tables') {
-      loadTables();
-    }
-  }, [activeTab]);
-
-  // Carica dati tabella
-  useEffect(() => {
-    if (activeTab === 'tables' && selectedTable) {
-      loadTableData();
-    }
-  }, [activeTab, selectedTable, tablePage]);
 
   const loadStats = async () => {
     setLoading(true);
@@ -119,124 +95,8 @@ export default function AdminPage() {
     }
   };
 
-  const loadTables = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/admin/tables');
-      if (!res.ok) throw new Error('Errore nel caricamento tabelle');
-      const data = await res.json();
-      setTables(data.tables || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const loadTableData = async () => {
-    if (!selectedTable) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({
-        page: tablePage.toString(),
-        limit: '50',
-      });
-      
-      const res = await fetch(`/api/admin/tables/${selectedTable}?${params}`);
-      if (!res.ok) throw new Error('Errore nel caricamento dati');
-      const data = await res.json();
-      setTableData(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const loadAdminEmails = async () => {
-    try {
-      const res = await fetch('/api/admin/create-admin-users');
-      if (!res.ok) throw new Error('Errore nel caricamento email admin');
-      const data = await res.json();
-      setAdminEmails(data.admin_emails || []);
-    } catch (err) {
-      console.error('Error loading admin emails:', err);
-    }
-  };
-
-  const handleCreateAdminUsers = async () => {
-    if (!adminPassword || adminPassword.length < 8) {
-      setError('La password deve essere di almeno 8 caratteri');
-      return;
-    }
-
-    setCreatingAdmins(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/admin/create-admin-users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Errore nella creazione utenti admin');
-      }
-
-      const data = await res.json();
-      const resultsMessage = data.results.map((r: any) => 
-        `- ${r.email}: ${r.status}\n  ${r.message}${r.user_id ? `\n  User ID: ${r.user_id}` : ''}`
-      ).join('\n\n');
-      
-      alert(`Utenti admin creati/aggiornati:\n\n${resultsMessage}\n\nPassword impostata: ${adminPassword}\n\nIMPORTANTE: Usa questa password per fare login!`);
-      setAdminPassword('');
-      loadAdminEmails();
-      loadUsers();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
-    } finally {
-      setCreatingAdmins(false);
-    }
-  };
-
-  const handleCheckUser = async (email: string) => {
-    try {
-      const res = await fetch('/api/admin/check-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Errore nella verifica utente');
-      }
-
-      const data = await res.json();
-      if (data.exists) {
-        alert(`Utente trovato:\n\nEmail: ${data.email}\nUser ID: ${data.user_id}\nEmail confermata: ${data.email_confirmed ? 'Sì' : 'No'}\nRuolo: ${data.role}\nPuò fare login: ${data.can_login ? 'Sì' : 'No'}\nCreato: ${new Date(data.created_at).toLocaleString('it-IT')}`);
-      } else {
-        alert(`Utente non trovato per email: ${email}`);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
-    }
-  };
-
-  const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Sei sicuro di voler eliminare questo utente?')) return;
-    
-    try {
-      const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Errore nell\'eliminazione');
-      loadUsers();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
-    }
-  };
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -258,78 +118,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Admin Users Section */}
-        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-          <h2 className="text-lg font-semibold text-text-primary mb-4">Gestione Utenti Admin</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
-                Password per utenti admin
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder="Inserisci password (min 8 caratteri)"
-                  className="flex-1 px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary"
-                />
-                <button
-                  onClick={handleCreateAdminUsers}
-                  disabled={creatingAdmins || !adminPassword || adminPassword.length < 8}
-                  className="px-6 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {creatingAdmins ? 'Creazione...' : 'Crea/Resetta Utenti Admin'}
-                </button>
-              </div>
-              <p className="mt-2 text-xs text-text-tertiary">
-                Crea o resetta la password per tutte le email admin configurate
-              </p>
-            </div>
-            {adminEmails.length > 0 && (
-              <div>
-                <h3 className="text-sm font-medium text-text-secondary mb-2">Email Admin Configurate:</h3>
-                <div className="space-y-2">
-                  {adminEmails.map((ae) => (
-                    <div
-                      key={ae.email}
-                      className="flex items-center justify-between p-2 bg-bg-surface rounded text-sm"
-                    >
-                      <span className="text-text-primary">{ae.email}</span>
-                      <div className="flex items-center gap-2">
-                        {ae.has_user ? (
-                          <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
-                            ✓ Utente creato
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">
-                            ✗ Utente non creato
-                          </span>
-                        )}
-                        {ae.role === 'admin' ? (
-                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-                            Admin
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-amber-500/20 text-amber-400 rounded text-xs">
-                            Ruolo non assegnato
-                          </span>
-                        )}
-                        <button
-                          onClick={() => handleCheckUser(ae.email)}
-                          className="px-2 py-1 bg-bg-soft hover:bg-bg-elevated border border-border-subtle rounded text-xs text-text-secondary hover:text-text-primary transition-colors"
-                          title="Verifica dettagli utente"
-                        >
-                          Verifica
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Tabs */}
         <div className="mb-6 flex gap-2 border-b border-border-subtle">
@@ -354,17 +142,6 @@ export default function AdminPage() {
           >
             <Users className="w-4 h-4 inline mr-2" />
             Utenti
-          </button>
-          <button
-            onClick={() => setActiveTab('tables')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'tables'
-                ? 'text-accent border-b-2 border-accent'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            <Database className="w-4 h-4 inline mr-2" />
-            Tabelle
           </button>
         </div>
 
@@ -436,7 +213,6 @@ export default function AdminPage() {
                     <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Nome</th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Ruolo</th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Creato</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Azioni</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -451,24 +227,6 @@ export default function AdminPage() {
                       </td>
                       <td className="px-4 py-3 text-sm text-text-secondary">
                         {new Date(user.created_at).toLocaleDateString('it-IT')}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => window.open(`/api/admin/users/${user.id}`, '_blank')}
-                            className="p-1 text-text-secondary hover:text-accent transition-colors"
-                            title="Visualizza"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="p-1 text-red-400 hover:text-red-300 transition-colors"
-                            title="Elimina"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
                       </td>
                     </tr>
                   ))}
