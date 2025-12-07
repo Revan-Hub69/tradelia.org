@@ -739,64 +739,133 @@ export function BrokersRecommender() {
   const availableInstruments = ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Crypto', 'Commodities', 'Indici', 'CFD', 'IDEM', 'IPO', 'PAC'];
   const availablePlatforms = ['Web', 'Mobile', 'Desktop', 'MT4', 'MT5', 'cTrader', 'TWS', 'Client Portal', 'SaxoTraderGO', 'SaxoTraderPRO', 'Directa Platform', 'dLite', 'TradingView', 'OpenAPI', 'API FIX/REST'];
 
+  // Logica di filtraggio meno restrittiva - Publisher approach: informativo, non consulenziale
+  // Mostra tutti i broker di default, i filtri sono suggerimenti, non requisiti obbligatori
   const recommendedBrokers = useMemo(() => {
-    return availableBrokers.filter(broker => {
+    // Se non ci sono filtri selezionati, mostra tutti i broker
+    const hasFilters = formData.taxRegime || formData.experience || formData.instruments.length > 0 || 
+                      formData.platforms.length > 0 || formData.minDeposit || formData.leverage ||
+                      (formData.supportLanguage && formData.supportLanguage.length > 0) ||
+                      (formData.supportChannels && formData.supportChannels.length > 0);
+    
+    if (!hasFilters) {
+      return availableBrokers.sort((a, b) => (b.score || b.rating * 20) - (a.score || a.rating * 20));
+    }
+
+    // Sistema di scoring invece di filtri binari - più flessibile
+    return availableBrokers.map(broker => {
+      let score = broker.score || broker.rating * 20;
+      let matchCount = 0;
+      let totalCriteria = 0;
+
+      // Regime fiscale - match perfetto aumenta score
       if (formData.taxRegime && formData.taxRegime !== 'both') {
-        if (formData.taxRegime === 'amministrato' && broker.taxRegime !== 'amministrato' && broker.taxRegime !== 'both') return false;
-        if (formData.taxRegime === 'dichiarativo' && broker.taxRegime !== 'dichiarativo' && broker.taxRegime !== 'both') return false;
-      }
-
-      if (formData.experience) {
-        const experienceMap = { beginner: 'beginner', intermediate: 'intermediate', advanced: 'advanced' };
-        if (broker.educationLevel !== experienceMap[formData.experience] && broker.educationLevel !== 'all') return false;
-      }
-
-      if (formData.instruments.length > 0) {
-        const hasInstruments = formData.instruments.some(inst => broker.instruments.includes(inst));
-        if (!hasInstruments) return false;
-      }
-
-      if (formData.platforms.length > 0) {
-        const hasPlatforms = formData.platforms.some(plat => broker.platforms.some(bp => bp.includes(plat) || plat.includes(bp)));
-        if (!hasPlatforms) return false;
-      }
-
-      if (formData.minDeposit && typeof formData.minDeposit === 'number') {
-        const brokerMin = typeof broker.minDeposit === 'number' ? broker.minDeposit : 0;
-        if (brokerMin > formData.minDeposit) return false;
-      }
-
-      if (formData.leverage) {
-        if (broker.leverage === 'N/A') {
-          if (formData.leverage !== 'low') return true;
-          return false;
+        totalCriteria++;
+        if (formData.taxRegime === 'amministrato' && (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both')) {
+          score += 10;
+          matchCount++;
+        } else if (formData.taxRegime === 'dichiarativo' && (broker.taxRegime === 'dichiarativo' || broker.taxRegime === 'both')) {
+          score += 10;
+          matchCount++;
         }
       }
 
-      // Filtro per supporto lingua
+      // Esperienza - match perfetto aumenta score
+      if (formData.experience) {
+        totalCriteria++;
+        if (broker.educationLevel === formData.experience || broker.educationLevel === 'all') {
+          score += 10;
+          matchCount++;
+        }
+      }
+
+      // Strumenti - ogni match aumenta score
+      if (formData.instruments.length > 0) {
+        totalCriteria++;
+        const matchingInstruments = formData.instruments.filter(inst => broker.instruments.includes(inst)).length;
+        if (matchingInstruments > 0) {
+          score += matchingInstruments * 5;
+          matchCount++;
+        }
+      }
+
+      // Piattaforme - ogni match aumenta score
+      if (formData.platforms.length > 0) {
+        totalCriteria++;
+        const matchingPlatforms = formData.platforms.filter(plat => 
+          broker.platforms.some(bp => bp.toLowerCase().includes(plat.toLowerCase()) || plat.toLowerCase().includes(bp.toLowerCase()))
+        ).length;
+        if (matchingPlatforms > 0) {
+          score += matchingPlatforms * 5;
+          matchCount++;
+        }
+      }
+
+      // Deposito minimo - match aumenta score
+      if (formData.minDeposit && typeof formData.minDeposit === 'number') {
+        totalCriteria++;
+        const brokerMin = typeof broker.minDeposit === 'number' ? broker.minDeposit : 0;
+        if (brokerMin <= formData.minDeposit) {
+          score += 5;
+          matchCount++;
+        }
+      }
+
+      // Leverage - match aumenta score
+      if (formData.leverage) {
+        totalCriteria++;
+        if (broker.leverage !== 'N/A') {
+          if (formData.leverage === 'low' && broker.leverage.includes('30:1')) {
+            score += 5;
+            matchCount++;
+          } else if (formData.leverage === 'medium' && (broker.leverage.includes('50:1') || broker.leverage.includes('100:1'))) {
+            score += 5;
+            matchCount++;
+          } else if (formData.leverage === 'high' && broker.leverage.includes('400:1')) {
+            score += 5;
+            matchCount++;
+          }
+        } else if (formData.leverage === 'low') {
+          score += 5;
+          matchCount++;
+        }
+      }
+
+      // Supporto lingua - match aumenta score
       if (formData.supportLanguage && formData.supportLanguage.length > 0 && broker.support) {
+        totalCriteria++;
         const hasLanguage = formData.supportLanguage.some(lang => 
           broker.support!.languages.some(bLang => 
             bLang.toLowerCase().includes(lang.toLowerCase()) || 
             lang.toLowerCase().includes(bLang.toLowerCase())
           )
         );
-        if (!hasLanguage) return false;
+        if (hasLanguage) {
+          score += 5;
+          matchCount++;
+        }
       }
 
-      // Filtro per canali supporto
+      // Canali supporto - match aumenta score
       if (formData.supportChannels && formData.supportChannels.length > 0 && broker.support) {
+        totalCriteria++;
         const hasChannel = formData.supportChannels.some(channel => 
           broker.support!.channels.some(bChannel => 
             bChannel.toLowerCase().includes(channel.toLowerCase()) || 
             channel.toLowerCase().includes(bChannel.toLowerCase())
           )
         );
-        if (!hasChannel) return false;
+        if (hasChannel) {
+          score += 5;
+          matchCount++;
+        }
       }
 
-      return true;
-    }).sort((a, b) => (b.score || b.rating * 20) - (a.score || a.rating * 20));
+      return { broker, score, matchCount, totalCriteria };
+    })
+    .filter(item => item.matchCount > 0 || !hasFilters) // Mostra solo se ha almeno un match O se non ci sono filtri
+    .sort((a, b) => b.score - a.score)
+    .map(item => item.broker);
   }, [formData]);
 
   const canProceed = useMemo(() => {
@@ -890,11 +959,24 @@ export function BrokersRecommender() {
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-text-primary mb-2">
-              {t('utilities.brokers.title') || 'Brokers Consigliati'}
+              {t('utilities.brokers.title') || 'Brokers Disponibili'}
             </h2>
-            <p className="text-text-secondary">
-              {t('utilities.brokers.description') || 'Trova il broker ideale attraverso un percorso guidato basato su criteri accademici e conformità MiFID II'}
+            <p className="text-text-secondary mb-3">
+              {t('utilities.brokers.description') || 'Strumento informativo per confrontare broker regolamentati. Utilizza i filtri per trovare opzioni che corrispondono alle tue preferenze.'}
             </p>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-xs text-text-secondary">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="font-semibold text-text-primary mb-1">Disclaimer Publisher</p>
+                  <p>
+                    Tradelia è un publisher informativo, non un consulente finanziario. Le informazioni fornite sono a scopo educativo e informativo.
+                    La selezione di un broker è una decisione personale che richiede valutazione autonoma. Verifica sempre le informazioni ufficiali
+                    sul sito del broker e consulta un consulente finanziario autorizzato se necessario.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1397,23 +1479,35 @@ export function BrokersRecommender() {
                   </div>
                 </div>
                 <p className="text-text-secondary">
-                  Basato sui criteri selezionati, ecco i broker che meglio si adattano al tuo profilo
+                  Broker disponibili {recommendedBrokers.length > 0 && `(${recommendedBrokers.length} trovati)`}
                 </p>
               </div>
 
               {recommendedBrokers.length === 0 ? (
-                <div className="bg-bg-soft border border-border-subtle rounded-xl p-8 text-center">
+                <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-6 md:p-8 text-center card-mobile">
                   <AlertTriangle className="w-12 h-12 text-amber-400 mx-auto mb-4" aria-hidden="true" />
-                  <p className="text-text-secondary mb-4">
-                    Nessun broker trovato con i criteri selezionati. Prova a modificare le preferenze.
+                  <p className="text-text-secondary mb-2 font-semibold">
+                    Nessun broker corrisponde esattamente ai criteri selezionati
                   </p>
-                  <button
-                    onClick={resetForm}
-                    className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors"
-                    aria-label="Ricomincia il form"
-                  >
-                    Ricomincia
-                  </button>
+                  <p className="text-sm text-text-tertiary mb-4">
+                    Prova a modificare le preferenze o ricomincia per vedere tutti i broker disponibili
+                  </p>
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={resetForm}
+                      className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors interaction-smooth"
+                      aria-label="Ricomincia il form"
+                    >
+                      Mostra Tutti i Broker
+                    </button>
+                    <button
+                      onClick={prevStep}
+                      className="px-4 py-2 bg-bg-soft hover:bg-bg-elevated border-premium shadow-premium text-text-primary rounded-lg transition-colors interaction-smooth"
+                      aria-label="Torna indietro"
+                    >
+                      Modifica Criteri
+                    </button>
+                  </div>
                 </div>
               ) : compareMode ? (
                 /* Modalità Comparazione Side-by-Side */
@@ -2423,22 +2517,27 @@ export function BrokersRecommender() {
         )}
       </AnimatePresence>
 
-      {/* Disclaimer Affiliate */}
+      {/* Disclaimer Publisher e Affiliate */}
       <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mt-6">
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
           <div className="space-y-2 text-sm text-text-secondary">
-            <p className="font-semibold text-text-primary">Disclaimer - Link Affiliate</p>
+            <p className="font-semibold text-text-primary">Disclaimer Publisher e Link Affiliate</p>
             <p>
-              Alcuni link presenti in questa pagina sono link di affiliazione. Questo significa che Tradelia può ricevere
-              una commissione se apri un account tramite questi link, senza alcun costo aggiuntivo per te. Le nostre
-              raccomandazioni sono sempre basate su criteri oggettivi, accademici e conformi a MiFID II, indipendentemente
-              da eventuali accordi di affiliazione.
+              <strong>Tradelia è un publisher informativo, non un consulente finanziario.</strong> Le informazioni fornite
+              in questo strumento sono a scopo educativo e informativo. Non costituiscono consulenza finanziaria, raccomandazione
+              di investimento o sollecitazione all'acquisto/vendita di strumenti finanziari.
             </p>
             <p>
-              <strong>Importante:</strong> Prima di aprire un account con qualsiasi broker, leggi attentamente i termini
-              e condizioni, la Key Information Document (KID) quando disponibile, e assicurati di comprendere tutti i rischi
-              associati al trading. Il trading comporta rischi significativi e puoi perdere più del capitale investito.
+              Alcuni link presenti sono link di affiliazione. Tradelia può ricevere una commissione se apri un account
+              tramite questi link, senza alcun costo aggiuntivo per te. Le informazioni sono sempre basate su criteri
+              oggettivi e conformi a MiFID II, indipendentemente da eventuali accordi di affiliazione.
+            </p>
+            <p>
+              <strong>Importante:</strong> La selezione di un broker è una decisione personale che richiede valutazione autonoma.
+              Prima di aprire un account, leggi attentamente i termini e condizioni, la Key Information Document (KID) quando
+              disponibile, e consulta un consulente finanziario autorizzato se necessario. Il trading comporta rischi significativi
+              e puoi perdere più del capitale investito.
             </p>
             <p className="text-xs text-text-tertiary mt-2">
               Ultimo aggiornamento informazioni broker: {new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}

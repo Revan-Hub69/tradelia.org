@@ -42,37 +42,50 @@
   pointer-events: none;
 }
 
-.modules-view {
+.modulesView {
   display: flex;
   flex-direction: column;
   gap: 3rem;
 }
 
 /* Compact view - Best Practice UX: Reduce visual clutter for power users */
-.modules-view.compact-view {
-  gap: 1.5rem;
+.compactView {
+  gap: 1.5rem !important;
 }
 
-.modules-view.compact-view .dashboardHero {
-  margin-bottom: 1.5rem;
+.compactView .dashboardHero {
+  margin-bottom: 1.5rem !important;
   padding: 1.5rem !important;
 }
 
-.modules-view.compact-view .dashboardSection {
-  padding: 1rem 0;
+.compactView .dashboardSection {
+  padding: 1rem 0 !important;
 }
 
 /* Compact view per OverviewStats */
-.modules-view.compact-view .overviewSection {
+.compactView .overviewSection {
   padding: 1.5rem !important;
 }
 
-.modules-view.compact-view .overviewStatsGrid {
-  gap: 1rem;
+.compactView .overviewStatsGrid {
+  gap: 1rem !important;
 }
 
-.modules-view.compact-view .statCard {
+.compactView .statCard {
   padding: 1rem !important;
+  font-size: 0.875rem !important;
+}
+
+.compactView .statValue {
+  font-size: 1.5rem !important;
+}
+
+.compactView .statLabel {
+  font-size: 0.75rem !important;
+}
+
+.compactView .statContext {
+  font-size: 0.7rem !important;
 }
 
 .dashboardHeroContent {
