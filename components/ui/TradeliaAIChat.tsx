@@ -769,7 +769,7 @@ export function TradeliaAIChat() {
                       </p>
                       <Link
                         href="/pricing"
-                        className="text-xs text-accent hover:text-accent-hover font-medium inline-flex items-center gap-1 leading-relaxed"
+                        className="text-xs text-text-primary hover:text-text-primary font-medium inline-flex items-center gap-1 leading-relaxed underline-selection"
                       >
                         {currentLocale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
                         <ArrowRight className="w-3 h-3" />

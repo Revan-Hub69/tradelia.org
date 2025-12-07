@@ -271,7 +271,7 @@ export default function RequestsPage() {
                       setSelectedRequestId(request.id);
                       setDetailModalOpen(true);
                     }}
-                    className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors"
+                    className="flex items-center gap-1 text-text-primary hover:text-text-primary transition-colors underline-selection"
                     aria-label={t('dashboard.requests.viewDetail') || 'Visualizza dettaglio'}
                   >
                     <Eye className="w-4 h-4" />
@@ -280,7 +280,7 @@ export default function RequestsPage() {
                   {request.status === 'completed' && isPro && (
                     <button
                       onClick={() => handleDownloadResults(request.id)}
-                      className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors"
+                      className="flex items-center gap-1 text-text-primary hover:text-text-primary transition-colors underline-selection"
                       aria-label={t('dashboard.requests.download') || 'Scarica Risultati'}
                     >
                       <Download className="w-4 h-4" />

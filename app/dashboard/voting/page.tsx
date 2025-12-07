@@ -223,7 +223,7 @@ export default function VotingPage() {
                       setSelectedProposalId(proposal.id);
                       setDetailModalOpen(true);
                     }}
-                    className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors text-sm"
+                    className="flex items-center gap-1 text-text-primary hover:text-text-primary transition-colors text-sm underline-selection"
                     aria-label={t('dashboard.voting.viewDetail') || 'Visualizza dettaglio'}
                   >
                     <Eye className="w-4 h-4" />

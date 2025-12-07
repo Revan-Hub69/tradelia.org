@@ -136,7 +136,7 @@ export function Reviews() {
           <motion.div variants={itemVariants}>
             <Link
               href="/reviews"
-              className="inline-flex items-center gap-2 text-accent hover:text-accent-hover font-medium transition-colors"
+              className="inline-flex items-center gap-2 text-text-primary hover:text-text-primary font-medium transition-colors underline-selection"
             >
               <MessageSquare className="w-4 h-4" aria-hidden="true" />
               <span>{t('reviews.viewAll') || 'Vedi tutte le recensioni'}</span>

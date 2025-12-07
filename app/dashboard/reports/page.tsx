@@ -197,7 +197,7 @@ export default function ReportsPage() {
                       setSelectedReportId(report.id);
                       setDetailModalOpen(true);
                     }}
-                    className="flex items-center gap-2 text-sm text-accent hover:text-accent-hover transition-colors"
+                    className="flex items-center gap-2 text-sm text-text-primary hover:text-text-primary transition-colors underline-selection"
                     aria-label={t('dashboard.reports.view') || 'Visualizza dettaglio'}
                   >
                     <Eye className="w-4 h-4" />

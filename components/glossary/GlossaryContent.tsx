@@ -402,7 +402,7 @@ export function GlossaryContent() {
               })}
               <button
                 onClick={() => setSelectedTags([])}
-                className="ml-auto text-xs text-accent hover:text-accent-hover font-medium underline"
+                className="ml-auto text-xs text-text-primary hover:text-text-primary font-medium underline-selection"
               >
                 Cancella filtri
               </button>
@@ -501,7 +501,7 @@ export function GlossaryContent() {
                 setSearchTerm('');
                 setSelectedTags([]);
               }}
-              className="text-xs text-accent hover:text-accent-hover underline"
+                className="text-xs text-text-primary hover:text-text-primary underline-selection"
             >
               {t('glossary.filters.showAllTerms') || 'Mostra tutti i termini'}
             </button>
@@ -525,7 +525,7 @@ export function GlossaryContent() {
                     setSearchTerm('');
                     setSelectedTags([]);
                   }}
-                  className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
+                  className="mt-3 px-4 py-2 text-sm font-medium text-text-primary hover:text-text-primary underline-selection"
                 >
                   {t('glossary.filters.showAllAvailable') || `Mostra tutti i ${terms.length} termini disponibili`}
                 </button>

@@ -166,7 +166,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-xs text-accent hover:text-accent-hover"
+                    className="text-xs text-text-primary hover:text-text-primary underline-selection"
                     aria-label={t('widgets.notifications.markAllRead') || 'Segna tutte come lette'}
                   >
                     <Check className="w-4 h-4" />
@@ -248,7 +248,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
               <div className="p-2 border-t border-border-subtle text-center">
                 <Link
                   href={`/dashboard/widgets/notifications?widget=${widgetType}`}
-                  className="text-xs text-accent hover:text-accent-hover"
+                  className="text-xs text-text-primary hover:text-text-primary underline-selection"
                 >
                   {t('widgets.notifications.viewAll') || 'Vedi tutte →'}
                 </Link>

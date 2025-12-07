@@ -695,6 +695,156 @@ const availableBrokers: Broker[] = [
       researchSignal: 'Evidenziata nel Rapporto CONSOB 2025 per trasparenza informativa ai giovani risparmiatori.'
     }
   },
+  // Pepperstone - CFD (unico CFD consentito)
+  {
+    id: 'pepperstone',
+    name: 'Pepperstone',
+    logo: '/logos/pepperstone.svg',
+    description: 'Broker CFD regolamentato ASIC/FCA con spread competitivi e piattaforme professionali.',
+    regulatory: ['ASIC', 'FCA', 'DFSA', 'SCB'],
+    platforms: ['MT4', 'MT5', 'cTrader', 'TradingView', 'Web', 'Mobile'],
+    instruments: ['Forex', 'CFD', 'Indici', 'Commodities', 'Crypto'],
+    minDeposit: 200,
+    leverage: 'Fino a 500:1 (forex major), fino a 200:1 (indici)',
+    spread: 'Da 0.0 pip (Raw Spread)',
+    commission: 'Raw Spread: $3.50 per lotto round-turn, Standard: spread incluso',
+    taxRegime: 'dichiarativo',
+    educationLevel: 'intermediate',
+    pros: [
+      'Spread competitivi con account Raw',
+      'Piattaforme professionali (MT4/MT5/cTrader)',
+      'Regolamentazione ASIC/FCA',
+      'Esecuzione veloce (ECN)',
+      'Protezione fondi fino a £85,000 (FSCS)',
+      'Supporto 24/5'
+    ],
+    cons: [
+      'Solo CFD (no strumenti reali)',
+      'Deposito minimo €200',
+      'Costi swap su posizioni overnight',
+      'Limitato a derivati'
+    ],
+    rating: 4.6,
+    score: 89,
+    riskLevel: 'high',
+    mifid2Compliant: true,
+    costs: {
+      commissionForex: 'Raw: $3.50 per lotto round-turn, Standard: spread incluso',
+      spreadForex: 'Raw: da 0.0 pip, Standard: da 1.0 pip',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso',
+      minCommission: '$3.50 per lotto (Raw)'
+    },
+    fundProtection: {
+      scheme: 'FSCS',
+      amount: '£85,000'
+    },
+    support: {
+      languages: ['Inglese', 'Italiano', 'Tedesco', 'Francese', 'Spagnolo'],
+      hours: 'Lun-Ven 24/5',
+      channels: ['Chat', 'Email', 'Telefono'],
+      responseTime: '< 1h per chat, < 24h per email'
+    },
+    payment: {
+      depositMethods: ['Carta', 'Bank Transfer', 'PayPal', 'Skrill', 'Neteller'],
+      withdrawalMethods: ['Carta', 'Bank Transfer', 'PayPal', 'Skrill', 'Neteller'],
+      depositTime: 'Immediato (carta), 1-2 giorni (bonifico)',
+      withdrawalTime: '1-2 giorni lavorativi',
+      minWithdrawal: '€50'
+    },
+    accountTypes: ['Retail', 'Professional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.5,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.pepperstone.com',
+      terms: 'https://www.pepperstone.com/legal/terms',
+      privacy: 'https://www.pepperstone.com/legal/privacy'
+    },
+    review: {
+      summary: 'Broker CFD professionale con spread competitivi e piattaforme avanzate. Adatto per trader esperti di derivati.',
+      recommendedFor: 'Trader esperti che operano principalmente su CFD e derivati con spread competitivi.',
+      aiSupport: 'API disponibili per integrazione con piattaforme di trading algoritmico.',
+      researchSignal: 'Citato in studi accademici su spread e liquidità nei mercati CFD regolamentati.'
+    }
+  },
+  // eToro - Mix strumenti reali e CFD
+  {
+    id: 'etoro',
+    name: 'eToro',
+    logo: '/logos/etoro.svg',
+    description: 'Piattaforma social trading con strumenti reali (azioni, ETF) e CFD, copy trading e community.',
+    regulatory: ['CySEC', 'FCA', 'ASIC'],
+    platforms: ['Web', 'App iOS/Android', 'eToroX'],
+    instruments: ['Azioni', 'ETF', 'Crypto', 'CFD', 'Forex', 'Commodities', 'Indici'],
+    minDeposit: 50,
+    leverage: 'Fino a 30:1 (retail), fino a 400:1 (professional)',
+    spread: 'Spread incluso nel prezzo',
+    commission: 'Azioni reali: 0% commissioni, CFD: spread incluso',
+    taxRegime: 'dichiarativo',
+    educationLevel: 'beginner',
+    pros: [
+      'Strumenti reali (azioni, ETF) senza commissioni',
+      'Copy Trading e social trading',
+      'Interfaccia intuitiva',
+      'Regolamentazione CySEC/FCA',
+      'Protezione fondi fino a €20,000 (ICF)',
+      'Nessun costo di inattività'
+    ],
+    cons: [
+      'Spread non sempre trasparente',
+      'Costi di conversione valuta',
+      'Limitato a mercati principali',
+      'Copy trading comporta rischi aggiuntivi'
+    ],
+    rating: 4.3,
+    score: 85,
+    riskLevel: 'medium',
+    mifid2Compliant: true,
+    costs: {
+      commissionStocks: '0% commissioni su azioni reali',
+      commissionForex: 'Spread incluso (non trasparente)',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: '$5 per prelievo',
+      currencyConversionFee: 'Spread incluso nel prezzo',
+      minCommission: 'Nessuna commissione su azioni reali'
+    },
+    fundProtection: {
+      scheme: 'ICF (Investor Compensation Fund)',
+      amount: '€20,000'
+    },
+    support: {
+      languages: ['Inglese', 'Italiano', 'Tedesco', 'Francese', 'Spagnolo', 'Arabo'],
+      hours: 'Lun-Ven 24/5',
+      channels: ['Chat', 'Email'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Carta', 'PayPal', 'Bank Transfer', 'Skrill', 'Neteller'],
+      withdrawalMethods: ['Carta', 'PayPal', 'Bank Transfer'],
+      depositTime: 'Immediato (carta), 1-3 giorni (bonifico)',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '$30'
+    },
+    accountTypes: ['Retail', 'Professional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.6,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.etoro.com',
+      terms: 'https://www.etoro.com/legal/terms-and-conditions',
+      privacy: 'https://www.etoro.com/legal/privacy-policy'
+    },
+    review: {
+      summary: 'Piattaforma social trading con accesso a strumenti reali e CFD. Adatta per principianti interessati al copy trading.',
+      recommendedFor: 'Investitori principianti interessati a social trading e strumenti reali con interfaccia semplice.',
+      aiSupport: 'API limitate, focus su social features piuttosto che trading algoritmico.',
+      researchSignal: 'Citato in studi su behavioral finance e social trading platforms.'
+    }
+  },
 ];
 
 interface FormData {
@@ -737,6 +887,7 @@ export function BrokersRecommender() {
   const [showRegulatoryCheck, setShowRegulatoryCheck] = useState(false);
   const [showRiskAssessment, setShowRiskAssessment] = useState(false);
   const [showComparisonMatrix, setShowComparisonMatrix] = useState(false);
+  const [show360Comparison, setShow360Comparison] = useState(false);
 
   const availableInstruments = ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Crypto', 'Commodities', 'Indici', 'CFD', 'IDEM', 'IPO', 'PAC'];
   const availablePlatforms = ['Web', 'Mobile', 'Desktop', 'MT4', 'MT5', 'cTrader', 'TWS', 'Client Portal', 'SaxoTraderGO', 'SaxoTraderPRO', 'Directa Platform', 'dLite', 'TradingView', 'OpenAPI', 'API FIX/REST'];
@@ -865,7 +1016,11 @@ export function BrokersRecommender() {
 
       return { broker, score, matchCount, totalCriteria };
     })
-    .filter(item => item.matchCount > 0 || !hasFilters) // Mostra solo se ha almeno un match O se non ci sono filtri
+    .filter(item => {
+      // Semplificato: mostra sempre tutti i broker, ordina per score
+      // Se ci sono filtri, i broker con match hanno score più alto
+      return true;
+    })
     .sort((a, b) => b.score - a.score)
     .map(item => item.broker);
   }, [formData]);
@@ -1032,6 +1187,143 @@ export function BrokersRecommender() {
   }, []);
 
   // Risk Assessment Calculator
+  // Confronto a 360 gradi con punteggi su tutte le caratteristiche
+  const get360Comparison = useCallback((broker: Broker) => {
+    if (!broker) {
+      return {
+        overall: 0,
+        categories: {
+          costs: { score: 0, max: 20, details: [] as string[] },
+          instruments: { score: 0, max: 15, details: [] as string[] },
+          platforms: { score: 0, max: 15, details: [] as string[] },
+          regulation: { score: 0, max: 20, details: [] as string[] },
+          support: { score: 0, max: 15, details: [] as string[] },
+          features: { score: 0, max: 15, details: [] as string[] },
+        }
+      };
+    }
+
+    const categories: {
+      costs: { score: number; max: number; details: string[] };
+      instruments: { score: number; max: number; details: string[] };
+      platforms: { score: number; max: number; details: string[] };
+      regulation: { score: number; max: number; details: string[] };
+      support: { score: number; max: number; details: string[] };
+      features: { score: number; max: number; details: string[] };
+    } = {
+      costs: { score: 0, max: 20, details: [] },
+      instruments: { score: 0, max: 15, details: [] },
+      platforms: { score: 0, max: 15, details: [] },
+      regulation: { score: 0, max: 20, details: [] },
+      support: { score: 0, max: 15, details: [] },
+      features: { score: 0, max: 15, details: [] },
+    };
+
+    // COSTS (20 punti)
+    if (broker.costs) {
+      if (broker.costs.commissionStocks && broker.costs.commissionStocks.includes('0%')) {
+        categories.costs.score += 5;
+        categories.costs.details.push('Commissioni azioni: 0%');
+      } else if (broker.costs.commissionStocks) {
+        const commMatch = broker.costs.commissionStocks.match(/(\d+\.?\d*)/);
+        if (commMatch && parseFloat(commMatch[1]) < 0.2) {
+          categories.costs.score += 3;
+          categories.costs.details.push('Commissioni azioni: competitive');
+        } else {
+          categories.costs.score += 1;
+          categories.costs.details.push('Commissioni azioni disponibili');
+        }
+      }
+      if (broker.costs.inactivityFee?.includes('Nessun') || broker.costs.inactivityFee?.includes('Gratuito')) {
+        categories.costs.score += 3;
+        categories.costs.details.push('Nessun costo inattività');
+      }
+      if (broker.costs.withdrawalFee?.includes('Gratuito')) {
+        categories.costs.score += 2;
+        categories.costs.details.push('Prelievi gratuiti');
+      }
+      const minDep = typeof broker.minDeposit === 'number' ? broker.minDeposit : 0;
+      if (minDep === 0) {
+        categories.costs.score += 5;
+        categories.costs.details.push('Nessun deposito minimo');
+      } else if (minDep <= 100) {
+        categories.costs.score += 3;
+        categories.costs.details.push(`Deposito minimo: €${minDep}`);
+      }
+      categories.costs.score += 5; // Base score per trasparenza costi
+    }
+
+    // INSTRUMENTS (15 punti)
+    const realInstruments = broker.instruments.filter(i => !['CFD'].includes(i));
+    categories.instruments.score = Math.min(realInstruments.length * 2, 12);
+    categories.instruments.details.push(`${realInstruments.length} strumenti reali disponibili`);
+    if (broker.instruments.includes('Azioni') && broker.instruments.includes('ETF')) {
+      categories.instruments.score += 3;
+      categories.instruments.details.push('Azioni ed ETF disponibili');
+    }
+
+    // PLATFORMS (15 punti)
+    categories.platforms.score = Math.min(broker.platforms.length * 2, 12);
+    categories.platforms.details.push(`${broker.platforms.length} piattaforme disponibili`);
+    if (broker.platforms.some(p => p.includes('Mobile') || p.includes('App'))) {
+      categories.platforms.score += 3;
+      categories.platforms.details.push('App mobile disponibile');
+    }
+
+    // REGULATION (20 punti)
+    categories.regulation.score = Math.min(broker.regulatory.length * 4, 16);
+    categories.regulation.details.push(`${broker.regulatory.length} autorità regolatorie`);
+    if (broker.mifid2Compliant) {
+      categories.regulation.score += 4;
+      categories.regulation.details.push('Conforme MiFID II');
+    }
+    if (broker.fundProtection) {
+      const amount = parseFloat(broker.fundProtection.amount.replace(/[^\d]/g, ''));
+      if (amount >= 100000) {
+        categories.regulation.score += 2;
+        categories.regulation.details.push(`Protezione fondi: ${broker.fundProtection.amount}`);
+      }
+    }
+
+    // SUPPORT (15 punti)
+    if (broker.support) {
+      categories.support.score = Math.min(broker.support.languages.length * 2, 8);
+      categories.support.details.push(`${broker.support.languages.length} lingue supportate`);
+      categories.support.score += Math.min(broker.support.channels.length * 2, 5);
+      categories.support.details.push(`${broker.support.channels.length} canali supporto`);
+      if (broker.support.responseTime && broker.support.responseTime.includes('< 24h')) {
+        categories.support.score += 2;
+        categories.support.details.push('Tempo risposta: < 24h');
+      }
+    }
+
+    // FEATURES (15 punti)
+    if (broker.demoAccount) {
+      categories.features.score += 4;
+      categories.features.details.push('Account demo disponibile');
+    }
+    if (broker.educationalResources) {
+      categories.features.score += 3;
+      categories.features.details.push('Risorse educative');
+    }
+    if (broker.mobileAppRating && broker.mobileAppRating >= 4.5) {
+      categories.features.score += 4;
+      categories.features.details.push(`App mobile: ${broker.mobileAppRating}/5`);
+    }
+    if (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both') {
+      categories.features.score += 2;
+      categories.features.details.push('Regime amministrato disponibile');
+    }
+    if (broker.accountTypes && broker.accountTypes.length > 1) {
+      categories.features.score += 2;
+      categories.features.details.push('Multiple tipi account');
+    }
+
+    const overall = Object.values(categories).reduce((sum: number, cat: any) => sum + cat.score, 0);
+
+    return { overall, categories };
+  }, []);
+
   const getRiskAssessment = useCallback((broker: Broker) => {
     if (!broker) {
       return { riskScore: 0, factors: [], overallRisk: 'medium' as const };
@@ -1574,6 +1866,14 @@ export function BrokersRecommender() {
                           <Layers className="w-4 h-4" aria-hidden="true" />
                           Matrice
                         </button>
+                        <button
+                          onClick={() => setShow360Comparison(true)}
+                          className="btn-action btn-action-success"
+                          aria-label="Confronto 360 gradi"
+                        >
+                          <Activity className="w-4 h-4" aria-hidden="true" />
+                          Confronto 360°
+                        </button>
                       </>
                     )}
                     <div className="flex items-center gap-2 ml-auto">
@@ -1809,7 +2109,7 @@ export function BrokersRecommender() {
                           </div>
                           <button
                             onClick={() => handleShowDrawer(broker)}
-                            className="text-accent hover:text-accent-hover transition-colors p-2 hover:bg-accent/10 rounded-lg"
+                            className="text-text-primary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg underline-selection"
                             aria-label={`Dettagli completi ${broker.name}`}
                           >
                             <Info className="w-5 h-5" aria-hidden="true" />
@@ -2725,7 +3025,7 @@ export function BrokersRecommender() {
                               href={broker.officialLinks.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent-hover font-medium"
+                              className="inline-flex items-center gap-2 text-sm text-text-primary hover:text-text-primary font-medium underline-selection"
                             >
                               Consulta costi aggiornati sul sito ufficiale
                               <ExternalLink className="w-4 h-4" aria-hidden="true" />
@@ -3250,6 +3550,156 @@ export function BrokersRecommender() {
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
                 <button
                   onClick={() => setShowComparisonMatrix(false)}
+                  className="w-full px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-semibold"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Confronto 360 Gradi con Punteggi */}
+      <AnimatePresence>
+        {show360Comparison && recommendedBrokers.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShow360Comparison(false)}
+            aria-label="Chiudi confronto 360 gradi"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="360-comparison-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle gradient-indigo">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Activity className="w-6 h-6 text-indigo-300" aria-hidden="true" />
+                    <h3 id="360-comparison-title" className="text-xl font-bold text-text-primary">Confronto 360° con Punteggi</h3>
+                  </div>
+                  <button
+                    onClick={() => setShow360Comparison(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi confronto"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Analisi completa con punteggi su tutte le caratteristiche: costi, strumenti, piattaforme, regolamentazione, supporto e funzionalità
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {recommendedBrokers.slice(0, 6).map(broker => {
+                    if (!broker) return null;
+                    const comparison = get360Comparison(broker);
+                    const percentage = Math.round((comparison.overall / 100) * 100);
+                    return (
+                      <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                              <Image
+                                src={broker.logo}
+                                alt={`Logo ${broker.name}`}
+                                width={40}
+                                height={40}
+                                className="object-contain"
+                                loading="lazy"
+                              />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                              <p className="text-xs text-text-tertiary">Score Tradelia: {broker.score || broker.rating * 20}/100</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-3xl font-bold text-indigo-300">{comparison.overall}/100</p>
+                            <p className="text-xs text-text-tertiary">Score 360°</p>
+                          </div>
+                        </div>
+                        
+                        {/* Progress Bar Overall */}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-semibold text-text-primary">Score Complessivo</span>
+                            <span className="text-sm text-text-secondary">{percentage}%</span>
+                          </div>
+                          <div className="w-full bg-bg-surface rounded-full h-3 overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${percentage}%` }}
+                              transition={{ duration: 0.8, ease: "easeOut" }}
+                              className={cn(
+                                "h-full rounded-full",
+                                percentage >= 80 ? 'bg-green-500' :
+                                percentage >= 60 ? 'bg-amber-500' :
+                                'bg-red-500'
+                              )}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Categorie con punteggi */}
+                        <div className="space-y-3">
+                          {Object.entries(comparison.categories).map(([key, cat]: [string, any]) => {
+                            const catPercentage = Math.round((cat.score / cat.max) * 100);
+                            const categoryLabels: Record<string, string> = {
+                              costs: 'Costi',
+                              instruments: 'Strumenti',
+                              platforms: 'Piattaforme',
+                              regulation: 'Regolamentazione',
+                              support: 'Supporto',
+                              features: 'Funzionalità',
+                            };
+                            return (
+                              <div key={key} className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-sm font-semibold text-text-primary">{categoryLabels[key]}</span>
+                                  <span className="text-sm text-text-secondary">{cat.score}/{cat.max}</span>
+                                </div>
+                                <div className="w-full bg-bg-soft rounded-full h-2 mb-2">
+                                  <div
+                                    className={cn(
+                                      "h-full rounded-full transition-all",
+                                      catPercentage >= 80 ? 'bg-green-500' :
+                                      catPercentage >= 60 ? 'bg-amber-500' :
+                                      'bg-red-500'
+                                    )}
+                                    style={{ width: `${catPercentage}%` }}
+                                  />
+                                </div>
+                                <ul className="text-xs text-text-secondary space-y-1">
+                                  {cat.details.map((detail: string, idx: number) => (
+                                    <li key={idx} className="flex items-start gap-1.5">
+                                      <CheckCircle2 className="w-3 h-3 text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                                      <span>{detail}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }).filter(Boolean)}
+                </div>
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <button
+                  onClick={() => setShow360Comparison(false)}
                   className="w-full px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-semibold"
                 >
                   Chiudi

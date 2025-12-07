@@ -274,7 +274,7 @@ export const RecentActivity = memo(function RecentActivity() {
         <div className="mt-4 text-center">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1 transition-colors"
+            className="text-sm text-text-primary hover:text-text-primary inline-flex items-center gap-1 transition-colors underline-selection"
             aria-label={isExpanded 
               ? t('dashboard.activity.showLess') || 'Mostra meno attività'
               : t('dashboard.activity.showMore') || `Mostra altre ${activities.length - 3} attività`}

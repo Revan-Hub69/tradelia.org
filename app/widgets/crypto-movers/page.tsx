@@ -292,7 +292,7 @@ export default function CryptoMoversWidgetPage() {
       <div className="mt-6 pt-4 border-t border-border-subtle text-center">
         <Link
           href="/dashboard/analysis"
-          className="text-sm text-accent hover:text-accent-hover transition-colors flex items-center justify-center gap-1"
+          className="text-sm text-text-primary hover:text-text-primary transition-colors flex items-center justify-center gap-1 underline-selection"
         >
           <ExternalLink className="w-4 h-4" />
           {t('widgets.openDashboard') || 'Apri Dashboard Completa →'}

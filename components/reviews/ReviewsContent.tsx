@@ -251,7 +251,7 @@ export function ReviewsContent() {
               {selectedRating && (
                 <button
                   onClick={() => setSelectedRating(null)}
-                  className="mt-3 text-sm text-accent hover:text-accent-hover underline"
+                  className="mt-3 text-sm text-text-primary hover:text-text-primary underline-selection"
                 >
                   {t('reviews.showAll') || 'Mostra tutte le recensioni'}
                 </button>

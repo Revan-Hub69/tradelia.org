@@ -33,7 +33,7 @@ export default function MIFIDDisclaimer() {
           </p>
           <Link
             href="/legal/mifid-disclaimer"
-            className="text-accent hover:text-accent-hover underline text-xs"
+            className="text-text-primary hover:text-text-primary underline-selection text-xs"
             aria-label={t('widgets.mifid.disclaimer.linkLabel') || 'Leggi disclaimer completo MIFID II'}
           >
             {t('widgets.mifid.disclaimer.link') || 'Leggi disclaimer completo →'}

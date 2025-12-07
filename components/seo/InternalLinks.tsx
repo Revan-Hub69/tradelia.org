@@ -40,7 +40,7 @@ export function InternalLinks() {
               <Link
                 href={href}
                 onMouseEnter={() => prefetchOnHover(href)}
-                className="text-sm text-accent hover:text-accent-hover underline transition-colors"
+                className="text-sm text-text-primary hover:text-text-primary underline-selection transition-colors"
               >
                 {link.anchor}
               </Link>
