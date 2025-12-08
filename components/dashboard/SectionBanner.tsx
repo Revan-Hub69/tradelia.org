@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 
 interface SectionBannerProps {
@@ -16,8 +15,6 @@ interface SectionBannerProps {
  * Sostituisce il banner iniziale del progetto vecchio
  */
 export function SectionBanner({ title, description, icon, className }: SectionBannerProps) {
-  const { locale } = useTranslations();
-
   return (
     <div className={cn(
       'bg-bg-soft border border-border-subtle rounded-lg p-4 mb-4',

@@ -73,6 +73,15 @@ self.addEventListener("fetch", (event) => {
       if (cachedResponse) {
         return cachedResponse;
       }
+      // Only fetch same-origin requests to avoid CSP violations
+      const url = new URL(event.request.url);
+      const isSameOrigin = url.origin === self.location.origin;
+      
+      if (!isSameOrigin) {
+        // For external resources, return a placeholder or skip caching
+        return new Response("External resource not cached", { status: 408 });
+      }
+      
       return fetch(event.request).catch((error) => {
         // Se il fetch fallisce e non c'è cache, restituisci una risposta di errore
         console.error("Fetch failed:", error);

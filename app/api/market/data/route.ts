@@ -277,9 +277,10 @@ export async function GET(request: Request) {
     }
 
     if (!data) {
+      // Return 200 with null data instead of 404 to prevent client errors
       return NextResponse.json(
-        { success: false, error: 'Failed to fetch market data' },
-        { status: 404 }
+        { success: false, data: null, error: 'Data not available for the specified symbol and asset type' },
+        { status: 200 }
       );
     }
 
