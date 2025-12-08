@@ -21,10 +21,6 @@ const UserMenu = dynamic(() => import('./UserMenu').then(mod => ({ default: mod.
   loading: () => <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" />,
 });
 
-const UserStats = dynamic(() => import('@/components/gamification/UserStats').then(mod => ({ default: mod.UserStats })), {
-  ssr: false,
-  loading: () => <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" />,
-});
 
 const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').then(mod => ({ default: mod.CurrencySwitch })), {
   ssr: false,
@@ -117,7 +113,6 @@ function DashboardHeaderComponent() {
             <>
               <div className={styles.dashboardActionsLeft}>
                 <CurrencySwitch size="sm" />
-                <UserStats />
               </div>
               <div className={styles.dashboardActionsRight}>
                 <Link
