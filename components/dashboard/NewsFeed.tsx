@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ExternalLink, TrendingUp, TrendingDown, Minus, Filter, Search } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useAutoTranslate } from '@/lib/hooks/useAutoTranslate';
+import { useAutoTranslateArray } from '@/lib/hooks/useAutoTranslate';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
@@ -64,6 +64,29 @@ export function NewsFeed() {
       item.source.toLowerCase().includes(query)
     );
   });
+
+  // Auto-translate all news items in batch
+  const titlesToTranslate = useMemo(() => 
+    filteredNews.map(item => item.title),
+    [filteredNews]
+  );
+  const descriptionsToTranslate = useMemo(() => 
+    filteredNews.map(item => item.description || ''),
+    [filteredNews]
+  );
+  
+  const translatedTitles = useAutoTranslateArray(titlesToTranslate, locale !== 'en');
+  const translatedDescriptions = useAutoTranslateArray(descriptionsToTranslate, locale !== 'en');
+  
+  // Create translated news items
+  const translatedNews = useMemo(() => 
+    filteredNews.map((item, index) => ({
+      ...item,
+      translatedTitle: translatedTitles[index] || item.title,
+      translatedDescription: translatedDescriptions[index] || item.description,
+    })),
+    [filteredNews, translatedTitles, translatedDescriptions]
+  );
 
   const getSentimentIcon = (label: string) => {
     switch (label) {
@@ -159,19 +182,7 @@ export function NewsFeed() {
             No news found
           </div>
         ) : (
-          filteredNews.map((item, index) => {
-            // Use hooks for translation
-            const TranslatedTitle = ({ text }: { text: string }) => {
-              const translated = useAutoTranslate(text, locale !== 'en');
-              return <>{translated}</>;
-            };
-            const TranslatedDescription = ({ text }: { text: string | undefined }) => {
-              if (!text) return null;
-              const translated = useAutoTranslate(text, locale !== 'en');
-              return <>{translated}</>;
-            };
-
-            return (
+          translatedNews.map((item, index) => (
               <a
                 key={`${item.link}-${index}`}
                 href={item.link}
@@ -201,11 +212,11 @@ export function NewsFeed() {
                       {getSentimentIcon(item.sentiment.label)}
                     </div>
                     <h3 className="text-sm font-semibold text-text-primary mb-1 line-clamp-2">
-                      <TranslatedTitle text={item.title} />
+                      {item.translatedTitle}
                     </h3>
-                    {item.description && (
+                    {item.translatedDescription && (
                       <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-                        <TranslatedDescription text={item.description} />
+                        {item.translatedDescription}
                       </p>
                     )}
                   <div className="flex items-center gap-2 text-xs text-text-tertiary">
@@ -215,8 +226,7 @@ export function NewsFeed() {
                 </div>
               </div>
             </a>
-            );
-          })
+          ))
         )}
       </div>
     </section>
