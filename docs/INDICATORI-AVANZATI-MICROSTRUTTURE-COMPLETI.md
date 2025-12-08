@@ -642,6 +642,55 @@
 
 ---
 
+## 📅 7. CALENDARI E EVENTI (FREE TIER)
+
+### ✅ **Già Implementato** (FREE TIER)
+
+#### a) **IPO Calendar** ⭐⭐⭐⭐⭐
+**File**: `app/api/market/ipo-calendar/route.ts`
+**Component**: `components/dashboard/IPOCalendar.tsx`
+
+**Cosa fa**:
+- Calendario IPO multi-market (USA, Europa, Asia)
+- Sentiment analysis per ogni IPO
+- Partecipazione istituzionale
+- Performance tracking post-IPO
+- Filtri per paese/regione
+
+**API**: Finnhub (GRATIS, 60 calls/min)
+**Status**: ✅ Implementato e funzionante
+
+---
+
+#### b) **Corporate Events Calendar** ⭐⭐⭐⭐⭐
+**File**: `app/api/market/corporate-events/route.ts`
+
+**Cosa fa**:
+- Earnings calendar
+- Dividend calendar
+- Stock splits
+- Mergers & Acquisitions
+- Earnings surprise analysis
+
+**API**: Finnhub (GRATIS, 60 calls/min)
+**Status**: ✅ Implementato e funzionante
+
+---
+
+#### c) **Economic Calendar** ⭐⭐⭐⭐⭐
+**File**: `components/dashboard/EconomicCalendar.tsx`
+
+**Cosa fa**:
+- Eventi economici (GDP, CPI, Unemployment, etc.)
+- Fed meetings
+- Central bank decisions
+- Economic indicators releases
+
+**API**: Finnhub (GRATIS, 60 calls/min)
+**Status**: ✅ Implementato e funzionante
+
+---
+
 ## 📋 RIEPILOGO COMPLETO
 
 ### ✅ **Già Implementato** (FREE TIER)
@@ -650,6 +699,9 @@
 3. ✅ Recent Trades Analysis
 4. ✅ Imbalance Calculation
 5. ✅ Spread Calculation
+6. ✅ **IPO Calendar** (multi-market, sentiment, performance)
+7. ✅ **Corporate Events Calendar** (earnings, dividends, splits)
+8. ✅ **Economic Calendar** (GDP, CPI, Fed meetings)
 
 ### ⚠️ **Microstrutture da Implementare** (FREE TIER)
 6. ⚠️ Order Flow Imbalance
@@ -698,9 +750,18 @@
 
 ---
 
-## 🚀 TOTALE: 38 INDICATORI AVANZATI
+## 🚀 TOTALE: 41 INDICATORI AVANZATI
 
-### ✅ **Implementati**: 5
+### ✅ **Implementati**: 8
+1. ✅ Order Book Depth L400
+2. ✅ Multi-Exchange Aggregated Depth
+3. ✅ Recent Trades Analysis
+4. ✅ Imbalance Calculation
+5. ✅ Spread Calculation
+6. ✅ **IPO Calendar**
+7. ✅ **Corporate Events Calendar**
+8. ✅ **Economic Calendar**
+
 ### ⚠️ **Da Implementare**: 33
 
 **TUTTI CON FREE TIER!**
@@ -761,7 +822,7 @@
 
 ### **TUTTO È POSSIBILE CON FREE TIER!**
 
-1. ✅ **38 indicatori avanzati** possibili con free tier
+1. ✅ **41 indicatori avanzati** possibili con free tier (8 già implementati, 33 da implementare)
 2. ✅ **Microstrutture complete** (order flow, depth, imbalance)
 3. ✅ **Compositi accademicamente validati**
 4. ✅ **Tecnici avanzati** (VWAP, OBV, A/D, etc.)
