@@ -83,46 +83,43 @@ export function MultiAssetCharts() {
             : 0,
         };
 
-        // Fetch S&P 500 - Use current price for now (history requires paid API)
-        const sp500Response = await fetch('/api/market-indicators/stock-indexes');
+        // Fetch S&P 500 - Use unified market data API
+        const sp500Response = await fetch('/api/market/data?symbol=SPY&assetType=stock');
         const sp500DataRaw = sp500Response.ok ? await sp500Response.json() : null;
-        const sp500Index = sp500DataRaw?.indexes?.find((i: any) => i.symbol === 'SPX' || i.name.includes('S&P'));
-        const sp500Data = sp500Index ? {
+        const sp500Data = sp500DataRaw?.success && sp500DataRaw?.data ? {
           history: Array(24).fill(0).map((_, i) => ({
             timestamp: new Date(Date.now() - (23 - i) * 60 * 60 * 1000).toISOString(),
-            price: sp500Index.price * (1 + (sp500Index.changePercent / 100) * (i / 23)), // Simulated
+            price: sp500DataRaw.data.currentPrice * (1 - (sp500DataRaw.data.change24hPercent / 100) * (1 - i / 23)), // Simulated
           })),
-          currentPrice: sp500Index.price,
-          change24h: sp500Index.change,
-          change24hPercent: sp500Index.changePercent,
+          currentPrice: sp500DataRaw.data.currentPrice,
+          change24h: sp500DataRaw.data.change24h,
+          change24hPercent: sp500DataRaw.data.change24hPercent,
         } : null;
 
-        // Fetch EUR/USD - Use current price for now
-        const eurusdResponse = await fetch('/api/market-indicators/forex');
+        // Fetch EUR/USD - Use unified market data API
+        const eurusdResponse = await fetch('/api/market/data?symbol=EURUSD&assetType=forex');
         const eurusdDataRaw = eurusdResponse.ok ? await eurusdResponse.json() : null;
-        const eurusdPair = eurusdDataRaw?.pairs?.find((p: any) => p.symbol === 'EURUSD' || p.name.includes('EUR/USD'));
-        const eurusdData = eurusdPair ? {
+        const eurusdData = eurusdDataRaw?.success && eurusdDataRaw?.data ? {
           history: Array(24).fill(0).map((_, i) => ({
             timestamp: new Date(Date.now() - (23 - i) * 60 * 60 * 1000).toISOString(),
-            price: eurusdPair.rate * (1 + (eurusdPair.changePercent / 100) * (i / 23)), // Simulated
+            price: eurusdDataRaw.data.currentPrice * (1 - (eurusdDataRaw.data.change24hPercent / 100) * (1 - i / 23)), // Simulated
           })),
-          currentPrice: eurusdPair.rate,
-          change24h: eurusdPair.change,
-          change24hPercent: eurusdPair.changePercent,
+          currentPrice: eurusdDataRaw.data.currentPrice,
+          change24h: eurusdDataRaw.data.change24h,
+          change24hPercent: eurusdDataRaw.data.change24hPercent,
         } : null;
 
-        // Fetch Gold - Use current price for now
-        const goldResponse = await fetch('/api/market-indicators/commodities');
+        // Fetch Gold - Use unified market data API
+        const goldResponse = await fetch('/api/market/data?symbol=GOLD&assetType=commodity');
         const goldDataRaw = goldResponse.ok ? await goldResponse.json() : null;
-        const goldCommodity = goldDataRaw?.commodities?.find((c: any) => c.symbol === 'GOLD' || c.name.includes('Gold'));
-        const goldData = goldCommodity ? {
+        const goldData = goldDataRaw?.success && goldDataRaw?.data ? {
           history: Array(24).fill(0).map((_, i) => ({
             timestamp: new Date(Date.now() - (23 - i) * 60 * 60 * 1000).toISOString(),
-            price: goldCommodity.price * (1 + (goldCommodity.changePercent / 100) * (i / 23)), // Simulated
+            price: goldDataRaw.data.currentPrice * (1 - (goldDataRaw.data.change24hPercent / 100) * (1 - i / 23)), // Simulated
           })),
-          currentPrice: goldCommodity.price,
-          change24h: goldCommodity.change,
-          change24hPercent: goldCommodity.changePercent,
+          currentPrice: goldDataRaw.data.currentPrice,
+          change24h: goldDataRaw.data.change24h,
+          change24hPercent: goldDataRaw.data.change24hPercent,
         } : null;
 
         // Calculate correlations (Pearson correlation)
