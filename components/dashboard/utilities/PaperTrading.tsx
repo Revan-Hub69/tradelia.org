@@ -8,7 +8,6 @@ import { toast } from '@/components/ui/Toast';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { cn } from '@/lib/utils/cn';
-import { useGamification } from '@/lib/gamification/hooks/useGamification';
 import { getCurrentPrice } from '@/lib/price-apis';
 import { ComingSoon } from '@/components/ui/ComingSoon';
 
@@ -23,7 +22,6 @@ import { ComingSoon } from '@/components/ui/ComingSoon';
  * - Real-time P&L tracking
  * - Risk limits (margin, leverage, position size)
  * - Portfolio analytics
- * - Gamification integration
  */
 
 interface PaperPosition {
@@ -74,7 +72,6 @@ interface PortfolioStats {
 export function PaperTrading() {
   const { t, locale } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { handleUserAction } = useGamification();
   
   const [tradingMode, setTradingMode] = useState<'paper' | 'real'>('paper');
   const [initialCapital] = useState(10000); // €10,000 paper capital
@@ -293,15 +290,6 @@ export function PaperTrading() {
         setPositions(prev => [...prev, mappedPosition]);
         await refetchPositions();
         
-        // Award XP and check achievements
-        await handleUserAction('paper_trade_opened' as any, 5);
-        
-        // Check achievements
-        await fetch('/api/gamification/check-achievements', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ actionType: 'paper_trade_opened' }),
-        });
       }
     } else {
       // Close position via API
@@ -314,15 +302,6 @@ export function PaperTrading() {
         if (closeResponse.ok) {
           const pnl = (executionPrice - position.entryPrice) * position.quantity;
           
-          // Award XP based on P&L
-          await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
-          
-          // Check achievements
-          await fetch('/api/gamification/check-achievements', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ actionType: 'paper_trade_closed' }),
-          });
           
           setPositions(prev => prev.filter(p => p.id !== position.id));
           await refetchPositions();
@@ -446,15 +425,6 @@ export function PaperTrading() {
     });
     
     if (response.ok) {
-      // Award XP and check achievements
-      await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
-      
-      // Check achievements
-      await fetch('/api/gamification/check-achievements', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ actionType: 'paper_trade_closed' }),
-      });
       
       setPositions(prev => prev.filter(p => p.id !== position.id));
       await refetchPositions();

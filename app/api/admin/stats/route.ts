@@ -60,12 +60,6 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .catch(() => ({ count: 0 }));
 
-    // Conta corsi completati
-    const { count: completedCourses } = await supabaseAdmin
-      .from('user_progress')
-      .select('*', { count: 'exact', head: true })
-      .eq('completed', true)
-      .catch(() => ({ count: 0 }));
 
     return NextResponse.json({
       users: {
@@ -77,7 +71,6 @@ export async function GET() {
       analysisRequests: totalAnalysisRequests || 0, // Richieste analisi (diventano pubbliche)
       watchlist: totalWatchlist || 0,
       notifications: totalNotifications || 0,
-      completedCourses: completedCourses || 0,
     });
   } catch (error) {
     console.error('Error fetching stats:', error);

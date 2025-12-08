@@ -70,7 +70,7 @@ const getFAQItems = async (locale: 'it' | 'en'): Promise<FAQItem[]> => {
     {
       id: '1',
       question: 'What is Tradelia?',
-      answer: 'Tradelia is an educational financial platform that combines academic rigor with accessibility. We offer financial tools, MIFID II compliant reports, market analysis, and training.',
+      answer: 'Tradelia is a professional financial analysis platform that combines academic rigor with accessibility. We offer financial tools, MIFID II compliant reports, and market analysis.',
       category: 'General',
       tags: ['platform', 'introduction'],
     },
@@ -98,7 +98,7 @@ const getFAQItems = async (locale: 'it' | 'en'): Promise<FAQItem[]> => {
     {
       id: '5',
       question: 'Are reports MIFID II compliant?',
-      answer: 'Yes, all reports and analysis on Tradelia are compliant with MIFID II regulations. Each tool includes appropriate disclaimers and regulatory notices. Information is for educational purposes and does not constitute financial advice.',
+      answer: 'Yes, all reports and analysis on Tradelia are compliant with MIFID II regulations. Each tool includes appropriate disclaimers and regulatory notices. Information does not constitute financial advice.',
       category: 'Compliance',
       tags: ['mifid', 'compliance', 'reports'],
     },

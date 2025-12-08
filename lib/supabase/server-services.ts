@@ -89,35 +89,6 @@ export async function getUserCourseProgress(userId: string) {
   return { data: data || [], error: null };
 }
 
-/**
- * Get user achievements
- */
-export async function getUserAchievements(userId: string) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("user_achievements")
-    .select(
-      `
-      *,
-      achievements (
-        id,
-        title,
-        description,
-        icon_type
-      )
-    `
-    )
-    .eq("user_id", userId)
-    .order("unlocked_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching achievements:", error);
-    return { data: [], error };
-  }
-
-  return { data: data || [], error: null };
-}
 
 /**
  * Get dashboard stats
@@ -328,41 +299,6 @@ export async function createActivity(
     return { data: null, error };
   }
 
-  // Trigger gamification check if applicable
-  if (typeof window === "undefined") {
-    // Server-side: import and call directly
-    const { checkAndUnlockAchievements, awardXP } = await import(
-      "@/lib/gamification/achievement-engine"
-    );
-
-    // Map activity type to action type
-    const actionTypeMap: Record<
-      string,
-      "lesson_completed" | "course_completed" | "report_viewed" | "daily_login"
-    > = {
-      course_completed: "course_completed",
-      lesson_completed: "lesson_completed",
-      report_viewed: "report_viewed",
-    };
-
-    const actionType = actionTypeMap[activityData.type];
-    if (actionType) {
-      // Award XP based on action type
-      const xpAmounts: Record<string, number> = {
-        lesson_completed: 10,
-        course_completed: 100,
-        report_viewed: 5,
-      };
-
-      const xpAmount = xpAmounts[actionType];
-      if (xpAmount) {
-        await awardXP(activityData.user_id, xpAmount, actionType);
-      }
-
-      // Check achievements
-      await checkAndUnlockAchievements(activityData.user_id, actionType);
-    }
-  }
 
   return { data, error: null };
 }

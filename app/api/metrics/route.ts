@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Raccogli metrics
-    const [usersCount, activeUsers, newUsers, reportsCount, publishedReports, reportsViews, coursesCount, enrollments, completions] = await Promise.all([
+    const [usersCount, activeUsers, newUsers, reportsCount, publishedReports, reportsViews] = await Promise.all([
       supabase.from('profiles').select('id', { count: 'exact', head: true }),
       supabase
         .from('profiles')
@@ -57,12 +57,6 @@ export async function GET(request: NextRequest) {
         .from('reports')
         .select('views', { count: 'exact', head: false })
         .then(({ data }) => ({ count: data?.reduce((sum, r) => sum + (r.views || 0), 0) || 0 })),
-      supabase.from('education_modules').select('id', { count: 'exact', head: true }),
-      supabase.from('education_user_progress').select('id', { count: 'exact', head: true }),
-      supabase
-        .from('education_user_progress')
-        .select('id', { count: 'exact', head: true })
-        .eq('status', 'completed'),
     ]);
 
     // Calculate revenue metrics (if payments table exists)
@@ -100,11 +94,6 @@ export async function GET(request: NextRequest) {
         total: reportsCount.count || 0,
         published: publishedReports.count || 0,
         views: reportsViews.count || 0,
-      },
-      courses: {
-        total: coursesCount.count || 0,
-        enrollments: enrollments.count || 0,
-        completions: completions.count || 0,
       },
       revenue,
     });

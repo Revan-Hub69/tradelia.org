@@ -22,9 +22,6 @@ const ModalProviders = dynamic(() => import('@/components/dashboard/ModalProvide
   ssr: false,
 });
 
-const DailyLoginCheck = dynamic(() => import('@/components/gamification/DailyLoginCheck').then(mod => ({ default: mod.DailyLoginCheck })), {
-  ssr: false,
-});
 
 
 const LayoutFallback = () => (
@@ -67,9 +64,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </ErrorBoundary>
           <ErrorBoundary>
             <InstallPrompt />
-          </ErrorBoundary>
-          <ErrorBoundary>
-            <DailyLoginCheck />
           </ErrorBoundary>
           <ErrorBoundary>
             <ModalProviders />

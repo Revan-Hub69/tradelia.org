@@ -131,7 +131,6 @@ function generateBreadcrumbs(
   const segmentLabels: Record<string, string> = {
     dashboard: t('breadcrumb.dashboard') || 'Dashboard',
     reports: t('breadcrumb.reports') || 'Report',
-    education: t('breadcrumb.education') || 'Formazione',
     settings: t('breadcrumb.settings') || 'Impostazioni',
     requests: t('breadcrumb.requests') || 'Richieste',
     voting: t('breadcrumb.voting') || 'Votazioni',

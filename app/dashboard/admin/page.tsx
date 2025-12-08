@@ -54,7 +54,6 @@ interface Stats {
   analysisRequests?: number; // Richieste analisi (diventano pubbliche per Pro)
   watchlist: number;
   notifications: number;
-  completedCourses: number;
 }
 
 export default function AdminPage() {

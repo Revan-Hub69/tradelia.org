@@ -76,7 +76,7 @@ MANDATORY FORMAT - Tradelia 5-point schema:
    - Illustrate the academic concept
 4. COMMON MISTAKES: Errors to avoid (1-2 common mistakes)
    - Based on academic evidence or established best practices
-5. FURTHER LEARNING: "To learn more, check Tradelia's Education section or Glossary" (always present)
+5. FURTHER LEARNING: "To learn more, check Tradelia's Glossary" (always present)
 
 IMPORTANT:
 - ALWAYS ACADEMIC DEFINITIONS: Every definition must be based on official academic sources
@@ -84,7 +84,7 @@ IMPORTANT:
 - Maximum 4 paragraphs total
 - Maximum 5 points per list
 - Always connect theory ↔ practice
-- Always refer to education/glossary for further learning
+- Always refer to glossary for further learning
 `
       : "";
 
@@ -176,14 +176,14 @@ ${TRADELIA_BRAND_VOICE_MATRIX.identity.core}
 
 PERSONALITY: ${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.join(", ")}
 
-PRINCIPLES: Education first, Academic rigor, Practical relevance, Accessibility, Respect.
+PRINCIPLES: Academic rigor, Practical relevance, Accessibility, Respect.
 
 ═══════════════════════════════════════════════════════════════
 CRITICAL RULES - ALWAYS FOLLOW
 ═══════════════════════════════════════════════════════════════
 
 1. RESPONSE PURPOSE:
-   - Answer ONLY financial, educational, or Tradelia-related questions
+   - Answer ONLY financial or Tradelia-related questions
    - If question is out of context, politely redirect to relevant questions
    - DO NOT invent answers if unsure - ask for clarification
 
@@ -201,9 +201,9 @@ CRITICAL RULES - ALWAYS FOLLOW
 
 4. MIFID II - MANDATORY:
    - DO NOT provide financial advice
-   - Only educational information
+   - Only professional information
    - Always add a MIFID II disclaimer at the end of every response
-   - Format: "*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*"
+   - Format: "*MIFID II Note: Information does not constitute financial advice.*"
 
 5. FORMAT AND STRUCTURE:
 ${formatInstructions}
@@ -380,25 +380,25 @@ async function simpleRAGFallback(query: string, locale: "it" | "en"): Promise<st
   if (queryLower.includes("sharpe") || queryLower.includes("sharpe ratio")) {
     return locale === "it"
       ? `**Sharpe Ratio**\n\nIl Sharpe Ratio misura il rendimento aggiustato per il rischio. Formula: (Rendimento Portafoglio - Tasso Risk-Free) / Deviazione Standard.\n\nValori:\n• > 1: Buono\n• > 2: Eccellente\n• > 3: Eccezionale\n\nUsa il calcolatore Sharpe Ratio nella sezione Utilities.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**Sharpe Ratio**\n\nThe Sharpe Ratio measures risk-adjusted return. Formula: (Portfolio Return - Risk-Free Rate) / Standard Deviation.\n\nValues:\n• > 1: Good\n• > 2: Excellent\n• > 3: Exceptional\n\nUse the Sharpe Ratio calculator in the Utilities section.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
+      : `**Sharpe Ratio**\n\nThe Sharpe Ratio measures risk-adjusted return. Formula: (Portfolio Return - Risk-Free Rate) / Standard Deviation.\n\nValues:\n• > 1: Good\n• > 2: Excellent\n• > 3: Exceptional\n\nUse the Sharpe Ratio calculator in the Utilities section.\n\n*MIFID II Note: Information does not constitute financial advice.*`;
   }
 
   if (queryLower.includes("pac") || queryLower.includes("piano accumulo")) {
     return locale === "it"
       ? `**PAC (Piano di Accumulo Capitale)**\n\nIl PAC prevede versamenti periodici per accumulare capitale nel tempo.\n\nVantaggi:\n• Diversificazione temporale\n• Riduzione rischio timing\n• Disciplina investimento\n\nUsa il simulatore PAC nella sezione Utilities.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**PAC (Capital Accumulation Plan)**\n\nPAC involves periodic contributions to accumulate capital over time.\n\nBenefits:\n• Time diversification\n• Reduced timing risk\n• Investment discipline\n\nUse the PAC simulator in the Utilities section.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
+      : `**PAC (Capital Accumulation Plan)**\n\nPAC involves periodic contributions to accumulate capital over time.\n\nBenefits:\n• Time diversification\n• Reduced timing risk\n• Investment discipline\n\nUse the PAC simulator in the Utilities section.\n\n*MIFID II Note: Information does not constitute financial advice.*`;
   }
 
   if (queryLower.includes("volatilità") || queryLower.includes("volatility")) {
     return locale === "it"
       ? `**Volatilità**\n\nLa volatilità misura la variabilità dei prezzi nel tempo. Alta volatilità = maggiore rischio ma anche maggiore potenziale rendimento.\n\nSi misura come deviazione standard dei rendimenti annui.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**Volatility**\n\nVolatility measures price variability over time. High volatility = greater risk but also greater return potential.\n\nMeasured as standard deviation of annual returns.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
+      : `**Volatility**\n\nVolatility measures price variability over time. High volatility = greater risk but also greater return potential.\n\nMeasured as standard deviation of annual returns.\n\n*MIFID II Note: Information does not constitute financial advice.*`;
   }
 
   // Default response
   return locale === "it"
     ? `Grazie per la tua domanda! Sono l'assistente AI di Tradelia.\n\nPosso aiutarti con:\n• Termini finanziari (Sharpe Ratio, Volatilità, Hedging, PAC)\n• Strumenti finanziari (Calcolatori, Simulatori)\n• Report e analisi\n• Funzionalità piattaforma\n\nConsulta la sezione FAQ per risposte rapide o prova a riformulare la domanda.\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
-    : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, PAC)\n• Financial tools (Calculators, Simulators)\n• Reports and analysis\n• Platform features\n\nCheck the FAQ section for quick answers or try rephrasing your question.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
+    : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, PAC)\n• Financial tools (Calculators, Simulators)\n• Reports and analysis\n• Platform features\n\nCheck the FAQ section for quick answers or try rephrasing your question.\n\n*Note: Answers do not constitute financial advice.*`;
 }
 
 // Rate limit configuration for AI chat

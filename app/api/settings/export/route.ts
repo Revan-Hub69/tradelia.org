@@ -17,13 +17,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Raccogli tutti i dati utente
-    const [profile, portfolio, trades, alerts, expenses, courses, notesResult] = await Promise.all([
+    const [profile, portfolio, trades, alerts, expenses, notesResult] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', user.id).single(),
       supabase.from('portfolio_positions').select('*').eq('user_id', user.id),
       supabase.from('trading_journal').select('*').eq('user_id', user.id),
       supabase.from('watchlist_alerts').select('*').eq('user_id', user.id),
       supabase.from('expenses').select('*').eq('user_id', user.id),
-      supabase.from('education_user_progress').select('*').eq('user_id', user.id),
       supabase.from('lesson_notes').select('*').eq('user_id', user.id),
     ]);
 
@@ -39,7 +38,6 @@ export async function GET(request: NextRequest) {
       trades: trades.data || [],
       alerts: alerts.data || [],
       expenses: expenses.data || [],
-      courses: courses.data || [],
       notes: notes.data || [],
     };
 
