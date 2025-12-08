@@ -61,8 +61,8 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
     { id: 'top-mover', name: 'Top Mover', value: '—', status: 'neutral', loading: true, isPro: true },
   ]);
 
-  useEffect(() => {
-    const fetchIndicators = async () => {
+  // Memoize fetch function per evitare re-creazione
+  const fetchIndicators = useCallback(async () => {
       // Se API disattivate, usa dati mock
       if (API_CONFIG.DISABLE_API_CALLS) {
         // Simula un breve delay per mostrare loading
@@ -556,7 +556,7 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
     // Refresh ogni 5 minuti
     const interval = setInterval(fetchIndicators, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchIndicators]);
 
   return (
     <section 

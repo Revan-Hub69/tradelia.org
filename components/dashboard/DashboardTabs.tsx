@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { BarChart3, Settings, TrendingUp, Cog, Calculator } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
@@ -27,13 +27,14 @@ interface Tab {
  * - Analysis: Report e analisi
  * - Settings: Impostazioni e configurazione
  */
-export function DashboardTabs() {
+export const DashboardTabs = memo(function DashboardTabs() {
   const { t, locale } = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 
-  const tabs: Tab[] = [
+  // Memoize tabs per evitare re-creazione
+  const tabs: Tab[] = useMemo(() => [
     {
       id: 'overview',
       label: t('dashboard.tabs.overview') || 'Panoramica',

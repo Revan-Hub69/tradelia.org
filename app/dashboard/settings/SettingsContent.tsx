@@ -1,16 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
-import { NotificationSettings } from '@/components/notifications/NotificationSettings';
-import { BusinessLogoSettings } from '@/components/settings/BusinessLogoSettings';
-import { ProfileForm } from '@/components/settings/ProfileForm';
-import { PasswordForm } from '@/components/settings/PasswordForm';
-import { PreferencesForm } from '@/components/settings/PreferencesForm';
 import { useIsDesk } from '@/lib/hooks/useUserRole';
-import { BillingSummary } from '@/components/billing/BillingSummary';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+// Lazy load componenti settings pesanti
+const NotificationSettings = lazy(() => import('@/components/notifications/NotificationSettings').then(m => ({ default: m.NotificationSettings })));
+const BusinessLogoSettings = lazy(() => import('@/components/settings/BusinessLogoSettings').then(m => ({ default: m.BusinessLogoSettings })));
+const ProfileForm = lazy(() => import('@/components/settings/ProfileForm').then(m => ({ default: m.ProfileForm })));
+const PasswordForm = lazy(() => import('@/components/settings/PasswordForm').then(m => ({ default: m.PasswordForm })));
+const PreferencesForm = lazy(() => import('@/components/settings/PreferencesForm').then(m => ({ default: m.PreferencesForm })));
+const BillingSummary = lazy(() => import('@/components/billing/BillingSummary').then(m => ({ default: m.BillingSummary })));
 
 /**
  * Settings Content - Tab Impostazioni
@@ -19,12 +22,13 @@ import { BillingSummary } from '@/components/billing/BillingSummary';
  * BASE: Profilo, notifiche, lingua
  * PRO: API keys, backup (futuro)
  */
-export default function SettingsContent() {
+const SettingsContent = memo(function SettingsContent() {
   const { t, locale } = useTranslations();
   const isDesk = useIsDesk();
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'preferences' | 'business'>('profile');
 
-  const tabs = [
+  // Memoize tabs per evitare re-creazione
+  const tabs = useMemo(() => [
     {
       id: 'profile' as const,
       label: t('settings.tabs.profile') || 'Profilo',
@@ -56,7 +60,12 @@ export default function SettingsContent() {
       label: t('settings.tabs.business') || 'Business',
       icon: Building2,
     }] : []),
-  ];
+  ], [isDesk, t]);
+
+  // Memoize tab change handler
+  const handleTabChange = useCallback((tabId: typeof activeTab) => {
+    setActiveTab(tabId);
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -80,7 +89,7 @@ export default function SettingsContent() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                     className={cn(
                       'flex items-center gap-2 px-4 py-3 border-b-2 transition-colors underline-selection',
                       activeTab === tab.id
