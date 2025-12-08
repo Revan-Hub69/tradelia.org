@@ -3,11 +3,15 @@
 import { useMemo, memo } from 'react';
 import { INDICATOR_TOOLTIPS } from '@/lib/data/indicator-tooltips';
 import { IndicatorCard } from './IndicatorCard';
+import { IndicatorCardWrapper } from './IndicatorCardWrapper';
 import { SectionBanner } from '../SectionBanner';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import type { IndicatorCategory, IndicatorType, ViewMode } from '../tabs/MarketDataTab';
 import { cn } from '@/lib/utils/cn';
+
+// Indicatori con nuovi componenti accademici implementati
+const ACADEMIC_INDICATORS = ['vix', 'yield-curve', 'spy'];
 
 interface IndicatorGridProps {
   category: IndicatorCategory;
@@ -130,9 +134,14 @@ export const IndicatorGrid = memo(function IndicatorGrid({
                   : 'space-y-4'
               )}
             >
-              {indicators.map(id => (
-                <IndicatorCard key={id} indicatorId={id} viewMode={viewMode} />
-              ))}
+              {indicators.map(id => {
+                // Usa i nuovi componenti accademici se implementati
+                if (ACADEMIC_INDICATORS.includes(id)) {
+                  return <IndicatorCardWrapper key={id} indicatorId={id} viewMode={viewMode} />;
+                }
+                // Altrimenti usa il componente base esistente
+                return <IndicatorCard key={id} indicatorId={id} viewMode={viewMode} />;
+              })}
             </div>
           </section>
         );
