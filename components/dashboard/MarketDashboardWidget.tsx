@@ -60,43 +60,19 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
             if (ind.id === 'vix') {
               return { ...ind, value: mock.value.toFixed(2), change: mock.change, changePercent: mock.changePercent, status: mock.changePercent > 0 ? 'negative' : 'positive', loading: false };
             }
-            if (ind.id === 'vix-term-structure') {
-              return { ...ind, value: `${mock.contangoPercent > 0 ? '+' : ''}${mock.contangoPercent.toFixed(1)}%`, status: mock.contangoPercent > 5 ? 'negative' : mock.contangoPercent < -5 ? 'positive' : 'neutral', loading: false };
-            }
-            if (ind.id === 'put-call-ratio') {
-              return { ...ind, value: mock.totalPutCallRatio.toFixed(2), status: mock.totalPutCallRatio > 1.0 ? 'negative' : mock.totalPutCallRatio < 0.7 ? 'positive' : 'neutral', loading: false };
-            }
-            if (ind.id === 'yield-curve') {
-              return { ...ind, value: `${mock.spread['10Y-2Y'] > 0 ? '+' : ''}${mock.spread['10Y-2Y'].toFixed(2)}%`, status: mock.spread['10Y-2Y'] < 0 ? 'negative' : mock.spread['10Y-2Y'] < 0.5 ? 'neutral' : 'positive', loading: false };
-            }
-            if (ind.id === 'credit-spreads') {
-              return { ...ind, value: `${mock.baa10y.toFixed(2)}%`, status: mock.baa10y > 3.0 ? 'negative' : mock.baa10y > 2.0 ? 'neutral' : 'positive', loading: false };
-            }
             if (ind.id === 'fear-greed') {
               return { ...ind, value: mock.value.toString(), status: mock.value >= 50 ? 'positive' : 'negative', loading: false };
             }
             if (ind.id === 'bitcoin-dominance') {
               return { ...ind, value: `${mock.dominance.toFixed(1)}%`, status: 'neutral', loading: false };
             }
-            if (ind.id === 'crypto-market-cap') {
-              return { ...ind, value: `$${(mock.totalMarketCap / 1e12).toFixed(2)}T`, status: 'neutral', loading: false };
-            }
             if (ind.id === 'spy') {
-              return { ...ind, value: `$${mock.currentPrice.toFixed(2)}`, changePercent: mock.change24hPercent, status: mock.change24hPercent > 0 ? 'positive' : mock.change24hPercent < 0 ? 'negative' : 'neutral', loading: false };
-            }
-            if (ind.id === 'qqq') {
               return { ...ind, value: `$${mock.currentPrice.toFixed(2)}`, changePercent: mock.change24hPercent, status: mock.change24hPercent > 0 ? 'positive' : mock.change24hPercent < 0 ? 'negative' : 'neutral', loading: false };
             }
             if (ind.id === 'eurusd') {
               return { ...ind, value: mock.currentPrice.toFixed(4), changePercent: mock.change24hPercent, status: mock.change24hPercent > 0 ? 'positive' : mock.change24hPercent < 0 ? 'negative' : 'neutral', loading: false };
             }
-            if (ind.id === 'dxy') {
-              return { ...ind, value: mock.value.toFixed(2), changePercent: mock.changePercent, status: mock.changePercent > 0 ? 'positive' : mock.changePercent < 0 ? 'negative' : 'neutral', loading: false };
-            }
             if (ind.id === 'gold') {
-              return { ...ind, value: `$${mock.currentPrice.toFixed(2)}`, changePercent: mock.change24hPercent, status: mock.change24hPercent > 0 ? 'positive' : mock.change24hPercent < 0 ? 'negative' : 'neutral', loading: false };
-            }
-            if (ind.id === 'oil') {
               return { ...ind, value: `$${mock.currentPrice.toFixed(2)}`, changePercent: mock.change24hPercent, status: mock.change24hPercent > 0 ? 'positive' : mock.change24hPercent < 0 ? 'negative' : 'neutral', loading: false };
             }
           }
@@ -150,98 +126,6 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
           setIndicators(prev => prev.map(ind => ind.id === 'fear-greed' ? { ...ind, loading: false } : ind));
         }
 
-        // Fetch VIX Term Structure
-        try {
-          const vixTermResponse = await fetchFn('/api/market-indicators/vix-term-structure');
-          if (vixTermResponse.ok) {
-            const vixTermData = await vixTermResponse.json();
-            if (vixTermData.success && vixTermData.data) {
-              const contango = vixTermData.data.contangoPercent || 0;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'vix-term-structure' 
-                  ? {
-                      ...ind,
-                      value: contango > 0 ? `+${contango.toFixed(1)}%` : `${contango.toFixed(1)}%`,
-                      status: contango > 5 ? 'negative' : contango < -5 ? 'positive' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'vix-term-structure' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Put/Call Ratio
-        try {
-          const pcRatioResponse = await fetchFn('/api/market-indicators/put-call-ratio');
-          if (pcRatioResponse.ok) {
-            const pcRatioData = await pcRatioResponse.json();
-            if (pcRatioData.success && pcRatioData.data) {
-              const ratio = pcRatioData.data.totalPutCallRatio || 0;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'put-call-ratio' 
-                  ? {
-                      ...ind,
-                      value: ratio.toFixed(2),
-                      status: ratio > 1.0 ? 'negative' : ratio < 0.7 ? 'positive' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'put-call-ratio' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Yield Curve
-        try {
-          const yieldCurveResponse = await fetchFn('/api/market-indicators/yield-curve');
-          if (yieldCurveResponse.ok) {
-            const yieldCurveData = await yieldCurveResponse.json();
-            if (yieldCurveData.success && yieldCurveData.data) {
-              const spread = yieldCurveData.data.spread['10Y-2Y'] || 0;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'yield-curve' 
-                  ? {
-                      ...ind,
-                      value: `${spread > 0 ? '+' : ''}${spread.toFixed(2)}%`,
-                      status: spread < 0 ? 'negative' : spread < 0.5 ? 'neutral' : 'positive',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'yield-curve' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Credit Spreads
-        try {
-          const creditSpreadsResponse = await fetchFn('/api/market-indicators/credit-spreads');
-          if (creditSpreadsResponse.ok) {
-            const creditSpreadsData = await creditSpreadsResponse.json();
-            if (creditSpreadsData.success && creditSpreadsData.data) {
-              const spread = creditSpreadsData.data.baa10y || 0;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'credit-spreads' 
-                  ? {
-                      ...ind,
-                      value: `${spread.toFixed(2)}%`,
-                      status: spread > 3.0 ? 'negative' : spread > 2.0 ? 'neutral' : 'positive',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'credit-spreads' ? { ...ind, loading: false } : ind));
-        }
-
         // Fetch Bitcoin Dominance
         try {
           const btcResponse = await fetchFn('/api/market-indicators/bitcoin-dominance');
@@ -260,29 +144,6 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
           }
         } catch (e) {
           setIndicators(prev => prev.map(ind => ind.id === 'bitcoin-dominance' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Crypto Market Cap
-        try {
-          const marketCapResponse = await fetchFn('/api/market-indicators/crypto-market-cap');
-          if (marketCapResponse.ok) {
-            const marketCapData = await marketCapResponse.json();
-            const value = marketCapData.totalMarketCap 
-              ? `$${(marketCapData.totalMarketCap / 1e12).toFixed(2)}T`
-              : '—';
-            setIndicators(prev => prev.map(ind => 
-              ind.id === 'crypto-market-cap' 
-                ? {
-                    ...ind,
-                    value,
-                    status: 'neutral',
-                    loading: false,
-                  }
-                : ind
-            ));
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'crypto-market-cap' ? { ...ind, loading: false } : ind));
         }
 
         // Fetch S&P 500 (SPY)
@@ -309,30 +170,6 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
           setIndicators(prev => prev.map(ind => ind.id === 'spy' ? { ...ind, loading: false } : ind));
         }
 
-        // Fetch NASDAQ (QQQ)
-        try {
-          const qqqResponse = await fetchFn('/api/market/data?symbol=QQQ&assetType=stock');
-          if (qqqResponse.ok) {
-            const qqqData = await qqqResponse.json();
-            if (qqqData.success && qqqData.data) {
-              const value = `$${qqqData.data.currentPrice.toFixed(2)}`;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'qqq' 
-                  ? {
-                      ...ind,
-                      value,
-                      changePercent: qqqData.data.change24hPercent,
-                      status: qqqData.data.change24hPercent > 0 ? 'positive' : qqqData.data.change24hPercent < 0 ? 'negative' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'qqq' ? { ...ind, loading: false } : ind));
-        }
-
         // Fetch EUR/USD
         try {
           const eurusdResponse = await fetchFn('/api/market/data?symbol=EURUSD&assetType=forex');
@@ -355,29 +192,6 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
           }
         } catch (e) {
           setIndicators(prev => prev.map(ind => ind.id === 'eurusd' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch DXY (Dollar Index) - from FRED
-        try {
-          const dxyResponse = await fetchFn('/api/market-indicators/economic?indicator=DXY');
-          if (dxyResponse.ok) {
-            const dxyData = await dxyResponse.json();
-            if (dxyData.value) {
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'dxy' 
-                  ? {
-                      ...ind,
-                      value: dxyData.value.toFixed(2),
-                      changePercent: dxyData.changePercent,
-                      status: dxyData.changePercent > 0 ? 'positive' : dxyData.changePercent < 0 ? 'negative' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'dxy' ? { ...ind, loading: false } : ind));
         }
 
         // Fetch Gold
@@ -404,133 +218,6 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
           setIndicators(prev => prev.map(ind => ind.id === 'gold' ? { ...ind, loading: false } : ind));
         }
 
-        // Fetch Oil
-        try {
-          const oilResponse = await fetchFn('/api/market/data?symbol=OIL&assetType=commodity');
-          if (oilResponse.ok) {
-            const oilData = await oilResponse.json();
-            if (oilData.success && oilData.data) {
-              const value = `$${oilData.data.currentPrice.toFixed(2)}`;
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'oil' 
-                  ? {
-                      ...ind,
-                      value,
-                      changePercent: oilData.data.change24hPercent,
-                      status: oilData.data.change24hPercent > 0 ? 'positive' : oilData.data.change24hPercent < 0 ? 'negative' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'oil' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Whale Ratio (PRO)
-        try {
-          const whaleResponse = await fetchFn('/api/crypto/whale-analysis');
-          if (whaleResponse.ok) {
-            const whaleData = await whaleResponse.json();
-            setIndicators(prev => prev.map(ind => 
-              ind.id === 'whale-ratio' 
-                ? {
-                    ...ind,
-                    value: whaleData.whaleRatio ? `${whaleData.whaleRatio.toFixed(2)}` : '—',
-                    status: whaleData.whaleRatio && whaleData.whaleRatio > 1 ? 'negative' : 'positive',
-                    loading: false,
-                  }
-                : ind
-            ));
-          } else if (whaleResponse.status === 403) {
-            // Pro required
-            setIndicators(prev => prev.map(ind => ind.id === 'whale-ratio' ? { ...ind, value: 'PRO', loading: false } : ind));
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'whale-ratio' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Exchange Flow (PRO) - Now using Glassnode real data
-        try {
-          const exchangeFlowResponse = await fetchFn('/api/crypto/exchange-flows?asset=BTC');
-          if (exchangeFlowResponse.ok) {
-            const flowData = await exchangeFlowResponse.json();
-            if (flowData.success && flowData.data) {
-              const netFlow = flowData.data.netFlow || 0;
-              const value = netFlow !== 0 
-                ? `${netFlow > 0 ? '+' : ''}$${(Math.abs(netFlow) / 1e6).toFixed(1)}M`
-                : '—';
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'exchange-flow' 
-                  ? {
-                      ...ind,
-                      value,
-                      status: netFlow > 0 ? 'positive' : netFlow < 0 ? 'negative' : 'neutral',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            } else {
-              setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, value: 'PRO', loading: false } : ind));
-            }
-          } else if (exchangeFlowResponse.status === 403) {
-            setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, value: 'PRO', loading: false } : ind));
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch L400 Imbalance (PRO)
-        try {
-          const l400Response = await fetchFn('/api/crypto/top-400-depth');
-          if (l400Response.ok) {
-            const l400Data = await l400Response.json();
-            const imbalance = l400Data.summary?.globalImbalance || 0;
-            const value = imbalance !== 0 
-              ? `${imbalance > 0 ? '+' : ''}${imbalance.toFixed(1)}%`
-              : '0%';
-            setIndicators(prev => prev.map(ind => 
-              ind.id === 'l400-imbalance' 
-                ? {
-                    ...ind,
-                    value,
-                    status: imbalance > 5 ? 'positive' : imbalance < -5 ? 'negative' : 'neutral',
-                    loading: false,
-                  }
-                : ind
-            ));
-          } else if (l400Response.status === 403) {
-            setIndicators(prev => prev.map(ind => ind.id === 'l400-imbalance' ? { ...ind, value: 'PRO', loading: false } : ind));
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'l400-imbalance' ? { ...ind, loading: false } : ind));
-        }
-
-        // Fetch Top Mover (PRO)
-        try {
-          const moversResponse = await fetchFn('/api/crypto/top-movers');
-          if (moversResponse.ok) {
-            const moversData = await moversResponse.json();
-            const topGainer = moversData.gainers?.[0];
-            if (topGainer) {
-              setIndicators(prev => prev.map(ind => 
-                ind.id === 'top-mover' 
-                  ? {
-                      ...ind,
-                      value: `${topGainer.symbol} +${topGainer.changePercent.toFixed(1)}%`,
-                      status: 'positive',
-                      loading: false,
-                    }
-                  : ind
-              ));
-            }
-          } else if (moversResponse.status === 403) {
-            setIndicators(prev => prev.map(ind => ind.id === 'top-mover' ? { ...ind, value: 'PRO', loading: false } : ind));
-          }
-        } catch (e) {
-          setIndicators(prev => prev.map(ind => ind.id === 'top-mover' ? { ...ind, loading: false } : ind));
-        }
       } catch (error) {
         console.error('Error fetching market indicators:', error);
       }
