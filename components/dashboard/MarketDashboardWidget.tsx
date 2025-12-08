@@ -8,10 +8,10 @@ import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { AssetType, MarketIndicator as MarketIndicatorType } from '@/lib/types/market';
-import { IndicatorTooltip } from '@/components/ui/IndicatorTooltip';
 import { API_CONFIG, safeFetch } from '@/lib/config/api';
 import { MOCK_INDICATORS } from '@/lib/config/mock-data';
 import { mockFetch } from '@/lib/utils/fetch-wrapper';
+import { getIndicatorTooltip } from '@/lib/data/indicator-tooltips';
 
 interface MarketIndicator {
   id: string;
@@ -581,71 +581,79 @@ export function MarketDashboardWidget() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-        {indicators.map((indicator) => (
-          <div
-            key={indicator.id}
-            className={cn(
-              'bg-bg-base border border-border-subtle rounded-lg p-4 transition-all hover:border-accent/40',
-              indicator.status === 'positive' && 'border-green-500/30',
-              indicator.status === 'negative' && 'border-red-500/30'
-            )}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1">
-                <div className="flex items-center gap-1">
-                  <IndicatorTooltip indicatorId={indicator.id}>
-                    <span className="text-xs text-text-tertiary font-medium uppercase">
-                      {indicator.name}
-                    </span>
-                  </IndicatorTooltip>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {indicators.map((indicator) => {
+          const tooltipData = getIndicatorTooltip(indicator.id);
+          return (
+            <div
+              key={indicator.id}
+              className={cn(
+                'bg-bg-base border border-border-subtle rounded-lg p-4 transition-all hover:border-accent/40 flex flex-col'
+              )}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-text-primary">
+                    {indicator.name}
+                  </span>
                   {indicator.assetType && (
                     <span className={cn(
-                      'text-[9px] px-1 py-0.5 rounded font-semibold uppercase',
-                      indicator.assetType === 'crypto' && 'bg-purple-500/20 text-purple-400',
-                      indicator.assetType === 'stock' && 'bg-blue-500/20 text-blue-400',
-                      indicator.assetType === 'forex' && 'bg-amber-500/20 text-amber-400',
-                      indicator.assetType === 'commodity' && 'bg-yellow-500/20 text-yellow-400'
+                      'text-[10px] px-1.5 py-0.5 rounded font-medium uppercase',
+                      'bg-bg-soft text-text-tertiary border border-border-subtle'
                     )}>
-                      {indicator.assetType.substring(0, 1)}
+                      {indicator.assetType}
                     </span>
                   )}
                   {indicator.isPro && indicator.value === 'PRO' && (
-                    <span className="text-[10px] px-1 py-0.5 bg-accent/20 text-accent rounded font-semibold">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-accent/10 text-accent border border-accent/30 rounded font-semibold">
                       PRO
                     </span>
                   )}
                 </div>
+                {indicator.changePercent !== undefined && (
+                  <div className={cn(
+                    'flex items-center gap-1 text-xs font-medium',
+                    indicator.changePercent > 0 ? 'text-red-400' : 'text-green-400'
+                  )}>
+                    {indicator.changePercent > 0 ? (
+                      <TrendingUp className="w-3 h-3" />
+                    ) : (
+                      <TrendingDown className="w-3 h-3" />
+                    )}
+                    <span>{Math.abs(indicator.changePercent).toFixed(1)}%</span>
+                  </div>
+                )}
               </div>
-              {indicator.changePercent !== undefined && (
-                <div className={cn(
-                  'flex items-center gap-1 text-xs font-medium',
-                  indicator.changePercent > 0 ? 'text-red-400' : 'text-green-400'
-                )}>
-                  {indicator.changePercent > 0 ? (
-                    <TrendingUp className="w-3 h-3" />
-                  ) : (
-                    <TrendingDown className="w-3 h-3" />
-                  )}
-                  <span>{Math.abs(indicator.changePercent).toFixed(1)}%</span>
+
+              {/* Value */}
+              {indicator.loading ? (
+                <Skeleton className="h-10 w-full mb-3" />
+              ) : (
+                <div className="text-3xl font-bold text-text-primary mb-3">
+                  {indicator.value}
+                </div>
+              )}
+
+              {/* Spiegazione standalone */}
+              {tooltipData && (
+                <div className="mt-auto pt-3 border-t border-border-subtle">
+                  <p className="text-xs text-text-tertiary leading-relaxed border-l-2 border-l-accent/30 pl-2">
+                    {tooltipData.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Alert se necessario */}
+              {indicator.status === 'negative' && indicator.id === 'vix' && (
+                <div className="flex items-center gap-1 mt-2 text-xs text-amber-400">
+                  <AlertTriangle className="w-3 h-3" />
+                  <span>{t('dashboard.marketDashboard.highVolatility') || 'Alta volatilità'}</span>
                 </div>
               )}
             </div>
-            {indicator.loading ? (
-              <Skeleton className="h-8 w-full" />
-            ) : (
-              <div className="text-2xl font-bold text-text-primary">
-                {indicator.value}
-              </div>
-            )}
-            {indicator.status === 'negative' && indicator.id === 'vix' && (
-              <div className="flex items-center gap-1 mt-2 text-xs text-amber-400">
-                <AlertTriangle className="w-3 h-3" />
-                <span>{t('dashboard.marketDashboard.highVolatility') || 'Alta volatilità'}</span>
-              </div>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
