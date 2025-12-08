@@ -91,10 +91,11 @@ export const DashboardTabs = memo(function DashboardTabs() {
     }
   }, [pathname]);
 
-  const handleTabClick = (tab: Tab) => {
+  // Memoize tab click handler
+  const handleTabClick = useCallback((tab: Tab) => {
     setActiveTab(tab.id);
     router.push(tab.href);
-  };
+  }, [router]);
 
   return (
     <div className="sticky top-0 z-40 bg-bg-base border-b border-premium shadow-premium mb-6">
@@ -144,4 +145,4 @@ export const DashboardTabs = memo(function DashboardTabs() {
       </div>
     </div>
   );
-}
+});

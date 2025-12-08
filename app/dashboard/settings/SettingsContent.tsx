@@ -1,5 +1,7 @@
 'use client';
 
+'use client';
+
 import { useState, lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
@@ -105,73 +107,75 @@ const SettingsContent = memo(function SettingsContent() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Content - Lazy loaded per performance */}
         <div className="bg-bg-surface border border-border-subtle rounded-xl p-6">
-          {activeTab === 'profile' && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.profile.title') || 'Profilo Utente'}
-              </h2>
-              <p className="text-text-secondary mb-6">
-                {t('settings.profile.description') || 'Gestisci le informazioni del tuo profilo'}
-              </p>
-              <ProfileForm />
-            </div>
-          )}
+          <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+            {activeTab === 'profile' && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.profile.title') || 'Profilo Utente'}
+                </h2>
+                <p className="text-text-secondary mb-6">
+                  {t('settings.profile.description') || 'Gestisci le informazioni del tuo profilo'}
+                </p>
+                <ProfileForm />
+              </div>
+            )}
 
-          {activeTab === 'notifications' && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.notifications.title') || 'Preferenze Notifiche'}
-              </h2>
-              <NotificationSettings />
-            </div>
-          )}
+            {activeTab === 'notifications' && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.notifications.title') || 'Preferenze Notifiche'}
+                </h2>
+                <NotificationSettings />
+              </div>
+            )}
 
-          {activeTab === 'security' && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.security.title') || 'Sicurezza'}
-              </h2>
-              <p className="text-text-secondary mb-6">
-                {t('settings.security.description') || 'Gestisci password e sicurezza account'}
-              </p>
-              <PasswordForm />
-            </div>
-          )}
+            {activeTab === 'security' && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.security.title') || 'Sicurezza'}
+                </h2>
+                <p className="text-text-secondary mb-6">
+                  {t('settings.security.description') || 'Gestisci password e sicurezza account'}
+                </p>
+                <PasswordForm />
+              </div>
+            )}
 
-          {activeTab === 'billing' && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.billing.title') || 'Fatturazione'}
-              </h2>
-              <p className="text-text-secondary mb-6">
-                {t('settings.billing.description') || 'Monitora i pagamenti e le fatture emesse'}
-              </p>
-              <BillingSummary />
-            </div>
-          )}
+            {activeTab === 'billing' && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.billing.title') || 'Fatturazione'}
+                </h2>
+                <p className="text-text-secondary mb-6">
+                  {t('settings.billing.description') || 'Monitora i pagamenti e le fatture emesse'}
+                </p>
+                <BillingSummary />
+              </div>
+            )}
 
-          {activeTab === 'preferences' && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.preferences.title') || 'Preferenze'}
-              </h2>
-              <p className="text-text-secondary mb-6">
-                {t('settings.preferences.description') || 'Lingua, tema e altre preferenze'}
-              </p>
-              <PreferencesForm />
-            </div>
-          )}
+            {activeTab === 'preferences' && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.preferences.title') || 'Preferenze'}
+                </h2>
+                <p className="text-text-secondary mb-6">
+                  {t('settings.preferences.description') || 'Lingua, tema e altre preferenze'}
+                </p>
+                <PreferencesForm />
+              </div>
+            )}
 
-          {activeTab === 'business' && isDesk && (
-            <div>
-              <h2 className="text-xl font-semibold text-text-primary mb-4">
-                {t('settings.business.title') || 'Impostazioni Business'}
-              </h2>
-              <BusinessLogoSettings />
-            </div>
-          )}
+            {activeTab === 'business' && isDesk && (
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  {t('settings.business.title') || 'Impostazioni Business'}
+                </h2>
+                <BusinessLogoSettings />
+              </div>
+            )}
+          </Suspense>
         </div>
       </div>
     </div>

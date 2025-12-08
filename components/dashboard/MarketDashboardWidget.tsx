@@ -549,8 +549,9 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
       } catch (error) {
         console.error('Error fetching market indicators:', error);
       }
-    };
+  }, []);
 
+  useEffect(() => {
     fetchIndicators();
     
     // Refresh ogni 5 minuti
