@@ -348,7 +348,7 @@ export function PACSimulator() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>{t('proUtilities.pacSimulator.targetAmount') || `Obiettivo (${currencySymbols[currency]})`} *</span>
+              <span>{t('proUtilities.pacSimulator.targetAmount') || 'Obiettivo (€)'} *</span>
               <Tooltip content="L'importo totale che vuoi raggiungere. Il calcolatore ti dirà quanto devi investire periodicamente per raggiungere questo obiettivo.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
