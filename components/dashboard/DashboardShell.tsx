@@ -12,7 +12,7 @@ import { L400SupportResistance } from './L400SupportResistance';
 import { NewsFeed } from './NewsFeed';
 import { EconomicCalendar } from './EconomicCalendar';
 import { TrendingCoins } from './TrendingCoins';
-import { SocialSentiment } from './SocialSentiment';
+import { MarketSentiment } from './MarketSentiment';
 import { RedditSentiment } from './RedditSentiment';
 import { DeveloperActivity } from './DeveloperActivity';
 import { ModuleGrid } from './ModuleGrid';
@@ -339,15 +339,15 @@ export function DashboardShell() {
             </ErrorBoundary>
           </section>
 
-          {/* Social Sentiment - Multi-Asset Sentiment */}
+          {/* Market Sentiment - Multi-Asset Sentiment (Crypto, Stocks, Forex, Commodities) */}
           <section 
-            aria-label="Social Sentiment" 
+            aria-label="Market Sentiment" 
             className={styles.dashboardSection}
             suppressHydrationWarning
-            id="social-sentiment"
+            id="market-sentiment"
           >
             <ErrorBoundary>
-              <SocialSentiment />
+              <MarketSentiment />
             </ErrorBoundary>
           </section>
 
