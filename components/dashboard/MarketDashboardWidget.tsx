@@ -33,6 +33,10 @@ export function MarketDashboardWidget() {
   const [indicators, setIndicators] = useState<MarketIndicator[]>([
     // Market-wide indicators
     { id: 'vix', name: 'VIX', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
+    { id: 'vix-term-structure', name: 'VIX Term', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
+    { id: 'put-call-ratio', name: 'Put/Call', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
+    { id: 'yield-curve', name: 'Yield Curve', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
+    { id: 'credit-spreads', name: 'Credit Spreads', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
     { id: 'fear-greed', name: 'Fear & Greed', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
     // Crypto indicators
     { id: 'bitcoin-dominance', name: 'BTC Dominance', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
@@ -96,6 +100,98 @@ export function MarketDashboardWidget() {
           }
         } catch (e) {
           setIndicators(prev => prev.map(ind => ind.id === 'fear-greed' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch VIX Term Structure
+        try {
+          const vixTermResponse = await fetch('/api/market-indicators/vix-term-structure');
+          if (vixTermResponse.ok) {
+            const vixTermData = await vixTermResponse.json();
+            if (vixTermData.success && vixTermData.data) {
+              const contango = vixTermData.data.contangoPercent || 0;
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'vix-term-structure' 
+                  ? {
+                      ...ind,
+                      value: contango > 0 ? `+${contango.toFixed(1)}%` : `${contango.toFixed(1)}%`,
+                      status: contango > 5 ? 'negative' : contango < -5 ? 'positive' : 'neutral',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            }
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'vix-term-structure' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch Put/Call Ratio
+        try {
+          const pcRatioResponse = await fetch('/api/market-indicators/put-call-ratio');
+          if (pcRatioResponse.ok) {
+            const pcRatioData = await pcRatioResponse.json();
+            if (pcRatioData.success && pcRatioData.data) {
+              const ratio = pcRatioData.data.totalPutCallRatio || 0;
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'put-call-ratio' 
+                  ? {
+                      ...ind,
+                      value: ratio.toFixed(2),
+                      status: ratio > 1.0 ? 'negative' : ratio < 0.7 ? 'positive' : 'neutral',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            }
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'put-call-ratio' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch Yield Curve
+        try {
+          const yieldCurveResponse = await fetch('/api/market-indicators/yield-curve');
+          if (yieldCurveResponse.ok) {
+            const yieldCurveData = await yieldCurveResponse.json();
+            if (yieldCurveData.success && yieldCurveData.data) {
+              const spread = yieldCurveData.data.spread['10Y-2Y'] || 0;
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'yield-curve' 
+                  ? {
+                      ...ind,
+                      value: `${spread > 0 ? '+' : ''}${spread.toFixed(2)}%`,
+                      status: spread < 0 ? 'negative' : spread < 0.5 ? 'neutral' : 'positive',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            }
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'yield-curve' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch Credit Spreads
+        try {
+          const creditSpreadsResponse = await fetch('/api/market-indicators/credit-spreads');
+          if (creditSpreadsResponse.ok) {
+            const creditSpreadsData = await creditSpreadsResponse.json();
+            if (creditSpreadsData.success && creditSpreadsData.data) {
+              const spread = creditSpreadsData.data.baa10y || 0;
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'credit-spreads' 
+                  ? {
+                      ...ind,
+                      value: `${spread.toFixed(2)}%`,
+                      status: spread > 3.0 ? 'negative' : spread > 2.0 ? 'neutral' : 'positive',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            }
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'credit-spreads' ? { ...ind, loading: false } : ind));
         }
 
         // Fetch Bitcoin Dominance
