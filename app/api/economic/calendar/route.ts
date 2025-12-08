@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '7', 10);
-    const country = searchParams.get('country') || 'united states';
+    const country = searchParams.get('country') || 'all'; // 'all', 'united states', 'euro area', 'united kingdom', etc.
 
     if (!TRADING_ECONOMICS_CLIENT_KEY || !TRADING_ECONOMICS_CLIENT_SECRET) {
       // Return mock data if API keys not configured
@@ -78,9 +78,13 @@ export async function GET(request: Request) {
     const params = new URLSearchParams({
       c: TRADING_ECONOMICS_CLIENT_KEY,
       d: TRADING_ECONOMICS_CLIENT_SECRET,
-      country: country,
       importance: '1,2,3', // All importance levels
     });
+    
+    // Add country filter only if not 'all'
+    if (country !== 'all') {
+      params.append('country', country);
+    }
 
     try {
       const response = await fetch(`${url}?${params.toString()}`);

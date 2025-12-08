@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '30', 10);
-    const country = searchParams.get('country') || 'US';
+    const country = searchParams.get('country') || 'all'; // 'all', 'US', 'EU', 'ASIA', etc.
 
     if (!FINNHUB_API_KEY) {
       // Return mock data if API key not configured
@@ -69,8 +69,25 @@ export async function GET(request: Request) {
 
     try {
       // Fetch IPO calendar from Finnhub
+      // Note: Finnhub IPO calendar may be limited by country in free tier
+      // For multi-market, we'll fetch all and filter by exchange
       const url = `${FINNHUB_BASE_URL}/calendar/ipo?from=${new Date().toISOString().split('T')[0]}&to=${new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}&token=${FINNHUB_API_KEY}`;
       const response = await fetch(url);
+      
+      // Map exchanges to countries/regions
+      const exchangeToCountry: Record<string, string> = {
+        'NASDAQ': 'US',
+        'NYSE': 'US',
+        'NYSEARCA': 'US',
+        'LSE': 'GB',
+        'XETR': 'DE',
+        'XPAR': 'FR',
+        'MIL': 'IT',
+        'TSE': 'JP',
+        'HKEX': 'HK',
+        'SSE': 'CN',
+        'SZSE': 'CN',
+      };
 
       if (!response.ok) {
         throw new Error(`Finnhub API error: ${response.status}`);
@@ -86,7 +103,10 @@ export async function GET(request: Request) {
       }
 
       // Process IPO data and add sentiment/participation (simulated for now)
-      const ipos: IPOEvent[] = data.ipoCalendar.map((ipo: any) => {
+      let ipos: IPOEvent[] = data.ipoCalendar.map((ipo: any) => {
+        // Determine country from exchange
+        const ipoCountry = exchangeToCountry[ipo.exchange] || 'US';
+        
         // Simulate sentiment based on company info
         const sentimentScore = Math.random() * 100 - 50; // -50 to +50, then adjust
         
@@ -120,6 +140,28 @@ export async function GET(request: Request) {
           },
         };
       });
+
+      // Filter by country if specified
+      if (country !== 'all') {
+        const countryMap: Record<string, string[]> = {
+          'US': ['US'],
+          'EU': ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'PT', 'IE', 'FI', 'DK', 'SE'],
+          'ASIA': ['JP', 'HK', 'CN', 'KR', 'SG', 'TW', 'IN'],
+          'GB': ['GB'],
+          'DE': ['DE'],
+          'FR': ['FR'],
+          'IT': ['IT'],
+          'JP': ['JP'],
+          'HK': ['HK'],
+          'CN': ['CN'],
+        };
+        
+        const targetCountries = countryMap[country.toUpperCase()] || [country];
+        ipos = ipos.filter(ipo => {
+          const ipoCountry = exchangeToCountry[ipo.exchange] || 'US';
+          return targetCountries.includes(ipoCountry);
+        });
+      }
 
       // Sort by date
       ipos.sort((a, b) => new Date(a.ipoDate).getTime() - new Date(b.ipoDate).getTime());

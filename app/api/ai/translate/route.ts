@@ -32,29 +32,28 @@ export async function POST(request: Request) {
       });
     }
 
-    // Use AI translation (OpenAI or similar)
-    // For now, use a simple approach with OpenAI API if available
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+    // Use Groq (Grok) for translation - already configured
+    const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-    if (!OPENAI_API_KEY) {
+    if (!GROQ_API_KEY) {
       // Fallback: return text as-is with note
       return NextResponse.json({
         success: true,
         translated: text,
         confidence: 0.5,
-        note: 'OPENAI_API_KEY not configured - returning original text',
+        note: 'GROQ_API_KEY not configured - returning original text',
       });
     }
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini', // Cheaper model for translation
+          model: 'llama-3.1-70b-versatile', // Fast and accurate for translation
           messages: [
             {
               role: 'system',
@@ -71,7 +70,7 @@ export async function POST(request: Request) {
       });
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        throw new Error(`Groq API error: ${response.status}`);
       }
 
       const data = await response.json();
@@ -87,7 +86,7 @@ export async function POST(request: Request) {
         },
       });
     } catch (error) {
-      console.error('Error calling OpenAI API:', error);
+      console.error('Error calling Groq API:', error);
       // Fallback: return original text
       return NextResponse.json({
         success: true,

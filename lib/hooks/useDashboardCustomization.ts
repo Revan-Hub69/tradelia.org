@@ -19,6 +19,7 @@ const DEFAULT_COMPONENTS: DashboardComponent[] = [
   { id: 'news-feed', name: 'News Feed', visible: true, order: 4 },
   { id: 'economic-calendar', name: 'Economic Calendar', visible: true, order: 5 },
   { id: 'ipo-calendar', name: 'IPO Calendar', visible: true, order: 6 },
+  { id: 'corporate-events', name: 'Corporate Events', visible: true, order: 6.5 },
   { id: 'trending-coins', name: 'Trending Coins', visible: true, order: 7 },
   { id: 'market-sentiment', name: 'Market Sentiment', visible: true, order: 8 },
   { id: 'reddit-sentiment', name: 'Reddit Sentiment', visible: true, order: 9 },

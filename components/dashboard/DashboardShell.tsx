@@ -12,6 +12,7 @@ import { L400SupportResistance } from './L400SupportResistance';
 import { NewsFeed } from './NewsFeed';
 import { EconomicCalendar } from './EconomicCalendar';
 import { IPOCalendar } from './IPOCalendar';
+import { CorporateEvents } from './CorporateEvents';
 import { TrendingCoins } from './TrendingCoins';
 import { UserMenu } from './UserMenu';
 import { MarketSentiment } from './MarketSentiment';
@@ -362,6 +363,20 @@ export function DashboardShell() {
             >
               <ErrorBoundary>
                 <IPOCalendar />
+              </ErrorBoundary>
+            </section>
+          )}
+
+          {/* Corporate Events - Earnings, Dividends, Splits, Mergers */}
+          {isComponentVisible('corporate-events') && (
+            <section 
+              aria-label="Corporate Events" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="corporate-events"
+            >
+              <ErrorBoundary>
+                <CorporateEvents />
               </ErrorBoundary>
             </section>
           )}
