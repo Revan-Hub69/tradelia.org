@@ -133,6 +133,25 @@ export function IPOCalendar() {
         </div>
       )}
 
+      {/* Country Filter */}
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {[
+          { value: 'all', label: locale === 'it' ? 'Tutti' : 'All' },
+          { value: 'US', label: 'USA' },
+          { value: 'EU', label: 'EU' },
+          { value: 'ASIA', label: 'Asia' },
+        ].map((country) => (
+          <Button
+            key={country.value}
+            variant={countryFilter === country.value ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setCountryFilter(country.value)}
+          >
+            {country.label}
+          </Button>
+        ))}
+      </div>
+
       <div className="space-y-4 max-h-[600px] overflow-y-auto">
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => (
