@@ -15,7 +15,8 @@ import {
 } from 'chart.js';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, BarChart3, Activity, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 
 ChartJS.register(
@@ -59,7 +60,9 @@ export function MultiAssetCharts() {
     { id: 'commodities', name: 'Gold', symbol: 'XAU/USD', data: [], currentPrice: 0, change24h: 0, change24hPercent: 0 },
   ]);
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState<'1h' | '4h' | '24h' | '7d'>('24h');
+  const [timeframe, setTimeframe] = useState<'1h' | '4h' | '1d' | '1w' | '1m' | '3m' | '1y'>('1d');
+  const [showIndicators, setShowIndicators] = useState(false);
+  const [showVolume, setShowVolume] = useState(false);
 
   useEffect(() => {
     const fetchChartData = async () => {
@@ -67,8 +70,26 @@ export function MultiAssetCharts() {
         setLoading(true);
 
         // Fetch BTC price history from Binance (free)
-        const btcInterval = timeframe === '1h' ? '1h' : timeframe === '4h' ? '4h' : timeframe === '24h' ? '1h' : '1d';
-        const btcLimit = timeframe === '1h' ? 60 : timeframe === '4h' ? 60 : timeframe === '24h' ? 24 : 7;
+        const intervalMap: Record<string, string> = {
+          '1h': '1h',
+          '4h': '4h',
+          '1d': '1d',
+          '1w': '1d',
+          '1m': '1d',
+          '3m': '1w',
+          '1y': '1M',
+        };
+        const limitMap: Record<string, number> = {
+          '1h': 60,
+          '4h': 60,
+          '1d': 24,
+          '1w': 7,
+          '1m': 30,
+          '3m': 12,
+          '1y': 12,
+        };
+        const btcInterval = intervalMap[timeframe] || '1d';
+        const btcLimit = limitMap[timeframe] || 24;
         const btcKlinesResponse = await fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${btcInterval}&limit=${btcLimit}`);
         const btcKlines = btcKlinesResponse.ok ? await btcKlinesResponse.json() : [];
         const btcData = {
