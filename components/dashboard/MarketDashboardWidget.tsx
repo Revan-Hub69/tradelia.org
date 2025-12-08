@@ -29,36 +29,21 @@ interface MarketIndicator {
 
 /**
  * Market Dashboard Widget
- * Cruscotto operativo con indicatori di mercato principali
- * Versione compatta per la panoramica dashboard
+ * Cruscotto operativo con indicatori chiave (4-6 indicatori più importanti)
+ * Design migliorato con cards più grandi e leggibili
+ * Per tutti gli indicatori, vedere /dashboard/market-data
  */
 export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
   const { t, locale } = useTranslations();
+  // Solo indicatori chiave per il cruscotto principale (4-6 indicatori più importanti)
   const [indicators, setIndicators] = useState<MarketIndicator[]>([
-    // Market-wide indicators
+    // Indicatori chiave - solo i più importanti per overview
     { id: 'vix', name: 'VIX', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'vix-term-structure', name: 'VIX Term', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'put-call-ratio', name: 'Put/Call', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'yield-curve', name: 'Yield Curve', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'credit-spreads', name: 'Credit Spreads', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'fear-greed', name: 'Fear & Greed', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
-    // Crypto indicators
-    { id: 'bitcoin-dominance', name: 'BTC Dominance', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
-    { id: 'crypto-market-cap', name: 'Crypto Market Cap', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
-    // Stock indicators
     { id: 'spy', name: 'S&P 500', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    { id: 'qqq', name: 'NASDAQ', value: '—', status: 'neutral', loading: true, assetType: 'stock' },
-    // Forex indicators
+    { id: 'bitcoin-dominance', name: 'BTC Dominance', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
+    { id: 'fear-greed', name: 'Fear & Greed', value: '—', status: 'neutral', loading: true, assetType: 'crypto' },
     { id: 'eurusd', name: 'EUR/USD', value: '—', status: 'neutral', loading: true, assetType: 'forex' },
-    { id: 'dxy', name: 'DXY', value: '—', status: 'neutral', loading: true, assetType: 'forex' },
-    // Commodity indicators
     { id: 'gold', name: 'Gold', value: '—', status: 'neutral', loading: true, assetType: 'commodity' },
-    { id: 'oil', name: 'Oil', value: '—', status: 'neutral', loading: true, assetType: 'commodity' },
-    // PRO indicators
-    { id: 'whale-ratio', name: 'Whale Ratio', value: '—', status: 'neutral', loading: true, isPro: true, assetType: 'crypto' },
-    { id: 'exchange-flow', name: 'Exchange Flow', value: '—', status: 'neutral', loading: true, isPro: true, assetType: 'crypto' },
-    { id: 'l400-imbalance', name: 'L400 Imbalance', value: '—', status: 'neutral', loading: true, isPro: true, assetType: 'crypto' },
-    { id: 'top-mover', name: 'Top Mover', value: '—', status: 'neutral', loading: true, isPro: true },
   ]);
 
   // Memoize fetch function per evitare re-creazione
@@ -579,79 +564,85 @@ export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
       </div>
 
       <SectionBanner
-        title="Indicatori di Mercato in Tempo Reale"
-        description="Monitora i principali indicatori finanziari per avere una visione completa dello stato dei mercati. Ogni indicatore mostra il valore attuale e una spiegazione su come interpretarlo."
+        title="Indicatori Chiave di Mercato"
+        description="I principali indicatori finanziari per monitorare lo stato dei mercati. Clicca su 'Vedi tutti' per accedere all'analisi completa con tutti gli indicatori disponibili."
         icon={<BarChart3 className="w-4 h-4" />}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {indicators.map((indicator) => {
           const tooltipData = getIndicatorTooltip(indicator.id);
           return (
             <div
               key={indicator.id}
               className={cn(
-                'bg-bg-base border border-border-subtle rounded-lg p-4 transition-all hover:border-accent/40 flex flex-col'
+                'bg-bg-base border-2 border-border-subtle rounded-xl p-6 transition-all hover:border-accent/60 hover:shadow-lg flex flex-col min-h-[200px]'
               )}
             >
-              {/* Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-text-primary">
-                    {indicator.name}
-                  </span>
-                  {indicator.assetType && (
-                    <span className={cn(
-                      'text-[10px] px-1.5 py-0.5 rounded font-medium uppercase',
-                      'bg-bg-soft text-text-tertiary border border-border-subtle'
-                    )}>
-                      {indicator.assetType}
-                    </span>
-                  )}
-                  {indicator.isPro && indicator.value === 'PRO' && (
-                    <span className="text-[10px] px-1.5 py-0.5 bg-accent/10 text-accent border border-accent/30 rounded font-semibold">
-                      PRO
-                    </span>
-                  )}
+              {/* Header con badge */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-base font-bold text-text-primary">
+                      {indicator.name}
+                    </h3>
+                    {indicator.assetType && (
+                      <span className={cn(
+                        'text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wide',
+                        'bg-bg-soft text-text-secondary border border-border-subtle'
+                      )}>
+                        {indicator.assetType}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {indicator.changePercent !== undefined && (
                   <div className={cn(
-                    'flex items-center gap-1 text-xs font-medium',
-                    indicator.changePercent > 0 ? 'text-red-400' : 'text-green-400'
+                    'flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-bold',
+                    indicator.changePercent > 0 
+                      ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
+                      : 'bg-green-500/10 text-green-400 border border-green-500/20'
                   )}>
                     {indicator.changePercent > 0 ? (
-                      <TrendingUp className="w-3 h-3" />
+                      <TrendingUp className="w-3.5 h-3.5" />
                     ) : (
-                      <TrendingDown className="w-3 h-3" />
+                      <TrendingDown className="w-3.5 h-3.5" />
                     )}
                     <span>{Math.abs(indicator.changePercent).toFixed(1)}%</span>
                   </div>
                 )}
               </div>
 
-              {/* Value */}
+              {/* Value - più prominente */}
               {indicator.loading ? (
-                <Skeleton className="h-10 w-full mb-3" />
+                <Skeleton className="h-14 w-full mb-4" />
               ) : (
-                <div className="text-3xl font-bold text-text-primary mb-3">
+                <div className="text-4xl font-extrabold text-text-primary mb-4 tracking-tight">
                   {indicator.value}
                 </div>
               )}
 
-              {/* Spiegazione standalone */}
+              {/* Spiegazione - più leggibile */}
               {tooltipData && (
-                <div className="mt-auto pt-3 border-t border-border-subtle">
-                  <p className="text-xs text-text-tertiary leading-relaxed border-l-2 border-l-accent/30 pl-2">
-                    {tooltipData.description}
+                <div className="mt-auto pt-4 border-t-2 border-border-subtle">
+                  <p className="text-sm text-text-secondary leading-relaxed line-clamp-3">
+                    {tooltipData.description.split('.')[0]}{tooltipData.description.split('.')[1] ? '.' + tooltipData.description.split('.')[1] : ''}
                   </p>
+                  <Link
+                    href={buildLocalePath(locale, `/dashboard/market-data#${indicator.id}`)}
+                    className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent hover:text-accent-hover transition-colors"
+                  >
+                    <span>Dettagli</span>
+                    <LinkIcon className="w-3 h-3" />
+                  </Link>
                 </div>
               )}
 
               {/* Alert se necessario */}
               {indicator.status === 'negative' && indicator.id === 'vix' && (
-                <div className="flex items-center gap-1 mt-2 text-xs text-amber-400">
-                  <AlertTriangle className="w-3 h-3" />
-                  <span>{t('dashboard.marketDashboard.highVolatility') || 'Alta volatilità'}</span>
+                <div className="flex items-center gap-2 mt-3 px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-amber-400">
+                  <AlertTriangle className="w-4 h-4" />
+                  <span className="font-semibold">{t('dashboard.marketDashboard.highVolatility') || 'Alta volatilità'}</span>
                 </div>
               )}
             </div>
