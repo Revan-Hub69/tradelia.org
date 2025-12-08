@@ -16,25 +16,84 @@
 | 2 | **Bond Yields** (10Y, 2Y Treasury) | 1 ora | FRED (GRATIS) |
 | 3 | **Yield Curve** (10Y - 2Y Spread) | 1 ora | FRED (GRATIS) |
 | 4 | **Credit Spreads** | 1 ora | FRED (GRATIS) |
-| 5 | **Stock Indexes USA** (S&P 500, Dow, NASDAQ) | 5 minuti | Finnhub (GRATIS) |
-| 6 | **Forex Major Pairs** (EUR/USD, GBP/USD, USD/JPY, USD/CHF) | 5 minuti | Finnhub (GRATIS) |
-| 7 | **Commodities** (Gold, Oil, Silver) | 10 minuti | Alpha Vantage (GRATIS) |
-| 8 | **VIX** | 1 minuto | Yahoo Finance (GRATIS) |
-| 9 | **Fear & Greed Index** | 1 ora | Alternative.me (GRATIS) |
-| 10 | **Bitcoin Dominance** | 5 minuti | CoinGecko (GRATIS) |
-| 11 | **Crypto Market Cap** | 5 minuti | CoinGecko (GRATIS) |
+| 5 | **Leading Economic Indicators** | 1 ora | FRED (GRATIS) |
+| 6 | **Stock Indexes USA** (S&P 500, Dow, NASDAQ) | 5 minuti | Finnhub (GRATIS) |
+| 7 | **Forex Major Pairs** (EUR/USD, GBP/USD, USD/JPY, USD/CHF) | 5 minuti | Finnhub (GRATIS) |
+| 8 | **Commodities** (Gold, Oil, Silver) | 10 minuti | Alpha Vantage (GRATIS) |
+| 9 | **VIX** | 1 minuto | Yahoo Finance (GRATIS) |
+| 10 | **Put/Call Ratio** | 1 minuto | Yahoo Finance (GRATIS) |
+| 11 | **Fear & Greed Index** | 1 ora | Alternative.me (GRATIS) |
+| 12 | **Bitcoin Dominance** | 5 minuti | CoinGecko (GRATIS) |
+| 13 | **Crypto Market Cap** | 5 minuti | CoinGecko (GRATIS) |
 
-**Totale**: 11 indicatori base FREE
+**Totale**: 13 indicatori base FREE
 
 ---
 
-### 📅 **2. CALENDARI** (FREE)
+### 🌍 **2. INDICATORI GLOBALI BASE** (FREE)
 
 | # | Indicatore | Frequenza | API |
 |---|------------|-----------|-----|
-| 12 | **IPO Calendar** (base) | 1 ora | Finnhub (GRATIS) |
-| 13 | **Corporate Events** (base) | 1 ora | Finnhub (GRATIS) |
-| 14 | **Economic Calendar** (base) | 1 ora | Finnhub (GRATIS) |
+| 14 | **European Indexes** (DAX, CAC, FTSE, FTSE MIB, Euro Stoxx) | 5 minuti | Finnhub (GRATIS) |
+| 15 | **Asian Indexes** (Nikkei, Shanghai, Hang Seng, Nifty) | 5 minuti | Finnhub (GRATIS) |
+| 16 | **Emerging Markets** (Bovespa, MSCI EM) | 5 minuti | Finnhub (GRATIS) |
+| 17 | **Forex Esteso** (Emergenti, Europee) | 5 minuti | Finnhub (GRATIS) |
+| 18 | **DXY (Dollar Index)** | 5 minuti | FRED/Yahoo Finance (GRATIS) |
+| 19 | **ETF Geografici** (VGK, EEM, VWO) | 5 minuti | Finnhub (GRATIS) |
+| 20 | **ETF Settoriali** (SPY, QQQ, XLK, XLF) | 5 minuti | Finnhub (GRATIS) |
+
+**Totale**: 7 indicatori globali base FREE
+
+---
+
+### 📊 **3. INDICATORI COMPOSITI BASE** (FREE)
+
+| # | Indicatore | Frequenza | API |
+|---|------------|-----------|-----|
+| 21 | **Market Breadth** (Advance/Decline) | 5 minuti | Finnhub (GRATIS) |
+| 22 | **McClellan Oscillator** | 5 minuti | Finnhub (GRATIS) |
+| 23 | **Business Cycle Composite** | 1 ora | FRED (GRATIS) |
+| 24 | **Volatility Composite** | 1 minuto | Yahoo Finance (GRATIS) |
+
+**Totale**: 4 compositi base FREE
+
+---
+
+### 🔧 **4. INDICATORI TECNICI BASE** (FREE)
+
+| # | Indicatore | Frequenza | API |
+|---|------------|-----------|-----|
+| 25 | **VWAP** (Volume-Weighted Average Price) | 1 minuto | Finnhub (GRATIS) |
+| 26 | **OBV** (On-Balance Volume) | 1 minuto | Finnhub (GRATIS) |
+| 27 | **Accumulation/Distribution Line** | 1 minuto | Finnhub (GRATIS) |
+
+**Totale**: 3 tecnici base FREE
+
+---
+
+### 💰 **5. INDICATORI CRYPTO** (FREE)
+
+| # | Indicatore | Frequenza | API |
+|---|------------|-----------|-----|
+| 28 | **Top Movers** | 5 minuti | CoinGecko (GRATIS) |
+| 29 | **Trending** | 5 minuti | CoinGecko (GRATIS) |
+| 30 | **Whale Analysis** | 5 minuti | CoinGecko (GRATIS) |
+| 31 | **Social Sentiment** | 1 ora | CoinGecko (GRATIS) |
+| 32 | **L400 Depth** | 1 minuto | Binance (GRATIS) |
+| 33 | **Aggregated Depth** | 1 minuto | Binance + Coinbase (GRATIS) |
+| 34 | **Top 400 Monitor** | 1 minuto | Binance (GRATIS) |
+
+**Totale**: 7 indicatori crypto FREE
+
+---
+
+### 📅 **6. CALENDARI** (FREE)
+
+| # | Indicatore | Frequenza | API |
+|---|------------|-----------|-----|
+| 35 | **IPO Calendar** (con sentiment, performance) | 1 ora | Finnhub (GRATIS) |
+| 36 | **Corporate Events** (con earnings surprise) | 1 ora | Finnhub (GRATIS) |
+| 37 | **Economic Calendar** | 1 ora | Finnhub (GRATIS) |
 
 **Totale**: 3 calendari FREE
 
@@ -58,43 +117,37 @@
 
 | # | Indicatore | Frequenza | API | Perché PRO |
 |---|------------|-----------|-----|------------|
-| 18 | **Market Breadth** (Advance/Decline) | 5 minuti | Finnhub (GRATIS) | Analisi avanzata |
-| 19 | **McClellan Oscillator** | 5 minuti | Finnhub (GRATIS) | Indicatore professionale |
-| 20 | **McClellan Summation Index** | 5 minuti | Finnhub (GRATIS) | Indicatore professionale |
-| 21 | **Arms Index (TRIN)** | 5 minuti | Finnhub (GRATIS) | Indicatore professionale |
-| 22 | **Leading Economic Indicators** | 1 ora | FRED (GRATIS) | Predittore avanzato |
-| 23 | **Business Cycle Composite** | 1 ora | FRED (GRATIS) | Analisi ciclo economico |
-| 24 | **PMI Composite** | 1 ora | FRED/Trading Economics | Indicatore economico avanzato |
-| 25 | **Financial Stress Composite** | 1 ora | FRED (GRATIS) | Indicatore stress finanziario |
-| 26 | **Volatility Composite** | 1 minuto | Yahoo Finance (GRATIS) | Analisi volatilità avanzata |
-| 27 | **Momentum Composite Multi-Timeframe** | 5 minuti | Finnhub (GRATIS) | Analisi momentum avanzata |
-| 28 | **Sentiment Composite Avanzato** | 1 minuto | Multiple (GRATIS) | Sentiment multi-fonte |
-| 29 | **Liquidity Composite** | 1 minuto | Multiple (GRATIS) | Analisi liquidità avanzata |
+| 38 | **McClellan Summation Index** | 5 minuti | Finnhub (GRATIS) | Indicatore professionale avanzato |
+| 39 | **Arms Index (TRIN)** | 5 minuti | Finnhub (GRATIS) | Indicatore professionale avanzato |
+| 40 | **PMI Composite** | 1 ora | FRED/Trading Economics | Indicatore economico avanzato |
+| 41 | **Financial Stress Composite** | 1 ora | FRED (GRATIS) | Indicatore stress finanziario |
+| 42 | **Momentum Composite Multi-Timeframe** | 5 minuti | Finnhub (GRATIS) | Analisi momentum avanzata |
+| 43 | **Sentiment Composite Avanzato** | 1 minuto | Multiple (GRATIS) | Sentiment multi-fonte avanzato |
+| 44 | **Liquidity Composite** | 1 minuto | Multiple (GRATIS) | Analisi liquidità avanzata |
 
-**Totale**: 12 compositi PRO
+**Totale**: 7 compositi avanzati PRO
 
 ---
 
-### 🌍 **5. INDICATORI GLOBALI** (PRO)
+### 🌍 **5. INDICATORI GLOBALI AVANZATI** (PRO)
 
 | # | Indicatore | Frequenza | API | Perché PRO |
 |---|------------|-----------|-----|------------|
-| 30 | **European Indexes** (DAX, CAC, FTSE, FTSE MIB, Euro Stoxx, IBEX, AEX) | 5 minuti | Finnhub (GRATIS) | Copertura globale |
-| 31 | **Asian Indexes** (Nikkei, Shanghai, Hang Seng, Nifty, KOSPI, ASX) | 5 minuti | Finnhub (GRATIS) | Copertura globale |
-| 32 | **Emerging Markets** (Bovespa, JSE, MSCI EM) | 5 minuti | Finnhub (GRATIS) | Copertura globale |
-| 33 | **European Stocks** (Top 20) | 5 minuti | Finnhub (GRATIS) | Stocks globali |
-| 34 | **Asian Stocks** (Top 15) | 5 minuti | Finnhub (GRATIS) | Stocks globali |
-| 35 | **Emerging Stocks** (Top 10) | 5 minuti | Finnhub (GRATIS) | Stocks globali |
-| 36 | **ETF Geografici** (VGK, EEM, VWO, VPL, EWJ) | 5 minuti | Finnhub (GRATIS) | ETF globali |
-| 37 | **ETF Settoriali** (SPY, QQQ, XLK, XLF, XLE, XLV, XLY, XLP) | 5 minuti | Finnhub (GRATIS) | ETF settoriali |
-| 38 | **Forex Esteso** (Emergenti, Europee, Commodity Currencies) | 5 minuti | Finnhub (GRATIS) | Forex avanzato |
-| 39 | **DXY (Dollar Index)** | 5 minuti | FRED/Yahoo Finance (GRATIS) | Indicatore avanzato |
-| 40 | **Economic Indicators Globali** (Europa, Italia, Asia) | 1 ora | ECB, Eurostat, FRED, World Bank, IMF | Dati economici globali |
-| 41 | **Regional Rotation Composite** | 5 minuti | Finnhub (GRATIS) | Analisi rotazione regionale |
-| 42 | **Currency Strength Composite** | 5 minuti | Finnhub (GRATIS) | Analisi forza valute |
-| 43 | **Sector Rotation Composite** | 5 minuti | Finnhub (GRATIS) | Analisi rotazione settoriale |
+| 45 | **European Indexes Completi** (IBEX, AEX) | 5 minuti | Finnhub (GRATIS) | Indici aggiuntivi |
+| 46 | **Asian Indexes Completi** (KOSPI, ASX) | 5 minuti | Finnhub (GRATIS) | Indici aggiuntivi |
+| 47 | **Emerging Markets Completi** (JSE) | 5 minuti | Finnhub (GRATIS) | Indici aggiuntivi |
+| 48 | **European Stocks** (Top 20) | 5 minuti | Finnhub (GRATIS) | Stocks globali dettagliate |
+| 49 | **Asian Stocks** (Top 15) | 5 minuti | Finnhub (GRATIS) | Stocks globali dettagliate |
+| 50 | **Emerging Stocks** (Top 10) | 5 minuti | Finnhub (GRATIS) | Stocks globali dettagliate |
+| 51 | **ETF Geografici Completi** (VPL, EWJ) | 5 minuti | Finnhub (GRATIS) | ETF aggiuntivi |
+| 52 | **ETF Settoriali Completi** (XLE, XLV, XLY, XLP) | 5 minuti | Finnhub (GRATIS) | ETF aggiuntivi |
+| 53 | **Forex Commodity Currencies** | 5 minuti | Finnhub (GRATIS) | Forex avanzato |
+| 54 | **Economic Indicators Globali** (Europa, Italia, Asia) | 1 ora | ECB, Eurostat, FRED, World Bank, IMF | Dati economici globali |
+| 55 | **Regional Rotation Composite** | 5 minuti | Finnhub (GRATIS) | Analisi rotazione regionale |
+| 56 | **Currency Strength Composite** | 5 minuti | Finnhub (GRATIS) | Analisi forza valute |
+| 57 | **Sector Rotation Composite** | 5 minuti | Finnhub (GRATIS) | Analisi rotazione settoriale |
 
-**Totale**: 14 indicatori globali PRO
+**Totale**: 13 indicatori globali avanzati PRO
 
 ---
 
@@ -124,14 +177,11 @@
 
 | # | Indicatore | Frequenza | API | Perché PRO |
 |---|------------|-----------|-----|------------|
-| 57 | **VWAP** (Volume-Weighted Average Price) | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
-| 58 | **OBV** (On-Balance Volume) | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
-| 59 | **Accumulation/Distribution Line** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
-| 60 | **Money Flow Index (MFI)** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
-| 61 | **Chaikin Oscillator** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
-| 62 | **Ease of Movement (EOM)** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale |
+| 58 | **Money Flow Index (MFI)** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale avanzato |
+| 59 | **Chaikin Oscillator** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale avanzato |
+| 60 | **Ease of Movement (EOM)** | 1 minuto | Finnhub (GRATIS) | Indicatore professionale avanzato |
 
-**Totale**: 6 tecnici avanzati PRO
+**Totale**: 3 tecnici avanzati PRO
 
 ---
 
@@ -155,13 +205,13 @@
 
 | # | Indicatore | Frequenza | API | Perché PRO |
 |---|------------|-----------|-----|------------|
-| 70 | **Whale Analysis** | 5 minuti | CoinGecko (GRATIS) | Analisi whale |
-| 71 | **Exchange Flows** | 1 ora | CoinGecko (GRATIS) | Flussi exchange |
-| 72 | **Social Sentiment** | 1 ora | CoinGecko (GRATIS) | Sentiment avanzato |
-| 73 | **Developer Activity** | 1 ora | CoinGecko (GRATIS) | Metriche sviluppo |
-| 74 | **NVT Ratio** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
-| 75 | **MVRV Ratio** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
-| 76 | **Active Addresses** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
+| 61 | **Exchange Flows** | 1 ora | CoinGecko (GRATIS) | Flussi exchange |
+| 62 | **Developer Activity** | 1 ora | CoinGecko (GRATIS) | Metriche sviluppo |
+| 63 | **NVT Ratio** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
+| 64 | **MVRV Ratio** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
+| 65 | **Active Addresses** | 1 ora | CoinGecko (GRATIS) | Metriche on-chain |
+| 66 | **Multi-Exchange Depth** | 1 minuto | Binance + Coinbase (GRATIS) | Depth multi-exchange avanzato |
+| 67 | **L400 History** | 1 minuto | Binance (GRATIS) | Storico depth |
 
 **Totale**: 7 indicatori crypto avanzati PRO
 
@@ -190,9 +240,9 @@
 
 | # | Indicatore | Frequenza | API | Perché PRO |
 |---|------------|-----------|-----|------------|
-| 87 | **IPO Calendar Avanzato** (con sentiment, partecipazione istituzionale, performance) | 1 ora | Finnhub + SEC EDGAR (GRATIS) | Dati IPO completi |
-| 88 | **Corporate Events Avanzato** (con earnings surprise, analisi) | 1 ora | Finnhub (GRATIS) | Analisi eventi avanzata |
-| 89 | **Economic Calendar Avanzato** (con impatto previsto, analisi) | 1 ora | Finnhub (GRATIS) | Analisi eventi avanzata |
+| 68 | **IPO Calendar Avanzato** (con partecipazione istituzionale reale SEC) | 1 ora | Finnhub + SEC EDGAR (GRATIS) | Dati IPO completi reali |
+| 69 | **Corporate Events Avanzato** (con analisi approfondita) | 1 ora | Finnhub (GRATIS) | Analisi eventi avanzata |
+| 70 | **Economic Calendar Avanzato** (con impatto previsto, analisi) | 1 ora | Finnhub (GRATIS) | Analisi eventi avanzata |
 
 **Totale**: 3 calendari avanzati PRO
 
@@ -200,53 +250,60 @@
 
 ## 📋 **12. RIEPILOGO COMPLETO**
 
-### 🟢 **PACCHETTO FREE** (17 indicatori):
-- ✅ 11 indicatori base (Economic, Bond Yields, Yield Curve, Credit Spreads, Stock Indexes USA, Forex Major, Commodities, VIX, Fear & Greed, Bitcoin Dominance, Crypto Market Cap)
-- ✅ 3 calendari base (IPO, Corporate Events, Economic)
-- ✅ 3 indicatori crypto base (Top Movers, Trending, Market Overview)
+### 🟢 **PACCHETTO FREE** (37 indicatori - 42.5%):
+- ✅ 13 indicatori base (Economic, Bond Yields, Yield Curve, Credit Spreads, Leading Indicators, Stock Indexes USA, Forex Major, Commodities, VIX, Put/Call Ratio, Fear & Greed, Bitcoin Dominance, Crypto Market Cap)
+- ✅ 7 indicatori globali base (European Indexes, Asian Indexes, Emerging Markets, Forex Esteso, DXY, ETF Geografici, ETF Settoriali)
+- ✅ 4 compositi base (Market Breadth, McClellan Oscillator, Business Cycle, Volatility Composite)
+- ✅ 3 tecnici base (VWAP, OBV, Accumulation/Distribution)
+- ✅ 7 indicatori crypto (Top Movers, Trending, Whale Analysis, Social Sentiment, L400 Depth, Aggregated Depth, Top 400 Monitor)
+- ✅ 3 calendari (IPO, Corporate Events, Economic)
 
-**Totale FREE**: **17 indicatori**
+**Totale FREE**: **37 indicatori**
 
 ---
 
-### 🔴 **PACCHETTO PRO** (70 indicatori):
-- ✅ 12 compositi avanzati
-- ✅ 14 indicatori globali
-- ✅ 13 microstrutture
-- ✅ 6 tecnici avanzati
-- ✅ 7 compositi multi-asset
-- ✅ 7 indicatori crypto avanzati
-- ✅ 10 indicatori base avanzati
-- ✅ 3 calendari avanzati
+### 🔴 **PACCHETTO PRO** (50 indicatori - 57.5%):
+- ✅ 7 compositi avanzati (McClellan Summation, Arms Index/TRIN, PMI, Financial Stress, Momentum Multi-Timeframe, Sentiment Avanzato, Liquidity Composite)
+- ✅ 13 indicatori globali avanzati (European/Asian/Emerging completi, Stocks globali, ETF completi, Forex commodity, Economic globali, Regional/Sector/Currency Rotation)
+- ✅ 13 microstrutture (Order Flow, Delta, Volume Profile, Time & Sales, Heatmap, Spread, Large Orders, Imbalance Zones, Multi-Exchange Depth, L400 History)
+- ✅ 3 tecnici avanzati (MFI, Chaikin Oscillator, EOM)
+- ✅ 7 compositi multi-asset (Risk-On/Off, Correlation Matrix, Risk Parity, All-Weather, Inflation Hedge, Carry Trade)
+- ✅ 7 indicatori crypto avanzati (Exchange Flows, Developer Activity, NVT, MVRV, Active Addresses, Multi-Exchange Depth, L400 History)
+- ✅ 10 indicatori base avanzati (Short Interest, VIX Term Structure reale, AAII, COT, ETF Flows, Stock Fear & Greed, Real Estate, Options Flow, Futures Term Structure)
+- ✅ 3 calendari avanzati (IPO con SEC, Corporate avanzato, Economic avanzato)
 
-**Totale PRO**: **70 indicatori**
+**Totale PRO**: **50 indicatori**
 
 ---
 
 ## 🎯 **13. STRATEGIA FREE vs PRO**
 
 ### 🟢 **FREE - Cosa Offriamo**:
-- **Indicatori base essenziali** per capire il mercato
-- **Calendari base** per eventi importanti
-- **Crypto base** per monitorare il mercato crypto
-- **Solo USA** per stock indexes
-- **Solo 4 coppie forex** major
+- **Indicatori base essenziali** per capire il mercato (Economic, Bond Yields, Yield Curve, Credit Spreads, Leading Indicators)
+- **Indicatori globali base** (European/Asian/Emerging Indexes, Forex Esteso, DXY, ETF Geografici/Settoriali)
+- **Compositi base** (Market Breadth, McClellan Oscillator, Business Cycle, Volatility Composite)
+- **Indicatori tecnici base** (VWAP, OBV, Accumulation/Distribution)
+- **Crypto completo** (Top Movers, Trending, Whale Analysis, Social Sentiment, L400 Depth, Aggregated Depth, Top 400 Monitor)
+- **Calendari completi** (IPO, Corporate Events, Economic)
+- **Stock Indexes USA** (S&P 500, Dow, NASDAQ)
+- **Forex Major + Esteso** (4 major + emergenti/europee)
+- **Commodities, VIX, Put/Call Ratio, Fear & Greed**
 
-**Obiettivo**: Dare valore sufficiente per attirare utenti, ma limitato per incentivare upgrade a PRO.
+**Obiettivo**: Dare valore significativo (37 indicatori) per attirare e trattenere utenti, con funzionalità base ma complete.
 
 ---
 
 ### 🔴 **PRO - Cosa Offriamo**:
-- **Tutti gli indicatori compositi** (Market Breadth, McClellan, TRIN, etc.)
-- **Copertura globale completa** (Europa, Asia, Emergenti)
-- **Microstrutture avanzate** (Order Flow, Delta, Volume Profile, etc.)
-- **Indicatori tecnici professionali** (VWAP, OBV, A/D, MFI, etc.)
-- **Analisi multi-asset** (Correlation Matrix, Risk Parity, All-Weather, etc.)
-- **Crypto avanzato** (Whale Analysis, On-Chain Metrics, etc.)
-- **Indicatori avanzati** (Short Interest, Put/Call reale, COT, Options Flow, etc.)
-- **Calendari avanzati** (con sentiment, analisi, performance)
+- **Compositi avanzati** (McClellan Summation, TRIN, PMI, Financial Stress, Momentum Multi-Timeframe, Sentiment Avanzato, Liquidity)
+- **Copertura globale completa** (Stocks globali dettagliate, ETF completi, Economic globali, Regional/Sector/Currency Rotation)
+- **Microstrutture avanzate** (Order Flow, Delta, Volume Profile, Time & Sales, Heatmap, Spread, Large Orders, Imbalance Zones)
+- **Indicatori tecnici avanzati** (MFI, Chaikin Oscillator, EOM)
+- **Analisi multi-asset** (Correlation Matrix, Risk Parity, All-Weather, Inflation Hedge, Carry Trade, Risk-On/Off)
+- **Crypto avanzato** (Exchange Flows, Developer Activity, On-Chain Metrics NVT/MVRV/Active Addresses, Multi-Exchange Depth, L400 History)
+- **Indicatori avanzati** (Short Interest, VIX Term Structure reale, AAII, COT, ETF Flows, Stock Fear & Greed, Real Estate, Options Flow, Futures Term Structure)
+- **Calendari avanzati** (IPO con SEC, Corporate avanzato, Economic avanzato)
 
-**Obiettivo**: Offrire valore premium che giustifica il prezzo del piano PRO.
+**Obiettivo**: Offrire valore premium (50 indicatori avanzati) che giustifica il prezzo del piano PRO.
 
 ---
 
@@ -254,17 +311,17 @@
 
 ### 🟢 **FREE**:
 - **Prezzo**: €0/mese
-- **Indicatori**: 17
-- **Frequenza**: Limitata (5 min - 1 ora)
-- **Copertura**: Solo USA (stock indexes), 4 coppie forex
-- **Funzionalità**: Base
+- **Indicatori**: 37 (42.5%)
+- **Frequenza**: 1 minuto - 1 ora (dipende dall'indicatore)
+- **Copertura**: USA + Globali base (Europa, Asia, Emergenti indexes), Forex Major + Esteso, ETF base
+- **Funzionalità**: Base ma complete (compositi base, tecnici base, crypto completo, calendari)
 
 ### 🔴 **PRO**:
 - **Prezzo**: €19-29/mese (da definire)
-- **Indicatori**: 70
+- **Indicatori**: 50 (57.5%)
 - **Frequenza**: Realtime (1 minuto) per molti indicatori
-- **Copertura**: Globale completa (Europa, Asia, Emergenti)
-- **Funzionalità**: Avanzate (compositi, microstrutture, multi-asset)
+- **Copertura**: Globale completa (Stocks globali dettagliate, ETF completi, Economic globali)
+- **Funzionalità**: Avanzate (compositi avanzati, microstrutture, multi-asset, on-chain, opzioni/futures)
 
 ---
 
@@ -301,32 +358,42 @@
 ## 📊 **17. STATISTICHE FINALI**
 
 ### **Distribuzione**:
-- 🟢 **FREE**: 17 indicatori (19.5%)
-- 🔴 **PRO**: 70 indicatori (80.5%)
+- 🟢 **FREE**: 37 indicatori (42.5%)
+- 🔴 **PRO**: 50 indicatori (57.5%)
 
 ### **Valore Proposto**:
-- **FREE**: Valore base sufficiente per attirare utenti
-- **PRO**: Valore premium 4x superiore che giustifica pricing
+- **FREE**: Valore significativo (37 indicatori) con copertura globale base, compositi base, tecnici base, crypto completo - sufficiente per uso serio
+- **PRO**: Valore premium (50 indicatori avanzati) con microstrutture, compositi avanzati, multi-asset, on-chain, opzioni/futures - per utenti professionali
 
 ---
 
 ## ✅ **18. CONCLUSIONE**
 
-### **Pacchetto FREE** (17 indicatori):
-- Indicatori base essenziali
-- Calendari base
-- Crypto base
-- Solo USA (stock indexes)
-- Solo 4 coppie forex
+### **Pacchetto FREE** (37 indicatori - 42.5%):
+- ✅ Indicatori base essenziali (Economic, Bond Yields, Yield Curve, Credit Spreads, Leading Indicators)
+- ✅ Indicatori globali base (European/Asian/Emerging Indexes, Forex Esteso, DXY, ETF)
+- ✅ Compositi base (Market Breadth, McClellan Oscillator, Business Cycle, Volatility Composite)
+- ✅ Tecnici base (VWAP, OBV, Accumulation/Distribution)
+- ✅ Crypto completo (Top Movers, Trending, Whale Analysis, Social Sentiment, L400 Depth, Aggregated Depth, Top 400 Monitor)
+- ✅ Calendari completi (IPO, Corporate Events, Economic)
+- ✅ Stock Indexes USA + Forex Major + Commodities + VIX + Put/Call + Fear & Greed
 
-### **Pacchetto PRO** (70 indicatori):
-- Tutti i compositi avanzati
-- Copertura globale completa
-- Microstrutture avanzate
-- Indicatori tecnici professionali
-- Analisi multi-asset
-- Crypto avanzato
-- Indicatori avanzati
-- Calendari avanzati
+**Valore**: Significativo per uso serio, con copertura globale base e funzionalità complete.
 
-**Questa strategia crea un chiaro valore differenziato tra FREE e PRO!**
+---
+
+### **Pacchetto PRO** (50 indicatori - 57.5%):
+- ✅ Compositi avanzati (McClellan Summation, TRIN, PMI, Financial Stress, Momentum Multi-Timeframe, Sentiment Avanzato, Liquidity)
+- ✅ Globali avanzati (Stocks globali dettagliate, ETF completi, Economic globali, Regional/Sector/Currency Rotation)
+- ✅ Microstrutture avanzate (Order Flow, Delta, Volume Profile, Time & Sales, Heatmap, Spread, Large Orders, Imbalance Zones)
+- ✅ Tecnici avanzati (MFI, Chaikin Oscillator, EOM)
+- ✅ Compositi multi-asset (Risk-On/Off, Correlation Matrix, Risk Parity, All-Weather, Inflation Hedge, Carry Trade)
+- ✅ Crypto avanzato (Exchange Flows, Developer Activity, On-Chain Metrics, Multi-Exchange Depth, L400 History)
+- ✅ Indicatori avanzati (Short Interest, VIX Term Structure reale, AAII, COT, ETF Flows, Stock Fear & Greed, Real Estate, Options Flow, Futures Term Structure)
+- ✅ Calendari avanzati (IPO con SEC, Corporate avanzato, Economic avanzato)
+
+**Valore**: Premium per utenti professionali che necessitano analisi avanzate e microstrutture.
+
+---
+
+**Questa strategia bilanciata (42.5% FREE / 57.5% PRO) crea un chiaro valore differenziato mantenendo un FREE attraente!**
