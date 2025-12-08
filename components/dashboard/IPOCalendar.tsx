@@ -116,25 +116,23 @@ export function IPOCalendar() {
       aria-label="IPO Calendar"
     >
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-accent" />
-            {t('dashboard.ipoCalendar.title') || 'IPO Calendar'}
-          </h2>
-          <p className="text-sm text-text-secondary mt-1">
-            {t('dashboard.ipoCalendar.description') || 'Upcoming IPOs with sentiment and institutional participation'}
-            {!isPro && ` (${days} days - Pro: 90 days)`}
-          </p>
-        </div>
+        <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+          <Building2 className="w-5 h-5 text-accent" />
+          {t('dashboard.ipoCalendar.title') || 'Calendario IPO'}
+        </h2>
       </div>
+
+      <SectionBanner
+        title="IPO in Arrivo con Sentiment e Partecipazione Istituzionale"
+        description={`Monitora le prossime offerte pubbliche iniziali (IPO) con analisi del sentiment, partecipazione istituzionale e performance post-IPO. Ogni IPO mostra il prezzo atteso, il sentiment del mercato e i principali investitori istituzionali. ${!isPro ? `Versione free: ${days} giorni. Pro: 90 giorni.` : ''}`}
+        icon={<Building2 className="w-4 h-4" />}
+      />
 
       {!isPro && (
         <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
           <Lock className="w-4 h-4" />
           <span>
-            {locale === 'it' 
-              ? 'Versione Pro: 90 giorni vs 30 free. Aggiorna per vedere il calendario esteso.'
-              : 'Pro Version: 90 days vs 30 free. Upgrade to see extended calendar.'}
+            Versione Pro: 90 giorni vs 30 free. Aggiorna per vedere il calendario esteso.
           </span>
         </div>
       )}
@@ -142,7 +140,7 @@ export function IPOCalendar() {
       {/* Country Filter */}
       <div className="flex gap-2 mb-4 flex-wrap">
         {[
-          { value: 'all', label: locale === 'it' ? 'Tutti' : 'All' },
+          { value: 'all', label: 'Tutti' },
           { value: 'US', label: 'USA' },
           { value: 'EU', label: 'EU' },
           { value: 'ASIA', label: 'Asia' },

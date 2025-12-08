@@ -4,7 +4,7 @@
 import '@/lib/utils/suppress-hydration-errors';
 
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { DashboardHero } from './DashboardHero';
+// DashboardHero rimosso - progetto vecchio
 import { OverviewStats } from './OverviewStats';
 import { MarketDashboardWidget } from './MarketDashboardWidget';
 import { MultiAssetCharts } from './MultiAssetCharts';
@@ -35,7 +35,7 @@ import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
-import { Eye, EyeOff, LayoutGrid, LayoutList } from 'lucide-react';
+import { LayoutGrid, LayoutList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { logError, logRedirect } from '@/lib/monitoring/error-logger';
@@ -213,26 +213,7 @@ export function DashboardShell() {
           {isLoaded && (
             <div className="flex items-center justify-end gap-2 mb-4 px-4 sm:px-6 lg:px-8">
               <DashboardCustomization />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleHero}
-                className="text-text-secondary hover:text-text-primary h-9 sm:h-10"
-                aria-label={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
-                title={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
-              >
-                {preferences.hideHero ? (
-                  <>
-                    <Eye className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Mostra Hero</span>
-                  </>
-                ) : (
-                  <>
-                    <EyeOff className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Nascondi Hero</span>
-                  </>
-                )}
-              </Button>
+              {/* Hero toggle rimosso - progetto vecchio */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -256,13 +237,7 @@ export function DashboardShell() {
             </div>
           )}
           
-          {/* Hero Section - Best Practice UX: Prima impressione, welcome, CTA principale */}
-          {/* Personalizzabile: può essere nascosta dall'utente per focus sui contenuti */}
-          {isLoaded && !preferences.hideHero && (
-            <ErrorBoundary>
-              <DashboardHero />
-            </ErrorBoundary>
-          )}
+          {/* Hero Section rimosso - progetto vecchio */}
           
           {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
           {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}

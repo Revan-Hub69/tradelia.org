@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
+import { SectionBanner } from './SectionBanner';
 
 interface CorporateEvent {
   symbol: string;
@@ -113,26 +114,23 @@ export function CorporateEvents() {
         <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
           <Lock className="w-4 h-4" />
           <span>
-            {locale === 'it'
-              ? 'Versione Pro: 30 giorni vs 7 giorni free. Aggiorna per sbloccare tutti gli eventi.'
-              : 'Pro Version: 30 days vs 7 days free. Upgrade to unlock all events.'}
+            Versione Pro: 30 giorni vs 7 giorni free. Aggiorna per sbloccare tutti gli eventi.
           </span>
         </div>
       )}
 
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-accent" />
-            {locale === 'it' ? 'Eventi Corporate' : 'Corporate Events'}
-          </h2>
-          <p className="text-sm text-text-secondary mt-1">
-            {locale === 'it' 
-              ? 'Utili, dividendi, split e fusioni'
-              : 'Earnings, dividends, splits, and mergers'}
-          </p>
-        </div>
+        <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+          <Building2 className="w-5 h-5 text-accent" />
+          Eventi Corporate
+        </h2>
       </div>
+
+      <SectionBanner
+        title="Utili, Dividendi, Split e Fusioni"
+        description={`Monitora gli eventi corporate più importanti: pubblicazione degli utili (con analisi della sorpresa), pagamento dividendi, split azionari e operazioni di M&A. Ogni evento mostra l'impatto previsto sul prezzo dell'azione. ${!isPro ? 'Versione free: 7 giorni. Pro: 30 giorni.' : ''}`}
+        icon={<Building2 className="w-4 h-4" />}
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">

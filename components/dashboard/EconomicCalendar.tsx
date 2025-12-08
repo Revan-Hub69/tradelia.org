@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
 import { API_CONFIG } from '@/lib/config/api';
 import { mockFetch } from '@/lib/utils/fetch-wrapper';
+import { SectionBanner } from './SectionBanner';
 
 interface EconomicEvent {
   CalendarId: number;
@@ -130,17 +131,17 @@ export function EconomicCalendar() {
       aria-label="Economic Calendar"
     >
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-accent" />
-            {t('dashboard.economicCalendar.title') || 'Economic Calendar'}
-          </h2>
-          <p className="text-sm text-text-secondary mt-1">
-            {t('dashboard.economicCalendar.description') || 'Upcoming economic events and indicators'}
-            {!isPro && ` (${days} days - Pro: 30 days)`}
-          </p>
-        </div>
+        <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-accent" />
+          {t('dashboard.economicCalendar.title') || 'Calendario Economico'}
+        </h2>
       </div>
+
+      <SectionBanner
+        title="Eventi Economici e Indicatori in Arrivo"
+        description={`Monitora i principali eventi economici (GDP, inflazione, occupazione, tassi di interesse) che influenzano i mercati. Ogni evento mostra l'impatto previsto su azioni, forex e commodities, oltre alle performance storiche. ${!isPro ? `Versione free: ${days} giorni. Pro: 30 giorni.` : ''}`}
+        icon={<Calendar className="w-4 h-4" />}
+      />
 
       {!isPro && (
         <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">

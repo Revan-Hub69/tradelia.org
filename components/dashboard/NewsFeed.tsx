@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { API_CONFIG } from '@/lib/config/api';
 import { MOCK_NEWS } from '@/lib/config/mock-data';
 import { mockFetch } from '@/lib/utils/fetch-wrapper';
+import { SectionBanner } from './SectionBanner';
 
 interface NewsItem {
   title: string;
@@ -146,16 +147,17 @@ export function NewsFeed() {
       aria-label="News Feed"
     >
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-            <Filter className="w-5 h-5 text-accent" />
-            {t('dashboard.news.title') || 'Market News'}
-          </h2>
-          <p className="text-sm text-text-secondary mt-1">
-            {t('dashboard.news.description') || 'Aggregated news from top financial sources'}
-          </p>
-        </div>
+        <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+          <Filter className="w-5 h-5 text-accent" />
+          {t('dashboard.news.title') || 'Notizie di Mercato'}
+        </h2>
       </div>
+
+      <SectionBanner
+        title="Notizie Aggregated da Fonti Finanziarie Top"
+        description="Monitora le ultime notizie finanziarie da Bloomberg, Reuters, CoinDesk e altre fonti affidabili. Ogni notizia include analisi del sentiment e score di impatto per aiutarti a capire l'effetto sul mercato."
+        icon={<Filter className="w-4 h-4" />}
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">

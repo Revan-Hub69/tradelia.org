@@ -374,17 +374,20 @@ export function MultiAssetCharts() {
       aria-label="Multi-asset charts with correlations"
     >
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-accent" />
-            {t('dashboard.multiAssetCharts.title') || 'Multi-Asset Charts'}
-          </h2>
-          <p className="text-sm text-text-secondary mt-1">
-            {t('dashboard.multiAssetCharts.description') || 'Correlazioni cross-asset in tempo reale'}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {(['1h', '4h', '1d', '1w', '1m', '3m', '1y'] as const).map((tf) => (
+        <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-accent" />
+          {t('dashboard.multiAssetCharts.title') || 'Grafici Multi-Asset'}
+        </h2>
+      </div>
+
+      <SectionBanner
+        title="Correlazioni Cross-Asset in Tempo Reale"
+        description="Visualizza le correlazioni tra Bitcoin, S&P 500, EUR/USD e Oro. I grafici mostrano come si muovono insieme questi asset, aiutandoti a capire i trend di mercato e le opportunità di diversificazione. Attiva gli indicatori tecnici (RSI, SMA, Bollinger Bands) per analisi approfondite."
+        icon={<TrendingUp className="w-4 h-4" />}
+      />
+
+      <div className="flex gap-2 mb-4">
+        {(['1h', '4h', '1d', '1w', '1m', '3m', '1y'] as const).map((tf) => (
             <button
               key={tf}
               onClick={() => setTimeframe(tf)}
