@@ -22,10 +22,6 @@ const UserMenu = dynamic(() => import('./UserMenu').then(mod => ({ default: mod.
 });
 
 
-const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').then(mod => ({ default: mod.CurrencySwitch })), {
-  ssr: false,
-  loading: () => <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" />,
-});
 
 // LanguageSwitch removed - system always uses Italian
 
@@ -112,7 +108,6 @@ function DashboardHeaderComponent() {
           ) : shouldShowAuthenticated ? (
             <>
               <div className={styles.dashboardActionsLeft}>
-                <CurrencySwitch size="sm" />
               </div>
               <div className={styles.dashboardActionsRight}>
                 <Link
