@@ -257,12 +257,12 @@ export function UserMenu() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group"
+        className="flex items-center gap-2 h-9 sm:h-10 px-2 sm:px-3 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group min-h-[36px] sm:min-h-[40px]"
         aria-label={t('dashboard.userMenu.open') || 'Menu utente'}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white text-xs font-semibold">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
           {initials}
         </div>
         <span className="hidden md:inline text-sm text-text-primary font-medium max-w-[120px] truncate">
@@ -270,7 +270,7 @@ export function UserMenu() {
         </span>
         <ChevronDown
           className={cn(
-            'w-4 h-4 text-text-tertiary transition-transform',
+            'w-4 h-4 text-text-tertiary transition-transform flex-shrink-0',
             isOpen && 'rotate-180'
           )}
         />

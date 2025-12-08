@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { AssetType, MarketIndicator as MarketIndicatorType } from '@/lib/types/market';
+import { IndicatorTooltip } from '@/components/ui/IndicatorTooltip';
 
 interface MarketIndicator {
   id: string;
@@ -435,9 +436,11 @@ export function MarketDashboardWidget() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1">
                 <div className="flex items-center gap-1">
-                  <span className="text-xs text-text-tertiary font-medium uppercase">
-                    {indicator.name}
-                  </span>
+                  <IndicatorTooltip indicatorId={indicator.id}>
+                    <span className="text-xs text-text-tertiary font-medium uppercase">
+                      {indicator.name}
+                    </span>
+                  </IndicatorTooltip>
                   {indicator.assetType && (
                     <span className={cn(
                       'text-[9px] px-1 py-0.5 rounded font-semibold uppercase',

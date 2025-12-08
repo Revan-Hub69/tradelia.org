@@ -11,7 +11,9 @@ import { MultiAssetCharts } from './MultiAssetCharts';
 import { L400SupportResistance } from './L400SupportResistance';
 import { NewsFeed } from './NewsFeed';
 import { EconomicCalendar } from './EconomicCalendar';
+import { IPOCalendar } from './IPOCalendar';
 import { TrendingCoins } from './TrendingCoins';
+import { UserMenu } from './UserMenu';
 import { MarketSentiment } from './MarketSentiment';
 import { RedditSentiment } from './RedditSentiment';
 import { DeveloperActivity } from './DeveloperActivity';
@@ -324,6 +326,18 @@ export function DashboardShell() {
           >
             <ErrorBoundary>
               <EconomicCalendar />
+            </ErrorBoundary>
+          </section>
+
+          {/* IPO Calendar - Upcoming IPOs with Sentiment and Institutional Participation */}
+          <section 
+            aria-label="IPO Calendar" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="ipo-calendar"
+          >
+            <ErrorBoundary>
+              <IPOCalendar />
             </ErrorBoundary>
           </section>
 
