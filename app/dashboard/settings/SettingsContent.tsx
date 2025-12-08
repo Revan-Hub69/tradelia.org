@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import { useState, lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
@@ -180,4 +178,6 @@ const SettingsContent = memo(function SettingsContent() {
       </div>
     </div>
   );
-}
+});
+
+export default SettingsContent;
