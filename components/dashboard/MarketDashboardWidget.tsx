@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, BarChart3, Link as LinkIcon } from 'lucide-react';
 import { SectionBanner } from './SectionBanner';
 import { useTranslations } from '@/lib/i18n/use-translations';
@@ -32,7 +32,7 @@ interface MarketIndicator {
  * Cruscotto operativo con indicatori di mercato principali
  * Versione compatta per la panoramica dashboard
  */
-export function MarketDashboardWidget() {
+export const MarketDashboardWidget = memo(function MarketDashboardWidget() {
   const { t, locale } = useTranslations();
   const [indicators, setIndicators] = useState<MarketIndicator[]>([
     // Market-wide indicators
@@ -659,4 +659,4 @@ export function MarketDashboardWidget() {
       </div>
     </section>
   );
-}
+});

@@ -14,7 +14,7 @@ import { LayoutGrid, LayoutList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import styles from './dashboard.module.css';
 
-// Lazy load TUTTI i componenti dashboard - Best Practice: Code Splitting completo
+// Lazy load TUTTI i componenti dashboard - Best Practice: Code Splitting
 const AccountBanner = lazy(() => import('./AccountBanner').then(m => ({ default: m.AccountBanner })));
 const DashboardCustomization = lazy(() => import('./DashboardCustomization').then(m => ({ default: m.DashboardCustomization })));
 const ModuleGrid = lazy(() => import('./ModuleGrid').then(m => ({ default: m.ModuleGrid })));
@@ -99,16 +99,16 @@ LazySection.displayName = 'LazySection';
 
 /**
  * DashboardShell - Ottimizzato per performance
- * Best Practices Accademiche:
- * - Lazy loading completo di tutti i componenti
+ * Best Practices:
+ * - Lazy loading di tutti i componenti
  * - Intersection Observer per caricare solo quando visibili
  * - Memoization per evitare re-render inutili
  * - Code splitting completo
- * - React.memo per componenti pesanti
  */
 export function DashboardShell() {
   const { preferences, isLoaded, toggleCompactView } = useDashboardPreferences();
   const { components: dashboardComponents, isLoading: isLoadingCustomization } = useDashboardCustomization();
+  const { t } = useTranslations();
 
   // Memoize visibility check per evitare re-calcoli
   const isComponentVisible = useCallback((componentId: string): boolean => {
@@ -122,138 +122,26 @@ export function DashboardShell() {
     toggleCompactView();
   }, [toggleCompactView]);
 
-  // Gestisci errori globali con logging migliorato
-  // IMPORTANTE: Tutto questo codice viene eseguito SOLO sul client per evitare hydration mismatch
-  useEffect(() => {
-    // Verifica che siamo sul client prima di accedere a window/document
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const handleError = (event: ErrorEvent) => {
-      logError('Global JavaScript error', event.error, {
-        component: 'DashboardShell',
-        path: typeof window !== 'undefined' ? window.location.pathname : '/',
-        metadata: {
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-        },
-      });
-      setHasError(true);
-    };
-
-    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      const error = event.reason instanceof Error 
-        ? event.reason 
-        : new Error(String(event.reason));
-      logError('Unhandled promise rejection', error, {
-        component: 'DashboardShell',
-        path: typeof window !== 'undefined' ? window.location.pathname : '/',
-        metadata: {
-          reason: event.reason,
-        },
-      });
-      setHasError(true);
-    };
-
-    const handleLocationChange = () => {
-      if (typeof window === 'undefined' || typeof document === 'undefined') {
-        return;
-      }
-      const currentPath = window.location.pathname;
-      if (currentPath === '/login' && document.referrer.includes('/dashboard')) {
-        const shouldRedirect = logRedirect(document.referrer, currentPath, 'Automatic redirect to login');
-        if (!shouldRedirect) {
-          logError('Redirect loop detected', undefined, {
-            component: 'DashboardShell',
-            path: currentPath,
-            metadata: { referrer: document.referrer },
-          });
-          // Torna alla dashboard invece del login
-          window.history.replaceState({}, '', '/dashboard');
-          if (router && typeof router.refresh === 'function') {
-            router.refresh();
-          }
-        }
-      }
-    };
-
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
-    
-    // Controlla se siamo stati redirectati al login (solo sul client)
-    // Defer non-critical redirect check to improve initial render
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      if (window.location.pathname === '/login' && document.referrer.includes('/dashboard')) {
-        // Defer redirect check after hydration to avoid blocking initial render
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(handleLocationChange, { timeout: 100 });
-        } else {
-          setTimeout(handleLocationChange, 0);
-        }
-      }
-    }
-
-    return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
-    };
-  }, [router]);
-
-  // Keyboard shortcuts (WCAG 2.1 SC 2.1.1 - Keyboard)
-  useKeyboardShortcuts([
-    {
-      keys: ['g', 'd'],
-      handler: () => router.push('/dashboard'),
-      description: 'Vai alla dashboard',
-    },
-    {
-      keys: ['g', 'm'],
-      handler: () => router.push('/dashboard/market-data'),
-      description: 'Vai ai market data',
-    },
-    {
-      keys: ['g', 'r'],
-      handler: () => router.push('/dashboard/reports'),
-      description: 'Vai ai report',
-    },
-    {
-      keys: ['g', 's'],
-      handler: () => router.push('/dashboard/settings'),
-      description: 'Vai alle impostazioni',
-    },
-  ]);
-
-  // Listen for achievement unlocked events
-  useEffect(() => {
-    const handleAchievementUnlocked = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail) {
-        setUnlockedAchievement(customEvent.detail);
-      }
-    };
-
-    window.addEventListener('achievement-unlocked', handleAchievementUnlocked);
-    return () => {
-      window.removeEventListener('achievement-unlocked', handleAchievementUnlocked);
-    };
-  }, []);
-
   return (
     <ErrorBoundary>
-      <SkipLink href="#modules-view" />
-      <ARIALiveRegion message={liveMessage} />
-
-      <main 
-        className={styles.dashboardMain} 
-        role="main" 
+      <main
+        id="dashboard-main"
+        className={styles.dashboardMain}
+        role="main"
         aria-label="Dashboard principale"
         suppressHydrationWarning
       >
-        <div id="modules-view" className={cn(styles.modulesView, "active", isLoaded && preferences.compactView && styles.compactView)} role="region" aria-label="Contenuti dashboard" style={{ minHeight: '600px' }}>
-          {/* Breadcrumb è già in DashboardTabs - non duplicare */}
-          
+        <div
+          id="modules-view"
+          className={cn(
+            styles.modulesView,
+            "active",
+            isLoaded && preferences.compactView && styles.compactView
+          )}
+          role="region"
+          aria-label="Contenuti dashboard"
+          style={{ minHeight: '600px' }}
+        >
           {/* Account Banner - Caricato immediatamente (critico) */}
           <div id="account-banner-slot" role="region" aria-label="Stato account">
             <ErrorBoundary>
@@ -291,14 +179,10 @@ export function DashboardShell() {
               </Button>
             </div>
           )}
-          
+
           {/* Moduli - Caricato immediatamente (critico) */}
           {isComponentVisible('module-grid') && (
-            <LazySection
-              componentId="modules"
-              ariaLabel="Moduli e funzionalità"
-              className={cn(isLoaded && preferences.compactView && 'compact-view')}
-            >
+            <LazySection componentId="modules" ariaLabel="Moduli e funzionalità">
               <ModuleGrid />
             </LazySection>
           )}
