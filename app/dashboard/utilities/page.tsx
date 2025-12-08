@@ -57,9 +57,6 @@ const VolatilityCalculator = lazy(() =>
 const StrategyBuilder = lazy(() => 
   import('@/components/dashboard/utilities/StrategyBuilder').then(m => ({ default: m.StrategyBuilder }))
 );
-const PaperTrading = lazy(() => 
-  import('@/components/dashboard/utilities/PaperTrading').then(m => ({ default: m.PaperTrading }))
-);
 
 // Loading fallback component
 const CalculatorSkeleton = () => (
@@ -70,7 +67,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
 
 interface Utility {
   id: UtilityTab;
@@ -173,17 +170,6 @@ export default function UtilitiesPage() {
       description: 'Registra e analizza le tue operazioni di trading',
       available: true,
     },
-    {
-      id: 'paper-trading',
-      label: 'Paper Trading',
-      icon: Target,
-      category: 'coming-soon',
-      group: 'performance',
-      description: 'Simula operazioni di trading in tempo reale con ordini avanzati e risk management',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato e ordini',
-    },
     // Pro Tools - Advanced
     {
       id: 'options',
@@ -227,7 +213,7 @@ export default function UtilitiesPage() {
       icon: Settings,
       category: 'pro',
       group: 'advanced',
-      description: 'Simula e esplora strategie di trading (dati simulati - educativo). Usa Paper Trading per test reali.',
+      description: 'Simula e esplora strategie di trading usando dati simulati per scopi educativi.',
       available: true,
     },
     // Coming Soon - Real-time Tools
@@ -323,25 +309,6 @@ export default function UtilitiesPage() {
                 {/* Pro Tools - Mostrati a tutti ma bloccati se non Pro */}
                 {selectedUtility === 'journal' && (
                   isPro ? <TradingJournal /> : <ProLockOverlay><TradingJournal /></ProLockOverlay>
-                )}
-                {selectedUtility === 'paper-trading' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon 
-                        title="Paper Trading" 
-                        description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management" 
-                        reason="Richiede integrazione con API real-time per prezzi di mercato e ordini" 
-                        estimatedDate="Q2 2025" 
-                      />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Paper Trading"
-                      description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato e ordini"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
                 )}
                 {selectedUtility === 'hedging' && (
                   isPro ? <HedgingCalculator /> : <ProLockOverlay><HedgingCalculator /></ProLockOverlay>

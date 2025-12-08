@@ -555,8 +555,8 @@ export function StrategyBuilder() {
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               description: locale === 'it'
-                ? 'Strumento educativo per simulare strategie di trading usando dati simulati. Best practice accademiche per comprendere come funzionano le strategie. Per test reali, usa Paper Trading.'
-                : 'Educational tool to simulate trading strategies using simulated data. Academic best practices to understand how strategies work. For real tests, use Paper Trading.',
+                ? 'Strumento educativo per simulare strategie di trading usando dati simulati. Best practice accademiche per comprendere come funzionano le strategie.'
+                : 'Educational tool to simulate trading strategies using simulated data. Academic best practices to understand how strategies work.',
               offers: {
                 '@type': 'Offer',
                 price: '0',

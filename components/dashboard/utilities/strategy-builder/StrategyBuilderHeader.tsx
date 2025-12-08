@@ -19,8 +19,8 @@ export function StrategyBuilderHeader({ locale }: StrategyBuilderHeaderProps) {
           </h2>
           <p className="text-sm text-text-secondary mb-4">
             {locale === 'it'
-              ? 'Simula ed esplora strategie di trading usando dati simulati per scopi educativi. Questo strumento ti aiuta a capire come funzionano le strategie accademiche. Per testare con prezzi reali, usa Paper Trading.'
-              : 'Simulate and explore trading strategies using simulated data for educational purposes. This tool helps you understand how academic strategies work. To test with real prices, use Paper Trading.'}
+              ? 'Simula ed esplora strategie di trading usando dati simulati per scopi educativi. Questo strumento ti aiuta a capire come funzionano le strategie accademiche.'
+              : 'Simulate and explore trading strategies using simulated data for educational purposes. This tool helps you understand how academic strategies work.'}
           </p>
           {/* IMPORTANT: Simulated Data Warning */}
           <div className="bg-red-500/10 border-2 border-red-500/30 rounded-lg p-4">
@@ -32,25 +32,11 @@ export function StrategyBuilderHeader({ locale }: StrategyBuilderHeaderProps) {
                     {locale === 'it' ? '⚠️ Dati Simulati - Solo Educativo' : '⚠️ Simulated Data - Educational Only'}
                   </span>
                 </div>
-                <p className="text-xs text-text-secondary leading-relaxed mb-3">
+                <p className="text-xs text-text-secondary leading-relaxed">
                   {locale === 'it'
-                    ? 'Questo strumento usa dati SIMULATI per scopi educativi. I risultati NON riflettono performance reali di mercato. Per testare strategie con prezzi reali, usa Paper Trading.'
-                    : 'This tool uses SIMULATED data for educational purposes. Results do NOT reflect real market performance. To test strategies with real prices, use Paper Trading.'}
+                    ? 'Questo strumento usa dati SIMULATI per scopi educativi. I risultati NON riflettono performance reali di mercato.'
+                    : 'This tool uses SIMULATED data for educational purposes. Results do NOT reflect real market performance.'}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <a
-                    href="/dashboard/utilities?utility=paper-trading"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg text-sm font-medium transition-all"
-                  >
-                    <Target className="w-4 h-4" />
-                    {locale === 'it' ? 'Testa in Paper Trading' : 'Test in Paper Trading'}
-                  </a>
-                  <div className="text-xs text-text-tertiary flex items-center">
-                    {locale === 'it'
-                      ? 'Backtesting reale disponibile Q2 2025'
-                      : 'Real backtesting available Q2 2025'}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
