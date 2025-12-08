@@ -92,17 +92,6 @@ export function GlobalSearch() {
         });
       });
 
-      // Courses
-      (data.courses || []).forEach((item: any) => {
-        mappedResults.push({
-          id: `course-${item.id}`,
-          type: 'course',
-          title: item.title,
-          description: item.description || '',
-          href: item.slug ? `/courses/${item.slug}` : '/dashboard/education',
-          icon: <BookOpen className="w-4 h-4" />,
-        });
-      });
 
       // Modules
       (data.modules || []).forEach((item: any) => {

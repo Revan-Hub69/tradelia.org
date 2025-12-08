@@ -12,7 +12,6 @@ import { createClient } from '@/lib/supabase/server';
  * {
  *   "users": { "total": 100, "active": 50 },
  *   "reports": { "total": 200, "published": 150 },
- *   "courses": { "total": 10, "enrollments": 500 }
  * }
  */
 export async function GET(request: NextRequest) {

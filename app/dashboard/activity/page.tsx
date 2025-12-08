@@ -56,10 +56,6 @@ export default function ActivityPage() {
     switch (type) {
       case 'report_viewed':
         return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
-      case 'course_started':
-        return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
-      case 'course_completed':
-        return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
       case 'analysis_requested':
         return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
     }
@@ -121,7 +117,6 @@ export default function ActivityPage() {
         >
           <option value="all">{t('dashboard.activity.filterAll') || 'Tutte'}</option>
           <option value="report_viewed">{t('dashboard.activity.filterReports') || 'Report'}</option>
-          <option value="course_started">{t('dashboard.activity.filterCourses') || 'Corsi'}</option>
           <option value="analysis_requested">{t('dashboard.activity.filterAnalysis') || 'Analisi'}</option>
         </select>
       </div>
