@@ -14,7 +14,7 @@ export function CurrencySwitch({ className, size = 'md' }: CurrencySwitchProps) 
   const { currency, setCurrency, exchangeRate, isLoadingRate } = useCurrency();
 
   const sizeClasses = {
-    sm: 'text-xs px-2 py-1',
+    sm: 'text-xs px-2 py-1 h-9 sm:h-10 min-h-[36px] sm:min-h-[40px]',
     md: 'text-sm px-3 py-1.5',
     lg: 'text-base px-4 py-2',
   };

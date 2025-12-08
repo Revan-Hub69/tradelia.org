@@ -82,7 +82,7 @@ export function NotificationBell() {
   return (
     <Link
       href="/dashboard/notifications"
-      className="relative inline-flex items-center justify-center p-2 rounded-lg hover:bg-dash-surface-elev transition-colors"
+      className="relative inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg hover:bg-dash-surface-elev transition-colors min-h-[36px] sm:min-h-[40px]"
       aria-label={`Notifiche${showBadge ? ` (${unreadCount} non lette)` : ''}`}
     >
       {hasActiveSubscription ? (
