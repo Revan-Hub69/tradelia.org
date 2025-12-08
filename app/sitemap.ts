@@ -80,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     // Dashboard pages
     {
-      url: `${baseUrl}/dashboard/analysis`,
+      url: `${baseUrl}/dashboard/market-data`, // Analysis è integrato in market-data
       lastModified: currentDate,
       changeFrequency: 'hourly' as const,
       priority: 0.9,

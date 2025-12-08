@@ -6,7 +6,7 @@ import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 export async function generateMetadata(): Promise<Metadata> {
   const title = 'Dashboard Analisi | Tradelia';
   const description = 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
-  const url = 'https://tradelia.org/en/dashboard/analysis';
+  const url = 'https://tradelia.org/en/dashboard/market-data'; // Analysis è integrato in market-data
   const image = 'https://tradelia.org/og-analysis.png'; // TODO: Create OG image
   
   return {

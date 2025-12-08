@@ -15,7 +15,7 @@ const DEFAULT_MODULES = {
       id: 'analysis',
       title: 'Analisi',
       description: 'Report ufficiali verificabili e analisi conformi MiFID II',
-      href: '/dashboard/analysis',
+      href: '/dashboard/market-data', // Analysis è integrato in market-data
       icon: 'file-text',
       priority: 'primary' as const,
       is_active: true,
