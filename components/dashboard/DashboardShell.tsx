@@ -3,7 +3,6 @@
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
 
-'use client';
 
 import React, { Suspense, lazy, useState, useEffect, useMemo, useCallback, memo } from 'react';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
