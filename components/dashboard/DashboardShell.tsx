@@ -1,9 +1,5 @@
 'use client';
 
-// Importa il suppressor degli errori di hydration PRIMA di tutto
-import '@/lib/utils/suppress-hydration-errors';
-
-
 import React, { Suspense, lazy, useState, useEffect, useMemo, useCallback, memo } from 'react';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
@@ -110,7 +106,6 @@ LazySection.displayName = 'LazySection';
 export function DashboardShell() {
   const { preferences, isLoaded, toggleCompactView } = useDashboardPreferences();
   const { components: dashboardComponents, isLoading: isLoadingCustomization } = useDashboardCustomization();
-  const { t } = useTranslations();
 
   // Memoize visibility check per evitare re-calcoli
   const isComponentVisible = useCallback((componentId: string): boolean => {
