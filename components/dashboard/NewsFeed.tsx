@@ -7,6 +7,9 @@ import { useAutoTranslateArray } from '@/lib/hooks/useAutoTranslate';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
+import { API_CONFIG } from '@/lib/config/api';
+import { MOCK_NEWS } from '@/lib/config/mock-data';
+import { mockFetch } from '@/lib/utils/fetch-wrapper';
 
 interface NewsItem {
   title: string;
@@ -36,11 +39,20 @@ export function NewsFeed() {
     const fetchNews = async () => {
       setLoading(true);
       try {
+        // Se API disattivate, usa dati mock
+        if (API_CONFIG.DISABLE_API_CALLS) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          setNews(MOCK_NEWS as any);
+          setLoading(false);
+          return;
+        }
+
         const params = new URLSearchParams({
           category: category === 'all' ? '' : category,
           limit: '30',
         });
-        const response = await fetch(`/api/news/rss?${params.toString()}`);
+        const fetchFn = API_CONFIG.DISABLE_API_CALLS ? mockFetch : fetch;
+        const response = await fetchFn(`/api/news/rss?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           setNews(data.data || []);
@@ -53,8 +65,10 @@ export function NewsFeed() {
     };
 
     fetchNews();
-    const interval = setInterval(fetchNews, 5 * 60 * 1000); // Refresh every 5 minutes
-    return () => clearInterval(interval);
+    if (!API_CONFIG.DISABLE_API_CALLS) {
+      const interval = setInterval(fetchNews, 5 * 60 * 1000); // Refresh every 5 minutes
+      return () => clearInterval(interval);
+    }
   }, [category]);
 
   const filteredNews = news.filter(item => {

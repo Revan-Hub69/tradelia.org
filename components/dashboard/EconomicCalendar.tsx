@@ -7,6 +7,8 @@ import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
+import { API_CONFIG } from '@/lib/config/api';
+import { mockFetch } from '@/lib/utils/fetch-wrapper';
 
 interface EconomicEvent {
   CalendarId: number;
@@ -49,7 +51,8 @@ export function EconomicCalendar() {
           days: days.toString(),
           country: countryFilter,
         });
-        const response = await fetch(`/api/economic/calendar?${params.toString()}`);
+        const fetchFn = API_CONFIG.DISABLE_API_CALLS ? mockFetch : fetch;
+        const response = await fetchFn(`/api/economic/calendar?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           setEvents(data.data || []);
