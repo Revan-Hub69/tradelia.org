@@ -29,9 +29,6 @@ export function NewsFeed() {
   const [category, setCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [availableCategories] = useState<string[]>(['all', 'markets', 'crypto']);
-  
-  // Auto-translate news titles and descriptions
-  const translateText = useAutoTranslate;
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -163,13 +160,14 @@ export function NewsFeed() {
           </div>
         ) : (
           filteredNews.map((item, index) => {
-            const TranslatedTitle = () => {
-              const translated = useAutoTranslate(item.title, locale !== 'en');
+            // Use hooks for translation
+            const TranslatedTitle = ({ text }: { text: string }) => {
+              const translated = useAutoTranslate(text, locale !== 'en');
               return <>{translated}</>;
             };
-            const TranslatedDescription = () => {
-              if (!item.description) return null;
-              const translated = useAutoTranslate(item.description, locale !== 'en');
+            const TranslatedDescription = ({ text }: { text: string | undefined }) => {
+              if (!text) return null;
+              const translated = useAutoTranslate(text, locale !== 'en');
               return <>{translated}</>;
             };
 
@@ -203,11 +201,11 @@ export function NewsFeed() {
                       {getSentimentIcon(item.sentiment.label)}
                     </div>
                     <h3 className="text-sm font-semibold text-text-primary mb-1 line-clamp-2">
-                      <TranslatedTitle />
+                      <TranslatedTitle text={item.title} />
                     </h3>
                     {item.description && (
                       <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-                        <TranslatedDescription />
+                        <TranslatedDescription text={item.description} />
                       </p>
                     )}
                   <div className="flex items-center gap-2 text-xs text-text-tertiary">

@@ -53,13 +53,22 @@ export function useDashboardCustomization() {
 
         if (data?.dashboard_layout) {
           try {
-            const saved = JSON.parse(data.dashboard_layout);
-            // Merge with defaults to handle new components
-            const merged = DEFAULT_COMPONENTS.map(defaultComp => {
-              const savedComp = saved.find((c: DashboardComponent) => c.id === defaultComp.id);
-              return savedComp || defaultComp;
-            });
-            setComponents(merged);
+            // dashboard_layout is already JSONB, no need to parse if it's an object
+            const saved = typeof data.dashboard_layout === 'string' 
+              ? JSON.parse(data.dashboard_layout)
+              : data.dashboard_layout;
+            
+            // Ensure it's an array
+            if (Array.isArray(saved)) {
+              // Merge with defaults to handle new components
+              const merged = DEFAULT_COMPONENTS.map(defaultComp => {
+                const savedComp = saved.find((c: DashboardComponent) => c.id === defaultComp.id);
+                return savedComp || defaultComp;
+              });
+              setComponents(merged);
+            } else {
+              setComponents(DEFAULT_COMPONENTS);
+            }
           } catch (e) {
             console.error('Error parsing dashboard layout:', e);
             setComponents(DEFAULT_COMPONENTS);
@@ -87,7 +96,7 @@ export function useDashboardCustomization() {
         .from('user_preferences')
         .upsert({
           user_id: user.id,
-          dashboard_layout: JSON.stringify(newComponents),
+          dashboard_layout: newComponents, // JSONB accepts objects directly
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'user_id',

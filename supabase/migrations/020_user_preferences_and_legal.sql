@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS user_preferences (
     show_welcome_tour BOOLEAN DEFAULT true,
     show_tooltips BOOLEAN DEFAULT true,
     -- Dashboard Preferences
-    dashboard_layout VARCHAR(50) DEFAULT 'default',
+    dashboard_layout JSONB, -- Store full component configuration (visibility, order, etc.)
     widgets_order JSONB,
     -- Other preferences as JSONB for flexibility
     other_preferences JSONB DEFAULT '{}',
