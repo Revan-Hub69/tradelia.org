@@ -25,29 +25,41 @@ export function Drawer({
 }: DrawerProps) {
   const { locale } = useTranslations();
 
-  // Prevent body scroll when drawer is open
+  // Prevent body scroll when drawer is open - con debounce per evitare blocchi
   useEffect(() => {
-    if (!isOpen) return;
-    
-    try {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-      return () => {
-        try {
-          document.body.style.overflow = originalOverflow;
-          document.body.style.paddingRight = originalPaddingRight;
-        } catch (e) {
-          // Ignora errori durante cleanup
-        }
-      };
-    } catch (e) {
-      console.error('Error managing body scroll:', e);
+    if (!isOpen) {
+      // Ripristina scroll quando si chiude
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      return;
     }
+    
+    // Usa requestAnimationFrame per evitare blocchi durante il rendering
+    const rafId = requestAnimationFrame(() => {
+      try {
+        const originalOverflow = document.body.style.overflow || '';
+        const originalPaddingRight = document.body.style.paddingRight || '';
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        
+        document.body.style.overflow = 'hidden';
+        if (scrollbarWidth > 0) {
+          document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
+      } catch (e) {
+        console.error('Error managing body scroll:', e);
+      }
+    });
+    
+    return () => {
+      cancelAnimationFrame(rafId);
+      // Cleanup sicuro
+      try {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      } catch (e) {
+        // Ignora errori durante cleanup
+      }
+    };
   }, [isOpen]);
 
   const sizeClasses = {
@@ -96,45 +108,53 @@ export function Drawer({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 z-[100]"
-            onClick={onClose}
-            aria-hidden="true"
-          />
-          
-          {/* Drawer */}
-          <motion.div
-            {...getAnimationVariants()}
-            transition={{
-              type: 'spring',
-              damping: 25,
-              stiffness: 300,
-            }}
-            className={cn(
-              'fixed z-[101] bg-bg-surface border-border-subtle shadow-2xl',
-              'flex flex-col',
-              side === 'left' || side === 'right' ? 'top-0 bottom-0' : 'left-0 right-0',
-              side === 'left' && 'left-0',
-              side === 'right' && 'right-0',
-              side === 'top' && 'top-0',
-              side === 'bottom' && 'bottom-0',
-              side === 'left' || side === 'right' ? 'border-l' : 'border-t',
-              sizeClasses[size]
-            )}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={title ? 'drawer-title' : undefined}
-            onClick={(e) => e.stopPropagation()}
-          >
+    <AnimatePresence mode="wait">
+      {/* Backdrop */}
+      <motion.div
+        key="backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+        className="fixed inset-0 bg-black/50 z-[100]"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            onClose();
+          }
+        }}
+        aria-hidden="true"
+      />
+      
+      {/* Drawer */}
+      <motion.div
+        key="drawer"
+        {...getAnimationVariants()}
+        transition={{
+          type: 'spring',
+          damping: 30,
+          stiffness: 300,
+          mass: 0.5,
+        }}
+        className={cn(
+          'fixed z-[101] bg-bg-surface border-border-subtle shadow-2xl',
+          'flex flex-col',
+          side === 'left' || side === 'right' ? 'top-0 bottom-0' : 'left-0 right-0',
+          side === 'left' && 'left-0',
+          side === 'right' && 'right-0',
+          side === 'top' && 'top-0',
+          side === 'bottom' && 'bottom-0',
+          side === 'left' || side === 'right' ? 'border-l' : 'border-t',
+          sizeClasses[size]
+        )}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'drawer-title' : undefined}
+        onClick={(e) => e.stopPropagation()}
+      >
             {/* Header */}
             {title && (
               <div className="flex items-center justify-between p-4 border-b border-border-subtle flex-shrink-0">
