@@ -16,11 +16,14 @@ interface SectionBannerProps {
  */
 export function SectionBanner({ title, description, icon, className }: SectionBannerProps) {
   return (
-    <div className={cn(
-      'bg-bg-soft border border-border-subtle rounded-lg p-4 mb-4',
-      'border-l-4 border-l-accent/30',
-      className
-    )}>
+    <div 
+      className={cn(
+        'bg-bg-soft border border-border-subtle rounded-lg p-4 mb-4',
+        'border-l-4 border-l-accent/30',
+        className
+      )}
+      suppressHydrationWarning
+    >
       <div className="flex items-start gap-3">
         {icon && (
           <div className="text-accent flex-shrink-0 mt-0.5">

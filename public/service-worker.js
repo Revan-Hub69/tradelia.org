@@ -47,6 +47,15 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
+  // NON intercettare richieste a domini esterni (evita CSP violations)
+  // Questo deve essere il PRIMO check per evitare che il service worker interferisca
+  const isSameOrigin = url.origin === self.location.origin;
+  if (!isSameOrigin) {
+    // Per richieste esterne, non fare nulla - lascia che il browser gestisca
+    // Non chiamare event.respondWith() per evitare che il service worker intercetti
+    return;
+  }
+
   // Non intercettare richieste di autenticazione, API, o reset password
   if (
     url.pathname.startsWith("/api/") ||
@@ -68,14 +77,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // NON intercettare richieste a domini esterni (evita CSP violations)
-  const isSameOrigin = url.origin === self.location.origin;
-  if (!isSameOrigin) {
-    // Lascia passare direttamente alla rete senza cache
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
+  // Solo per richieste same-origin, gestisci cache
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
