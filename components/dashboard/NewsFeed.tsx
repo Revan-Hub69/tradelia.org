@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ExternalLink, TrendingUp, TrendingDown, Minus, Filter, Search } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useAutoTranslate } from '@/lib/hooks/useAutoTranslate';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,9 @@ export function NewsFeed() {
   const [category, setCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [availableCategories] = useState<string[]>(['all', 'markets', 'crypto']);
+  
+  // Auto-translate news titles and descriptions
+  const translateText = useAutoTranslate;
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -158,43 +162,54 @@ export function NewsFeed() {
             No news found
           </div>
         ) : (
-          filteredNews.map((item, index) => (
-            <a
-              key={`${item.link}-${index}`}
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                'block bg-bg-base border border-border-subtle rounded-lg p-4 transition-all hover:border-accent/40 hover:shadow-md',
-                item.impactScore >= 7 && 'border-red-500/30 bg-red-500/5',
-                item.impactScore >= 4 && item.impactScore < 7 && 'border-amber-500/30 bg-amber-500/5'
-              )}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={cn(
-                      'text-xs px-2 py-0.5 rounded font-semibold',
-                      getImpactColor(item.impactScore)
-                    )}>
-                      Impact {item.impactScore}/10
-                    </span>
-                    <span className="text-xs text-text-tertiary capitalize">
-                      {item.category}
-                    </span>
-                    <span className="text-xs text-text-tertiary">
-                      {item.source}
-                    </span>
-                    {getSentimentIcon(item.sentiment.label)}
-                  </div>
-                  <h3 className="text-sm font-semibold text-text-primary mb-1 line-clamp-2">
-                    {item.title}
-                  </h3>
-                  {item.description && (
-                    <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-                      {item.description}
-                    </p>
-                  )}
+          filteredNews.map((item, index) => {
+            const TranslatedTitle = () => {
+              const translated = useAutoTranslate(item.title, locale !== 'en');
+              return <>{translated}</>;
+            };
+            const TranslatedDescription = () => {
+              if (!item.description) return null;
+              const translated = useAutoTranslate(item.description, locale !== 'en');
+              return <>{translated}</>;
+            };
+
+            return (
+              <a
+                key={`${item.link}-${index}`}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  'block bg-bg-base border border-border-subtle rounded-lg p-4 transition-all hover:border-accent/40 hover:shadow-md',
+                  item.impactScore >= 7 && 'border-red-500/30 bg-red-500/5',
+                  item.impactScore >= 4 && item.impactScore < 7 && 'border-amber-500/30 bg-amber-500/5'
+                )}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={cn(
+                        'text-xs px-2 py-0.5 rounded font-semibold',
+                        getImpactColor(item.impactScore)
+                      )}>
+                        Impact {item.impactScore}/10
+                      </span>
+                      <span className="text-xs text-text-tertiary capitalize">
+                        {item.category}
+                      </span>
+                      <span className="text-xs text-text-tertiary">
+                        {item.source}
+                      </span>
+                      {getSentimentIcon(item.sentiment.label)}
+                    </div>
+                    <h3 className="text-sm font-semibold text-text-primary mb-1 line-clamp-2">
+                      <TranslatedTitle />
+                    </h3>
+                    {item.description && (
+                      <p className="text-xs text-text-secondary line-clamp-2 mb-2">
+                        <TranslatedDescription />
+                      </p>
+                    )}
                   <div className="flex items-center gap-2 text-xs text-text-tertiary">
                     <span>{formatDate(item.pubDate)}</span>
                     <ExternalLink className="w-3 h-3" />
@@ -202,7 +217,8 @@ export function NewsFeed() {
                 </div>
               </div>
             </a>
-          ))
+            );
+          })
         )}
       </div>
     </section>

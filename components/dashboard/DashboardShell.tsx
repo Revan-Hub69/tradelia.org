@@ -19,6 +19,8 @@ import { RedditSentiment } from './RedditSentiment';
 import { DeveloperActivity } from './DeveloperActivity';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
+import { DashboardCustomization } from './DashboardCustomization';
+import { useDashboardCustomization } from '@/lib/hooks/useDashboardCustomization';
 // WidgetsSection rimossa - richiede API real-time non disponibili
 // Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
@@ -53,10 +55,18 @@ const HelpAssistant = lazy(() =>
 export function DashboardShell() {
   const { t } = useTranslations();
   const { preferences, isLoaded, toggleHero, toggleCompactView } = useDashboardPreferences();
+  const { components: dashboardComponents, isLoading: isLoadingCustomization } = useDashboardCustomization();
   const [liveMessage, setLiveMessage] = useState('');
   const [unlockedAchievement, setUnlockedAchievement] = useState<{ id: string; title: string; description: string; icon_type?: string } | null>(null);
   const [hasError, setHasError] = useState(false);
   const router = useSafeRouter();
+
+  // Helper to check if component should be visible
+  const isComponentVisible = (componentId: string): boolean => {
+    if (isLoadingCustomization) return true; // Show all during loading
+    const component = dashboardComponents.find(c => c.id === componentId);
+    return component?.visible !== false;
+  };
 
   // Gestisci errori globali con logging migliorato
   // IMPORTANTE: Tutto questo codice viene eseguito SOLO sul client per evitare hydration mismatch
@@ -200,11 +210,12 @@ export function DashboardShell() {
           {/* Personalization Controls - Best Practice UX: User control improves engagement */}
           {isLoaded && (
             <div className="flex items-center justify-end gap-2 mb-4 px-4 sm:px-6 lg:px-8">
+              <DashboardCustomization />
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleHero}
-                className="text-text-secondary hover:text-text-primary"
+                className="text-text-secondary hover:text-text-primary h-9 sm:h-10"
                 aria-label={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
                 title={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
               >
@@ -224,7 +235,7 @@ export function DashboardShell() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleCompactView}
-                className="text-text-secondary hover:text-text-primary"
+                className="text-text-secondary hover:text-text-primary h-9 sm:h-10"
                 aria-label={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
                 title={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
               >
@@ -253,154 +264,178 @@ export function DashboardShell() {
           
           {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
           {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}
-          <section 
-            aria-label="Moduli e funzionalità" 
-            className={cn(
-              styles.dashboardSection,
-              isLoaded && preferences.compactView && 'compact-view'
-            )}
-            id="modules"
-          >
-            <ErrorBoundary>
-              <ModuleGrid />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('module-grid') && (
+            <section 
+              aria-label="Moduli e funzionalità" 
+              className={cn(
+                styles.dashboardSection,
+                isLoaded && preferences.compactView && 'compact-view'
+              )}
+              id="modules"
+            >
+              <ErrorBoundary>
+                <ModuleGrid />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Cruscotto Operativo - Best Practice: Widget di mercato in tempo reale - PRIORITÀ ALTA */}
           {/* Fornisce vista operativa immediata degli indicatori di mercato principali */}
-          <section 
-            aria-label="Cruscotto operativo mercati" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="market-dashboard"
-          >
-            <ErrorBoundary>
-              <MarketDashboardWidget />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('market-dashboard') && (
+            <section 
+              aria-label="Cruscotto operativo mercati" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="market-dashboard"
+            >
+              <ErrorBoundary>
+                <MarketDashboardWidget />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Multi-Asset Charts - Best Practice: Correlazioni cross-asset - PRIORITÀ ALTA */}
           {/* Mostra correlazioni tra Crypto, Stocks, Forex, Commodities */}
-          <section 
-            aria-label="Multi-asset charts with correlations" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="multi-asset-charts"
-          >
-            <ErrorBoundary>
-              <MultiAssetCharts />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('multi-asset-charts') && (
+            <section 
+              aria-label="Multi-asset charts with correlations" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="multi-asset-charts"
+            >
+              <ErrorBoundary>
+                <MultiAssetCharts />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* L400 Support/Resistance - KILLER FEATURE - PRIORITÀ ALTA */}
           {/* Supporti e resistenze reali basati su order book L400 */}
-          <section 
-            aria-label="L400 Support and Resistance" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="l400-support-resistance"
-          >
-            <ErrorBoundary>
-              <L400SupportResistance />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('l400-support-resistance') && (
+            <section 
+              aria-label="L400 Support and Resistance" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="l400-support-resistance"
+            >
+              <ErrorBoundary>
+                <L400SupportResistance />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* News Feed - Aggregated News from Multiple Sources */}
-          <section 
-            aria-label="Market News Feed" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="news-feed"
-          >
-            <ErrorBoundary>
-              <NewsFeed />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('news-feed') && (
+            <section 
+              aria-label="Market News Feed" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="news-feed"
+            >
+              <ErrorBoundary>
+                <NewsFeed />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Economic Calendar - Upcoming Economic Events */}
-          <section 
-            aria-label="Economic Calendar" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="economic-calendar"
-          >
-            <ErrorBoundary>
-              <EconomicCalendar />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('economic-calendar') && (
+            <section 
+              aria-label="Economic Calendar" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="economic-calendar"
+            >
+              <ErrorBoundary>
+                <EconomicCalendar />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* IPO Calendar - Upcoming IPOs with Sentiment and Institutional Participation */}
-          <section 
-            aria-label="IPO Calendar" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="ipo-calendar"
-          >
-            <ErrorBoundary>
-              <IPOCalendar />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('ipo-calendar') && (
+            <section 
+              aria-label="IPO Calendar" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="ipo-calendar"
+            >
+              <ErrorBoundary>
+                <IPOCalendar />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Trending Coins - Early Signals */}
-          <section 
-            aria-label="Trending Coins" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="trending-coins"
-          >
-            <ErrorBoundary>
-              <TrendingCoins />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('trending-coins') && (
+            <section 
+              aria-label="Trending Coins" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="trending-coins"
+            >
+              <ErrorBoundary>
+                <TrendingCoins />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Market Sentiment - Multi-Asset Sentiment (Crypto, Stocks, Forex, Commodities) */}
-          <section 
-            aria-label="Market Sentiment" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="market-sentiment"
-          >
-            <ErrorBoundary>
-              <MarketSentiment />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('market-sentiment') && (
+            <section 
+              aria-label="Market Sentiment" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="market-sentiment"
+            >
+              <ErrorBoundary>
+                <MarketSentiment />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Reddit Sentiment - Retail Sentiment */}
-          <section 
-            aria-label="Reddit Sentiment" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="reddit-sentiment"
-          >
-            <ErrorBoundary>
-              <RedditSentiment />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('reddit-sentiment') && (
+            <section 
+              aria-label="Reddit Sentiment" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="reddit-sentiment"
+            >
+              <ErrorBoundary>
+                <RedditSentiment />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Developer Activity - GitHub Metrics */}
-          <section 
-            aria-label="Developer Activity" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="developer-activity"
-          >
-            <ErrorBoundary>
-              <DeveloperActivity />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('developer-activity') && (
+            <section 
+              aria-label="Developer Activity" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="developer-activity"
+            >
+              <ErrorBoundary>
+                <DeveloperActivity />
+              </ErrorBoundary>
+            </section>
+          )}
 
           {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali - SECONDARIA */}
           {/* Fornisce overview rapida delle attività principali */}
-          <section 
-            aria-label="Panoramica accademica" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="overview"
-          >
-            <ErrorBoundary>
-              <OverviewStats />
-            </ErrorBoundary>
-          </section>
+          {isComponentVisible('overview') && (
+            <section 
+              aria-label="Panoramica accademica" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="overview"
+            >
+              <ErrorBoundary>
+                <OverviewStats />
+              </ErrorBoundary>
+            </section>
+          )}
         </div>
         {/* Chat AI unificata - Disponibile tramite layout principale */}
       </main>
