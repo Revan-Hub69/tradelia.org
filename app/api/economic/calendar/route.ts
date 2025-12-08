@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 const TRADING_ECONOMICS_CLIENT_KEY = process.env.TRADING_ECONOMICS_CLIENT_KEY;
 const TRADING_ECONOMICS_CLIENT_SECRET = process.env.TRADING_ECONOMICS_CLIENT_SECRET;
 const TRADING_ECONOMICS_BASE_URL = 'https://api.tradingeconomics.com';
+const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
 
 interface EconomicEvent {
   CalendarId: number;
@@ -35,50 +36,90 @@ export async function GET(request: Request) {
     const days = parseInt(searchParams.get('days') || '7', 10);
     const country = searchParams.get('country') || 'all'; // 'all', 'united states', 'euro area', 'united kingdom', etc.
 
-    if (!TRADING_ECONOMICS_CLIENT_KEY || !TRADING_ECONOMICS_CLIENT_SECRET) {
-      // Return mock data if API keys not configured
-      const mockEvents: EconomicEvent[] = [
-        {
-          CalendarId: 1,
-          Country: 'United States',
-          Category: 'Inflation',
-          Event: 'CPI (MoM)',
-          Reference: 'Jan 2025',
-          Source: 'Bureau of Labor Statistics',
-          Actual: null,
-          Forecast: 0.3,
-          Previous: 0.2,
-          Date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-          Importance: 3,
-          LastUpdate: new Date().toISOString(),
-        },
-        {
-          CalendarId: 2,
-          Country: 'United States',
-          Category: 'Employment',
-          Event: 'Non-Farm Payrolls',
-          Reference: 'Jan 2025',
-          Source: 'Bureau of Labor Statistics',
-          Actual: null,
-          Forecast: 200000,
-          Previous: 216000,
-          Date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-          Importance: 3,
-          LastUpdate: new Date().toISOString(),
-        },
-      ];
+    // Try Finnhub Economic Calendar first (FREE, already have API key)
+    if (FINNHUB_API_KEY) {
+      try {
+        const finnhubResponse = await fetch(
+          `https://finnhub.io/api/v1/calendar/economic?token=${FINNHUB_API_KEY}`,
+          {
+            next: { revalidate: 3600 }, // Cache 1 hour
+          }
+        );
 
+        if (finnhubResponse.ok) {
+          const finnhubData = await finnhubResponse.json();
+          
+          if (finnhubData && Array.isArray(finnhubData.economicCalendar)) {
+            // Filter by date range
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - days);
+
+            let filteredData = finnhubData.economicCalendar
+              .filter((event: any) => {
+                const eventDate = new Date(event.time);
+                return eventDate >= startDate && eventDate <= endDate;
+              })
+              .map((event: any) => ({
+                CalendarId: event.id || Math.random(),
+                Country: event.country || 'Unknown',
+                Category: event.category || 'Economic',
+                Event: event.event || 'Economic Event',
+                Reference: event.time || '',
+                Source: event.source || 'Finnhub',
+                Actual: event.actual || null,
+                Forecast: event.forecast || null,
+                Previous: event.previous || null,
+                Date: event.time || new Date().toISOString(),
+                Importance: event.impact === 'high' ? 3 : event.impact === 'medium' ? 2 : 1,
+                LastUpdate: new Date().toISOString(),
+              }));
+
+            // Sort by date and importance
+            filteredData.sort((a: EconomicEvent, b: EconomicEvent) => {
+              const dateA = new Date(a.Date).getTime();
+              const dateB = new Date(b.Date).getTime();
+              if (dateA !== dateB) {
+                return dateA - dateB;
+              }
+              return b.Importance - a.Importance;
+            });
+
+            return NextResponse.json({
+              success: true,
+              data: filteredData,
+              total: filteredData.length,
+              source: 'finnhub',
+            }, {
+              headers: {
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+              },
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching Finnhub economic calendar:', error);
+        // Fall through to Trading Economics or mock data
+      }
+    }
+
+    // Fallback to Trading Economics if configured
+    if (TRADING_ECONOMICS_CLIENT_KEY && TRADING_ECONOMICS_CLIENT_SECRET) {
+      // Continue with Trading Economics implementation below
+    } else {
+      // Return empty array instead of mock data
       return NextResponse.json({
         success: true,
-        data: mockEvents,
-        note: 'TRADING_ECONOMICS credentials not configured - using mock data',
+        data: [],
+        note: 'Economic calendar not available. Configure FINNHUB_API_KEY or TRADING_ECONOMICS credentials.',
       }, {
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200', // 1 hour cache
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
         },
       });
     }
 
+    // Trading Economics fallback (if configured)
     // Calculate date range
     const endDate = new Date();
     const startDate = new Date();
