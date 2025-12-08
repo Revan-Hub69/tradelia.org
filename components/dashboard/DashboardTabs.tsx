@@ -63,7 +63,7 @@ export const DashboardTabs = memo(function DashboardTabs() {
       href: buildLocalePath(locale, '/dashboard/settings'),
       description: t('dashboard.tabs.settingsDesc') || 'Profilo e configurazione',
     },
-  ];
+  ], [t, locale]);
 
   // Determina tab attivo basato sul pathname
   // Best Practice: Mapping preciso per ogni route dashboard
