@@ -15,7 +15,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TrendingUp, TrendingDown, AlertCircle, Lock } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Lock, History, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ProLockOverlay } from './utilities/ProLockOverlay';
 
@@ -49,6 +49,14 @@ interface L400Data {
   totalAskVolume: number;
 }
 
+interface HistoricalLevel {
+  price: number;
+  volume: number;
+  type: 'support' | 'resistance';
+  timestamp: string;
+  strength: number;
+}
+
 /**
  * L400 Support/Resistance Component
  * 
@@ -69,6 +77,8 @@ export function L400SupportResistance() {
   const [loading, setLoading] = useState(true);
   const [priceHistory, setPriceHistory] = useState<Array<{ timestamp: string; price: number }>>([]);
   const [usingMultiExchange, setUsingMultiExchange] = useState(false);
+  const [historicalLevels, setHistoricalLevels] = useState<{ support: HistoricalLevel[]; resistance: HistoricalLevel[] } | null>(null);
+  const [showVolumeProfile, setShowVolumeProfile] = useState(false);
 
   useEffect(() => {
     const fetchL400Data = async () => {
