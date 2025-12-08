@@ -264,19 +264,75 @@
 
 ## 🌍 **7. INDICATORI GLOBALI - VERIFICA**
 
-### ⚠️ **Da Implementare**:
-1. ⚠️ European Indexes (DAX, CAC, FTSE, FTSE MIB, Euro Stoxx)
-2. ⚠️ Italian Stocks (Top 10)
-3. ⚠️ Emerging Markets (MSCI EM, BRICS, Asia)
-4. ⚠️ ETF Settoriali (SPY, QQQ, XLK, XLF, etc.)
-5. ⚠️ ETF Geografici (VGK, EEM, VWO, VPL)
-6. ⚠️ Forex Esteso (Emergenti, Europee, DXY, Commodity Currencies)
+### ⚠️ **⚠️ PROBLEMA CRITICO: STIAMO CONCENTRANDOCI TROPPO SU USA! ⚠️**
+
+#### **Cosa è implementato ORA**:
+- ✅ **Stock Indexes**: SOLO USA (S&P 500, Dow, NASDAQ)
+- ✅ **Forex**: SOLO 4 coppie major (EUR/USD, GBP/USD, USD/JPY, USD/CHF)
+- ✅ **Economic Indicators**: SOLO USA (GDP, CPI, Unemployment, Fed Rate)
+- ✅ **Bond Yields**: SOLO USA (10Y, 2Y)
+- ❌ **Europa**: NIENTE
+- ❌ **Italia**: NIENTE
+- ❌ **Asia**: NIENTE
+- ❌ **Emergenti**: NIENTE
+
+---
+
+### ⚠️ **Da Implementare URGENTEMENTE** (Priorità Massima):
+
+#### **1. Indici Globali** (6-8 ore) ⭐⭐⭐⭐⭐
+- ⚠️ **Europa**: DAX, CAC, FTSE, FTSE MIB, Euro Stoxx, IBEX, AEX
+- ⚠️ **Asia**: Nikkei, Shanghai, Hang Seng, Nifty, KOSPI, ASX
+- ⚠️ **Emergenti**: Bovespa, JSE, MSCI EM
+
+**API**: Finnhub (GRATIS, già configurato)
+**Status**: ⚠️ **MANCA COMPLETAMENTE**
+
+#### **2. Stocks Globali** (8-10 ore) ⭐⭐⭐⭐
+- ⚠️ **Europa**: Top 20 stocks (Germania, Francia, UK, Italia)
+- ⚠️ **Asia**: Top 15 stocks (Japan, China, India)
+- ⚠️ **Emergenti**: Top 10 stocks (BRICS)
+
+**API**: Finnhub (GRATIS, già configurato)
+**Status**: ⚠️ **MANCA COMPLETAMENTE**
+
+#### **3. Forex Esteso** (4-5 ore) ⭐⭐⭐⭐⭐
+- ⚠️ **Emergenti**: USD/CNY, USD/INR, USD/BRL, USD/ZAR, USD/MXN, USD/TRY
+- ⚠️ **Europee**: EUR/GBP, EUR/JPY, EUR/CHF, GBP/JPY
+- ⚠️ **DXY**: Dollar Index
+
+**API**: Finnhub (GRATIS) + Yahoo Finance (GRATIS)
+**Status**: ⚠️ **MANCA COMPLETAMENTE**
+
+#### **4. ETF Geografici** (3-4 ore) ⭐⭐⭐⭐
+- ⚠️ **Europa**: VGK, IEV, EZU
+- ⚠️ **Emergenti**: EEM, VWO, IEMG
+- ⚠️ **Asia**: VPL, EPP, AAXJ
+- ⚠️ **Japan**: EWJ, DXJ
+
+**API**: Finnhub (GRATIS, già configurato)
+**Status**: ⚠️ **MANCA COMPLETAMENTE**
+
+#### **5. Indicatori Economici Globali** (10-12 ore) ⚠️
+- ⚠️ **Europa**: ECB Rates, Eurozone Inflation/GDP, Bond Yields (Germany, France, Italy, Spain, UK)
+- ⚠️ **Italia**: GDP, Inflation, Unemployment, BTP-Bund Spread
+- ⚠️ **Asia/Emergenti**: World Bank, IMF Data
+
+**API**: ECB, Eurostat, FRED, World Bank, IMF (GRATIS)
+**Status**: ⚠️ **MANCA COMPLETAMENTE**
+
+---
+
+### ⚠️ **Altri Indicatori Globali** (Da Implementare):
+6. ⚠️ ETF Settoriali (SPY, QQQ, XLK, XLF, etc.)
 7. ⚠️ Cross-Asset Correlation Matrix
 8. ⚠️ Risk Parity Composite
 9. ⚠️ Carry Trade Composite
 10. ⚠️ Commodity Rotation Composite
 
 **Totale**: 10 indicatori globali ⚠️
+
+**Tempo Totale Fase 1 (Urgente)**: 18-23 ore
 
 ---
 
@@ -314,21 +370,44 @@
 ## ✅ **10. CONCLUSIONE**
 
 ### **Cosa abbiamo**:
-- ✅ 13 indicatori base
+- ✅ 13 indicatori base (ma SOLO USA!)
 - ✅ 11 indicatori crypto
 - ✅ 3 calendari
 - ✅ **Totale: 27 indicatori implementati**
 
-### **Cosa manca**:
-- ⚠️ 10 indicatori base (Short Interest, DXY, PMI, AAII, COT, etc.)
+### **⚠️ PROBLEMA CRITICO: STIAMO CONCENTRANDOCI TROPPO SU USA! ⚠️**
+
+#### **Cosa manca URGENTEMENTE** (Priorità Massima):
+- ⚠️ **Indici Globali** (Europa, Asia, Emergenti) - 6-8 ore
+- ⚠️ **Stocks Globali** (Europa, Asia, Emergenti) - 8-10 ore
+- ⚠️ **Forex Esteso** (Emergenti, Europee, DXY) - 4-5 ore
+- ⚠️ **ETF Geografici** (VGK, EEM, VWO, VPL) - 3-4 ore
+- ⚠️ **Indicatori Economici Globali** (Europa, Italia, Asia) - 10-12 ore
+
+**TOTALE FASE 1 (Urgente)**: 18-23 ore
+
+#### **Cosa manca** (Altre Priorità):
+- ⚠️ 10 indicatori base USA (Short Interest, DXY, PMI, AAII, COT, etc.)
 - ⚠️ 15 compositi
 - ⚠️ 8 microstrutture
-- ⚠️ 10 globali
 - ⚠️ **Totale: 43 indicatori mancanti**
 
-### **Priorità**:
-1. 🔴 **Alta**: Short Interest, DXY, PMI, AAII, COT
-2. 🟡 **Media**: Options Flow, Futures Term Structure, ETF Flows
-3. 🟢 **Bassa**: Stock Market Fear & Greed, Real Estate
+### **Priorità RIVISTA**:
+1. 🔴 **URGENTE - Priorità Massima**: Indici Globali, Stocks Globali, Forex Esteso, ETF Geografici (18-23 ore)
+2. 🔴 **Alta**: Indicatori Economici Globali (Europa, Italia, Asia) - 10-12 ore
+3. 🟡 **Media**: Short Interest, DXY, PMI, AAII, COT (USA)
+4. 🟡 **Media**: Options Flow, Futures Term Structure, ETF Flows
+5. 🟢 **Bassa**: Stock Market Fear & Greed, Real Estate
 
-**Vuoi che aggiunga questi 10 indicatori base mancanti alla lista?**
+---
+
+## 🎯 **11. RACCOMANDAZIONE FINALE**
+
+**IMPLEMENTARE SUBITO** (per passare da "solo USA" a "mercati globali"):
+1. ✅ Indici Globali (Europa, Asia, Emergenti) - 6-8 ore
+2. ✅ Forex Esteso (coppie emergenti, DXY) - 4-5 ore
+3. ✅ ETF Geografici - 3-4 ore
+
+**Questo ci porta da "solo USA" a "mercati globali completi" in 13-17 ore!**
+
+**Vuoi che implementi SUBITO gli indici globali (Europa, Italia, Asia, Emergenti) usando Finnhub?**
