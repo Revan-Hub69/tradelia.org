@@ -5,10 +5,9 @@ import '@/lib/utils/suppress-hydration-errors';
 
 'use client';
 
+import React, { Suspense, lazy, useState, useEffect, useMemo, useCallback, memo } from 'react';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
-
-import React, { Suspense, lazy, useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useDashboardCustomization } from '@/lib/hooks/useDashboardCustomization';
