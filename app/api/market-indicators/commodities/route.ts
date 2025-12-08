@@ -9,8 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
  * - Silver
  *
  * Academic Reference: Commodity Futures Theory, Inflation Hedging
- * Data Source: Alpha Vantage API (FREE, 5 calls/min)
- * Updates: Every 5 minutes
+ * Data Source: Alpha Vantage API (FREE, 5 calls/min, 500 calls/day)
+ * Updates: Every 10 minutes (cache increased to respect daily limit)
  */
 
 interface Commodity {
@@ -47,8 +47,9 @@ async function getCommodityQuote(
     const response = await fetch(
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`,
       {
-        // Cache for 5 minutes
-        next: { revalidate: 300 },
+        // Cache for 10 minutes (to respect Alpha Vantage free tier: 500 calls/day)
+        // With 3 commodities and 10min cache: 6 refresh/hour × 3 = 18 calls/hour = 432 calls/day < 500 limit
+        next: { revalidate: 600 },
       }
     );
 
@@ -96,7 +97,9 @@ async function getAllCommodities(): Promise<Commodity[]> {
     return [];
   }
 
-  // Sequential calls to respect rate limit (5 calls/min)
+  // Sequential calls to respect rate limit (5 calls/min, 500 calls/day)
+  // Cache is 10 minutes, so we can make calls more frequently here if needed
+  // But we still respect the 5 calls/min limit with delays
   const goldData = await getCommodityQuote(COMMODITY_SYMBOLS.GOLD, alphaVantageApiKey);
   await new Promise((resolve) => setTimeout(resolve, 12000)); // Wait 12 seconds between calls
 
