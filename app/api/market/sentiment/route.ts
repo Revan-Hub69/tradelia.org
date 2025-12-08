@@ -225,6 +225,13 @@ export async function GET(request: Request) {
       source = 'reddit';
     }
 
+    // Simulate trend (in production, would fetch historical data)
+    const trend = {
+      score7d: sentiment + (Math.random() - 0.5) * 10,
+      score30d: sentiment + (Math.random() - 0.5) * 15,
+      direction: (sentiment > 20 ? 'increasing' : sentiment < -20 ? 'decreasing' : 'stable') as 'increasing' | 'decreasing' | 'stable',
+    };
+
     const result: SentimentData = {
       asset,
       assetType,
@@ -232,6 +239,7 @@ export async function GET(request: Request) {
       socialVolume: volume,
       source,
       timestamp: Date.now(),
+      trend,
     };
 
     return NextResponse.json({

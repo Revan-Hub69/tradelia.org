@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageSquare, TrendingUp, TrendingDown, Minus, Filter, Lock } from 'lucide-react';
+import { MessageSquare, TrendingUp, TrendingDown, Minus, Filter, Lock, TrendingUp as TrendUp, TrendingDown as TrendDown } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -16,6 +16,11 @@ interface SentimentData {
   socialVolume: number;
   source: string;
   timestamp: number;
+  trend?: {
+    score7d: number;
+    score30d: number;
+    direction: 'increasing' | 'decreasing' | 'stable';
+  };
 }
 
 const ASSETS_FREE = {
@@ -195,10 +200,35 @@ export function MarketSentiment() {
               <div className="text-2xl font-bold text-text-primary mb-1">
                 {data.sentiment > 0 ? '+' : ''}{data.sentiment.toFixed(1)}
               </div>
-              <div className="flex items-center justify-between text-xs text-text-tertiary">
+              <div className="flex items-center justify-between text-xs text-text-tertiary mb-2">
                 <span>Vol: {formatVolume(data.socialVolume)}</span>
                 <span className="capitalize">{data.source}</span>
               </div>
+              
+              {/* Trend Indicator */}
+              {data.trend && (
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="text-text-tertiary">
+                    {locale === 'it' ? 'Trend' : 'Trend'}:
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {data.trend.direction === 'increasing' ? (
+                      <TrendUp className="w-3 h-3 text-green-400" />
+                    ) : data.trend.direction === 'decreasing' ? (
+                      <TrendDown className="w-3 h-3 text-red-400" />
+                    ) : (
+                      <Minus className="w-3 h-3 text-gray-400" />
+                    )}
+                    <span className={cn(
+                      data.trend.direction === 'increasing' ? 'text-green-400' :
+                      data.trend.direction === 'decreasing' ? 'text-red-400' :
+                      'text-text-tertiary'
+                    )}>
+                      {data.trend.direction}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           ))
         )}

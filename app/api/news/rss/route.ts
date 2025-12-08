@@ -122,6 +122,8 @@ export async function GET(request: Request) {
         const feedData = await parser.parseURL(feed.url);
         if (!feedData.items) return [];
 
+        const feedCredibility = feed.priority === 'high' ? 95 : 75;
+        
         return feedData.items.map((item) => {
           const sentiment = SentimentIntensityAnalyzer.polarity_scores(item.title || '');
           const description = item.contentSnippet || item.content || '';
@@ -139,6 +141,7 @@ export async function GET(request: Request) {
             },
             impactScore,
             description: description.substring(0, 200), // Limit description length
+            credibilityScore: feedCredibility,
           };
         });
       } catch (error) {
@@ -198,9 +201,9 @@ export async function GET(request: Request) {
     });
 
     // Filter by category if specified
-    let filteredNews = allNews;
+    let filteredNews = clusteredNews;
     if (category && category !== 'all') {
-      filteredNews = allNews.filter(item => item.category === category);
+      filteredNews = clusteredNews.filter(item => item.category === category);
     }
 
     // Limit results
