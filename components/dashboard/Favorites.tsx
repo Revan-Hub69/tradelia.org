@@ -23,7 +23,12 @@ interface Favorite {
   added_at: string;
 }
 
-export const Favorites = memo(function Favorites() {
+interface FavoritesProps {
+  type?: 'all' | 'indicator' | 'report' | 'analysis';
+  searchQuery?: string;
+}
+
+export const Favorites = memo(function Favorites({ type = 'all', searchQuery = '' }: FavoritesProps) {
   const { t } = useTranslations();
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +56,7 @@ export const Favorites = memo(function Favorites() {
   const favorites = useMemo(() => {
     if (!favoritesData) return [];
 
-    return favoritesData.map((item) => {
+    let mapped = favoritesData.map((item) => {
       let iconNode: React.ReactNode = <FileText className="w-4 h-4" />;
       
       if (item.icon) {
@@ -94,7 +99,31 @@ export const Favorites = memo(function Favorites() {
         addedAt: item.added_at,
       };
     });
-  }, [favoritesData]);
+
+    // Filter by type
+    if (type !== 'all') {
+      const typeMap: Record<string, Favorite['item_type']> = {
+        indicator: 'module',
+        report: 'report',
+        analysis: 'report',
+      };
+      const targetType = typeMap[type];
+      if (targetType) {
+        mapped = mapped.filter(item => item.type === targetType);
+      }
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      mapped = mapped.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+      );
+    }
+
+    return mapped;
+  }, [favoritesData, type, searchQuery]);
 
   const removeFavorite = async (id: string) => {
     try {

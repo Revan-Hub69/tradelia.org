@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import AnalysisDashboard from '@/components/dashboard/analysis/AnalysisDashboard';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
+import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 
@@ -7,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = 'Market Data & Indicators | Tradelia';
   const description = 'Market data dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
   const url = 'https://tradelia.org/dashboard/market-data';
-  const image = 'https://tradelia.org/og-market-data.png'; // TODO: Create OG image
+  const image = 'https://tradelia.org/og-market-data.png';
   
   return {
     title,
@@ -17,14 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url,
       siteName: 'Tradelia',
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: 'Tradelia Market Data Dashboard',
-        },
-      ],
+      images: [{ url: image, width: 1200, height: 630, alt: 'Tradelia Market Data Dashboard' }],
       locale: 'it_IT',
       type: 'website',
     },
@@ -41,13 +35,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function AnalysisPage() {
+export default function MarketDataPage() {
   const structuredData = generateWebSiteSchema('it');
   
   return (
     <>
       <StructuredData data={structuredData} id="market-data-structured-data" />
-      <AnalysisDashboard />
+      <DashboardTabs />
+      <DashboardShell />
     </>
   );
 }

@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BarChart3, Settings, TrendingUp, Cog, Calculator } from 'lucide-react';
+import { BarChart3, Settings, TrendingUp, Cog, Calculator, Star, LineChart } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { cn } from '@/lib/utils/cn';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
-type TabId = 'overview' | 'utilities' | 'market-data' | 'settings';
+type TabId = 'overview' | 'market-data' | 'analysis' | 'favorites' | 'settings';
 
 interface Tab {
   id: TabId;
@@ -43,18 +43,25 @@ export const DashboardTabs = memo(function DashboardTabs() {
       description: t('dashboard.tabs.overviewDesc') || 'Vista generale e attività recenti',
     },
     {
-      id: 'utilities',
-      label: t('dashboard.tabs.utilities') || 'Utilities',
-      icon: Calculator,
-      href: buildLocalePath(locale, '/dashboard/utilities'),
-      description: t('dashboard.tabs.utilitiesDesc') || 'Strumenti finanziari e calcolatori',
-    },
-    {
       id: 'market-data',
       label: t('dashboard.tabs.marketData') || 'Market Data',
       icon: TrendingUp,
       href: buildLocalePath(locale, '/dashboard/market-data'),
       description: t('dashboard.tabs.marketDataDesc') || 'Indicatori di mercato e dati real-time',
+    },
+    {
+      id: 'analysis',
+      label: t('dashboard.tabs.analysis') || 'Analisi',
+      icon: LineChart,
+      href: buildLocalePath(locale, '/dashboard/analysis'),
+      description: t('dashboard.tabs.analysisDesc') || 'Analisi avanzate e grafici',
+    },
+    {
+      id: 'favorites',
+      label: t('dashboard.tabs.favorites') || 'Preferiti',
+      icon: Star,
+      href: buildLocalePath(locale, '/dashboard/favorites'),
+      description: t('dashboard.tabs.favoritesDesc') || 'Contenuti salvati',
     },
     {
       id: 'settings',
@@ -76,16 +83,19 @@ export const DashboardTabs = memo(function DashboardTabs() {
     // Mapping preciso: ogni route dashboard mappa a una tab specifica
     if (normalizedPath === '/dashboard' || normalizedPath === '/it/dashboard' || normalizedPath === '/en/dashboard') {
       setActiveTab('overview');
-    } else if (normalizedPath.includes('/dashboard/utilities')) {
-      setActiveTab('utilities');
     } else if (normalizedPath.includes('/dashboard/market-data')) {
       setActiveTab('market-data');
-    } else if (normalizedPath.includes('/dashboard/reports')) {
-      setActiveTab('market-data'); // Reports (con Requests come sub-tab) è parte di market-data
+    } else if (normalizedPath.includes('/dashboard/analysis')) {
+      setActiveTab('analysis');
+    } else if (normalizedPath.includes('/dashboard/favorites')) {
+      setActiveTab('favorites');
     } else if (normalizedPath.includes('/dashboard/settings')) {
       setActiveTab('settings');
+    } else if (normalizedPath.includes('/dashboard/utilities')) {
+      // Utilities rimane come route separata, non tab
+      setActiveTab('overview');
     } else {
-      // Per altre route dashboard (requests, voting, favorites, billing, etc.)
+      // Per altre route dashboard (requests, voting, billing, etc.)
       // Mantieni tab overview come default
       setActiveTab('overview');
     }

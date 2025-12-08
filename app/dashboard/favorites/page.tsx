@@ -1,46 +1,48 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { NoSSR } from '@/components/common/NoSSR';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { Metadata } from 'next';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
+import { DashboardShell } from '@/components/dashboard/DashboardShell';
+import { StructuredData } from '@/components/seo/StructuredData';
+import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 
-// Favorites è già un componente client-side
-const Favorites = dynamic(
-  () => import('@/components/dashboard/Favorites').then(m => ({ default: m.Favorites })),
-  {
-    ssr: false,
-  }
-);
-
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-bg-base" suppressHydrationWarning>
-    <div className="text-center">
-      <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-text-secondary">Caricamento preferiti...</p>
-    </div>
-  </div>
-);
+export async function generateMetadata(): Promise<Metadata> {
+  const title = 'Preferiti | Tradelia';
+  const description = 'I tuoi contenuti preferiti: indicatori, report, analisi salvati';
+  const url = 'https://tradelia.org/dashboard/favorites';
+  const image = 'https://tradelia.org/og-favorites.png';
+  
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Tradelia',
+      images: [{ url: image, width: 1200, height: 630, alt: 'Tradelia Favorites' }],
+      locale: 'it_IT',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+      site: '@tradelia',
+    },
+    alternates: {
+      canonical: url,
+    },
+  };
+}
 
 export default function FavoritesPage() {
+  const structuredData = generateWebSiteSchema('it');
+  
   return (
-    <ErrorBoundary>
-      <NoSSR fallback={<LoadingFallback />}>
-        <div suppressHydrationWarning>
-          <DashboardTabs />
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-text-primary mb-2">
-                Preferiti
-              </h1>
-              <p className="text-text-secondary">
-                I tuoi contenuti salvati per accesso rapido
-              </p>
-            </div>
-            <Favorites />
-          </div>
-        </div>
-      </NoSSR>
-    </ErrorBoundary>
+    <>
+      <StructuredData data={structuredData} id="favorites-structured-data" />
+      <DashboardTabs />
+      <DashboardShell />
+    </>
   );
 }
