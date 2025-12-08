@@ -27,7 +27,9 @@ export function Drawer({
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) return;
+    
+    try {
       const originalOverflow = document.body.style.overflow;
       const originalPaddingRight = document.body.style.paddingRight;
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -36,9 +38,15 @@ export function Drawer({
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
       return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
+        try {
+          document.body.style.overflow = originalOverflow;
+          document.body.style.paddingRight = originalPaddingRight;
+        } catch (e) {
+          // Ignora errori durante cleanup
+        }
       };
+    } catch (e) {
+      console.error('Error managing body scroll:', e);
     }
   }, [isOpen]);
 

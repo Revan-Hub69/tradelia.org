@@ -22,31 +22,34 @@ export function IndicatorTooltip({ indicatorId, children, side = 'right' }: Indi
     return <>{children}</>;
   }
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsOpen(true);
-  };
+  // Disattivato temporaneamente per evitare blocchi
+  // const handleClick = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   setIsOpen(true);
+  // };
 
   return (
     <>
       <div 
-        className="inline-flex items-center gap-1 cursor-pointer"
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsOpen(true);
-          }
-        }}
-        aria-label={locale === 'it' ? 'Mostra dettagli indicatore' : 'Show indicator details'}
+        className="inline-flex items-center gap-1"
+        // onClick={handleClick}
+        // role="button"
+        // tabIndex={0}
+        // onKeyDown={(e) => {
+        //   if (e.key === 'Enter' || e.key === ' ') {
+        //     e.preventDefault();
+        //     setIsOpen(true);
+        //   }
+        // }}
+        aria-label={locale === 'it' ? 'Dettagli indicatore (disattivato)' : 'Indicator details (disabled)'}
       >
         {children}
-        <Info className="w-3 h-3 text-text-tertiary hover:text-accent transition-colors" />
+        <Info className="w-3 h-3 text-text-tertiary" />
       </div>
 
+      {/* Drawer disattivato temporaneamente */}
+      {false && (
       <Drawer
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
@@ -148,6 +151,7 @@ export function IndicatorTooltip({ indicatorId, children, side = 'right' }: Indi
           )}
         </div>
       </Drawer>
+      )}
     </>
   );
 }
