@@ -134,6 +134,7 @@ export async function searchDashboardContent(userId: string, query: string) {
   const supabase = await createClient();
 
   const searchTerm = `%${query}%`;
+  const queryLower = query.toLowerCase();
 
   // Search reports
   const { data: reports } = await supabase
@@ -143,12 +144,22 @@ export async function searchDashboardContent(userId: string, query: string) {
     .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .limit(5);
 
-  // Search courses
-  const { data: courses } = await supabase
-    .from("courses")
-    .select("id, title, description, created_at, slug")
-    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
-    .limit(5);
+  // Search indicators from indicator-tooltips
+  const { INDICATOR_TOOLTIPS } = await import('@/lib/data/indicator-tooltips');
+  const indicators = Object.values(INDICATOR_TOOLTIPS)
+    .filter(indicator => {
+      const nameMatch = indicator.name.toLowerCase().includes(queryLower);
+      const descMatch = indicator.description.toLowerCase().includes(queryLower);
+      const howToUseMatch = indicator.howToUse.toLowerCase().includes(queryLower);
+      return nameMatch || descMatch || howToUseMatch;
+    })
+    .slice(0, 5)
+    .map(indicator => ({
+      id: indicator.id,
+      name: indicator.name,
+      description: indicator.description,
+      howToUse: indicator.howToUse,
+    }));
 
   // Search modules
   const { data: modules } = await supabase
@@ -159,7 +170,7 @@ export async function searchDashboardContent(userId: string, query: string) {
 
   return {
     reports: reports || [],
-    courses: courses || [],
+    indicators: indicators || [],
     modules: modules || [],
   };
 }

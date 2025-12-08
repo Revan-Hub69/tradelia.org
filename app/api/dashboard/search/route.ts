@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('q');
 
     if (!query || query.trim().length === 0) {
-      return NextResponse.json({ data: { reports: [], modules: [] } });
+      return NextResponse.json({ data: { reports: [], indicators: [], modules: [] } });
     }
 
     const results = await searchDashboardContent(user.id, query.trim());
@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
     // Localize dynamic content if multilingual fields exist
     const localizedResults = {
       reports: localizeContentArray(results.reports || [], locale),
+      indicators: results.indicators || [],
       modules: localizeContentArray(results.modules || [], locale),
     };
 

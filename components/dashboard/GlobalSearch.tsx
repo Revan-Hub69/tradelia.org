@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X, FileText, BookOpen, TrendingUp, ArrowRight, Command } from 'lucide-react';
+import { Search, X, FileText, BarChart3, TrendingUp, ArrowRight, Command } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +13,7 @@ import { useFocusManagement } from '@/lib/hooks/useFocusManagement';
 
 interface SearchResult {
   id: string;
-  type: 'report' | 'course' | 'module' | 'glossary';
+  type: 'report' | 'indicator' | 'module' | 'glossary';
   title: string;
   description: string;
   href: string;
@@ -87,11 +87,22 @@ export function GlobalSearch() {
           type: 'report',
           title: item.title,
           description: item.description || '',
-          href: `/dashboard/market-data`,
+          href: `/dashboard/reports/${item.id}`,
           icon: <FileText className="w-4 h-4" />,
         });
       });
 
+      // Indicators
+      (data.indicators || []).forEach((item: any) => {
+        mappedResults.push({
+          id: `indicator-${item.id}`,
+          type: 'indicator',
+          title: item.name || item.title,
+          description: item.description || item.howToUse || '',
+          href: '/dashboard/market-data',
+          icon: <BarChart3 className="w-4 h-4" />,
+        });
+      });
 
       // Modules
       (data.modules || []).forEach((item: any) => {
@@ -237,7 +248,7 @@ export function GlobalSearch() {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={t('dashboard.search.placeholder') || 'Cerca report, corsi, moduli...'}
+                    placeholder={t('dashboard.search.placeholder') || 'Cerca indicatori, report, moduli...'}
                     className="flex-1 bg-transparent border-none outline-none text-text-primary placeholder:text-text-tertiary text-base"
                     autoComplete="off"
                     aria-label={t('dashboard.search.inputLabel') || 'Campo di ricerca'}
