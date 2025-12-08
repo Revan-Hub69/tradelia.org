@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { Button } from '@/components/ui/button';
 
 interface EconomicEvent {
   CalendarId: number;
@@ -28,6 +29,7 @@ export function EconomicCalendar() {
   const [events, setEvents] = useState<EconomicEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const days = isPro ? 30 : 7;
+  const [countryFilter, setCountryFilter] = useState<string>('all');
 
   useEffect(() => {
     const fetchCalendar = async () => {
@@ -35,7 +37,7 @@ export function EconomicCalendar() {
       try {
         const params = new URLSearchParams({
           days: days.toString(),
-          country: 'united states',
+          country: countryFilter,
         });
         const response = await fetch(`/api/economic/calendar?${params.toString()}`);
         if (response.ok) {
@@ -52,7 +54,7 @@ export function EconomicCalendar() {
     fetchCalendar();
     const interval = setInterval(fetchCalendar, 60 * 60 * 1000); // Refresh every hour
     return () => clearInterval(interval);
-  }, [days]);
+  }, [days, countryFilter]);
 
   const getImportanceColor = (importance: number) => {
     if (importance === 3) return 'text-red-400 bg-red-400/10 border-red-400/30';

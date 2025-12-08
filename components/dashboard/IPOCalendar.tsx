@@ -5,6 +5,7 @@ import { Calendar, TrendingUp, TrendingDown, Building2, Users, DollarSign, Alert
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { Button } from '@/components/ui/button';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Lock } from 'lucide-react';
 
@@ -37,6 +38,7 @@ export function IPOCalendar() {
   const [ipos, setIpos] = useState<IPOEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const days = isPro ? 90 : 30;
+  const [countryFilter, setCountryFilter] = useState<string>('all');
 
   useEffect(() => {
     const fetchIPOs = async () => {
@@ -44,7 +46,7 @@ export function IPOCalendar() {
       try {
         const params = new URLSearchParams({
           days: days.toString(),
-          country: 'US',
+          country: countryFilter,
         });
         const response = await fetch(`/api/market/ipo-calendar?${params.toString()}`);
         if (response.ok) {
