@@ -19,6 +19,7 @@ import { TrendingUp, TrendingDown, Minus, BarChart3, Activity, Settings } from '
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { calculateRSI, calculateMACD, calculateBollingerBands, calculateSMA, calculateEMA } from '@/lib/utils/technical-indicators';
+import { SectionBanner } from './SectionBanner';
 
 ChartJS.register(
   CategoryScale,
