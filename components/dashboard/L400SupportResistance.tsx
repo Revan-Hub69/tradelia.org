@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -14,8 +15,9 @@ import {
   Legend,
 } from 'chart.js';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { ProLockOverlay } from './utilities/ProLockOverlay';
 
 ChartJS.register(
   CategoryScale,
@@ -61,19 +63,26 @@ interface L400Data {
  */
 export function L400SupportResistance() {
   const { t, locale } = useTranslations();
+  const isPro = useIsPro();
   const [symbol, setSymbol] = useState('BTCUSDT');
   const [data, setData] = useState<L400Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [priceHistory, setPriceHistory] = useState<Array<{ timestamp: string; price: number }>>([]);
+  const [usingMultiExchange, setUsingMultiExchange] = useState(false);
 
   useEffect(() => {
     const fetchL400Data = async () => {
       try {
         setLoading(true);
 
-        // Fetch multi-exchange order book (aggregated from Binance, Coinbase, Kraken, OKX)
-        const multiExchangeResponse = await fetch(`/api/crypto/multi-exchange-depth?symbol=${symbol}`);
-        if (!multiExchangeResponse.ok) {
+        // Fetch multi-exchange order book (aggregated from Binance, Coinbase, Kraken, OKX) - PRO ONLY
+        let multiExchangeResponse = null;
+        if (isPro) {
+          multiExchangeResponse = await fetch(`/api/crypto/multi-exchange-depth?symbol=${symbol}`);
+        }
+        
+        if (!multiExchangeResponse || !multiExchangeResponse.ok) {
+          setUsingMultiExchange(false);
           // Fallback to Binance only if multi-exchange fails
           const orderBookResponse = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=400`);
           if (!orderBookResponse.ok) throw new Error('Failed to fetch order book');
@@ -154,6 +163,7 @@ export function L400SupportResistance() {
           throw new Error('Invalid multi-exchange data');
         }
 
+        setUsingMultiExchange(true);
         const aggregated = multiExchangeData.data.aggregated;
         const currentPrice = aggregated.bids[0]?.price || aggregated.asks[0]?.price || 0;
 
@@ -300,8 +310,29 @@ export function L400SupportResistance() {
   };
 
   if (loading) {
+  if (!isPro && usingMultiExchange) {
+    // This shouldn't happen, but just in case
     return (
-      <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
+      <ProLockOverlay>
+        <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
+          <Skeleton className="h-96 w-full" />
+        </section>
+      </ProLockOverlay>
+    );
+  }
+
+  return (
+    <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
+      {!isPro && (
+        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
+          <Lock className="w-4 h-4" />
+          <span>
+            {locale === 'it' 
+              ? 'Versione Pro: Aggregazione multi-exchange (Binance, Coinbase, Kraken, OKX) vs Binance solo.'
+              : 'Pro Version: Multi-exchange aggregation (Binance, Coinbase, Kraken, OKX) vs Binance only.'}
+          </span>
+        </div>
+      )}
         <Skeleton className="h-96 w-full" />
       </section>
     );

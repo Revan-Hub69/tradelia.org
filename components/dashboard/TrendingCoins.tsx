@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
+import { TrendingUp, TrendingDown, ExternalLink, Lock } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 
@@ -22,6 +23,7 @@ interface TrendingCoin {
 
 export function TrendingCoins() {
   const { t, locale } = useTranslations();
+  const isPro = useIsPro();
   const [coins, setCoins] = useState<TrendingCoin[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +31,8 @@ export function TrendingCoins() {
     const fetchTrending = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/crypto/trending?limit=10');
+        const limit = isPro ? 50 : 10;
+        const response = await fetch(`/api/crypto/trending?limit=${limit}`);
         if (response.ok) {
           const data = await response.json();
           setCoins(data.data || []);
@@ -69,6 +72,17 @@ export function TrendingCoins() {
           </p>
         </div>
       </div>
+
+      {!isPro && (
+        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
+          <Lock className="w-4 h-4" />
+          <span>
+            {locale === 'it' 
+              ? 'Versione Pro: Top 50 vs 10 free. Aggiorna per vedere tutti i trending coins.'
+              : 'Pro Version: Top 50 vs 10 free. Upgrade to see all trending coins.'}
+          </span>
+        </div>
+      )}
 
       <div className="space-y-2">
         {loading ? (

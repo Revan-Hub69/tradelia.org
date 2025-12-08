@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, TrendingUp, TrendingDown, AlertCircle, Clock } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, AlertCircle, Clock, Lock } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 
@@ -23,9 +24,10 @@ interface EconomicEvent {
 
 export function EconomicCalendar() {
   const { t, locale } = useTranslations();
+  const isPro = useIsPro();
   const [events, setEvents] = useState<EconomicEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [days] = useState(7);
+  const days = isPro ? 30 : 7;
 
   useEffect(() => {
     const fetchCalendar = async () => {
@@ -120,9 +122,21 @@ export function EconomicCalendar() {
           </h2>
           <p className="text-sm text-text-secondary mt-1">
             {t('dashboard.economicCalendar.description') || 'Upcoming economic events and indicators'}
+            {!isPro && ` (${days} days - Pro: 30 days)`}
           </p>
         </div>
       </div>
+
+      {!isPro && (
+        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
+          <Lock className="w-4 h-4" />
+          <span>
+            {locale === 'it' 
+              ? 'Versione Pro: 30 giorni vs 7 free. Aggiorna per vedere il calendario esteso.'
+              : 'Pro Version: 30 days vs 7 free. Upgrade to see extended calendar.'}
+          </span>
+        </div>
+      )}
 
       <div className="space-y-4 max-h-[600px] overflow-y-auto">
         {loading ? (

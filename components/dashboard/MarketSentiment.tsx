@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageSquare, TrendingUp, TrendingDown, Minus, Filter } from 'lucide-react';
+import { MessageSquare, TrendingUp, TrendingDown, Minus, Filter, Lock } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
+import { ProLockOverlay } from './utilities/ProLockOverlay';
 
 interface SentimentData {
   asset: string;
@@ -16,18 +18,28 @@ interface SentimentData {
   timestamp: number;
 }
 
-const ASSETS = {
+const ASSETS_FREE = {
   crypto: ['BTC', 'ETH', 'SOL', 'ADA', 'DOT'],
   stock: ['SPY', 'QQQ', 'AAPL', 'MSFT', 'GOOGL'],
   forex: ['EURUSD', 'GBPUSD', 'USDJPY'],
   commodity: ['GOLD', 'OIL'],
 };
 
+const ASSETS_PRO = {
+  crypto: ['BTC', 'ETH', 'SOL', 'ADA', 'DOT', 'BNB', 'XRP', 'MATIC', 'LTC', 'AVAX', 'ATOM', 'LINK', 'UNI', 'AAVE', 'ALGO'],
+  stock: ['SPY', 'QQQ', 'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'DIA', 'IWM', 'VTI', 'ARKK', 'TQQQ'],
+  forex: ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD', 'NZDUSD', 'EURGBP', 'EURJPY', 'GBPJPY'],
+  commodity: ['GOLD', 'OIL', 'SILVER', 'NATURAL_GAS', 'COPPER', 'WHEAT', 'CORN', 'SOYBEAN'],
+};
+
 export function MarketSentiment() {
   const { t, locale } = useTranslations();
+  const isPro = useIsPro();
   const [sentiments, setSentiments] = useState<Record<string, SentimentData>>({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'crypto' | 'stock' | 'forex' | 'commodity'>('all');
+  
+  const ASSETS = isPro ? ASSETS_PRO : ASSETS_FREE;
 
   useEffect(() => {
     const fetchSentiments = async () => {
@@ -134,9 +146,20 @@ export function MarketSentiment() {
         ))}
       </div>
 
+      {!isPro && (
+        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
+          <Lock className="w-4 h-4" />
+          <span>
+            {locale === 'it' 
+              ? 'Versione Pro: 30+ asset vs 15 free. Aggiorna per sbloccare tutti gli asset.'
+              : 'Pro Version: 30+ assets vs 15 free. Upgrade to unlock all assets.'}
+          </span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {loading ? (
-          Array.from({ length: 8 }).map((_, i) => (
+          Array.from({ length: isPro ? 16 : 8 }).map((_, i) => (
             <div key={i} className="bg-bg-base border border-border-subtle rounded-lg p-4">
               <Skeleton className="h-4 w-3/4 mb-2" />
               <Skeleton className="h-3 w-1/2" />
