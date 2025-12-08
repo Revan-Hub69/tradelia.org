@@ -310,29 +310,8 @@ export function L400SupportResistance() {
   };
 
   if (loading) {
-  if (!isPro && usingMultiExchange) {
-    // This shouldn't happen, but just in case
     return (
-      <ProLockOverlay>
-        <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
-          <Skeleton className="h-96 w-full" />
-        </section>
-      </ProLockOverlay>
-    );
-  }
-
-  return (
-    <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
-      {!isPro && (
-        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
-          <Lock className="w-4 h-4" />
-          <span>
-            {locale === 'it' 
-              ? 'Versione Pro: Aggregazione multi-exchange (Binance, Coinbase, Kraken, OKX) vs Binance solo.'
-              : 'Pro Version: Multi-exchange aggregation (Binance, Coinbase, Kraken, OKX) vs Binance only.'}
-          </span>
-        </div>
-      )}
+      <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
         <Skeleton className="h-96 w-full" />
       </section>
     );
@@ -340,6 +319,17 @@ export function L400SupportResistance() {
 
   if (!data) {
     return null;
+  }
+
+  // Show PRO lock if trying to use multi-exchange without PRO
+  if (!isPro && usingMultiExchange) {
+    return (
+      <ProLockOverlay>
+        <section className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6">
+          <Skeleton className="h-96 w-full" />
+        </section>
+      </ProLockOverlay>
+    );
   }
 
   // Chart data with support/resistance lines
@@ -413,14 +403,31 @@ export function L400SupportResistance() {
       className="bg-bg-soft border border-border-subtle rounded-xl p-6 mb-6"
       aria-label="L400 Support and Resistance based on real order book"
     >
+      {!isPro && (
+        <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2 text-sm text-amber-400">
+          <Lock className="w-4 h-4" />
+          <span>
+            {locale === 'it' 
+              ? 'Versione Pro: Aggregazione multi-exchange (Binance, Coinbase, Kraken, OKX) vs Binance solo.'
+              : 'Pro Version: Multi-exchange aggregation (Binance, Coinbase, Kraken, OKX) vs Binance only.'}
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-accent" />
             {t('dashboard.l400SupportResistance.title') || 'L400 Support & Resistance'}
+            {isPro && usingMultiExchange && (
+              <span className="text-xs px-2 py-0.5 bg-accent/20 text-accent rounded font-semibold">
+                PRO: Multi-Exchange
+              </span>
+            )}
           </h2>
           <p className="text-sm text-text-secondary mt-1">
             {t('dashboard.l400SupportResistance.description') || 'Supporti e resistenze reali basati su order book L400'}
+            {!isPro && ' (Pro: Multi-exchange aggregation)'}
           </p>
         </div>
         <select
