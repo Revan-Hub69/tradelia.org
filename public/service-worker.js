@@ -68,18 +68,18 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // NON intercettare richieste a domini esterni (evita CSP violations)
+  const isSameOrigin = url.origin === self.location.origin;
+  if (!isSameOrigin) {
+    // Lascia passare direttamente alla rete senza cache
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
-      }
-      // Only fetch same-origin requests to avoid CSP violations
-      const url = new URL(event.request.url);
-      const isSameOrigin = url.origin === self.location.origin;
-      
-      if (!isSameOrigin) {
-        // For external resources, return a placeholder or skip caching
-        return new Response("External resource not cached", { status: 408 });
       }
       
       return fetch(event.request).catch((error) => {
