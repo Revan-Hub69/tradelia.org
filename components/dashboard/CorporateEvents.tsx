@@ -19,6 +19,12 @@ interface CorporateEvent {
   currency?: string;
   exchange?: string;
   country?: string;
+  earningsSurprise?: {
+    actual?: number;
+    estimate?: number;
+    surprise?: number;
+    surprisePercent?: number;
+  };
 }
 
 export function CorporateEvents() {
@@ -200,6 +206,35 @@ export function CorporateEvents() {
                         ? `${event.currency || 'USD'} ${event.value.toFixed(2)}`
                         : event.value}
                     </p>
+                  )}
+
+                  {/* Earnings Surprise */}
+                  {event.earningsSurprise && event.earningsSurprise.surprise !== undefined && (
+                    <div className="mt-2 pt-2 border-t border-border-subtle">
+                      <div className="text-xs font-medium text-text-secondary mb-1">
+                        {locale === 'it' ? 'Sorpresa Earnings' : 'Earnings Surprise'}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-text-tertiary">
+                          Est: {event.earningsSurprise.estimate?.toFixed(2)}
+                        </span>
+                        <span className="text-xs text-text-tertiary">→</span>
+                        <span className="text-xs text-text-primary font-semibold">
+                          Act: {event.earningsSurprise.actual?.toFixed(2)}
+                        </span>
+                        <span className={cn(
+                          'text-xs font-semibold px-2 py-0.5 rounded',
+                          event.earningsSurprise.surprisePercent && event.earningsSurprise.surprisePercent > 0
+                            ? 'bg-green-500/20 text-green-400'
+                            : event.earningsSurprise.surprisePercent && event.earningsSurprise.surprisePercent < 0
+                            ? 'bg-red-500/20 text-red-400'
+                            : 'bg-gray-500/20 text-gray-400'
+                        )}>
+                          {event.earningsSurprise.surprisePercent && event.earningsSurprise.surprisePercent > 0 ? '+' : ''}
+                          {event.earningsSurprise.surprisePercent?.toFixed(2)}%
+                        </span>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div className="text-right">

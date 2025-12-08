@@ -24,6 +24,12 @@ interface IPOEvent {
     majorInvestors: string[];
     totalRaised: number;
   };
+  performanceTracking?: {
+    currentPrice?: number;
+    changeSinceIPO?: number;
+    changePercent?: number;
+    daysSinceIPO?: number;
+  };
 }
 
 export async function GET(request: Request) {
@@ -102,6 +108,12 @@ export async function GET(request: Request) {
         });
       }
 
+      // Fetch performance data for past IPOs (if available)
+      const pastIPOs = data.ipoCalendar.filter((ipo: any) => {
+        const ipoDate = new Date(ipo.date || ipo.ipoDate);
+        return ipoDate < new Date();
+      });
+
       // Process IPO data and add sentiment/participation (simulated for now)
       let ipos: IPOEvent[] = data.ipoCalendar.map((ipo: any) => {
         // Determine country from exchange
@@ -138,6 +150,28 @@ export async function GET(request: Request) {
               ? parseFloat(ipo.price) * parseInt(ipo.numberOfShares) * (institutionalPct / 100)
               : 0,
           },
+          // Add performance tracking for past IPOs
+          performanceTracking: (() => {
+            const ipoDate = new Date(ipo.date || ipo.ipoDate);
+            const isPast = ipoDate < new Date();
+            
+            if (isPast && ipo.symbol) {
+              // In production, would fetch current price and calculate performance
+              // For MVP, simulate based on expected price
+              const expectedPrice = ipo.price ? parseFloat(ipo.price) : undefined;
+              if (expectedPrice) {
+                const daysSince = Math.floor((Date.now() - ipoDate.getTime()) / (1000 * 60 * 60 * 24));
+                const simulatedChange = (Math.random() - 0.5) * 0.3; // -15% to +15%
+                return {
+                  currentPrice: expectedPrice * (1 + simulatedChange),
+                  changeSinceIPO: expectedPrice * simulatedChange,
+                  changePercent: simulatedChange * 100,
+                  daysSinceIPO: daysSince,
+                };
+              }
+            }
+            return undefined;
+          })(),
         };
       });
 

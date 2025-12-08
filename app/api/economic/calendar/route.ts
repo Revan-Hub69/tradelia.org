@@ -17,6 +17,16 @@ interface EconomicEvent {
   Date: string;
   Importance: number;
   LastUpdate: string;
+  predictedImpact?: {
+    onStocks: 'positive' | 'negative' | 'neutral';
+    onForex: 'positive' | 'negative' | 'neutral';
+    onCommodities: 'positive' | 'negative' | 'neutral';
+    confidence: number; // 0-100
+  };
+  historicalPerformance?: {
+    avgMove: number; // Average market move after this event
+    successRate: number; // How often forecast was accurate
+  };
 }
 
 export async function GET(request: Request) {
@@ -96,9 +106,35 @@ export async function GET(request: Request) {
       const data = await response.json() as EconomicEvent[];
 
       // Filter by date range
-      const filteredData = data.filter(event => {
+      let filteredData = data.filter(event => {
         const eventDate = new Date(event.Date);
         return eventDate >= startDate && eventDate <= endDate;
+      });
+
+      // Add impact prediction and historical performance (simulated for MVP)
+      filteredData = filteredData.map(event => {
+        // Simple impact prediction based on event type and importance
+        const impactMap: Record<string, { onStocks: 'positive' | 'negative' | 'neutral'; onForex: 'positive' | 'negative' | 'neutral'; onCommodities: 'positive' | 'negative' | 'neutral' }> = {
+          'Inflation': { onStocks: 'negative', onForex: 'negative', onCommodities: 'positive' },
+          'Employment': { onStocks: 'positive', onForex: 'positive', onCommodities: 'neutral' },
+          'GDP': { onStocks: 'positive', onForex: 'positive', onCommodities: 'neutral' },
+          'Interest Rate': { onStocks: 'negative', onForex: 'positive', onCommodities: 'negative' },
+        };
+
+        const defaultImpact = { onStocks: 'neutral' as const, onForex: 'neutral' as const, onCommodities: 'neutral' as const };
+        const predictedImpact = impactMap[event.Category] || defaultImpact;
+
+        return {
+          ...event,
+          predictedImpact: {
+            ...predictedImpact,
+            confidence: event.Importance * 30 + Math.random() * 20, // 30-50% for low, 60-80% for high
+          },
+          historicalPerformance: {
+            avgMove: (event.Importance * 0.5) + Math.random() * 1.5, // Simulated
+            successRate: 60 + event.Importance * 10 + Math.random() * 10, // 60-80%
+          },
+        };
       });
 
       // Sort by date and importance

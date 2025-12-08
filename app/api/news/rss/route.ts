@@ -66,6 +66,8 @@ interface NewsItem {
   };
   impactScore: number;
   description?: string;
+  credibilityScore?: number; // 0-100, based on source reputation
+  clusterId?: string; // For news clustering
 }
 
 // Keywords per impact score
@@ -150,10 +152,47 @@ export async function GET(request: Request) {
       allNews.push(...newsItems);
     });
 
-    // Sort by impact score and date
-    allNews.sort((a, b) => {
+    // Simple news clustering: group similar titles
+    const clusterNews = (news: typeof allNews): typeof allNews => {
+      const clusters: Record<string, typeof allNews> = {};
+      
+      news.forEach((item) => {
+        // Simple clustering: check if title is similar to existing clusters
+        const words = item.title.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+        let foundCluster = false;
+        
+        for (const [clusterId, clusterItems] of Object.entries(clusters)) {
+          const clusterWords = clusterItems[0].title.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+          const commonWords = words.filter(w => clusterWords.includes(w));
+          
+          // If >30% words in common, add to cluster
+          if (commonWords.length / Math.max(words.length, clusterWords.length) > 0.3) {
+            clusters[clusterId].push({ ...item, clusterId });
+            foundCluster = true;
+            break;
+          }
+        }
+        
+        if (!foundCluster) {
+          const newClusterId = `cluster_${Object.keys(clusters).length}`;
+          clusters[newClusterId] = [{ ...item, clusterId: newClusterId }];
+        }
+      });
+      
+      // Flatten clusters, keeping first item of each cluster
+      return Object.values(clusters).flat();
+    };
+
+    // Cluster news
+    const clusteredNews = clusterNews(allNews);
+
+    // Sort by impact score, credibility, and date
+    clusteredNews.sort((a, b) => {
       if (b.impactScore !== a.impactScore) {
         return b.impactScore - a.impactScore;
+      }
+      if (b.credibilityScore !== a.credibilityScore) {
+        return (b.credibilityScore || 0) - (a.credibilityScore || 0);
       }
       return new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
     });

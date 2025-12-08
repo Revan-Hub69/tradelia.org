@@ -13,6 +13,12 @@ interface CorporateEvent {
   currency?: string;
   exchange?: string;
   country?: string;
+  earningsSurprise?: {
+    actual?: number;
+    estimate?: number;
+    surprise?: number; // Actual - Estimate
+    surprisePercent?: number; // (Actual - Estimate) / Estimate * 100
+  };
 }
 
 export async function GET(request: Request) {
@@ -72,6 +78,22 @@ export async function GET(request: Request) {
             const earningsData = await earningsResponse.json();
             if (earningsData.earningsCalendar && Array.isArray(earningsData.earningsCalendar)) {
               earningsData.earningsCalendar.forEach((earning: any) => {
+                // Calculate earnings surprise if actual and estimate available
+                const actual = earning.actual ? parseFloat(earning.actual) : undefined;
+                const estimate = earning.estimate ? parseFloat(earning.estimate) : undefined;
+                
+                let earningsSurprise = undefined;
+                if (actual !== undefined && estimate !== undefined && estimate !== 0) {
+                  const surprise = actual - estimate;
+                  const surprisePercent = (surprise / estimate) * 100;
+                  earningsSurprise = {
+                    actual,
+                    estimate,
+                    surprise,
+                    surprisePercent,
+                  };
+                }
+
                 events.push({
                   symbol: earning.symbol || '',
                   name: earning.name || '',
@@ -80,6 +102,7 @@ export async function GET(request: Request) {
                   description: `Q${earning.quarter || 'N/A'} ${earning.year || new Date().getFullYear()} Earnings`,
                   exchange: earning.exchange || '',
                   country: earning.country || country,
+                  earningsSurprise,
                 });
               });
             }

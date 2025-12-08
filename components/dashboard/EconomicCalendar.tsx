@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, TrendingUp, TrendingDown, AlertCircle, Clock, Lock } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, AlertCircle, Clock, Lock, BarChart3, Target } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -21,6 +21,16 @@ interface EconomicEvent {
   Date: string;
   Importance: number;
   LastUpdate: string;
+  predictedImpact?: {
+    onStocks: 'positive' | 'negative' | 'neutral';
+    onForex: 'positive' | 'negative' | 'neutral';
+    onCommodities: 'positive' | 'negative' | 'neutral';
+    confidence: number;
+  };
+  historicalPerformance?: {
+    avgMove: number;
+    successRate: number;
+  };
 }
 
 export function EconomicCalendar() {
@@ -236,6 +246,53 @@ export function EconomicCalendar() {
                     {event.Source && (
                       <div className="text-xs text-text-tertiary mt-2">
                         Source: {event.Source}
+                      </div>
+                    )}
+
+                    {/* Impact Prediction */}
+                    {event.predictedImpact && (
+                      <div className="mt-3 pt-3 border-t border-border-subtle">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Target className="w-3 h-3 text-text-tertiary" />
+                          <span className="text-xs font-medium text-text-secondary">
+                            {locale === 'it' ? 'Impatto Previsto' : 'Predicted Impact'}
+                          </span>
+                          <span className="text-xs text-text-tertiary">
+                            ({event.predictedImpact.confidence.toFixed(0)}% confidence)
+                          </span>
+                        </div>
+                        <div className="flex gap-2 text-xs">
+                          <span className={cn(
+                            'px-2 py-0.5 rounded',
+                            event.predictedImpact.onStocks === 'positive' ? 'bg-green-500/20 text-green-400' :
+                            event.predictedImpact.onStocks === 'negative' ? 'bg-red-500/20 text-red-400' :
+                            'bg-gray-500/20 text-gray-400'
+                          )}>
+                            Stocks: {event.predictedImpact.onStocks}
+                          </span>
+                          <span className={cn(
+                            'px-2 py-0.5 rounded',
+                            event.predictedImpact.onForex === 'positive' ? 'bg-green-500/20 text-green-400' :
+                            event.predictedImpact.onForex === 'negative' ? 'bg-red-500/20 text-red-400' :
+                            'bg-gray-500/20 text-gray-400'
+                          )}>
+                            Forex: {event.predictedImpact.onForex}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Historical Performance */}
+                    {event.historicalPerformance && (
+                      <div className="mt-2 pt-2 border-t border-border-subtle">
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="w-3 h-3 text-text-tertiary" />
+                          <span className="text-xs text-text-tertiary">
+                            {locale === 'it' ? 'Performance Storica' : 'Historical Performance'}: 
+                            Avg Move: {event.historicalPerformance.avgMove.toFixed(2)}%, 
+                            Success: {event.historicalPerformance.successRate.toFixed(0)}%
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>

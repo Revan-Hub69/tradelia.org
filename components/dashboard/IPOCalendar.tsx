@@ -30,6 +30,12 @@ interface IPOEvent {
     majorInvestors: string[];
     totalRaised: number;
   };
+  performanceTracking?: {
+    currentPrice?: number;
+    changeSinceIPO?: number;
+    changePercent?: number;
+    daysSinceIPO?: number;
+  };
 }
 
 export function IPOCalendar() {
@@ -262,6 +268,36 @@ export function IPOCalendar() {
                 <div className="mt-2 text-[10px] text-text-tertiary">
                   {locale === 'it' ? 'Sentiment da: ' : 'Sentiment from: '}
                   {ipo.sentiment.sources.join(', ')}
+                </div>
+              )}
+
+              {/* Performance Tracking */}
+              {ipo.performanceTracking && ipo.performanceTracking.currentPrice && (
+                <div className="mt-3 pt-3 border-t border-border-subtle">
+                  <div className="text-xs font-medium text-text-secondary mb-1">
+                    {locale === 'it' ? 'Performance Post-IPO' : 'Post-IPO Performance'}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold text-text-primary">
+                        ${ipo.performanceTracking.currentPrice.toFixed(2)}
+                      </div>
+                      <div className="text-xs text-text-tertiary">
+                        {ipo.performanceTracking.daysSinceIPO} {locale === 'it' ? 'giorni' : 'days'} since IPO
+                      </div>
+                    </div>
+                    <div className={cn(
+                      'text-sm font-semibold',
+                      ipo.performanceTracking.changePercent && ipo.performanceTracking.changePercent > 0
+                        ? 'text-green-400'
+                        : ipo.performanceTracking.changePercent && ipo.performanceTracking.changePercent < 0
+                        ? 'text-red-400'
+                        : 'text-text-primary'
+                    )}>
+                      {ipo.performanceTracking.changePercent && ipo.performanceTracking.changePercent > 0 ? '+' : ''}
+                      {ipo.performanceTracking.changePercent?.toFixed(2)}%
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
