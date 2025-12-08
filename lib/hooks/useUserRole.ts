@@ -36,8 +36,8 @@ export function useUserRole(): UserRoleData {
         }
 
         try {
-          // Use single() instead of maybeSingle() to get better error handling
-          // If no record exists, we'll catch the error and use default role
+          // First check if user is admin via admin_emails (bypass RLS check)
+          // Then fetch role from user_roles
           const { data, error } = await supabase
             .from("user_roles")
             .select("role, valid_until")

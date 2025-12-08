@@ -43,11 +43,12 @@ export function useDashboardCustomization() {
           return;
         }
 
+        // Use maybeSingle() instead of single() to handle missing records gracefully
         const { data, error } = await supabase
           .from('user_preferences')
           .select('dashboard_layout')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         if (error && error.code !== 'PGRST116') {
           console.error('Error loading dashboard customization:', error);
