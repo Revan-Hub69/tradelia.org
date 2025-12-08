@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Lock } from 'lucide-react';
+import { SectionBanner } from './SectionBanner';
 
 interface IPOEvent {
   symbol: string;
