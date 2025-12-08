@@ -15,6 +15,7 @@ const DEFAULT_COMPONENTS: DashboardComponent[] = [
   { id: 'module-grid', name: 'Moduli', visible: true, order: 0 },
   { id: 'market-dashboard', name: 'Cruscotto Operativo', visible: true, order: 1 },
   { id: 'multi-asset-charts', name: 'Multi-Asset Charts', visible: true, order: 2 },
+  { id: 'correlation-heatmap', name: 'Correlation Heatmap', visible: true, order: 2.5 },
   { id: 'l400-support-resistance', name: 'L400 Support/Resistance', visible: true, order: 3 },
   { id: 'news-feed', name: 'News Feed', visible: true, order: 4 },
   { id: 'economic-calendar', name: 'Economic Calendar', visible: true, order: 5 },

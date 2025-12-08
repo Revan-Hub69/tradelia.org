@@ -14,6 +14,7 @@ import { EconomicCalendar } from './EconomicCalendar';
 import { IPOCalendar } from './IPOCalendar';
 import { CorporateEvents } from './CorporateEvents';
 import { TrendingCoins } from './TrendingCoins';
+import { CorrelationHeatmap } from './CorrelationHeatmap';
 import { UserMenu } from './UserMenu';
 import { MarketSentiment } from './MarketSentiment';
 import { RedditSentiment } from './RedditSentiment';
@@ -306,6 +307,20 @@ export function DashboardShell() {
             >
               <ErrorBoundary>
                 <MultiAssetCharts />
+              </ErrorBoundary>
+            </section>
+          )}
+
+          {/* Correlation Heatmap - Visual correlation matrix */}
+          {isComponentVisible('correlation-heatmap') && (
+            <section 
+              aria-label="Correlation Heatmap" 
+              className={styles.dashboardSection}
+              suppressHydrationWarning
+              id="correlation-heatmap"
+            >
+              <ErrorBoundary>
+                <CorrelationHeatmap />
               </ErrorBoundary>
             </section>
           )}

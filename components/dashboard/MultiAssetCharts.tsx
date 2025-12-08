@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { TrendingUp, TrendingDown, Minus, BarChart3, Activity, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
+import { calculateRSI, calculateMACD, calculateBollingerBands, calculateSMA, calculateEMA } from '@/lib/utils/technical-indicators';
 
 ChartJS.register(
   CategoryScale,
@@ -235,29 +236,87 @@ export function MultiAssetCharts() {
   };
 
   const getChartData = (chart: AssetChart) => {
+    const prices = chart.data.map(d => d.price);
     const labels = chart.data.map((d, i) => {
       const date = new Date(d.timestamp);
-      if (timeframe === '1h') return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-      if (timeframe === '4h') return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-      if (timeframe === '24h') return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+      if (timeframe === '1h' || timeframe === '4h') return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
       return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
     });
 
-    return {
-      labels,
-      datasets: [
-        {
-          label: chart.symbol,
-          data: chart.data.map(d => d.price),
-          borderColor: chart.change24hPercent >= 0 ? '#10b981' : '#ef4444',
-          backgroundColor: chart.change24hPercent >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-          fill: true,
-          tension: 0.4,
+    const datasets: any[] = [
+      {
+        label: chart.symbol,
+        data: prices,
+        borderColor: chart.change24hPercent >= 0 ? '#10b981' : '#ef4444',
+        backgroundColor: chart.change24hPercent >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        yAxisID: 'y',
+      },
+    ];
+
+    // Add technical indicators if enabled
+    if (showIndicators && prices.length >= 20) {
+      // SMA 20
+      const sma20 = calculateSMA(prices, 20);
+      if (sma20.length > 0) {
+        datasets.push({
+          label: 'SMA 20',
+          data: Array(prices.length - sma20.length).fill(null).concat(sma20),
+          borderColor: '#3b82f6',
+          borderWidth: 1,
+          borderDash: [5, 5],
+          fill: false,
           pointRadius: 0,
-          pointHoverRadius: 4,
-        },
-      ],
-    };
+          yAxisID: 'y',
+        });
+      }
+
+      // Bollinger Bands
+      const bb = calculateBollingerBands(prices, 20, 2);
+      if (bb.upper.length > 0) {
+        const offset = prices.length - bb.upper.length;
+        datasets.push(
+          {
+            label: 'BB Upper',
+            data: Array(offset).fill(null).concat(bb.upper),
+            borderColor: 'rgba(156, 163, 175, 0.5)',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+            yAxisID: 'y',
+          },
+          {
+            label: 'BB Lower',
+            data: Array(offset).fill(null).concat(bb.lower),
+            borderColor: 'rgba(156, 163, 175, 0.5)',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+            yAxisID: 'y',
+          }
+        );
+      }
+
+      // RSI (separate axis)
+      const rsi = calculateRSI(prices, 14);
+      if (rsi.length > 0) {
+        const rsiOffset = prices.length - rsi.length;
+        datasets.push({
+          label: 'RSI',
+          data: Array(rsiOffset).fill(null).concat(rsi),
+          borderColor: '#f59e0b',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0,
+          yAxisID: 'y1',
+        });
+      }
+    }
+
+    return { labels, datasets };
   };
 
   const chartOptions = {
@@ -278,6 +337,16 @@ export function MultiAssetCharts() {
       },
       y: {
         display: false,
+        position: 'left' as const,
+      },
+      y1: {
+        display: showIndicators,
+        position: 'right' as const,
+        min: 0,
+        max: 100,
+        grid: {
+          drawOnChartArea: false,
+        },
       },
     },
     interaction: {
