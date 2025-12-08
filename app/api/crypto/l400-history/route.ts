@@ -65,7 +65,7 @@ export async function GET(request: Request) {
         timestamp: new Date().toISOString(),
         strength: Math.min(1, b.volume / (avgBidVolume + 3 * stdBidVolume)),
       }))
-      .sort((a, b) => b.volume - a.volume)
+      .sort((a: { volume: number }, b: { volume: number }) => b.volume - a.volume)
       .slice(0, 10);
 
     // Find significant resistance levels (high ask volume)
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
         timestamp: new Date().toISOString(),
         strength: Math.min(1, a.volume / (avgAskVolume + 3 * stdAskVolume)),
       }))
-      .sort((a, b) => b.volume - a.volume)
+      .sort((a: { volume: number }, b: { volume: number }) => b.volume - a.volume)
       .slice(0, 10);
 
     return NextResponse.json({

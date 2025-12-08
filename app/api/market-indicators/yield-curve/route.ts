@@ -78,8 +78,8 @@ export async function GET(request: Request) {
 
       const yieldResults = await Promise.all(yieldPromises);
       yieldResults.forEach(([key, value]) => {
-        if (value !== null) {
-          yields[key as keyof YieldCurve] = value;
+        if (value !== null && key in yields) {
+          (yields as any)[key] = value;
         }
       });
     }

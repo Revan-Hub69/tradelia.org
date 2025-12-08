@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils/cn';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
 import { InterestRateSuggestions } from './InterestRateSuggestions';

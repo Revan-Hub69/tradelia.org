@@ -3,7 +3,7 @@
 import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencies, currencySymbols, currencyNames } from '@/lib/currency/config';
 import { cn } from '@/lib/utils/cn';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from './CustomTooltip';
 
 interface CurrencySwitchProps {
   className?: string;

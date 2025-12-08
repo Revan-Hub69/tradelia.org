@@ -6,7 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { TradingJournalCharts } from '@/components/charts/TradingJournalCharts';
 import { format } from 'date-fns';

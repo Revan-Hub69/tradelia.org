@@ -13,6 +13,11 @@ interface SentimentData {
   socialVolume: number;
   source: string;
   timestamp: number;
+  trend?: {
+    score7d: number;
+    score30d: number;
+    direction: 'increasing' | 'decreasing' | 'stable';
+  };
 }
 
 const SANTIMENT_QUERY = `
@@ -83,7 +88,7 @@ const REDDIT_SUBREDDITS: Record<string, string[]> = {
 
 async function fetchRedditSentiment(asset: string, subreddits: string[]): Promise<{ sentiment: number; volume: number }> {
   try {
-    const allPosts: Array<{ title: string }> = [];
+    const allPosts: string[] = [];
     
     for (const subreddit of subreddits) {
       try {
@@ -107,7 +112,7 @@ async function fetchRedditSentiment(asset: string, subreddits: string[]): Promis
     }
 
     // Analyze sentiment for all posts
-    const sentiments = allPosts.map(title => 
+    const sentiments = allPosts.map((title: string) =>
       SentimentIntensityAnalyzer.polarity_scores(title)
     );
 

@@ -384,7 +384,7 @@ export function MultiAssetCharts() {
           </p>
         </div>
         <div className="flex gap-2">
-          {(['1h', '4h', '24h', '7d'] as const).map((tf) => (
+          {(['1h', '4h', '1d', '1w', '1m', '3m', '1y'] as const).map((tf) => (
             <button
               key={tf}
               onClick={() => setTimeframe(tf)}

@@ -6,7 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
 import { VolatilitySuggestions } from './VolatilitySuggestions';

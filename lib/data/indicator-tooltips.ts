@@ -306,6 +306,106 @@ export const INDICATOR_TOOLTIPS: Record<string, IndicatorTooltip> = {
       neutral: 'Movimenti normali',
     },
   },
+  'vix-term-structure': {
+    id: 'vix-term-structure',
+    name: 'VIX Term Structure',
+    description: 'Struttura temporale del VIX: differenza tra VIX a lungo termine e VIX a breve termine. Indica contango (futures > spot) o backwardation (spot > futures).',
+    howToUse: 'Contango positivo (>5%): Mercato calmo, aspettative di volatilità futura. Backwardation negativo (<-5%): Mercato stressato, volatilità immediata alta. Inversione predice correzioni.',
+    academicReferences: [
+      {
+        authors: 'Whaley, R.E.',
+        year: 2000,
+        title: 'The Investor Fear Gauge',
+        keyFindings: 'La struttura temporale del VIX predice correzioni di mercato quando si inverte (backwardation).',
+      },
+      {
+        authors: 'Giot, P.',
+        year: 2005,
+        title: 'Relationships between Implied Volatility Indexes and Stock Index Returns',
+        keyFindings: 'Contango persistente indica mercato rialzista, backwardation indica stress di mercato.',
+      },
+    ],
+    interpretation: {
+      positive: 'Backwardation: Stress di mercato, possibile correzione',
+      negative: 'Contango elevato: Mercato calmo, trend rialzista',
+      neutral: 'Contango moderato: Mercato normale',
+    },
+  },
+  'put-call-ratio': {
+    id: 'put-call-ratio',
+    name: 'Put/Call Ratio',
+    description: 'Rapporto tra volume di opzioni Put e Call. Indica sentiment del mercato: più Put = bearish, più Call = bullish.',
+    howToUse: 'Ratio > 1.0: Più Put che Call (bearish sentiment, possibile bottom). Ratio < 0.7: Più Call che Put (bullish sentiment, possibile top). Estremi indicano reversal.',
+    academicReferences: [
+      {
+        authors: 'CBOE',
+        year: 2000,
+        title: 'Put/Call Ratio: A Contrarian Indicator',
+        keyFindings: 'Put/Call ratio estremi (>1.2 o <0.6) predicono reversal di mercato con alta probabilità.',
+      },
+      {
+        authors: 'Pan, J., & Poteshman, A.M.',
+        year: 2006,
+        title: 'The Information in Option Volume for Future Stock Prices',
+        keyFindings: 'Il volume di opzioni Put/Call contiene informazioni predittive sui movimenti futuri dei prezzi.',
+      },
+    ],
+    interpretation: {
+      positive: 'Ratio basso (<0.7): Sentiment bullish, possibile top',
+      negative: 'Ratio alto (>1.0): Sentiment bearish, possibile bottom',
+      neutral: 'Ratio normale (0.7-1.0): Sentiment bilanciato',
+    },
+  },
+  'yield-curve': {
+    id: 'yield-curve',
+    name: 'Yield Curve Spread',
+    description: 'Differenza tra rendimenti dei Treasury a 10 anni e 2 anni. Spread positivo = curva normale, spread negativo = inversione (recessione warning).',
+    howToUse: 'Spread > 0.5%: Curva normale, crescita economica. Spread < 0%: Inversione, predittore di recessione (12-18 mesi). Spread 0-0.5%: Attenzione.',
+    academicReferences: [
+      {
+        authors: 'Estrella, A., & Mishkin, F.S.',
+        year: 1998,
+        title: 'Predicting U.S. Recessions: Financial Variables as Leading Indicators',
+        keyFindings: 'L\'inversione della yield curve (10Y-2Y < 0) predice recessioni con alta accuratezza (12-18 mesi prima).',
+      },
+      {
+        authors: 'Harvey, C.R.',
+        year: 1988,
+        title: 'The Real Term Structure and Consumption Growth',
+        keyFindings: 'La yield curve è il miglior predittore di crescita economica futura.',
+      },
+    ],
+    interpretation: {
+      positive: 'Spread positivo: Curva normale, crescita economica',
+      negative: 'Spread negativo: Inversione, warning recessione',
+      neutral: 'Spread basso: Attenzione, possibile inversione',
+    },
+  },
+  'credit-spreads': {
+    id: 'credit-spreads',
+    name: 'Credit Spreads',
+    description: 'Differenza tra rendimenti obbligazionari corporate (BAA) e Treasury. Spread alto = stress creditizio, spread basso = mercato sano.',
+    howToUse: 'Spread > 3.0%: Stress creditizio, rischio recessione. Spread < 2.0%: Mercato sano, crescita. Monitorare trend per anticipare cicli economici.',
+    academicReferences: [
+      {
+        authors: 'Duffie, D., & Singleton, K.J.',
+        year: 2003,
+        title: 'Credit Risk: Pricing, Measurement, and Management',
+        keyFindings: 'I credit spreads predicono recessioni economiche con 6-12 mesi di anticipo.',
+      },
+      {
+        authors: 'Gilchrist, S., & Zakrajšek, E.',
+        year: 2012,
+        title: 'Credit Spreads and Business Cycle Fluctuations',
+        keyFindings: 'I credit spreads sono predittori robusti di crescita economica e recessioni.',
+      },
+    ],
+    interpretation: {
+      positive: 'Spread basso (<2.0%): Mercato sano, crescita',
+      negative: 'Spread alto (>3.0%): Stress creditizio, rischio recessione',
+      neutral: 'Spread moderato (2.0-3.0%): Mercato normale',
+    },
+  },
 };
 
 export function getIndicatorTooltip(id: string): IndicatorTooltip | undefined {

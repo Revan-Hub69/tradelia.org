@@ -4,7 +4,7 @@ import React, { useState, useMemo, useCallback, memo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X, CheckCircle2, Circle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { MethodologyNotes } from './MethodologyNotes';
 import { 
   ACADEMIC_STRATEGIES, 

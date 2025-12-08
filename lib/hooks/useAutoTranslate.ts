@@ -21,7 +21,7 @@ export function useAutoTranslate(text: string | null | undefined, enabled: boole
   const cacheKey = text ? `${locale}-${text.substring(0, 100)}` : '';
 
   useEffect(() => {
-    if (!text || !enabled || locale === 'en') {
+    if (!text || !enabled || locale !== 'it') {
       setTranslated(text || '');
       return;
     }
@@ -91,7 +91,7 @@ export function useAutoTranslateArray(
   const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
-    if (!enabled || locale === 'en' || texts.length === 0) {
+    if (!enabled || locale !== 'it' || texts.length === 0) {
       setTranslated(texts.map(t => t || ''));
       return;
     }

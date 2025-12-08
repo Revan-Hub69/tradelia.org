@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Target, AlertTriangle, TrendingUp } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
 

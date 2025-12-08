@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, TrendingUp, DollarSign, GitBranch, Building2, Filter } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useIsPro } from '@/lib/hooks/useIsPro';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/button';

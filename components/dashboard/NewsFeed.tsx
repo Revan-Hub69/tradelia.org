@@ -77,8 +77,8 @@ export function NewsFeed() {
     [filteredNews]
   );
   
-  const translatedTitles = useAutoTranslateArray(titlesToTranslate, locale !== 'en');
-  const translatedDescriptions = useAutoTranslateArray(descriptionsToTranslate, locale !== 'en');
+  const translatedTitles = useAutoTranslateArray(titlesToTranslate, locale === 'it');
+  const translatedDescriptions = useAutoTranslateArray(descriptionsToTranslate, locale === 'it');
   
   // Create translated news items
   const translatedNews = useMemo(() => 

@@ -1,7 +1,7 @@
 'use client';
 
 import { Info, TrendingUp, Shield, Target, AlertCircle } from 'lucide-react';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { cn } from '@/lib/utils/cn';
 
 /**

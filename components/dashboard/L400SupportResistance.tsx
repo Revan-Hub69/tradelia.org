@@ -239,66 +239,6 @@ export function L400SupportResistance() {
         }
 
         setLoading(false);
-
-        // Calculate mean and std dev for bids
-        const bidVolumes = bids.map(b => b.volume);
-        const meanBid = bidVolumes.reduce((a, b) => a + b, 0) / bidVolumes.length;
-        const stdDevBid = Math.sqrt(
-          bidVolumes.reduce((sum, v) => sum + Math.pow(v - meanBid, 2), 0) / bidVolumes.length
-        );
-
-        // Calculate mean and std dev for asks
-        const askVolumes = asks.map(a => a.volume);
-        const meanAsk = askVolumes.reduce((a, b) => a + b, 0) / askVolumes.length;
-        const stdDevAsk = Math.sqrt(
-          askVolumes.reduce((sum, v) => sum + Math.pow(v - meanAsk, 2), 0) / askVolumes.length
-        );
-
-        // Identify support levels (bid volume > mean + 2σ)
-        const supportLevels: SupportResistanceLevel[] = bids
-          .filter(bid => bid.volume > meanBid + 2 * stdDevBid)
-          .sort((a, b) => b.volume - a.volume)
-          .slice(0, 5)
-          .map(bid => ({
-            price: bid.price,
-            volume: bid.volume,
-            type: 'support' as const,
-          }));
-
-        // Identify resistance levels (ask volume > mean + 2σ)
-        const resistanceLevels: SupportResistanceLevel[] = asks
-          .filter(ask => ask.volume > meanAsk + 2 * stdDevAsk)
-          .sort((a, b) => b.volume - a.volume)
-          .slice(0, 5)
-          .map(ask => ({
-            price: ask.price,
-            volume: ask.volume,
-            type: 'resistance' as const,
-          }));
-
-        // Calculate imbalance
-        const totalBidVolume = bids.reduce((sum, b) => sum + b.volume, 0);
-        const totalAskVolume = asks.reduce((sum, a) => sum + a.volume, 0);
-        const imbalance = (totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume);
-
-        setData({
-          currentPrice,
-          supportLevels,
-          resistanceLevels,
-          imbalance,
-          totalBidVolume,
-          totalAskVolume,
-        });
-
-        // Fetch price history for chart
-        const klineResponse = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=24`);
-        if (klineResponse.ok) {
-          const klines = await klineResponse.json();
-          setPriceHistory(klines.map((k: any[]) => ({
-            timestamp: new Date(k[0]).toISOString(),
-            price: parseFloat(k[4]), // Close price
-          })));
-        }
       } catch (error) {
         console.error('Error fetching L400 data:', error);
       } finally {

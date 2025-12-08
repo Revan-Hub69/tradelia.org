@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { HelpCircle } from 'lucide-react';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/CustomTooltip';
 import { cn } from '@/lib/utils/cn';
 
 interface ContextualHelpProps {
