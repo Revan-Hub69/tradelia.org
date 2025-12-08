@@ -4,8 +4,6 @@ import { useState, useMemo } from 'react';
 import { Zap, TrendingUp, TrendingDown } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -20,7 +18,6 @@ import { RiskFreeRateSuggestions } from './RiskFreeRateSuggestions';
 export function OptionsCalculator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   
   const [optionType, setOptionType] = useState<'call' | 'put'>('call');
   const [stockPrice, setStockPrice] = useState('100');
@@ -193,7 +190,7 @@ export function OptionsCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Prezzo Stock ({currencySymbols[currency]}) *</span>
+              <span>Prezzo Stock (€) *</span>
               <Tooltip content="Il prezzo corrente dell'asset sottostante.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
@@ -211,7 +208,7 @@ export function OptionsCalculator() {
 
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Strike Price ({currencySymbols[currency]}) *</span>
+              <span>Strike Price (€) *</span>
               <Tooltip content="Il prezzo di esercizio dell'opzione.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>

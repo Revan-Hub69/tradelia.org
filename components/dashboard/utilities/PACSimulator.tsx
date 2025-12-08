@@ -8,8 +8,6 @@ import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -23,7 +21,6 @@ import { PACReturnSuggestions } from './PACReturnSuggestions';
 export function PACSimulator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   const [monthlyAmount, setMonthlyAmount] = useState('500');
   const [annualReturn, setAnnualReturn] = useState('7');
   const [years, setYears] = useState('20');

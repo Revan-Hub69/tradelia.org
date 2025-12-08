@@ -4,8 +4,6 @@ import { useState, useMemo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -18,7 +16,6 @@ import { MethodologyNotes } from './MethodologyNotes';
 export function RiskRewardCalculator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   
   const [entryPrice, setEntryPrice] = useState('100');
   const [stopLoss, setStopLoss] = useState('95');
@@ -102,7 +99,7 @@ export function RiskRewardCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Entry Price ({currencySymbols[currency]}) *</span>
+              <span>Entry Price (€) *</span>
               <Tooltip content="Il prezzo a cui entri nel trade.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
@@ -120,7 +117,7 @@ export function RiskRewardCalculator() {
 
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Stop Loss ({currencySymbols[currency]}) *</span>
+              <span>Stop Loss (€) *</span>
               <Tooltip content="Il prezzo a cui esci se il trade va male. Deve essere più lontano dall'entry rispetto al take profit.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
@@ -138,7 +135,7 @@ export function RiskRewardCalculator() {
 
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Take Profit ({currencySymbols[currency]}) *</span>
+              <span>Take Profit (€) *</span>
               <Tooltip content="Il prezzo target dove prendi profitto. Idealmente almeno 2x la distanza dello stop loss.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
@@ -187,7 +184,7 @@ export function RiskRewardCalculator() {
                 {formatCurrency(results.riskAmount)}
               </div>
               <div className="text-xs text-text-tertiary mt-1">
-                {results.risk.toFixed(2)} {currencySymbols[currency]} per unità
+                {results.risk.toFixed(2)} € per unità
               </div>
             </div>
 
@@ -200,7 +197,7 @@ export function RiskRewardCalculator() {
                 {formatCurrency(results.rewardAmount)}
               </div>
               <div className="text-xs text-text-tertiary mt-1">
-                {results.reward.toFixed(2)} {currencySymbols[currency]} per unità
+                {results.reward.toFixed(2)} € per unità
               </div>
             </div>
 

@@ -8,8 +8,6 @@ import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -26,7 +24,6 @@ interface CalculationResult {
 export function FinancialCalculator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   const [calcType, setCalcType] = useState<CalculationType>('compound');
   const [inputs, setInputs] = useState({
     principal: '',
@@ -222,7 +219,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
-                <span>{t('proUtilities.calculator.principal') || `Capitale Iniziale (${currencySymbols[currency]})`}</span>
+                <span>{t('proUtilities.calculator.principal') || 'Capitale Iniziale (€)'}</span>
                 <Tooltip content="L'importo iniziale che investi. Questo è il capitale di partenza su cui verrà calcolato l'interesse composto.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>
@@ -283,7 +280,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
-                <span>{t('proUtilities.calculator.futureValue') || `Valore Futuro (${currencySymbols[currency]})`}</span>
+                <span>{t('proUtilities.calculator.futureValue') || 'Valore Futuro (€)'}</span>
                 <Tooltip content="L'importo che vuoi ottenere in futuro. Il calcolatore ti dirà quanto devi investire oggi per raggiungere questo obiettivo.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>
@@ -344,7 +341,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
-                <span>{t('proUtilities.calculator.principal') || `Valore Presente (${currencySymbols[currency]})`}</span>
+                <span>{t('proUtilities.calculator.principal') || 'Valore Presente (€)'}</span>
                 <Tooltip content="L'importo che investi oggi. Il calcolatore ti mostrerà quanto varrà questo investimento in futuro.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>
@@ -397,7 +394,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
-                <span>{t('proUtilities.calculator.payment') || `Pagamento Periodico (${currencySymbols[currency]})`}</span>
+                <span>{t('proUtilities.calculator.payment') || 'Pagamento Periodico (€)'}</span>
                 <Tooltip content="L'importo che investi periodicamente (mensile, trimestrale o annuale). Questo è l'importo fisso che versi ogni periodo.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>

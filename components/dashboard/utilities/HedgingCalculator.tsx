@@ -4,8 +4,6 @@ import { useState, useMemo } from 'react';
 import { Shield, TrendingDown, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -18,7 +16,6 @@ import { MethodologyNotes } from './MethodologyNotes';
 export function HedgingCalculator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   
   const [portfolioValue, setPortfolioValue] = useState('100000');
   const [hedgeRatio, setHedgeRatio] = useState('50');
@@ -95,7 +92,7 @@ export function HedgingCalculator() {
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-            <span>Valore Portafoglio ({currencySymbols[currency]}) *</span>
+            <span>Valore Portafoglio (€) *</span>
             <Tooltip content="Il valore totale del portafoglio che vuoi coprire. Questo è l'esposizione totale al rischio.">
               <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
             </Tooltip>

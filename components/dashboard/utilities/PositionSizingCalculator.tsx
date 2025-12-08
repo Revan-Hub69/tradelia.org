@@ -4,8 +4,6 @@ import { useState, useMemo } from 'react';
 import { Target, AlertTriangle, TrendingUp, DollarSign } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
-import { useCurrency } from '@/lib/hooks/useCurrency';
-import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/CustomTooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
@@ -18,7 +16,6 @@ import { MethodologyNotes } from './MethodologyNotes';
 export function PositionSizingCalculator() {
   const { t } = useTranslations();
   const formatCurrency = useFormatCurrency();
-  const { currency } = useCurrency();
   
   const [accountSize, setAccountSize] = useState('100000');
   const [riskPercent, setRiskPercent] = useState('2');
@@ -99,7 +96,7 @@ export function PositionSizingCalculator() {
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-            <span>Capitale Account ({currencySymbols[currency]}) *</span>
+            <span>Capitale Account (€) *</span>
             <Tooltip content="Il capitale totale disponibile per il trading. Questo è il tuo account size.">
               <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
             </Tooltip>
@@ -137,7 +134,7 @@ export function PositionSizingCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Prezzo Entry ({currencySymbols[currency]}) *</span>
+              <span>Prezzo Entry (€) *</span>
               <Tooltip content="Il prezzo a cui entri nella posizione.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
@@ -155,7 +152,7 @@ export function PositionSizingCalculator() {
 
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
-              <span>Stop Loss ({currencySymbols[currency]}) *</span>
+              <span>Stop Loss (€) *</span>
               <Tooltip content="Il prezzo a cui esci se il trade va contro di te. Deve essere diverso dal prezzo di entry.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>

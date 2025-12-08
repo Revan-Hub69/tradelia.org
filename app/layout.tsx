@@ -20,7 +20,6 @@ const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').th
 
 const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })));
 
-const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })));
 
 const TradeliaAIChat = dynamic(() => import('@/components/ui/TradeliaAIChat').then(m => ({ default: m.TradeliaAIChat })));
 
@@ -188,26 +187,24 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
-          <CurrencyProvider>
-            <div className="min-h-screen flex flex-col" suppressHydrationWarning>
-              <UnregisterServiceWorker />
-              <div suppressHydrationWarning>
-                {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
-                <ConditionalHeader />
-              </div>
-              {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
-              {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
-              <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
-                {children}
-              </main>
-              <div suppressHydrationWarning>
-                <Footer />
-                <LegalConsent />
-                <ToastContainer />
-                <TradeliaAIChat />
-              </div>
+          <div className="min-h-screen flex flex-col" suppressHydrationWarning>
+            <UnregisterServiceWorker />
+            <div suppressHydrationWarning>
+              {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
+              <ConditionalHeader />
             </div>
-          </CurrencyProvider>
+            {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
+            {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
+            <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
+              {children}
+            </main>
+            <div suppressHydrationWarning>
+              <Footer />
+              <LegalConsent />
+              <ToastContainer />
+              <TradeliaAIChat />
+            </div>
+          </div>
         </ErrorBoundary>
       </body>
     </html>
