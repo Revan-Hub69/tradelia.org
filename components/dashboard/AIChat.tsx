@@ -19,9 +19,20 @@ interface Message {
  * Replaces HelpSupport and ProUtilities floating buttons
  * Best Practice: Conversational interface for better UX
  */
+interface ChatHistory {
+  id: string;
+  title: string;
+  lastMessage: string;
+  timestamp: Date;
+  messages: Message[];
+}
+
 export function AIChat() {
   const { t, locale } = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -39,16 +50,92 @@ export function AIChat() {
 
   useBodyScrollLock(isOpen);
 
+  // Load chat history from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('tradelia_chat_history');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setChatHistory(parsed.map((h: any) => ({
+          ...h,
+          timestamp: new Date(h.timestamp),
+          messages: h.messages.map((m: any) => ({
+            ...m,
+            timestamp: new Date(m.timestamp),
+          })),
+        })));
+      } catch (e) {
+        console.error('Error loading chat history:', e);
+      }
+    }
+  }, []);
+
+  // Save chat history to localStorage
+  const saveChatHistory = (msgs: Message[]) => {
+    if (msgs.length <= 1) return; // Don't save welcome-only chats
+    
+    const title = msgs.find(m => m.role === 'user')?.content.substring(0, 50) || 'Nuova conversazione';
+    const lastMessage = msgs[msgs.length - 1].content.substring(0, 100);
+    
+    const newHistory: ChatHistory = {
+      id: currentChatId || Date.now().toString(),
+      title,
+      lastMessage,
+      timestamp: new Date(),
+      messages: msgs,
+    };
+
+    const updated = [newHistory, ...chatHistory.filter(h => h.id !== newHistory.id)].slice(0, 10);
+    setChatHistory(updated);
+    localStorage.setItem('tradelia_chat_history', JSON.stringify(updated));
+  };
+
+  // Start new chat
+  const startNewChat = () => {
+    setCurrentChatId(null);
+    setMessages([
+      {
+        id: 'welcome',
+        role: 'assistant',
+        content: locale === 'it'
+          ? 'Ciao! Sono l\'assistente AI di Tradelia. Posso aiutarti con domande su termini finanziari, strumenti, report e molto altro. Come posso aiutarti?'
+          : 'Hello! I\'m Tradelia\'s AI assistant. I can help you with questions about financial terms, tools, reports, and more. How can I help you?',
+        timestamp: new Date(),
+      },
+    ]);
+    setShowHistory(false);
+  };
+
+  // Load chat from history
+  const loadChat = (history: ChatHistory) => {
+    setCurrentChatId(history.id);
+    setMessages(history.messages);
+    setShowHistory(false);
+    setIsOpen(true);
+    setTimeout(() => inputRef.current?.focus(), 100);
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !showHistory) {
       scrollToBottom();
-      inputRef.current?.focus();
+      // Don't auto-focus - wait for user to click input
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, showHistory]);
+
+  // Open chat only when input is focused (not on button click)
+  const handleInputFocus = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      // Start new chat if no current chat
+      if (!currentChatId) {
+        startNewChat();
+      }
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -93,7 +180,11 @@ export function AIChat() {
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => {
+        const updated = [...prev, assistantMessage];
+        saveChatHistory(updated);
+        return updated;
+      });
     } catch (error) {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
@@ -130,18 +221,49 @@ export function AIChat() {
 
   return (
     <>
-      {/* Floating Button */}
-      <motion.button
+      {/* Floating Input - Opens chat on focus */}
+      <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-accent via-accent to-accent-hover shadow-lg hover:shadow-xl border border-accent/30 flex items-center justify-center text-white transition-all duration-200 group"
-        aria-label={locale === 'it' ? 'Apri chat AI' : 'Open AI chat'}
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40"
       >
-        <Sparkles className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-200" />
-      </motion.button>
+        {!isOpen ? (
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setIsOpen(true);
+              startNewChat();
+              setTimeout(() => inputRef.current?.focus(), 100);
+            }}
+            className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-accent via-accent to-accent-hover shadow-lg hover:shadow-xl border border-accent/30 flex items-center justify-center text-white transition-all duration-200 group"
+            aria-label={locale === 'it' ? 'Apri chat AI' : 'Open AI chat'}
+          >
+            <Sparkles className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-200" />
+          </motion.button>
+        ) : (
+          <motion.div
+            initial={{ width: 56, height: 56 }}
+            animate={{ width: 'auto', height: 'auto' }}
+            className="bg-bg-surface border border-border-subtle rounded-full shadow-lg p-2 flex items-center gap-2"
+          >
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="w-10 h-10 rounded-full bg-bg-soft hover:bg-bg-base flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors"
+              aria-label={locale === 'it' ? 'Cronologia chat' : 'Chat history'}
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+            <button
+              onClick={startNewChat}
+              className="w-10 h-10 rounded-full bg-bg-soft hover:bg-bg-base flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors"
+              aria-label={locale === 'it' ? 'Nuova chat' : 'New chat'}
+            >
+              <span className="text-xs font-semibold">+</span>
+            </button>
+          </motion.div>
+        )}
+      </motion.div>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -152,8 +274,11 @@ export function AIChat() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={() => {
+                setIsOpen(false);
+                setShowHistory(false);
+              }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[55]"
             />
 
             {/* Chat Panel */}
@@ -162,7 +287,7 @@ export function AIChat() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-md sm:w-96 bg-bg-surface border-l border-border-subtle shadow-2xl z-50 flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md sm:w-96 bg-bg-surface border-l border-border-subtle shadow-2xl z-[60] flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -181,13 +306,65 @@ export function AIChat() {
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setShowHistory(false);
+                  }}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
                   aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
+
+              {/* Chat History Sidebar */}
+              {showHistory && (
+                <div className="absolute inset-y-0 left-0 w-full bg-bg-surface border-r border-border-subtle z-10 overflow-y-auto">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-semibold text-text-primary">
+                        {locale === 'it' ? 'Cronologia Chat' : 'Chat History'}
+                      </h4>
+                      <button
+                        onClick={() => setShowHistory(false)}
+                        className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    {chatHistory.length === 0 ? (
+                      <p className="text-sm text-text-tertiary text-center py-8">
+                        {locale === 'it' ? 'Nessuna chat precedente' : 'No previous chats'}
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {chatHistory.map((history) => (
+                          <button
+                            key={history.id}
+                            onClick={() => loadChat(history)}
+                            className="w-full text-left p-3 rounded-lg bg-bg-soft hover:bg-bg-base border border-border-subtle hover:border-accent/30 transition-colors"
+                          >
+                            <div className="font-medium text-sm text-text-primary mb-1 line-clamp-1">
+                              {history.title}
+                            </div>
+                            <div className="text-xs text-text-tertiary line-clamp-2 mb-1">
+                              {history.lastMessage}
+                            </div>
+                            <div className="text-xs text-text-tertiary">
+                              {history.timestamp.toLocaleDateString(locale, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">

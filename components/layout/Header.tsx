@@ -18,7 +18,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="sticky top-0 z-50 w-full border-b border-border-subtle glass supports-[backdrop-filter]:bg-bg-glass"
+      className="sticky top-0 z-40 w-full border-b border-border-subtle glass supports-[backdrop-filter]:bg-bg-glass"
       initial={prefersReducedMotion ? { opacity: 0 } : { y: -100, opacity: 0 }}
       animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
       transition={
