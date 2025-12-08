@@ -22,34 +22,50 @@ export function IndicatorTooltip({ indicatorId, children, side = 'right' }: Indi
     return <>{children}</>;
   }
 
-  // Disattivato temporaneamente per evitare blocchi
-  // const handleClick = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   setIsOpen(true);
-  // };
+  // Drawer disattivato temporaneamente - mostra solo icona
+  return (
+    <div className="inline-flex items-center gap-1">
+      {children}
+      <Info className="w-3 h-3 text-text-tertiary" />
+    </div>
+  );
+
+  /* Codice drawer disattivato
+
+  // Drawer disattivato temporaneamente - mostra solo icona
+  return (
+    <div className="inline-flex items-center gap-1">
+      {children}
+      <Info className="w-3 h-3 text-text-tertiary" />
+    </div>
+  );
+
+  /* Codice drawer disattivato
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(true);
+  };
 
   return (
     <>
       <div 
-        className="inline-flex items-center gap-1"
-        // onClick={handleClick}
-        // role="button"
-        // tabIndex={0}
-        // onKeyDown={(e) => {
-        //   if (e.key === 'Enter' || e.key === ' ') {
-        //     e.preventDefault();
-        //     setIsOpen(true);
-        //   }
-        // }}
-        aria-label={locale === 'it' ? 'Dettagli indicatore (disattivato)' : 'Indicator details (disabled)'}
+        className="inline-flex items-center gap-1 cursor-pointer"
+        onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(true);
+          }
+        }}
+        aria-label={locale === 'it' ? 'Mostra dettagli indicatore' : 'Show indicator details'}
       >
         {children}
-        <Info className="w-3 h-3 text-text-tertiary" />
+        <Info className="w-3 h-3 text-text-tertiary hover:text-accent transition-colors" />
       </div>
 
-      {/* Drawer disattivato temporaneamente */}
-      {false && (
       <Drawer
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
@@ -151,7 +167,7 @@ export function IndicatorTooltip({ indicatorId, children, side = 'right' }: Indi
           )}
         </div>
       </Drawer>
-      )}
     </>
   );
+  */
 }
