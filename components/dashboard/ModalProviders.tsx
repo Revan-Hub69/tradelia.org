@@ -40,6 +40,11 @@ export function ModalProviders() {
     };
   }, []);
 
+  // DISABLED: Solo dashboard scalping intraday crypto per ora
+  // TODO: Riabilitare quando necessario
+  return null;
+  
+  /* DISABLED MODALS - Solo dashboard scalping intraday crypto
   return (
     <>
       <RequestAnalysisModal
@@ -72,5 +77,6 @@ export function ModalProviders() {
       />
     </>
   );
+  */
 }
 

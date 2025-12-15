@@ -53,9 +53,17 @@ export function PatternRecognition({ symbol, supportResistance = [], onPatternDe
           volume: parseFloat(kline[5]),
         }));
 
-        // Calculate indicators
-        const rsi = calculateRSI(priceData);
-        const macd = calculateMACD(priceData);
+        // Calculate indicators - need array of RSI values for pattern detection
+        const rsiValues: number[] = [];
+        for (let i = 14; i < priceData.length; i++) {
+          const rsi = calculateRSI(priceData.slice(0, i + 1));
+          rsiValues.push(rsi.rsi);
+        }
+        // Pad with last value for initial 14 periods
+        if (rsiValues.length > 0) {
+          const lastRSI = rsiValues[rsiValues.length - 1];
+          rsiValues.unshift(...Array(14).fill(lastRSI));
+        }
 
         // Extract support/resistance levels
         const supportLevels = supportResistance
@@ -69,8 +77,7 @@ export function PatternRecognition({ symbol, supportResistance = [], onPatternDe
         // Detect patterns
         const detectedPatterns = detectAllPatterns(
           priceData,
-          rsi.rsiValues,
-          macd.macdLine,
+          rsiValues,
           supportLevels,
           resistanceLevels
         );
