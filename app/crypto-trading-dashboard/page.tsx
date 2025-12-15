@@ -215,8 +215,7 @@ export default function CryptoTradingDashboardPage() {
               entryPrice: decision.entryPrice,
               stopLoss: decision.stopLoss,
               takeProfit: decision.takeProfit || decision.entryPrice * 1.02,
-              recommendedLeverage: decision.recommendedLeverage,
-              riskLevel: decision.riskLevel,
+              leverage: decision.recommendedLeverage,
             });
 
             // Crea alert per segnali forti
