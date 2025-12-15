@@ -168,11 +168,13 @@ export function DownloadPDFModal({
       isOpen={isOpen}
       onClose={onClose}
       title={t('dashboard.reports.download') || 'Scarica Report'}
-      description={t('dashboard.reports.downloadDescription') || 'Scegli il formato e le opzioni per il download'}
       size="md"
     >
       {/* Riferimento: WCAG 2.1 - Forms, Norman (2013) - Affordance */}
       <div className="space-y-4" role="form" aria-label={t('dashboard.reports.downloadForm') || 'Form download report'}>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          {t('dashboard.reports.downloadDescription') || 'Scegli il formato e le opzioni per il download'}
+        </p>
         {/* Report Selection */}
         {!reportId && (
           <div>
