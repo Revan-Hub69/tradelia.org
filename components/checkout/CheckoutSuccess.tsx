@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useUserRole } from '@/lib/hooks/useUserRole';
 
 export function CheckoutSuccess() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [paymentData, setPaymentData] = useState<any>(null);
@@ -18,6 +18,7 @@ export function CheckoutSuccess() {
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'completed' | 'unknown'>('unknown');
   const { role, isLoading: roleLoading, validUntil } = useUserRole();
   const paymentId = searchParams.get('payment');
+  const localePrefix = '';
 
   const fetchPayment = async () => {
     if (!paymentId) return;
@@ -39,7 +40,7 @@ export function CheckoutSuccess() {
 
   useEffect(() => {
     if (!paymentId) {
-      router.push('/pricing');
+      router.push(`${localePrefix}/pricing`);
       return;
     }
 
@@ -182,14 +183,14 @@ export function CheckoutSuccess() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href={`${localePrefix}/dashboard`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
             >
               {t('checkout.success.goToDashboard') || 'Vai alla Dashboard'}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/dashboard/billing"
+              href={`${localePrefix}/dashboard/billing`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold transition-all duration-200"
             >
               <FileText className="w-4 h-4" />

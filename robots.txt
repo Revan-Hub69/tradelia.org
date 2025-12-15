@@ -25,8 +25,8 @@ Allow: /assets/
 Allow: /logos/
 Allow: /report/
 
-# Sitemap (se disponibile)
-# Sitemap: https://tradelia.org/sitemap.xml
+# Sitemap
+Sitemap: https://tradelia.org/sitemap.xml
 
 # Crawl-delay (opzionale, solo se necessario)
 # Crawl-delay: 1

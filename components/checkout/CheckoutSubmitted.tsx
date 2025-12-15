@@ -8,16 +8,17 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export function CheckoutSubmitted() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestId = searchParams.get('request');
+  const localePrefix = '';
 
   useEffect(() => {
     if (!requestId) {
-      router.push('/pricing');
+      router.push(`${localePrefix}/pricing`);
     }
-  }, [requestId, router]);
+  }, [requestId, router, localePrefix]);
 
   return (
     <div className="min-h-screen bg-bg-base py-16">
@@ -25,7 +26,7 @@ export function CheckoutSubmitted() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-bg-surface border border-border-subtle rounded-2xl p-12 text-center"
+          className="bg-bg-surface border-premium shadow-premium rounded-2xl p-8 md:p-12 text-center card-mobile"
         >
           <div className="w-20 h-20 rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center mx-auto mb-6">
             <Mail className="w-12 h-12 text-blue-400" />
@@ -65,14 +66,14 @@ export function CheckoutSubmitted() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href={`${localePrefix}/dashboard`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
             >
               {t('checkout.submitted.goToDashboard') || 'Vai alla Dashboard'}
             </Link>
             <Link
-              href="/pricing"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold transition-all duration-200"
+              href={`${localePrefix}/pricing`}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border-premium shadow-premium hover:border-border-strong shadow-premium-hover text-text-primary font-semibold interaction-smooth"
             >
               {t('checkout.submitted.backToPricing') || 'Torna ai Piani'}
             </Link>

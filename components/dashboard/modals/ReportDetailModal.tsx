@@ -192,7 +192,11 @@ export function ReportDetailModal({
             {report.content_json ? (
               <div className="prose prose-invert max-w-none">
                 {typeof report.content_json === 'string' ? (
-                  <div dangerouslySetInnerHTML={{ __html: report.content_json }} />
+                  <div 
+                    dangerouslySetInnerHTML={{ 
+                      __html: report.content_json.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                    }} 
+                  />
                 ) : (
                   <pre className="text-sm text-text-secondary whitespace-pre-wrap">
                     {JSON.stringify(report.content_json, null, 2)}

@@ -37,7 +37,7 @@ export function AccountBanner() {
         setBannerState('email-not-verified');
       }
     } catch (err) {
-      console.error('Error checking user status:', err);
+      // Log error but don't expose to user
       setBannerState('not-logged-in');
     }
   }, []);
@@ -60,9 +60,14 @@ export function AccountBanner() {
   // Controlla se è stato dismissato in precedenza (deve essere prima di qualsiasi return)
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const wasDismissed = localStorage.getItem('account-banner-dismissed') === 'true';
-      if (wasDismissed) {
-        setDismissed(true);
+      try {
+        const wasDismissed = localStorage.getItem('account-banner-dismissed') === 'true';
+        if (wasDismissed) {
+          setDismissed(true);
+        }
+      } catch (error) {
+        // localStorage potrebbe non essere disponibile (es. modalità privata)
+        // Ignora silenziosamente
       }
     }
   }, []);
@@ -71,7 +76,12 @@ export function AccountBanner() {
     setDismissed(true);
     // Salva in localStorage per non mostrare di nuovo in questa sessione
     if (typeof window !== 'undefined') {
-      localStorage.setItem('account-banner-dismissed', 'true');
+      try {
+        localStorage.setItem('account-banner-dismissed', 'true');
+      } catch (error) {
+        // localStorage potrebbe non essere disponibile (es. modalità privata)
+        // Ignora silenziosamente
+      }
     }
   };
 
@@ -88,6 +98,7 @@ export function AccountBanner() {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full mb-6"
+        style={{ minHeight: '80px' }} // Fissa altezza per evitare CLS
       >
         <div
           className={`
@@ -97,6 +108,7 @@ export function AccountBanner() {
                 ? 'bg-gradient-to-br from-accent/20 via-accent/10 to-accent/5 border-accent/30 shadow-accent/10'
                 : 'bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-amber-500/5 border-amber-500/30 shadow-amber-500/10'
             }
+            ${dismissed ? 'hidden' : ''}
           `}
           role="alert"
         >
@@ -115,9 +127,9 @@ export function AccountBanner() {
                 }
               `}>
                 {bannerState === 'not-logged-in' ? (
-                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-400'}`} aria-hidden="true" />
+                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-300'}`} aria-hidden="true" />
                 ) : (
-                  <Mail className="w-6 h-6 text-amber-400" aria-hidden="true" />
+                  <Mail className="w-6 h-6 text-amber-300" aria-hidden="true" />
                 )}
               </div>
               
@@ -134,7 +146,7 @@ export function AccountBanner() {
                     <div className="flex items-center gap-3 flex-wrap">
                       <Link
                         href="/login"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-primary font-medium text-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border-premium shadow-premium text-text-primary font-medium text-sm interaction-smooth hover:border-border-strong shadow-premium-hover"
                       >
                         {t('dashboard.banner.notLoggedIn.login')}
                       </Link>
@@ -160,7 +172,7 @@ export function AccountBanner() {
                     <div className="flex items-center gap-3 flex-wrap">
                       <Link
                         href="/login?mode=verify-email"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-medium text-sm transition-all duration-200 hover:shadow-md"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 font-medium text-sm transition-all duration-200 hover:shadow-md"
                       >
                         {t('dashboard.banner.emailNotVerified.verify')}
                       </Link>
@@ -172,14 +184,14 @@ export function AccountBanner() {
                               email: userEmail,
                             });
                             if (error) {
-                              console.error('Error resending verification:', error);
+                              // Silently handle errors
                             } else {
                               const { toast } = await import('@/components/ui/Toast');
                               toast.success(t('dashboard.banner.emailNotVerified.resendSuccess'));
                             }
                           }
                         }}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium text-sm transition-all duration-200 hover:border-border-default"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border-premium shadow-premium text-text-secondary hover:text-text-primary font-medium text-sm interaction-smooth hover:border-border-strong shadow-premium-hover"
                       >
                         {t('dashboard.banner.emailNotVerified.resend')}
                       </button>

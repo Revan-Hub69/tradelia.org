@@ -8,6 +8,7 @@ import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { VirtualizedList } from '@/components/dashboard/VirtualizedList';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
@@ -55,10 +56,6 @@ export default function ActivityPage() {
     switch (type) {
       case 'report_viewed':
         return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
-      case 'course_started':
-        return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
-      case 'course_completed':
-        return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
       case 'analysis_requested':
         return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
     }
@@ -96,8 +93,10 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
           <Clock className="w-8 h-8 text-accent" />
@@ -118,7 +117,6 @@ export default function ActivityPage() {
         >
           <option value="all">{t('dashboard.activity.filterAll') || 'Tutte'}</option>
           <option value="report_viewed">{t('dashboard.activity.filterReports') || 'Report'}</option>
-          <option value="course_started">{t('dashboard.activity.filterCourses') || 'Corsi'}</option>
           <option value="analysis_requested">{t('dashboard.activity.filterAnalysis') || 'Analisi'}</option>
         </select>
       </div>
@@ -208,6 +206,7 @@ export default function ActivityPage() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

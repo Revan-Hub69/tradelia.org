@@ -1,0 +1,36 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+import { NoSSR } from '@/components/common/NoSSR';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
+
+// SettingsContent è già un componente client-side
+const SettingsContent = dynamic(
+  () => import('../../../dashboard/settings/SettingsContent'),
+  {
+    ssr: false,
+  }
+);
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-bg-base" suppressHydrationWarning>
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-text-secondary">Loading settings...</p>
+    </div>
+  </div>
+);
+
+export default function SettingsPageEN() {
+  return (
+    <ErrorBoundary>
+      <NoSSR fallback={<LoadingFallback />}>
+        <div suppressHydrationWarning>
+          <DashboardTabs />
+          <SettingsContent />
+        </div>
+      </NoSSR>
+    </ErrorBoundary>
+  );
+}

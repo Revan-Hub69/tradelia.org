@@ -8,7 +8,19 @@
     "loading": "Caricamento...",
     "error": "Errore",
     "success": "Successo",
-    "sending": "Invio..."
+    "sending": "Invio...",
+    "skipToContent": "Salta al contenuto principale",
+    "viewAll": "Vedi tutti"
+  },
+  "error": {
+    "title": "Qualcosa è andato storto",
+    "description": "Si è verificato un errore imprevisto. Puoi provare a:",
+    "actions": {
+      "retry": "Riprova",
+      "goBack": "Torna Indietro",
+      "reload": "Ricarica Pagina",
+      "goHome": "Torna alla Home"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -64,27 +76,25 @@
     "copyright": "progetto indipendente",
     "description": "Ricerca finanziaria aperta: framework AI, dataset e note metodologiche condivise per la community. I servizi professionali sono opzionali e finanziano l'accesso gratuito.",
     "disclaimer": "Solo materiale educativo. Nessuna consulenza o sollecitazione di investimento; rispettiamo MiFID II e le best practice etiche.",
+    "product": "Prodotto",
     "support": "Supporto",
     "legal": "Legale",
-    "resources": "Risorse",
-    "company": "Azienda",
+    "productLinks": {
+      "pricing": "Prezzi",
+      "glossary": "Glossario",
+      "courses": "Corsi",
+      "dashboard": "Dashboard"
+    },
     "supportLinks": {
+      "faq": "FAQ",
       "support": "Supporto",
-      "status": "Status",
-      "documentation": "Documentazione",
-      "faq": "FAQ"
+      "about": "Chi Siamo",
+      "contact": "Contatti"
     },
     "legalLinks": {
-      "mifid": "MiFID II",
       "privacy": "Privacy",
       "cookie": "Cookie",
       "terms": "Termini e Condizioni"
-    },
-    "resourcesLinks": {
-      "blog": "Blog",
-      "guides": "Guide",
-      "api": "API",
-      "changelog": "Changelog"
     },
     "companyLinks": {
       "about": "Chi Siamo",
@@ -97,6 +107,25 @@
     "copyright": "Tutti i diritti riservati"
   },
   "dashboard": {
+    "tabs": {
+      "navigation": "Navigazione dashboard",
+      "overview": "Panoramica",
+      "overviewDesc": "Vista generale e attività recenti",
+      "education": "Formazione",
+      "educationDesc": "Corsi e percorsi formativi",
+      "analysis": "Analisi",
+      "analysisDesc": "Report e richieste analisi",
+      "settings": "Impostazioni",
+      "settingsDesc": "Profilo e configurazione"
+    },
+    "analysis": {
+      "title": "Analisi",
+      "description": "Report, richieste analisi e strumenti di analisi finanziaria"
+    },
+    "utilities": {
+      "title": "Utilities",
+      "subtitle": "Strumenti finanziari professionali per analisi e trading"
+    },
     "search": {
       "open": "Apri ricerca",
       "placeholder": "Cerca report, corsi, moduli...",
@@ -468,7 +497,53 @@
   "seo": {
     "title": "Tradelia AI · Formazione Finanziaria Gratuita",
     "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.",
-    "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education"
+    "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education",
+    "pages": {
+      "pricing": {
+        "title": "Pricing · Tradelia",
+        "description": "Scegli il piano perfetto per le tue esigenze. Individuale o Business, con fatturazione B2B disponibile."
+      },
+      "checkout": {
+        "title": "Checkout · Tradelia",
+        "description": "Completa il tuo acquisto e scegli il metodo di pagamento."
+      },
+      "glossary": {
+        "title": "Glossario · Tradelia",
+        "description": "Glossario completo dei termini finanziari e tecnici utilizzati in Tradelia"
+      },
+      "faq": {
+        "title": "FAQ · Tradelia",
+        "description": "Domande frequenti su Tradelia, i nostri servizi e come utilizzare la piattaforma."
+      },
+      "support": {
+        "title": "Supporto · Tradelia",
+        "description": "Ottieni supporto per Tradelia. Contattaci per assistenza, domande o segnalazioni."
+      },
+      "about": {
+        "title": "Chi Siamo · Tradelia",
+        "description": "Scopri Tradelia: un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria."
+      },
+      "contact": {
+        "title": "Contatti · Tradelia",
+        "description": "Contatta il team di Tradelia per supporto, domande o collaborazioni."
+      },
+      "privacy": {
+        "title": "Privacy Policy · Tradelia",
+        "description": "Informativa sulla privacy di Tradelia. Scopri come proteggiamo i tuoi dati personali."
+      },
+      "cookie": {
+        "title": "Cookie Policy · Tradelia",
+        "description": "Informativa sui cookie di Tradelia. Scopri come utilizziamo i cookie sul nostro sito."
+      },
+      "terms": {
+        "title": "Termini e Condizioni · Tradelia",
+        "description": "Termini e condizioni di utilizzo di Tradelia. Leggi le condizioni per l'uso della piattaforma."
+      },
+      "reviews": {
+        "title": "Recensioni · Tradelia",
+        "description": "Leggi le recensioni verificate dei nostri utenti e condividi la tua esperienza con Tradelia."
+      }
+    }
   },
   "auth": {
     "title": "Accedi a Tradelia",
@@ -765,13 +840,59 @@
     "noResults": "Nessun termine trovato",
     "relatedTerms": "Termini correlati",
     "stats": "{count} termini disponibili",
+    "loading": "Caricamento glossario...",
+    "termsCount": "termini",
+    "themesCount": "temi",
+    "instructions": "Istruzioni",
+    "keyboardNavigation": {
+      "title": "Navigazione da tastiera",
+      "navigateTerms": "Naviga tra i termini",
+      "openTerm": "Apri termine nel drawer",
+      "closeDrawer": "Chiudi drawer",
+      "focusSearch": "Focus ricerca",
+      "navigateElements": "Naviga tra elementi interattivi",
+      "closeInstructions": "Chiudi istruzioni",
+      "showInstructions": "Mostra istruzioni tastiera"
+    },
+    "termOfTheDay": {
+      "title": "Termine del Giorno",
+      "viewTerm": "Visualizza Termine",
+      "educationalDescription": "Spiegazione educativa semplice ma completa"
+    },
+    "filters": {
+      "title": "Argomenti e Temi",
+      "selectedTags": "tema selezionato",
+      "selectedTagsPlural": "temi selezionati",
+      "termCount": "termine",
+      "termCountPlural": "termini",
+      "removeAllTags": "Rimuovi tutti i temi",
+      "availableTerms": "termine disponibile",
+      "availableTermsPlural": "termini disponibili",
+      "showAllTerms": "Mostra tutti i termini",
+      "modifyFilters": "Prova a modificare i filtri o la ricerca per trovare altri termini",
+      "showAllAvailable": "Mostra tutti i {count} termini disponibili"
+    },
     "drawer": {
       "subtitle": "Definizione completa del termine",
       "academicExplanation": "Definizione Accademica",
       "technicalExplanation": "Spiegazione Tecnica Tradelia AI",
       "tradeliaExplanation": "Spiegazione Tradelia AI",
+      "tradeliaAIExplanation": "Spiegazione Tradelia AI",
       "relatedTerms": "Termini Correlati",
-      "sources": "Riferimenti Bibliografici"
+      "sources": "Riferimenti Bibliografici",
+      "whatDoes": "Cosa fa",
+      "howToUse": "Come si usa",
+      "practicalExample": "Esempio Pratico",
+      "commonMistakes": "Errori Comuni",
+      "close": "Chiudi drawer",
+      "print": "Stampa definizione",
+      "content": "Contenuto glossario",
+      "sourceTypes": {
+        "primarySource": "Fonte primaria",
+        "secondarySource": "Fonte secondaria",
+        "workingPaper": "Working paper",
+        "bookChapter": "Capitolo libro"
+      }
     }
   },
   "widgets": {
@@ -1013,6 +1134,19 @@
           "7": "Supporto prioritario"
         },
         "cta": "Scegli Pro"
+      },
+      "desk": {
+        "name": "Desk",
+        "description": "Per istituzioni e team",
+        "features": {
+          "1": "Tutto del Pro",
+          "2": "API Access",
+          "3": "Fatturazione B2B",
+          "4": "Supporto 24/7",
+          "5": "Account Manager dedicato",
+          "6": "Custom integrations"
+        },
+        "cta": "Scegli Desk"
       }
     },
     "comparison": {
@@ -1043,6 +1177,17 @@
     },
     "processing": "Elaborazione pagamento in corso...",
     "data": {
+      "customerType": "Tipo Cliente",
+      "retail": {
+        "label": "Privato (Retail)",
+        "description": "Per uso personale",
+        "title": "Dati Personali (Retail)"
+      },
+      "business": {
+        "label": "Azienda (Business)",
+        "description": "Per uso professionale",
+        "title": "Dati Aziendali"
+      },
       "individual": {
         "title": "Dati Personali",
         "firstName": "Nome",
@@ -1074,6 +1219,7 @@
     "payment": {
       "title": "Metodo di Pagamento",
       "xolo": {
+        "title": "Xolo Go",
         "description": "Pagamento sicuro tramite Xolo Go",
         "info": "Il pagamento verrà processato in modo sicuro tramite Xolo Go. Riceverai una conferma via email."
       },
@@ -1089,13 +1235,17 @@
       "vat": "IVA inclusa dove applicabile"
     },
     "errors": {
+      "customerType": "Seleziona tipo cliente",
       "firstName": "Nome richiesto",
       "lastName": "Cognome richiesto",
       "email": "Email richiesta",
+      "invalidEmail": "Email non valida",
       "country": "Paese richiesto",
       "taxCode": "Codice fiscale richiesto per l'Italia",
+      "invalidTaxCode": "Codice fiscale non valido",
       "companyName": "Ragione sociale richiesta",
       "vatNumber": "P.IVA richiesta",
+      "invalidVAT": "P.IVA non valida",
       "companyAddress": "Indirizzo aziendale richiesto",
       "contactEmail": "Email contatto richiesta",
       "companyCountry": "Paese richiesto",
@@ -1109,6 +1259,12 @@
       "downloadInvoice": "Scarica Fattura",
       "goToDashboard": "Vai alla Dashboard",
       "viewBilling": "Vedi Fatture"
+    },
+    "submitted": {
+      "title": "Richiesta Inviata!",
+      "description": "La tua richiesta è stata inviata con successo al nostro team. Riceverai una risposta via email entro 24-48 ore.",
+      "goToDashboard": "Vai alla Dashboard",
+      "backToPricing": "Torna ai Piani"
     },
     "instructions": {
       "title": "Completa il Pagamento",
@@ -1294,5 +1450,231 @@
     "of": "di",
     "previous": "Pagina precedente",
     "next": "Pagina successiva"
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "subtitle": "Trova risposte alle domande più comuni su Tradelia",
+    "questions": {
+      "whatIsTradelia": "Cos'è Tradelia?",
+      "howToStart": "Come posso iniziare?",
+      "whatIsPro": "Cos'è il piano Pro?",
+      "isFree": "Tradelia è davvero gratuito?",
+      "mifidCompliant": "Il materiale è conforme MiFID II?",
+      "businessPlans": "Ci sono piani per aziende?"
+    },
+    "answers": {
+      "whatIsTradelia": "Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria. Offriamo accesso gratuito per tutti e servizi professionali on demand.",
+      "howToStart": "Puoi iniziare creando un account gratuito. Avrai accesso alla dashboard, ai report pubblici e ai corsi base. Per funzionalità avanzate, considera l'upgrade a Pro.",
+      "whatIsPro": "Il piano Pro include Portfolio Manager, Calcolatrice Finanziaria, Sistema Alert Avanzato, Download PDF Report, Richieste Analisi Personalizzate e supporto prioritario.",
+      "isFree": "Sì, l'accesso base è completamente gratuito e permanente. I servizi professionali sono opzionali e finanziano l'accesso gratuito per tutti.",
+      "mifidCompliant": "Sì, tutto il materiale è conforme alle normative MiFID II e agli standard accademici internazionali. Le informazioni sono a scopo educativo e non costituiscono consulenza finanziaria.",
+      "businessPlans": "Sì, offriamo piani Business con fatturazione B2B. Contattaci per maggiori informazioni sui piani aziendali."
+    },
+    "needMoreHelp": "Hai bisogno di più aiuto?",
+    "contactUs": "Non hai trovato la risposta che cercavi? Contattaci e ti aiuteremo.",
+    "contactButton": "Contattaci"
+  },
+  "support": {
+    "title": "Supporto",
+    "subtitle": "Siamo qui per aiutarti. Scegli il metodo di contatto più adatto alle tue esigenze.",
+    "options": {
+      "faq": {
+        "title": "FAQ",
+        "description": "Consulta le domande frequenti per risposte rapide."
+      },
+      "email": {
+        "title": "Email",
+        "description": "Scrivici a support@tradelia.org per assistenza diretta."
+      },
+      "contact": {
+        "title": "Contatti",
+        "description": "Compila il form di contatto per richieste specifiche."
+      },
+      "documentation": {
+        "title": "Documentazione",
+        "description": "Esplora la documentazione completa della piattaforma."
+      }
+    },
+    "responseTime": {
+      "title": "Tempi di Risposta",
+      "email": "Rispondiamo entro 24-48 ore",
+      "pro": "Risposta prioritaria entro 12-24 ore",
+      "urgent": "Per problemi urgenti, contattaci direttamente via email"
+    }
+  },
+  "about": {
+    "title": "Chi Siamo",
+    "description": "Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria. Il nostro obiettivo è rendere la ricerca finanziaria accessibile, verificabile e conforme agli standard internazionali.",
+    "mission": {
+      "title": "La Nostra Missione",
+      "content": "Crediamo che la ricerca finanziaria debba essere aperta, verificabile e accessibile a tutti. I nostri framework AI sono documentati e replicabili, il materiale è conforme alle normative MiFID II e gli standard accademici internazionali. I servizi professionali sono opzionali e finanziano l'accesso gratuito per la community."
+    },
+    "values": {
+      "title": "I Nostri Valori",
+      "independence": {
+        "title": "Indipendenza",
+        "description": "Progetto indipendente senza conflitti di interesse."
+      },
+      "academic": {
+        "title": "Rigore Accademico",
+        "description": "Metodologia basata su standard accademici internazionali."
+      },
+      "compliance": {
+        "title": "Conformità",
+        "description": "Materiale conforme alle normative MiFID II."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Accesso gratuito per tutti, servizi Pro opzionali."
+      }
+    },
+    "contact": {
+      "title": "Vuoi Saperne di Più?",
+      "description": "Contattaci per domande, collaborazioni o per saperne di più sui nostri servizi.",
+      "button": "Contattaci"
+    }
+  },
+  "contact": {
+    "title": "Contatti",
+    "subtitle": "Compila il form qui sotto o scrivici direttamente a support@tradelia.org",
+    "email": {
+      "title": "Email Diretta"
+    },
+    "response": {
+      "title": "Tempi di Risposta",
+      "content": "Rispondiamo entro 24-48 ore. Per utenti Pro, risposta prioritaria entro 12-24 ore."
+    },
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "subject": "Oggetto",
+      "message": "Messaggio",
+      "send": "Invia Messaggio",
+      "sending": "Invio in corso...",
+      "success": "Messaggio inviato con successo! Ti risponderemo presto.",
+      "error": "Errore durante l'invio. Riprova o scrivici direttamente a support@tradelia.org"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "introduction": {
+        "title": "Introduzione",
+        "content": "Tradelia rispetta la tua privacy e si impegna a proteggere i tuoi dati personali. Questa Privacy Policy spiega come raccogliamo, utilizziamo e proteggiamo le tue informazioni quando utilizzi la nostra piattaforma."
+      },
+      "dataCollection": {
+        "title": "Raccolta Dati",
+        "content": "Raccogliamo solo i dati necessari per fornire i nostri servizi: email per l'autenticazione, dati di utilizzo per migliorare la piattaforma, e informazioni di pagamento per i servizi Pro (processate tramite provider sicuri)."
+      },
+      "dataUsage": {
+        "title": "Utilizzo Dati",
+        "content": "I tuoi dati sono utilizzati esclusivamente per: fornire e migliorare i nostri servizi, comunicare con te, processare pagamenti, e rispettare obblighi legali. Non vendiamo né condividiamo i tuoi dati con terze parti per scopi di marketing."
+      },
+      "rights": {
+        "title": "I Tuoi Diritti",
+        "content": "Hai il diritto di accedere, correggere, eliminare o limitare l'elaborazione dei tuoi dati personali. Puoi anche opporti all'elaborazione o richiedere la portabilità dei dati. Contattaci a support@tradelia.org per esercitare questi diritti."
+      },
+      "contact": {
+        "title": "Contatti",
+        "content": "Per domande sulla Privacy Policy, contattaci a support@tradelia.org"
+      }
+    }
+  },
+  "cookie": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "whatAre": {
+        "title": "Cosa Sono i Cookie",
+        "content": "I cookie sono piccoli file di testo salvati sul tuo dispositivo quando visiti un sito web. Utilizziamo cookie per migliorare la tua esperienza e fornire funzionalità essenziali."
+      },
+      "types": {
+        "title": "Tipi di Cookie Utilizzati",
+        "essential": {
+          "title": "Cookie Tecnici (Necessari)",
+          "content": "Cookie essenziali per il funzionamento del sito, inclusi autenticazione e sicurezza. Questi cookie non possono essere disabilitati."
+        },
+        "analytics": {
+          "title": "Cookie di Analisi",
+          "content": "Cookie utilizzati per analizzare l'utilizzo del sito e migliorare l'esperienza utente. Puoi disabilitare questi cookie nelle impostazioni del browser."
+        }
+      },
+      "management": {
+        "title": "Gestione Cookie",
+        "content": "Puoi gestire le preferenze dei cookie tramite le impostazioni del tuo browser. Nota che disabilitare alcuni cookie può limitare alcune funzionalità del sito."
+      }
+    }
+  },
+  "terms": {
+    "title": "Termini e Condizioni",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "acceptance": {
+        "title": "Accettazione dei Termini",
+        "content": "Utilizzando Tradelia, accetti questi Termini e Condizioni. Se non accetti, non utilizzare la piattaforma."
+      },
+      "use": {
+        "title": "Utilizzo del Servizio",
+        "content": "Tradelia fornisce materiale educativo e strumenti di ricerca finanziaria. Il materiale è a scopo educativo e non costituisce consulenza finanziaria. Non siamo responsabili per decisioni di investimento basate sul materiale fornito."
+      },
+      "account": {
+        "title": "Account e Pagamenti",
+        "content": "Sei responsabile di mantenere la sicurezza del tuo account. I pagamenti per servizi Pro sono processati tramite provider sicuri. I rimborsi sono gestiti secondo la nostra politica di rimborso."
+      },
+      "disclaimer": {
+        "title": "Disclaimer",
+        "content": "Il materiale fornito è a scopo educativo e non costituisce consulenza finanziaria, sollecitazione di investimento o raccomandazione. Tutti gli investimenti comportano rischi. Consulta sempre un consulente finanziario qualificato prima di prendere decisioni di investimento."
+      },
+      "contact": {
+        "title": "Contatti",
+        "content": "Per domande sui Termini e Condizioni, contattaci a support@tradelia.org"
+      }
+    }
+  },
+  "reviews": {
+    "title": "Cosa Dicono i Nostri Utenti",
+    "subtitle": "Recensioni verificate da utenti reali",
+    "verified": "Verificato",
+    "previous": "Recensione precedente",
+    "next": "Recensione successiva",
+    "goToReview": "Vai alla recensione",
+    "viewAll": "Vedi tutte le recensioni",
+    "loading": "Caricamento recensioni...",
+    "noReviews": "Nessuna recensione disponibile",
+    "noReviewsForRating": "Nessuna recensione con questo voto",
+    "showAll": "Mostra tutte le recensioni",
+    "filterByRating": "Filtra per voto",
+    "all": "Tutte",
+    "averageRating": "Media voti",
+    "totalReviews": "Recensioni totali",
+    "writeReview": "Scrivi una Recensione",
+    "loginToReview": "Accedi per lasciare una recensione",
+    "writeReviewDesc": "Condividi la tua esperienza con Tradelia. La tua recensione sarà pubblicata dopo la verifica.",
+    "backToReviews": "Torna alle recensioni",
+    "rating": "Voto",
+    "comment": "La tua recensione",
+    "commentPlaceholder": "Condividi la tua esperienza con Tradelia...",
+    "characters": "caratteri",
+    "submit": "Invia Recensione",
+    "verificationNote": "La tua recensione sarà pubblicata dopo la verifica da parte del team.",
+    "submitSuccess": "Recensione inviata! Verrà pubblicata dopo la verifica.",
+    "rate": "Vota",
+    "star": "stella",
+    "stars": "stelle",
+    "errors": {
+      "commentTooShort": "Il commento deve essere di almeno 10 caratteri",
+      "notLoggedIn": "Devi essere loggato per lasciare una recensione",
+      "submitError": "Errore durante l'invio della recensione"
+    }
+  },
+  "share": {
+    "title": "Condividi",
+    "native": "Condividi",
+    "facebook": "Condividi su Facebook",
+    "twitter": "Condividi su Twitter",
+    "linkedin": "Condividi su LinkedIn",
+    "copyLink": "Copia link",
+    "copied": "Copiato!"
   }
 }

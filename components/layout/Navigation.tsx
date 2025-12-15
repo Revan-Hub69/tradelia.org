@@ -7,12 +7,13 @@ import { LayoutDashboard, Building2, BookOpen, GraduationCap, FileText, Users, M
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navKeys = [
   { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
   { key: 'brokers', href: '/brokers', icon: Building2 },
   { key: 'manifesto', href: '/about', icon: BookOpen },
-  { key: 'percorso', href: '/dashboard#education', icon: GraduationCap },
   { key: 'serviziPro', href: '/services', icon: FileText },
   { key: 'documentazione', href: '/docs', icon: FileText },
   { key: 'community', href: '/community', icon: Users },
@@ -93,6 +94,7 @@ export function Navigation() {
               key={item.key}
               href={item.href}
               aria-current={active ? 'page' : undefined}
+              onMouseEnter={() => prefetchOnHover(item.href)}
               className={cn(
                 'px-4 py-2 text-sm font-semibold text-text-secondary rounded-lg transition-all duration-200 relative',
                 'hover:text-text-primary hover:bg-bg-surface/60 hover:shadow-sm hover:-translate-y-0.5',
@@ -130,45 +132,64 @@ export function Navigation() {
         )}
       </Button>
 
-      {/* Mobile Menu - Horizontal Scrollable with Icons */}
-      {mounted && mobileMenuOpen && (
-        <div
-          className="md:hidden fixed top-16 left-0 right-0 bg-bg-surface border-b border-border-subtle shadow-lg z-40 overflow-x-auto"
-          style={{ WebkitOverflowScrolling: 'touch' }}
-        >
-          <nav 
-            className="flex items-center gap-2 px-4 py-3 min-w-max"
-            role="navigation"
-            aria-label="Main navigation"
-          >
-            {navKeys.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
+      {/* Mobile Menu - Drawer from bottom */}
+      <AnimatePresence>
+        {mounted && mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-surface border-t border-border-subtle shadow-2xl z-50 rounded-t-2xl max-h-[70vh] overflow-hidden"
+            >
+              <div className="flex items-center justify-center p-4 border-b border-border-subtle">
+                <div className="w-12 h-1 bg-border-default rounded-full" />
+              </div>
+              <nav 
+                className="flex flex-col gap-1 p-4 overflow-y-auto"
+                role="navigation"
+                aria-label="Main navigation"
+              >
+                {navKeys.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.href);
 
-              return (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    'px-4 py-2 text-sm font-semibold whitespace-nowrap rounded-lg transition-all duration-200',
-                    'min-h-[44px] flex items-center justify-center gap-2',
-                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
-                    'group hover:scale-105',
-                    active
-                      ? 'text-text-primary bg-bg-elevated shadow-sm'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                  )}
-                  aria-current={active ? 'page' : undefined}
-                >
-                  <Icon className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
-                  <span>{t(`nav.${item.key}`)}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      )}
+                  return (
+                    <Link
+                      key={item.key}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      onMouseEnter={() => prefetchOnHover(item.href)}
+                      className={cn(
+                        'px-4 py-3 text-base font-medium rounded-lg transition-all duration-200',
+                        'min-h-[48px] flex items-center gap-3',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
+                        active
+                          ? 'text-text-primary bg-bg-elevated shadow-sm'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
+                      )}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                      <span>{t(`nav.${item.key}`)}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }

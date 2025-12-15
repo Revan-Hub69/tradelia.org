@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -12,6 +14,115 @@ interface ErrorBoundaryState {
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
+}
+
+/**
+ * Error UI Component (funzionale per usare hooks)
+ */
+function ErrorUI({ 
+  error, 
+  errorInfo, 
+  resetError 
+}: { 
+  error: Error; 
+  errorInfo: React.ErrorInfo | null; 
+  resetError: () => void;
+}) {
+  const router = useRouter();
+  const { t, locale } = useTranslations();
+
+  const handleGoBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push('/');
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-bg-base p-4">
+      <div className="max-w-2xl w-full bg-bg-surface border border-border-default rounded-lg p-6 space-y-4 shadow-lg">
+        <div className="flex items-center gap-3 text-red-400">
+          <AlertTriangle className="w-6 h-6" aria-hidden="true" />
+          <h1 className="text-xl font-bold text-text-primary">
+            {t('error.title') || 'Something went wrong'}
+          </h1>
+        </div>
+        
+        <p className="text-text-secondary">
+          {t('error.description') || 'An unexpected error occurred. You can try:'}
+        </p>
+
+        <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
+          <li>{t('error.actions.retry') || 'Retry the operation'}</li>
+          <li>{t('error.actions.goBack') || 'Go back to the previous page'}</li>
+          <li>{t('error.actions.reload') || 'Reload the page'}</li>
+          <li>{t('error.actions.goHome') || 'Go to home'}</li>
+        </ul>
+
+        {process.env.NODE_ENV === 'development' && error && (
+          <div className="mt-4 p-4 bg-bg-soft rounded border border-border-subtle">
+            <p className="text-sm font-mono text-red-400 mb-2">
+              {error.name}: {error.message}
+            </p>
+            {error.stack && (
+              <pre className="text-xs text-text-tertiary overflow-auto max-h-64">
+                {error.stack}
+              </pre>
+            )}
+            {errorInfo && (
+              <details className="mt-2">
+                <summary className="text-xs text-text-tertiary cursor-pointer">
+                  Component Stack
+                </summary>
+                <pre className="text-xs text-text-tertiary overflow-auto max-h-64 mt-2">
+                  {errorInfo.componentStack}
+                </pre>
+              </details>
+            )}
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-3 pt-4">
+          <button
+            onClick={resetError}
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-medium"
+            aria-label={t('error.actions.retry') || 'Retry'}
+          >
+            <RefreshCw className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.retry') || 'Retry'}
+          </button>
+          <button
+            onClick={handleGoBack}
+            className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.goBack') || 'Go back'}
+          >
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.goBack') || 'Go Back'}
+          </button>
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.location.reload();
+              }
+            }}
+            className="px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.reload') || 'Reload page'}
+          >
+            {t('error.actions.reload') || 'Reload Page'}
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.goHome') || 'Go to home'}
+          >
+            <Home className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.goHome') || 'Go to Home'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -28,6 +139,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       errorInfo: null,
     };
   }
+
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return {
@@ -60,73 +172,20 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   };
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasError && this.state.error) {
       // Use custom fallback if provided
-      if (this.props.fallback && this.state.error) {
+      if (this.props.fallback) {
         const Fallback = this.props.fallback;
         return <Fallback error={this.state.error} resetError={this.resetError} />;
       }
 
       // Default error UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-bg-base p-4">
-          <div className="max-w-2xl w-full bg-bg-surface border border-border-default rounded-lg p-6 space-y-4">
-            <div className="flex items-center gap-3 text-red-400">
-              <AlertTriangle className="w-6 h-6" />
-              <h1 className="text-xl font-bold text-text-primary">Qualcosa è andato storto</h1>
-            </div>
-            
-            <p className="text-text-secondary">
-              Si è verificato un errore imprevisto. Puoi provare a ricaricare la pagina o tornare alla home.
-            </p>
-
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mt-4 p-4 bg-bg-soft rounded border border-border-subtle">
-                <p className="text-sm font-mono text-red-400 mb-2">
-                  {this.state.error.name}: {this.state.error.message}
-                </p>
-                {this.state.error.stack && (
-                  <pre className="text-xs text-text-tertiary overflow-auto max-h-64">
-                    {this.state.error.stack}
-                  </pre>
-                )}
-                {this.state.errorInfo && (
-                  <details className="mt-2">
-                    <summary className="text-xs text-text-tertiary cursor-pointer">
-                      Component Stack
-                    </summary>
-                    <pre className="text-xs text-text-tertiary overflow-auto max-h-64 mt-2">
-                      {this.state.errorInfo.componentStack}
-                    </pre>
-                  </details>
-                )}
-              </div>
-            )}
-
-            <div className="flex gap-3 pt-4">
-              <button
-                onClick={this.resetError}
-                className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Riprova
-              </button>
-              <button
-                onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
-              >
-                <Home className="w-4 h-4" />
-                Torna alla Home
-              </button>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
-              >
-                Ricarica Pagina
-              </button>
-            </div>
-          </div>
-        </div>
+        <ErrorUI 
+          error={this.state.error} 
+          errorInfo={this.state.errorInfo} 
+          resetError={this.resetError} 
+        />
       );
     }
 

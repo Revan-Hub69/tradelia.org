@@ -10,6 +10,7 @@ import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/button';
 import { ProposalDetailModal } from '@/components/dashboard/modals/ProposalDetailModal';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import { toast } from '@/components/ui/Toast';
 import Link from 'next/link';
 
@@ -114,8 +115,10 @@ export default function VotingPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
@@ -220,7 +223,7 @@ export default function VotingPage() {
                       setSelectedProposalId(proposal.id);
                       setDetailModalOpen(true);
                     }}
-                    className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors text-sm"
+                    className="flex items-center gap-1 text-text-primary hover:text-text-primary transition-colors text-sm underline-selection"
                     aria-label={t('dashboard.voting.viewDetail') || 'Visualizza dettaglio'}
                   >
                     <Eye className="w-4 h-4" />
@@ -278,6 +281,7 @@ export default function VotingPage() {
           refetch();
         }}
       />
+      </div>
     </div>
   );
 }

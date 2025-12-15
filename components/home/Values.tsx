@@ -12,6 +12,7 @@ import {
   createHoverVariants,
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 const valueKeys = ['libero', 'verificabile', 'aperta', 'etica'];
 const valueIcons = [DollarSign, CheckCircle2, Smartphone, Shield];
@@ -156,6 +157,15 @@ export function Values() {
                     );
                   })}
                 </div>
+
+                {/* Share Buttons */}
+                <motion.div variants={itemVariants} className="mt-12 flex justify-center">
+                  <ShareButtons 
+                    variant="compact"
+                    title={t('home.values.title')}
+                    description={t('home.values.description')}
+                  />
+                </motion.div>
       </motion.div>
     </section>
   );

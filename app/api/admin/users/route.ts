@@ -1,0 +1,102 @@
+/**
+ * Admin API - Users Management
+ * Gestisce utenti su Supabase
+ * 
+ * GET /api/admin/users - Lista tutti gli utenti
+ * POST /api/admin/users - Crea nuovo utente
+ * GET /api/admin/users/[id] - Dettagli utente
+ * PUT /api/admin/users/[id] - Aggiorna utente
+ * DELETE /api/admin/users/[id] - Elimina utente
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
+
+// GET - Lista tutti gli utenti
+export async function GET(request: NextRequest) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const search = searchParams.get('search') || '';
+    const role = searchParams.get('role') || '';
+
+    // Lista utenti da auth
+    const { data: { users }, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+      page,
+      perPage: limit,
+    });
+
+    if (authError) {
+      return NextResponse.json(
+        { error: authError.message },
+        { status: 500 }
+      );
+    }
+
+    // Filtra per search se presente
+    let filteredUsers = users || [];
+    if (search) {
+      filteredUsers = filteredUsers.filter(
+        (u: { email?: string; user_metadata?: { full_name?: string } }) =>
+          u.email?.toLowerCase().includes(search.toLowerCase()) ||
+          u.user_metadata?.full_name?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Ottieni ruoli da user_roles
+    const userIds = filteredUsers.map((u: { id: string }) => u.id);
+    const { data: rolesData } = await supabaseAdmin
+      .from('user_roles')
+      .select('user_id, role, valid_until')
+      .in('user_id', userIds);
+
+    // Combina dati
+    const usersWithRoles = filteredUsers.map((user: { id: string; email?: string; user_metadata?: { full_name?: string; avatar_url?: string }; created_at: string; last_sign_in_at?: string; email_confirmed_at?: string }) => {
+      const userRole = rolesData?.find((r: { user_id: string; role: string }) => r.user_id === user.id);
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.full_name || user.email?.split('@')[0],
+        avatar_url: user.user_metadata?.avatar_url,
+        created_at: user.created_at,
+        last_sign_in_at: user.last_sign_in_at,
+        email_confirmed_at: user.email_confirmed_at,
+        role: userRole?.role || 'guest',
+        role_valid_until: userRole?.valid_until || null,
+        metadata: user.user_metadata,
+      };
+    });
+
+    // Filtra per ruolo se specificato
+    const finalUsers = role
+      ? usersWithRoles.filter((u: { role: string }) => u.role === role)
+      : usersWithRoles;
+
+    return NextResponse.json({
+      users: finalUsers,
+      total: finalUsers.length,
+      page,
+      limit,
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Crea nuovo utente (RIMOSSO - vulnerabilità di sicurezza)
+// La creazione utenti deve essere fatta solo manualmente via Supabase Dashboard

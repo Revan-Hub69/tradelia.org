@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
     if (authError || !user) {
       return NextResponse.json({
         totalReports: 0,
-        activeCourses: 0,
         pendingRequests: 0,
         recentActivity: null,
       });
@@ -28,7 +27,6 @@ export async function GET(request: NextRequest) {
     // In caso di errore, restituisci statistiche vuote invece di 500
     return NextResponse.json({
       totalReports: 0,
-      activeCourses: 0,
       pendingRequests: 0,
       recentActivity: null,
     });

@@ -1,24 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Target, ArrowRight, BookOpen } from 'lucide-react';
+import { Sparkles, ShieldCheck, Target, ArrowRight } from 'lucide-react';
 import styles from './dashboard.module.css';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
 import { useState, useEffect } from 'react';
-import { getGlossaryTerm } from '@/lib/glossary/terms';
+import { getGlossaryTerm, type GlossaryTerm } from '@/lib/glossary/terms';
 import { useIsClient } from '@/lib/hooks/useIsClient';
 
 export function DashboardHero() {
   const { t, tArray, locale } = useTranslations();
   const isClient = useIsClient();
   const chips = tArray('dashboard.hero.chips', []);
-  const [mifidTerm, setMifidTerm] = useState<any>(null);
-  const [frameworkTerm, setFrameworkTerm] = useState<any>(null);
+  const [mifidTerm, setMifidTerm] = useState<GlossaryTerm | null>(null);
+  const [frameworkTerm, setFrameworkTerm] = useState<GlossaryTerm | null>(null);
 
   // Carica termini per tooltip SOLO sul client per evitare hydration mismatch
   useEffect(() => {
@@ -35,13 +35,13 @@ export function DashboardHero() {
   }, [isClient]);
 
   return (
-    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title">
+    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title" style={{ minHeight: '280px' }}>
       <div className={styles.dashboardHeroContent}>
         <Badge variant="default" className={styles.dashboardHeroBadge}>
           <Sparkles className={styles.dashboardHeroBadgeIcon} aria-hidden="true" />
           <span>{t('dashboard.hero.badge')}</span>
         </Badge>
-        <p className={styles.dashboardHeroSubtitle}>
+        <p className={styles.dashboardHeroSubtitle} style={{ minHeight: '24px' }}>
           {frameworkTerm ? (
             <TooltipGlossary term={frameworkTerm} icon={true}>
               <span className="text-accent hover:text-accent-hover underline decoration-dotted">
@@ -52,7 +52,7 @@ export function DashboardHero() {
             t('dashboard.hero.subtitle')
           )}
         </p>
-        <h1 id="dashboard-hero-title" className={styles.dashboardHeroTitle}>
+        <h1 id="dashboard-hero-title" className={styles.dashboardHeroTitle} style={{ minHeight: '120px' }}>
           {t('dashboard.hero.title')}
         </h1>
         <p className={styles.dashboardHeroDescription}>
@@ -70,14 +70,14 @@ export function DashboardHero() {
         </p>
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
-            <Link href={buildLocalePath(locale, '/dashboard#education')}>
-              <span>{t('dashboard.hero.ctaPrimary')}</span>
+            <Link href="/dashboard/market-data">
+              <span>{t('dashboard.hero.ctaPrimary') || 'Vai ai Market Data'}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>
           </Button>
           <div className={styles.dashboardHeroSupportText}>
-            <BookOpen className={styles.dashboardHeroSupportIcon} aria-hidden="true" />
-            <span>{t('dashboard.hero.supportingText')}</span>
+            <Target className={styles.dashboardHeroSupportIcon} aria-hidden="true" />
+            <span>{t('dashboard.hero.supportingText') || 'Strumenti professionali per analisi di mercato'}</span>
           </div>
         </div>
         {chips.length > 0 && (

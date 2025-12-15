@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, memo, useMemo } from 'react';
-import { Clock, FileText, BookOpen, TrendingUp, ArrowRight, Filter } from 'lucide-react';
+import { Clock, FileText, TrendingUp, ArrowRight, Filter } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsClient } from '@/lib/hooks/useIsClient';
 import { cn } from '@/lib/utils/cn';
@@ -18,7 +18,7 @@ import { ErrorState } from './ErrorState';
 
 interface Activity {
   id: string;
-  type: 'report_viewed' | 'course_started' | 'course_completed' | 'analysis_requested';
+  type: 'report_viewed' | 'analysis_requested';
   title: string;
   description: string;
   timestamp: string;
@@ -30,10 +30,11 @@ export const RecentActivity = memo(function RecentActivity() {
   const { t, locale } = useTranslations();
   const isClient = useIsClient();
   const [filter, setFilter] = useState<string>('all');
+  const [isExpanded, setIsExpanded] = useState(false); // Best Practice: Progressive disclosure
 
   interface ActivityData {
     id: string;
-    type: 'report_viewed' | 'course_started' | 'course_completed' | 'analysis_requested';
+    type: 'report_viewed' | 'analysis_requested';
     title: string;
     description: string | null;
     created_at: string;
@@ -66,16 +67,11 @@ export const RecentActivity = memo(function RecentActivity() {
       switch (item.type) {
         case 'report_viewed':
           icon = <FileText className="w-4 h-4" />;
-          href = `/dashboard#reports`;
-          break;
-        case 'course_started':
-        case 'course_completed':
-          icon = <BookOpen className="w-4 h-4" />;
-          href = `/dashboard#education`;
+          href = `/dashboard/market-data`;
           break;
         case 'analysis_requested':
           icon = <TrendingUp className="w-4 h-4" />;
-          href = `/dashboard#requests-history`;
+          href = `/dashboard/market-data`;
           break;
       }
 
@@ -96,10 +92,6 @@ export const RecentActivity = memo(function RecentActivity() {
       switch (type) {
         case 'report_viewed':
           return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
-        case 'course_started':
-          return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
-        case 'course_completed':
-          return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
         case 'analysis_requested':
           return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
       }
@@ -157,7 +149,7 @@ export const RecentActivity = memo(function RecentActivity() {
             {t('dashboard.activity.title') || 'Attività Recenti'}
           </h2>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-12 text-center">
+        <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-8 md:p-12 text-center card-mobile">
           <Clock className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
           <p className="text-sm text-text-tertiary">
             {t('dashboard.activity.empty') || 'Nessuna attività recente'}
@@ -166,6 +158,9 @@ export const RecentActivity = memo(function RecentActivity() {
       </section>
     );
   }
+
+  // Best Practice 2024-2025: Progressive disclosure - mostra solo prime 3 attività, espandibile
+  const visibleActivities = isExpanded ? activities : activities.slice(0, 3);
 
   return (
     <section className="mb-8" aria-label={t('dashboard.activity.title') || 'Attività recenti'}>
@@ -178,19 +173,18 @@ export const RecentActivity = memo(function RecentActivity() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="text-xs bg-bg-soft border border-border-subtle rounded-lg px-2 py-1 text-text-secondary focus:outline-none focus:border-accent"
+            className="text-xs bg-bg-soft border-premium rounded-lg px-2 py-1 text-text-secondary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent"
             aria-label={t('dashboard.activity.filterLabel') || 'Filtra attività per tipo'}
           >
             <option value="all">{t('dashboard.activity.filterAll') || 'Tutte'}</option>
             <option value="report_viewed">{t('dashboard.activity.filterReports') || 'Report'}</option>
-            <option value="course_started">{t('dashboard.activity.filterCourses') || 'Corsi'}</option>
             <option value="analysis_requested">{t('dashboard.activity.filterAnalysis') || 'Analisi'}</option>
           </select>
         </div>
       </div>
-      {activities.length > 10 ? (
+      {visibleActivities.length > 10 ? (
         <VirtualizedList
-          items={activities}
+          items={visibleActivities}
           renderItem={(activity, index) => (
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -199,7 +193,7 @@ export const RecentActivity = memo(function RecentActivity() {
             >
               <Link
                 href={activity.href}
-                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                className="block p-4 bg-bg-soft border-premium shadow-premium rounded-xl hover:border-border-strong shadow-premium-hover interaction-smooth group card-mobile"
                 aria-label={`${activity.title} - ${activity.description}`}
               >
                 <div className="flex items-start gap-3">
@@ -209,7 +203,7 @@ export const RecentActivity = memo(function RecentActivity() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
-                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                      <span className="px-1.5 py-0.5 bg-bg-surface border-premium rounded text-xs text-text-tertiary">
                         {getActivityTypeLabel(activity.type)}
                       </span>
                     </div>
@@ -230,7 +224,7 @@ export const RecentActivity = memo(function RecentActivity() {
         />
       ) : (
         <div className="space-y-2">
-          {activities.map((activity, index) => (
+          {visibleActivities.map((activity, index) => (
             <motion.div
               key={activity.id}
               initial={{ opacity: 0, x: -10 }}
@@ -239,7 +233,7 @@ export const RecentActivity = memo(function RecentActivity() {
             >
               <Link
                 href={activity.href}
-                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                className="block p-4 bg-bg-soft border-premium shadow-premium rounded-xl hover:border-border-strong shadow-premium-hover interaction-smooth group card-mobile"
                 aria-label={`${activity.title} - ${activity.description}`}
               >
                 <div className="flex items-start gap-3">
@@ -249,7 +243,7 @@ export const RecentActivity = memo(function RecentActivity() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
-                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                      <span className="px-1.5 py-0.5 bg-bg-surface border-premium rounded text-xs text-text-tertiary">
                         {getActivityTypeLabel(activity.type)}
                       </span>
                     </div>
@@ -266,15 +260,22 @@ export const RecentActivity = memo(function RecentActivity() {
           ))}
         </div>
       )}
-      {activities.length >= 3 && (
+      {activities.length > 3 && (
         <div className="mt-4 text-center">
-          <Link
-            href="/dashboard#activity"
-            className="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1"
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-sm text-text-primary hover:text-text-primary inline-flex items-center gap-1 transition-colors underline-selection"
+            aria-label={isExpanded 
+              ? t('dashboard.activity.showLess') || 'Mostra meno attività'
+              : t('dashboard.activity.showMore') || `Mostra altre ${activities.length - 3} attività`}
+            aria-expanded={isExpanded}
           >
-            {t('dashboard.activity.viewAll') || 'Vedi tutte le attività'}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+            {isExpanded 
+              ? (t('dashboard.activity.showLess') || 'Mostra meno')
+              : (t('dashboard.activity.showMore') || `Mostra altre (${activities.length - 3})`)
+            }
+            <ArrowRight className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+          </button>
         </div>
       )}
     </section>

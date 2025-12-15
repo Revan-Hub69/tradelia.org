@@ -1,6 +1,11 @@
 import { redirect } from 'next/navigation';
-import { defaultLocale } from '@/lib/i18n/config';
+import { defaultLocale, localePaths } from '@/lib/i18n/config';
 
-export default function LocalePage() {
-  redirect(`/${defaultLocale}`);
+/**
+ * Handle /[locale] routes
+ * Always redirect to root (Italian only - system simplified)
+ */
+export default function LocalePage({ params }: { params: { locale: string } }) {
+  // Always redirect to root (Italian only)
+  redirect(localePaths[defaultLocale]);
 }

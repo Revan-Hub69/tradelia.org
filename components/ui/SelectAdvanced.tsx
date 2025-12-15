@@ -154,7 +154,7 @@ export function SelectAdvanced({
             'transition-colors',
             error
               ? 'border-red-400 focus:ring-red-400'
-              : 'border-border-subtle hover:border-accent/40',
+              : 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
             className
           )}
           aria-haspopup="listbox"
@@ -211,11 +211,11 @@ export function SelectAdvanced({
 
         {isOpen && (
           <div
-            className="absolute z-50 w-full mt-1 bg-bg-soft border border-border-subtle rounded-lg shadow-lg max-h-60 overflow-hidden"
+            className="absolute z-50 w-full mt-1 bg-bg-soft border-premium shadow-premium rounded-lg max-h-60 overflow-hidden"
             role="listbox"
           >
             {searchable && (
-              <div className="p-2 border-b border-border-subtle">
+              <div className="p-2 border-b border-premium">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
                   <input
@@ -224,7 +224,7 @@ export function SelectAdvanced({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Cerca..."
-                    className="w-full pl-8 pr-3 py-1.5 bg-bg-surface border border-border-subtle rounded text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    className="w-full pl-8 pr-3 py-1.5 bg-bg-surface border-premium shadow-premium rounded text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-border-strong interaction-smooth"
                   />
                 </div>
               </div>

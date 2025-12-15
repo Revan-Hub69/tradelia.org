@@ -210,16 +210,16 @@ export function Modal({
             }}
             onClick={(e) => e.stopPropagation()}
             className={cn(
-              'relative z-50 w-full bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl',
+              'relative z-50 w-full bg-bg-surface border-premium shadow-premium rounded-2xl',
               'max-h-[90vh] overflow-hidden flex flex-col',
-              'focus:outline-none', // Remove default outline, we handle focus with ring
+              'focus:outline-none focus:border-border-strong', // Remove default outline, we handle focus with ring
               sizeClasses[size],
               className
             )}
           >
             {/* Header */}
             {(title || showCloseButton) && (
-              <div className="flex items-start justify-between p-6 border-b border-border-subtle">
+              <div className="flex items-start justify-between p-4 md:p-6 border-b border-premium card-mobile">
                 <div className="flex-1 pr-4">
                   {title && (
                     <h2
@@ -251,7 +251,7 @@ export function Modal({
             )}
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 card-mobile">
               {children}
             </div>
           </motion.div>

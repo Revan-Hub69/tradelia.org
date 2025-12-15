@@ -36,18 +36,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.totalReports.context'),
       action: {
         label: t('dashboard.overview.stats.totalReports.action'),
-        href: buildLocalePath(locale, '/dashboard#reports'),
-      },
-    },
-    {
-      id: 'active-courses',
-      value: '0',
-      label: t('dashboard.overview.stats.activeCourses.label'),
-      trend: 'neutral' as const,
-      context: t('dashboard.overview.stats.activeCourses.context'),
-      action: {
-        label: t('dashboard.overview.stats.activeCourses.action'),
-        href: buildLocalePath(locale, '/dashboard#education'),
+        href: buildLocalePath(locale, '/dashboard/market-data'),
       },
     },
     {
@@ -58,7 +47,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.pendingRequests.context'),
       action: {
         label: t('dashboard.overview.stats.pendingRequests.action'),
-        href: buildLocalePath(locale, '/dashboard#requests-history'),
+        href: buildLocalePath(locale, '/dashboard/reports?tab=requests'),
       },
     },
     {
@@ -69,14 +58,13 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.recentActivity.context'),
       action: {
         label: t('dashboard.overview.stats.recentActivity.action'),
-        href: buildLocalePath(locale, '/dashboard#activity'),
+        href: buildLocalePath(locale, '/dashboard'),
       },
     },
   ]);
 
   const { data: statsData, loading, error, retry } = useApi<{
     totalReports: number;
-    activeCourses: number;
     pendingRequests: number;
     recentActivity: { created_at: string } | null;
   }>('/api/dashboard/stats', {
@@ -101,9 +89,6 @@ export function OverviewStats() {
       setStats(prev => prev.map(stat => {
         if (stat.id === 'total-reports') {
           return { ...stat, value: String(statsData.totalReports || 0) };
-        }
-        if (stat.id === 'active-courses') {
-          return { ...stat, value: String(statsData.activeCourses || 0) };
         }
         if (stat.id === 'pending-requests') {
           return { ...stat, value: String(statsData.pendingRequests || 0) };

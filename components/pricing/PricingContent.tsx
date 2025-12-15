@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Check, Building2, User, ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
+import { InternalLinks } from '@/components/seo/InternalLinks';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 interface Plan {
   id: string;
@@ -23,10 +27,14 @@ interface Plan {
 }
 
 export function PricingContent() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
+  const router = useRouter();
   const isPro = useIsPro();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  
+  // System simplified: Italian only
+  const localePrefix = '';
 
   const individualPlans: Plan[] = [
     {
@@ -91,13 +99,8 @@ export function PricingContent() {
 
   const handleSelectPlan = (planId: string, type: 'individual' | 'business') => {
     setSelectedPlan(planId);
-    // Mostra scelta retail/professionale prima di andare al checkout
-    const customerType = prompt('Scegli tipo cliente:\n1. Retail (Privato)\n2. Professionale (Azienda)');
-    if (customerType === '1' || customerType?.toLowerCase() === 'retail') {
-      window.location.href = `/checkout?plan=${planId}&customerType=retail&billing=${billingCycle}`;
-    } else if (customerType === '2' || customerType?.toLowerCase() === 'professionale') {
-      window.location.href = `/checkout?plan=${planId}&customerType=professionale&billing=${billingCycle}`;
-    }
+    // Naviga direttamente al checkout - l'utente sceglierà business/retail nel form
+    router.push(`${localePrefix}/checkout?plan=${planId}&billing=${billingCycle}`);
   };
 
   return (
@@ -188,10 +191,22 @@ export function PricingContent() {
           <h2 className="text-2xl font-semibold text-text-primary text-center mb-8">
             {t('pricing.comparison.title') || 'Confronta le Funzionalità'}
           </h2>
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl p-8">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-2xl p-6 md:p-8 card-mobile">
             <ComparisonTable />
           </div>
         </section>
+
+        {/* Share Buttons */}
+        <div className="mt-12 flex justify-center">
+          <ShareButtons 
+            variant="compact"
+            title={t('pricing.title')}
+            description={t('pricing.subtitle')}
+          />
+        </div>
+        
+        {/* Internal Links per SEO */}
+        <InternalLinks />
       </div>
     </div>
   );
@@ -222,7 +237,7 @@ function PlanCard({
         'relative p-8 rounded-2xl border-2 transition-all duration-200',
         plan.popular
           ? 'bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-accent shadow-lg'
-          : 'bg-bg-surface border-border-subtle hover:border-accent/40',
+          : 'bg-bg-surface border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
         isCurrentPlan && 'ring-2 ring-accent'
       )}
     >
@@ -269,12 +284,17 @@ function PlanCard({
 
       <button
         onClick={onSelect}
+        onMouseEnter={() => {
+          if (!isCurrentPlan) {
+            prefetchOnHover('/checkout');
+          }
+        }}
         disabled={isCurrentPlan}
         className={cn(
           'w-full py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2',
           plan.popular
             ? 'bg-accent hover:bg-accent-hover text-white shadow-md hover:shadow-lg'
-            : 'bg-bg-soft hover:bg-bg-elevated text-text-primary border border-border-subtle hover:border-accent/40',
+            : 'bg-bg-soft hover:bg-bg-elevated text-text-primary border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
           isCurrentPlan && 'opacity-50 cursor-not-allowed'
         )}
       >
@@ -315,7 +335,7 @@ function ComparisonTable() {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border-subtle">
+          <tr className="border-b border-premium">
             <th className="text-left py-4 px-4 font-semibold text-text-primary">
               {t('pricing.comparison.feature') || 'Funzionalità'}
             </th>
@@ -326,7 +346,7 @@ function ComparisonTable() {
         </thead>
         <tbody>
           {features.map((feature, idx) => (
-            <tr key={idx} className="border-b border-border-subtle/50">
+            <tr key={idx} className="border-b border-premium/50">
               <td className="py-4 px-4 text-text-secondary">{feature.name}</td>
               <td className="py-4 px-4 text-center">
                 {feature.trial ? (

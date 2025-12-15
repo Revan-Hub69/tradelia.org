@@ -1,20 +1,18 @@
 import { Metadata } from "next";
 import { Locale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { generateOrganizationSchema, generateWebSiteSchema } from './structured-data';
 
 export async function generateMetadata(locale: Locale = "it"): Promise<Metadata> {
-  const dict = await getDictionary(locale);
   const baseUrl = "https://tradelia.org";
-  const localePath = locale === "it" ? "" : `/${locale}`;
 
   return {
     metadataBase: new URL(baseUrl),
     title: {
-      default: dict.seo.title,
+      default: "Tradelia AI · Formazione Finanziaria Gratuita",
       template: "%s · Tradelia AI",
     },
-    description: dict.seo.description,
-    keywords: dict.seo.keywords.split(", "),
+    description: "Formazione finanziaria gratuita basata su framework AI proprietari verificabili",
+    keywords: ["formazione finanziaria", "trading", "investimenti", "analisi tecnica", "analisi fondamentale", "MiFID II", "educazione finanziaria"],
     authors: [{ name: "Tradelia AI" }],
     creator: "Tradelia AI",
     publisher: "Tradelia AI",
@@ -25,11 +23,11 @@ export async function generateMetadata(locale: Locale = "it"): Promise<Metadata>
     },
     openGraph: {
       type: "website",
-      locale: locale === "it" ? "it_IT" : "en_US",
-      url: `${baseUrl}${localePath}`,
+      locale: "it_IT",
+      url: baseUrl,
       siteName: "Tradelia AI",
-      title: dict.seo.title,
-      description: dict.seo.description,
+      title: "Tradelia AI · Formazione Finanziaria Gratuita",
+      description: "Formazione finanziaria gratuita basata su framework AI proprietari verificabili",
       images: [
         {
           url: `${baseUrl}/img/tradelia_og_vC_white_clean.png`,
@@ -41,8 +39,8 @@ export async function generateMetadata(locale: Locale = "it"): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: dict.seo.title,
-      description: dict.seo.description,
+      title: "Tradelia AI · Formazione Finanziaria Gratuita",
+      description: "Formazione finanziaria gratuita basata su framework AI proprietari verificabili",
       images: [`${baseUrl}/img/tradelia_og_vC_white_clean.png`],
       creator: "@tradelia_ai",
       site: "@tradelia_ai",
@@ -59,11 +57,7 @@ export async function generateMetadata(locale: Locale = "it"): Promise<Metadata>
       },
     },
     alternates: {
-      canonical: `${baseUrl}${localePath}`,
-      languages: {
-        "it-IT": `${baseUrl}`,
-        "en-US": `${baseUrl}/en`,
-      },
+      canonical: baseUrl,
     },
     // AI Search Optimization (Perplexity, ChatGPT, etc.)
     other: {
@@ -75,59 +69,149 @@ export async function generateMetadata(locale: Locale = "it"): Promise<Metadata>
   };
 }
 
-// Structured Data for AI Search
-export function generateStructuredData(locale: Locale = "it") {
+/**
+ * Generate page-specific metadata
+ * Best Practice 2024-2025: Simplified - Italian only
+ */
+export async function generatePageMetadata(
+  pageKey: 'pricing' | 'checkout' | 'glossary' | 'faq' | 'support' | 'about' | 'contact' | 'privacy' | 'cookie' | 'terms' | 'reviews' | 'utilities',
+  locale: Locale = "it"
+): Promise<Metadata> {
   const baseUrl = "https://tradelia.org";
+  
+  // Page metadata - Italian only
+  const pageMetadataMap: Record<typeof pageKey, { title: string; description: string }> = {
+    pricing: {
+      title: "Pricing · Tradelia",
+      description: "Scegli il piano perfetto per le tue esigenze",
+    },
+    checkout: {
+      title: "Checkout · Tradelia",
+      description: "Completa il tuo acquisto",
+    },
+    glossary: {
+      title: "Glossario · Tradelia",
+      description: "Glossario completo dei termini finanziari",
+    },
+    faq: {
+      title: "FAQ · Tradelia",
+      description: "Domande frequenti su Tradelia",
+    },
+    utilities: {
+      title: "Strumenti Finanziari · Tradelia",
+      description: "Calcolatori e utilities finanziarie professionali",
+    },
+    support: {
+      title: "Supporto · Tradelia",
+      description: "Contatta il nostro team di supporto",
+    },
+    about: {
+      title: "Chi Siamo · Tradelia",
+      description: "Scopri di più su Tradelia",
+    },
+    contact: {
+      title: "Contatti · Tradelia",
+      description: "Contattaci per qualsiasi domanda",
+    },
+    privacy: {
+      title: "Privacy · Tradelia",
+      description: "Informativa sulla privacy",
+    },
+    cookie: {
+      title: "Cookie · Tradelia",
+      description: "Informativa sui cookie",
+    },
+    terms: {
+      title: "Termini · Tradelia",
+      description: "Termini e condizioni d'uso",
+    },
+    reviews: {
+      title: "Recensioni · Tradelia",
+      description: "Recensioni verificate dei nostri utenti",
+    },
+  };
+  
+  const pageMetadata = pageMetadataMap[pageKey];
+
+  // Map pageKey to URL path
+  const pagePathMap: Record<typeof pageKey, string> = {
+    pricing: 'pricing',
+    checkout: 'checkout',
+    glossary: 'glossary',
+    faq: 'faq',
+    utilities: 'dashboard/utilities',
+    support: 'support',
+    about: 'about',
+    contact: 'contact',
+    privacy: 'privacy',
+    cookie: 'cookie',
+    terms: 'terms',
+    reviews: 'reviews',
+  };
+  const pagePath = pagePathMap[pageKey];
 
   return {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": `${baseUrl}#organization`,
-    name: "Tradelia AI",
-    url: baseUrl,
-    description:
-      locale === "it"
-        ? "Formazione finanziaria gratuita basata su framework AI proprietari verificabili"
-        : "Free financial education based on verifiable proprietary AI frameworks",
-    // Organization type - Educational platform
-    additionalType: "https://schema.org/EducationalPlatform",
-    // What the organization knows about / specializes in
-    knowsAbout: [
-      "Financial Markets",
-      "AI Frameworks",
-      "MiFID II Compliance",
-      "Risk Management",
-      "Market Analysis",
-      "Financial Education",
-    ],
-    // Educational offerings
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: locale === "it" ? "Percorsi Formativi" : "Training Paths",
-      itemListElement: [
+    metadataBase: new URL(baseUrl),
+    title: pageMetadata.title,
+    description: pageMetadata.description,
+    keywords: ["formazione finanziaria", "trading", "investimenti", "analisi tecnica", "analisi fondamentale", "MiFID II", "educazione finanziaria"],
+    authors: [{ name: "Tradelia AI" }],
+    creator: "Tradelia AI",
+    publisher: "Tradelia AI",
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    openGraph: {
+      type: "website",
+      locale: "it_IT",
+      url: `${baseUrl}/${pagePath}`,
+      siteName: "Tradelia AI",
+      title: pageMetadata.title,
+      description: pageMetadata.description,
+      images: [
         {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Course",
-            name: locale === "it" ? "Formazione Finanziaria" : "Financial Education",
-            description:
-              locale === "it"
-                ? "Percorsi formativi completi sui mercati finanziari"
-                : "Complete training paths on financial markets",
-            provider: {
-              "@type": "Organization",
-              name: "Tradelia AI",
-              url: baseUrl,
-            },
-          },
+          url: `${baseUrl}/img/tradelia_og_vC_white_clean.png`,
+          width: 1200,
+          height: 630,
+          alt: "Tradelia AI - Formazione Finanziaria",
         },
       ],
     },
-    // Website information
-    sameAs: [
-      // Add social media profiles if available
-      // "https://twitter.com/tradelia_ai",
-      // "https://linkedin.com/company/tradelia",
-    ],
+    twitter: {
+      card: "summary_large_image",
+      title: pageMetadata.title,
+      description: pageMetadata.description,
+      images: [`${baseUrl}/img/tradelia_og_vC_white_clean.png`],
+      creator: "@tradelia_ai",
+      site: "@tradelia_ai",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    alternates: {
+      canonical: `${baseUrl}/${pagePath}`,
+    },
+    // AI Search Optimization
+    other: {
+      "ai-search-optimized": "true",
+      "structured-data": "true",
+      "academic-standards": "MiFID II compliant",
+      verification: "framework-verifiable",
+    },
   };
+}
+
+// Legacy function for backward compatibility
+export function generateStructuredData(locale: Locale = "it") {
+  return generateOrganizationSchema(locale);
 }

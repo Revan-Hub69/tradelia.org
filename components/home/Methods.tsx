@@ -128,7 +128,7 @@ export function Methods() {
                         ))}
                       </ul>
                       <Link
-                        href={buildLocalePath(locale, '/dashboard#education')}
+                        href={buildLocalePath(locale, '/dashboard/education')}
                         className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-200"
                       >
                         <span>{t('home.methods.cta')}</span>

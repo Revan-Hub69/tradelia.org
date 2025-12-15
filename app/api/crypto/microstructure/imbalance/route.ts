@@ -3,15 +3,12 @@
  * 
  * Calcola l'imbalance bid/ask per fasce di prezzo
  * rispetto al mid-price corrente.
- * 
- * Include spiegazione AI generata tramite Groq.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getBinanceOrderBook } from '@/lib/price-apis/binance';
 import { getOKXOrderBook } from '@/lib/price-apis/okx';
 import { getBybitOrderBook } from '@/lib/price-apis/bybit';
-import { generateImbalanceExplanation } from '@/lib/ai/groq-helper';
 import { OrderBookEntry } from '@/lib/price-apis/binance';
 
 interface ImbalanceData {
@@ -21,21 +18,17 @@ interface ImbalanceData {
   spread: number;
   spreadPercent: number;
   imbalances: {
-    range: string; // "0-0.1%", "0.1-0.5%", "0.5-1%", "1-2%"
+    range: string;
     bidVolume: number;
     askVolume: number;
-    imbalance: number; // -1 to 1
-    imbalancePercent: number; // -100% to 100%
+    imbalance: number;
+    imbalancePercent: number;
   }[];
   totalBidVolume: number;
   totalAskVolume: number;
   overallImbalance: number;
-  explanation?: string;
 }
 
-/**
- * Calcola il mid-price (media tra best bid e best ask)
- */
 function calculateMidPrice(bids: OrderBookEntry[], asks: OrderBookEntry[]): number {
   if (bids.length === 0 || asks.length === 0) return 0;
   const bestBid = bids[0].price;
@@ -43,9 +36,6 @@ function calculateMidPrice(bids: OrderBookEntry[], asks: OrderBookEntry[]): numb
   return (bestBid + bestAsk) / 2;
 }
 
-/**
- * Calcola imbalance per fascia di prezzo
- */
 function calculateImbalanceByRange(
   bids: OrderBookEntry[],
   asks: OrderBookEntry[],
@@ -63,14 +53,12 @@ function calculateImbalanceByRange(
   let bidVolume = 0;
   let askVolume = 0;
 
-  // Somma volumi bid nella fascia
   for (const bid of bids) {
     if (bid.price >= minPrice && bid.price <= midPrice) {
       bidVolume += bid.quantity;
     }
   }
 
-  // Somma volumi ask nella fascia
   for (const ask of asks) {
     if (ask.price >= midPrice && ask.price <= maxPrice) {
       askVolume += ask.quantity;
@@ -87,9 +75,6 @@ function calculateImbalanceByRange(
   };
 }
 
-/**
- * Aggrega order book da più exchange
- */
 async function getAggregatedOrderBook(symbol: string) {
   const [binanceBook, okxBook, bybitBook] = await Promise.all([
     getBinanceOrderBook(symbol, 100),
@@ -100,7 +85,6 @@ async function getAggregatedOrderBook(symbol: string) {
   const bidMap = new Map<number, number>();
   const askMap = new Map<number, number>();
 
-  // Aggrega Binance
   if (binanceBook) {
     for (const bid of binanceBook.bids) {
       bidMap.set(bid.price, (bidMap.get(bid.price) || 0) + bid.quantity);
@@ -110,7 +94,6 @@ async function getAggregatedOrderBook(symbol: string) {
     }
   }
 
-  // Aggrega OKX
   if (okxBook) {
     for (const bid of okxBook.bids) {
       bidMap.set(bid.price, (bidMap.get(bid.price) || 0) + bid.quantity);
@@ -120,7 +103,6 @@ async function getAggregatedOrderBook(symbol: string) {
     }
   }
 
-  // Aggrega Bybit
   if (bybitBook) {
     for (const bid of bybitBook.bids) {
       bidMap.set(bid.price, (bidMap.get(bid.price) || 0) + bid.quantity);
@@ -145,9 +127,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const symbol = searchParams.get('symbol') || 'BTC';
-    const includeExplanation = searchParams.get('explanation') === 'true';
 
-    // Ottieni order book aggregato
     const { bids, asks } = await getAggregatedOrderBook(symbol);
 
     if (bids.length === 0 || asks.length === 0) {
@@ -157,14 +137,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Calcola mid-price e spread
     const midPrice = calculateMidPrice(bids, asks);
     const bestBid = bids[0].price;
     const bestAsk = asks[0].price;
     const spread = bestAsk - bestBid;
     const spreadPercent = (spread / midPrice) * 100;
 
-    // Calcola imbalance per fasce
     const ranges = [
       { min: 0, max: 0.1, label: '0-0.1%' },
       { min: 0.1, max: 0.5, label: '0.1-0.5%' },
@@ -190,7 +168,6 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Calcola imbalance totale
     const totalBidVolume = bids.reduce((sum, bid) => sum + bid.quantity, 0);
     const totalAskVolume = asks.reduce((sum, ask) => sum + ask.quantity, 0);
     const totalVolume = totalBidVolume + totalAskVolume;
@@ -209,17 +186,6 @@ export async function GET(request: NextRequest) {
       totalAskVolume,
       overallImbalance,
     };
-
-    // Genera spiegazione AI se richiesta
-    if (includeExplanation) {
-      const explanation = await generateImbalanceExplanation(symbol, overallImbalance, {
-        bidVolume: totalBidVolume,
-        askVolume: totalAskVolume,
-        currentPrice: midPrice,
-      });
-
-      result.explanation = explanation || undefined;
-    }
 
     return NextResponse.json(result, {
       headers: {

@@ -1,12 +1,6 @@
-import { Metadata } from 'next';
-import { GlossaryContent } from '@/components/glossary/GlossaryContent';
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'Glossario | Tradelia',
-  description: 'Glossario completo dei termini finanziari e tecnici utilizzati in Tradelia',
-};
-
+// Glossario temporaneamente rimosso - troppo complesso
 export default function GlossaryPage() {
-  return <GlossaryContent />;
+  redirect('/dashboard/education');
 }
-

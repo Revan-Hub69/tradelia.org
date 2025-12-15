@@ -50,27 +50,30 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               {isFirst ? (
                 <Link
                   href={item.href || '#'}
-                  className="flex items-center gap-1 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-1 text-text-tertiary hover:text-white transition-colors relative group"
                   itemProp="item"
                 >
                   <Home className="w-4 h-4" />
                   <span className="sr-only">{item.label}</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500/25 group-hover:w-full transition-all duration-300" />
                 </Link>
               ) : isLast ? (
                 <span
-                  className="text-text-primary font-medium"
+                  className="text-white font-medium relative inline-block"
                   itemProp="name"
                   aria-current="page"
                 >
                   {item.label}
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500/25" />
                 </span>
               ) : (
                 <Link
                   href={item.href || '#'}
-                  className="text-text-tertiary hover:text-text-primary transition-colors"
+                  className="text-white hover:text-white transition-colors relative group inline-block"
                   itemProp="item"
                 >
                   <span itemProp="name">{item.label}</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500/25 group-hover:w-full transition-all duration-300" />
                 </Link>
               )}
               <meta itemProp="position" content={String(index + 1)} />

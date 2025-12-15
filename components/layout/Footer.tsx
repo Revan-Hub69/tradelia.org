@@ -12,6 +12,7 @@ import {
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 export function Footer() {
   const { t } = useTranslations();
@@ -27,23 +28,22 @@ export function Footer() {
   }, []);
 
   const footerLinks = {
+    product: [
+      { key: 'pricing', href: '/pricing' },
+      { key: 'glossary', href: '/glossary' },
+      { key: 'courses', href: '/courses' },
+      { key: 'dashboard', href: '/dashboard' },
+    ],
     support: [
-      { key: 'support', href: '/support' },
-      { key: 'status', href: '/status' },
-      { key: 'documentation', href: '/docs' },
       { key: 'faq', href: '/faq' },
+      { key: 'support', href: '/support' },
+      { key: 'about', href: '/about' },
+      { key: 'contact', href: '/contact' },
     ],
     legal: [
-      { key: 'mifid', href: '/mifid' },
       { key: 'privacy', href: '/privacy' },
       { key: 'cookie', href: '/cookie' },
       { key: 'terms', href: '/terms' },
-    ],
-    resources: [
-      { key: 'blog', href: '/blog' },
-      { key: 'guides', href: '/guides' },
-      { key: 'api', href: '/api' },
-      { key: 'changelog', href: '/changelog' },
     ],
   };
 
@@ -54,7 +54,7 @@ export function Footer() {
     delay 
   }: { 
     title: string; 
-    links: typeof footerLinks.support; 
+    links: typeof footerLinks.product; 
     sectionKey: string;
     delay: number;
   }) => {
@@ -76,6 +76,7 @@ export function Footer() {
                 <Link
                   href={link.href}
                   className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 inline-block group relative"
+                  onMouseEnter={() => prefetchOnHover(link.href)}
                 >
                   <span className="relative">
                     {t(`footer.${sectionKey}Links.${link.key}`)}
@@ -89,7 +90,7 @@ export function Footer() {
 
         {/* Mobile: Always visible - Simple list */}
         <div className="md:hidden">
-          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 pt-4 border-t border-border-subtle first:border-t-0 first:pt-0">
+          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 pt-4 border-t border-premium first:border-t-0 first:pt-0">
             {title}
           </h3>
           <ul className="space-y-3">
@@ -98,6 +99,7 @@ export function Footer() {
                 <Link
                   href={link.href}
                   className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
+                  onMouseEnter={() => prefetchOnHover(link.href)}
                 >
                   <span className="relative">
                     {t(`footer.${sectionKey}Links.${link.key}`)}
@@ -113,7 +115,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo" suppressHydrationWarning>
+    <footer className="relative border-t border-premium bg-bg-surface" role="contentinfo" suppressHydrationWarning>
       {/* Top gradient line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 
@@ -148,36 +150,36 @@ export function Footer() {
                   <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 group-hover:w-full" />
                 </div>
               </Link>
-              <p className="text-sm text-text-muted leading-relaxed">
+              <p className="text-sm text-text-tertiary leading-relaxed">
                 &copy; {mounted ? year : 2024} Tradelia · {t('footer.copyright')}
               </p>
               <p className="text-sm text-text-secondary leading-relaxed max-w-sm transition-colors duration-200">
                 {t('footer.description')}
               </p>
-              <p className="text-xs text-text-muted leading-relaxed max-w-sm mt-2 opacity-90">
+              <p className="text-xs text-text-tertiary leading-relaxed max-w-sm mt-2">
                 {t('footer.disclaimer')}
               </p>
             </motion.div>
 
             {/* Footer Sections - Equal width columns on desktop */}
             <FooterSection
+              title={t('footer.product')}
+              links={footerLinks.product}
+              sectionKey="product"
+              delay={0.1}
+            />
+
+            <FooterSection
               title={t('footer.support')}
               links={footerLinks.support}
               sectionKey="support"
-              delay={0.1}
+              delay={0.2}
             />
 
             <FooterSection
               title={t('footer.legal')}
               links={footerLinks.legal}
               sectionKey="legal"
-              delay={0.2}
-            />
-
-            <FooterSection
-              title={t('footer.resources')}
-              links={footerLinks.resources}
-              sectionKey="resources"
               delay={0.3}
             />
           </div>
@@ -186,9 +188,9 @@ export function Footer() {
           <motion.div
             variants={itemVariants}
             transition={{ delay: 0.4 }}
-            className="pt-8 border-t border-border-subtle"
+            className="pt-8 border-t border-premium"
           >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-tertiary">
               <div className="flex items-center gap-3">
                 <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-all duration-200">
                   v2.0.1
@@ -202,6 +204,7 @@ export function Footer() {
                 <Link
                   href="/privacy"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/privacy')}
                 >
                   {t('footer.legalLinks.privacy')}
                 </Link>
@@ -209,6 +212,7 @@ export function Footer() {
                 <Link
                   href="/terms"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/terms')}
                 >
                   {t('footer.legalLinks.terms')}
                 </Link>
@@ -216,6 +220,7 @@ export function Footer() {
                 <Link
                   href="/cookie"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/cookie')}
                 >
                   {t('footer.legalLinks.cookie')}
                 </Link>

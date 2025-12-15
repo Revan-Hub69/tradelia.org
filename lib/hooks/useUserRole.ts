@@ -25,35 +25,80 @@ export function useUserRole(): UserRoleData {
       try {
         const {
           data: { user },
+          error: authError,
         } = await supabase.auth.getUser();
 
-        if (!user || !mounted) {
-          setRoleData({ role: null, validUntil: null, isLoading: false });
+        if (authError || !user || !mounted) {
+          if (mounted) {
+            setRoleData({ role: null, validUntil: null, isLoading: false });
+          }
           return;
         }
 
-        const { data, error } = await supabase
-          .from("user_roles")
-          .select("role, valid_until")
-          .eq("user_id", user.id)
-          .maybeSingle();
+        try {
+          // First check if user is admin via admin_emails (bypass RLS check)
+          // Then fetch role from user_roles
+          const { data, error } = await supabase
+            .from("user_roles")
+            .select("role, valid_until")
+            .eq("user_id", user.id)
+            .maybeSingle();
 
-        if (error && error.code !== "PGRST116") {
-          // PGRST116 = no rows returned, which is fine
-          console.error("Error fetching user role:", error);
-        }
+          if (error) {
+            // PGRST116 = no rows returned, which is expected for new users
+            if (error.code === "PGRST116") {
+              // No role found - use default
+              if (mounted) {
+                setRoleData({
+                  role: "trial",
+                  validUntil: null,
+                  isLoading: false,
+                });
+              }
+              return;
+            }
+            
+            // For other errors (500, RLS, etc.), log in development and use default
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("Error fetching user role:", error.code, error.message);
+            }
+            
+            if (mounted) {
+              setRoleData({
+                role: "trial",
+                validUntil: null,
+                isLoading: false,
+              });
+            }
+            return;
+          }
 
-        if (mounted) {
-          setRoleData({
-            role: (data?.role as UserRole) || "trial",
-            validUntil: data?.valid_until || null,
-            isLoading: false,
-          });
+          // Success - use data or default
+          if (mounted) {
+            setRoleData({
+              role: (data?.role as UserRole) || "trial",
+              validUntil: data?.valid_until || null,
+              isLoading: false,
+            });
+          }
+        } catch (dbError) {
+          // Database error (500, network, etc.) - use default role
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Database error in useUserRole:", dbError);
+          }
+          
+          if (mounted) {
+            setRoleData({
+              role: "trial",
+              validUntil: null,
+              isLoading: false,
+            });
+          }
         }
       } catch (error) {
-        console.error("Error in useUserRole:", error);
+        // Auth error or other - use default
         if (mounted) {
-          setRoleData({ role: null, validUntil: null, isLoading: false });
+          setRoleData({ role: "trial", validUntil: null, isLoading: false });
         }
       }
     }

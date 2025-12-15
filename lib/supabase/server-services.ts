@@ -20,12 +20,14 @@ export interface Module {
 
 export interface Favorite {
   id: string;
-  item_id: string;
-  item_type: "report" | "course" | "module";
+  item_id?: string | null; // UUID (retrocompatibilità)
+  item_id_string?: string | null; // Stringa per qualsiasi contenuto
+  item_type: string; // Qualsiasi tipo, non più limitato
   title: string;
   description: string | null;
   href: string;
   icon: string | null;
+  metadata?: Record<string, any> | null;
   added_at: string;
 }
 
@@ -87,35 +89,6 @@ export async function getUserCourseProgress(userId: string) {
   return { data: data || [], error: null };
 }
 
-/**
- * Get user achievements
- */
-export async function getUserAchievements(userId: string) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("user_achievements")
-    .select(
-      `
-      *,
-      achievements (
-        id,
-        title,
-        description,
-        icon_type
-      )
-    `
-    )
-    .eq("user_id", userId)
-    .order("unlocked_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching achievements:", error);
-    return { data: [], error };
-  }
-
-  return { data: data || [], error: null };
-}
 
 /**
  * Get dashboard stats
@@ -129,12 +102,7 @@ export async function getDashboardStats(userId: string) {
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
 
-  // Get active courses count
-  const { count: activeCoursesCount } = await supabase
-    .from("course_progress")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .neq("progress", 100);
+  // Active courses removed - focus on analysis only
 
   // Get pending requests count
   const { count: pendingRequestsCount } = await supabase
@@ -154,7 +122,6 @@ export async function getDashboardStats(userId: string) {
 
   return {
     totalReports: reportsCount || 0,
-    activeCourses: activeCoursesCount || 0,
     pendingRequests: pendingRequestsCount || 0,
     recentActivity: recentActivity || null,
   };
@@ -167,6 +134,7 @@ export async function searchDashboardContent(userId: string, query: string) {
   const supabase = await createClient();
 
   const searchTerm = `%${query}%`;
+  const queryLower = query.toLowerCase();
 
   // Search reports
   const { data: reports } = await supabase
@@ -176,12 +144,22 @@ export async function searchDashboardContent(userId: string, query: string) {
     .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .limit(5);
 
-  // Search courses
-  const { data: courses } = await supabase
-    .from("courses")
-    .select("id, title, description, created_at, slug")
-    .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
-    .limit(5);
+  // Search indicators from indicator-tooltips
+  const { INDICATOR_TOOLTIPS } = await import('@/lib/data/indicator-tooltips');
+  const indicators = Object.values(INDICATOR_TOOLTIPS)
+    .filter(indicator => {
+      const nameMatch = indicator.name.toLowerCase().includes(queryLower);
+      const descMatch = indicator.description.toLowerCase().includes(queryLower);
+      const howToUseMatch = indicator.howToUse.toLowerCase().includes(queryLower);
+      return nameMatch || descMatch || howToUseMatch;
+    })
+    .slice(0, 5)
+    .map(indicator => ({
+      id: indicator.id,
+      name: indicator.name,
+      description: indicator.description,
+      howToUse: indicator.howToUse,
+    }));
 
   // Search modules
   const { data: modules } = await supabase
@@ -192,7 +170,7 @@ export async function searchDashboardContent(userId: string, query: string) {
 
   return {
     reports: reports || [],
-    courses: courses || [],
+    indicators: indicators || [],
     modules: modules || [],
   };
 }
@@ -332,41 +310,6 @@ export async function createActivity(
     return { data: null, error };
   }
 
-  // Trigger gamification check if applicable
-  if (typeof window === "undefined") {
-    // Server-side: import and call directly
-    const { checkAndUnlockAchievements, awardXP } = await import(
-      "@/lib/gamification/achievement-engine"
-    );
-
-    // Map activity type to action type
-    const actionTypeMap: Record<
-      string,
-      "lesson_completed" | "course_completed" | "report_viewed" | "daily_login"
-    > = {
-      course_completed: "course_completed",
-      lesson_completed: "lesson_completed",
-      report_viewed: "report_viewed",
-    };
-
-    const actionType = actionTypeMap[activityData.type];
-    if (actionType) {
-      // Award XP based on action type
-      const xpAmounts: Record<string, number> = {
-        lesson_completed: 10,
-        course_completed: 100,
-        report_viewed: 5,
-      };
-
-      const xpAmount = xpAmounts[actionType];
-      if (xpAmount) {
-        await awardXP(activityData.user_id, xpAmount, actionType);
-      }
-
-      // Check achievements
-      await checkAndUnlockAchievements(activityData.user_id, actionType);
-    }
-  }
 
   return { data, error: null };
 }
@@ -448,26 +391,49 @@ export async function getUserFavorites(userId: string) {
     return { data: [], error };
   }
 
-  return { data: (data || []) as Favorite[], error: null };
+  // Normalizza i dati: usa item_id_string se disponibile, altrimenti item_id
+  const normalized = (data || []).map((f: any) => ({
+    ...f,
+    item_id: f.item_id_string || f.item_id,
+  }));
+
+  return { data: normalized as Favorite[], error: null };
 }
 
 /**
  * Add favorite
  */
-export async function addFavorite(userId: string, favorite: Omit<Favorite, "id" | "added_at">) {
+export async function addFavorite(
+  userId: string,
+  favorite: Omit<Favorite, "id" | "added_at">
+) {
   const supabase = await createClient();
+
+  // Determina se item_id è UUID o stringa
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    favorite.item_id || ""
+  );
+
+  const insertData: any = {
+    user_id: userId,
+    item_type: favorite.item_type,
+    title: favorite.title,
+    description: favorite.description,
+    href: favorite.href,
+    icon: favorite.icon,
+    metadata: favorite.metadata || {},
+  };
+
+  // Usa item_id_string per stringhe, item_id per UUID
+  if (isUUID) {
+    insertData.item_id = favorite.item_id;
+  } else {
+    insertData.item_id_string = favorite.item_id;
+  }
 
   const { data, error } = await supabase
     .from("favorites")
-    .insert({
-      user_id: userId,
-      item_id: favorite.item_id,
-      item_type: favorite.item_type,
-      title: favorite.title,
-      description: favorite.description,
-      href: favorite.href,
-      icon: favorite.icon,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -476,7 +442,13 @@ export async function addFavorite(userId: string, favorite: Omit<Favorite, "id" 
     return { data: null, error };
   }
 
-  return { data: data as Favorite, error: null };
+  // Normalizza la risposta
+  const normalized = {
+    ...data,
+    item_id: data.item_id_string || data.item_id,
+  };
+
+  return { data: normalized as Favorite, error: null };
 }
 
 /**
@@ -507,17 +479,29 @@ export async function removeFavorite(userId: string, favoriteId: string) {
 export async function isFavorite(
   userId: string,
   itemId: string,
-  itemType: "report" | "course" | "module"
+  itemType: string
 ) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  // Determina se item_id è UUID o stringa
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    itemId
+  );
+
+  let query = supabase
     .from("favorites")
     .select("id")
     .eq("user_id", userId)
-    .eq("item_id", itemId)
-    .eq("item_type", itemType)
-    .single();
+    .eq("item_type", itemType);
+
+  // Cerca in item_id o item_id_string a seconda del tipo
+  if (isUUID) {
+    query = query.eq("item_id", itemId);
+  } else {
+    query = query.eq("item_id_string", itemId);
+  }
+
+  const { data, error } = await query.single();
 
   if (error && error.code !== "PGRST116") {
     // PGRST116 = no rows returned

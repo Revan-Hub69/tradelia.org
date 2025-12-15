@@ -64,6 +64,30 @@ interface MobileWidget {
 
 const mobileWidgets: MobileWidget[] = [
   {
+    id: 'crypto-whale',
+    name: 'Crypto Whale Widget',
+    description: 'Analisi transazioni whale e flussi exchange in tempo reale',
+    url: '/widgets/crypto-whale',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'crypto-depth',
+    name: 'Crypto Depth Widget',
+    description: 'Profondità di mercato aggregata multi-exchange',
+    url: '/widgets/crypto-depth',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'crypto-movers',
+    name: 'Crypto Top Movers Widget',
+    description: 'Top gainers, losers e high volume crypto',
+    url: '/widgets/crypto-movers',
+    icon: <TrendingUp className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
     id: 'portfolio',
     name: 'Portfolio Widget',
     description: 'Visualizza il tuo portafoglio direttamente sulla home screen',
@@ -85,6 +109,30 @@ const mobileWidgets: MobileWidget[] = [
     description: 'Vedi i tuoi alert attivi e quelli triggerati',
     url: '/widgets/alerts',
     icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'futures',
+    name: 'Futures Widget',
+    description: 'Monitora futures e contratti derivati in tempo reale',
+    url: '/widgets/futures',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'options',
+    name: 'Options Widget',
+    description: 'Analizza opzioni e Greeks in tempo reale',
+    url: '/widgets/options',
+    icon: <TrendingUp className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'forex',
+    name: 'Forex Widget',
+    description: 'Monitora coppie forex e tassi di cambio',
+    url: '/widgets/forex',
+    icon: <TrendingUp className="w-5 h-5" />,
     platforms: ['android', 'ios', 'desktop'],
   },
 ];
@@ -176,8 +224,8 @@ export function WidgetsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-base p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-bg-base p-4 md:p-6 container-mobile">
+      <div className="max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -204,8 +252,8 @@ export function WidgetsContent() {
               className={cn(
                 'px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize',
                 selectedCategory === category
-                  ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
+                  ? 'bg-accent text-white shadow-premium'
+                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border-premium shadow-premium hover:border-border-strong interaction-smooth underline-selection'
               )}
             >
               {category === 'all' ? (t('widgets.all') || 'Tutti') : category}
@@ -224,72 +272,86 @@ export function WidgetsContent() {
           <p className="text-sm text-text-secondary mb-4">
             {t('widgets.mobileWidgetsDesc') || 'Aggiungi questi widget alla home screen del tuo telefono o apri come finestra standalone su desktop'}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {mobileWidgets.map((widget, index) => (
-              <motion.div
-                key={widget.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-bg-surface border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center">
-                      {widget.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-text-primary">{widget.name}</h3>
-                      <p className="text-xs text-text-tertiary">
-                        {widget.platforms.map(p => {
-                          if (p === 'android') return 'Android';
-                          if (p === 'ios') return 'iOS';
-                          if (p === 'desktop') return 'Desktop';
-                          return p;
-                        }).join(', ')}
-                      </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 spacing-mobile">
+            {mobileWidgets
+              .filter(widget => {
+                // Mostra solo widget installabili (crypto-whale, crypto-depth, crypto-movers, futures, options, forex)
+                // Rimuovi portfolio, watchlist, alerts (coming soon)
+                const installableWidgets = ['crypto-whale', 'crypto-depth', 'crypto-movers', 'futures', 'options', 'forex'];
+                return installableWidgets.includes(widget.id);
+              })
+              .map((widget, index) => {
+              return (
+                <motion.div
+                  key={widget.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-bg-surface border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth rounded-xl p-4 md:p-6 card-mobile"
+                  aria-label={`${widget.name} - ${widget.description}. Disponibile su ${widget.platforms.join(', ')}`}
+                  role="article"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
+                        {widget.icon}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary" aria-label={`Nome widget: ${widget.name}`}>{widget.name}</h3>
+                        <p className="text-xs text-text-tertiary" aria-label={`Piattaforme supportate: ${widget.platforms.join(', ')}`}>
+                          {widget.platforms.map(p => {
+                            if (p === 'android') return 'Android';
+                            if (p === 'ios') return 'iOS';
+                            if (p === 'desktop') return 'Desktop';
+                            return p;
+                          }).join(', ')}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <p className="text-sm text-text-secondary mb-4">{widget.description}</p>
-                <div className="flex flex-col gap-2">
-                  {isMobile && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        window.open(widget.url, '_blank');
-                        installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
-                      }}
-                      className="w-full flex items-center justify-center gap-2"
+                  <p className="text-sm text-text-secondary mb-4" aria-label={`Descrizione: ${widget.description}`}>{widget.description}</p>
+                  <div className="flex flex-col gap-2">
+                    {isMobile && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          window.open(widget.url, '_blank');
+                          installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
+                        }}
+                        className="w-full flex items-center justify-center gap-2"
+                        aria-label={`Apri ${widget.name} per installazione su dispositivo mobile`}
+                      >
+                        <Smartphone className="w-4 h-4" aria-hidden="true" />
+                        {t('widgets.openForInstall') || 'Apri per Installare'}
+                      </Button>
+                    )}
+                    {isDesktop && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => openWidgetStandalone(widget.url, widget.id)}
+                        className="w-full flex items-center justify-center gap-2"
+                        aria-label={`Apri ${widget.name} in finestra standalone`}
+                      >
+                        <Monitor className="w-4 h-4" aria-hidden="true" />
+                        {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
+                      </Button>
+                    )}
+                    <a
+                      href={widget.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                      aria-label={`Apri ${widget.name} in nuova scheda`}
                     >
-                      <Smartphone className="w-4 h-4" />
-                      {t('widgets.openForInstall') || 'Apri per Installare'}
-                    </Button>
-                  )}
-                  {isDesktop && (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={() => openWidgetStandalone(widget.url, widget.id)}
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      <Monitor className="w-4 h-4" />
-                      {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
-                    </Button>
-                  )}
-                  <a
-                    href={widget.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
-                  </a>
-                </div>
-              </motion.div>
-            ))}
+                      <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                      {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
+                    </a>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
@@ -307,7 +369,7 @@ export function WidgetsContent() {
         </div>
 
         {/* Widgets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
           {filteredWidgets.map((widget, index) => (
             <motion.div
               key={widget.id}
@@ -315,10 +377,10 @@ export function WidgetsContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className={cn(
-                'bg-bg-surface border rounded-xl p-6 transition-all',
+                'bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 interaction-smooth card-mobile',
                 widget.enabled
-                  ? 'border-accent/40 shadow-md'
-                  : 'border-border-subtle hover:border-accent/20'
+                  ? 'border-border-strong shadow-premium-hover'
+                  : 'hover:border-border-strong shadow-premium-hover'
               )}
             >
               <div className="flex items-start justify-between mb-4">

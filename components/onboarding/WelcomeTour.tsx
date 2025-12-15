@@ -159,7 +159,7 @@ export function WelcomeTour({
 
   return (
     <>
-      {/* Overlay scuro */}
+      {/* Overlay scuro - Fix: z-index più basso per non interferire con menu */}
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -168,11 +168,12 @@ export function WelcomeTour({
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 z-[9998]"
             onClick={handleSkip}
+            style={{ pointerEvents: 'auto' }}
           />
         )}
       </AnimatePresence>
 
-      {/* Highlight elemento */}
+      {/* Highlight elemento - Fix: usa border invece di box-shadow per evitare "quadrato blu" */}
       {highlightedElement && elementRect && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -183,9 +184,10 @@ export function WelcomeTour({
             left: elementRect.left - 4,
             width: elementRect.width + 8,
             height: elementRect.height + 8,
-            border: '3px solid var(--accent)',
+            border: '3px solid hsl(var(--accent))',
             borderRadius: '8px',
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6)',
+            backgroundColor: 'transparent',
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
           }}
         />
       )}

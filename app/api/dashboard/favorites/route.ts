@@ -55,9 +55,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { item_id, item_type, title, description, href, icon } = body;
+    const { item_id, item_id_string, item_type, title, description, href, icon, metadata } = body;
 
-    if (!item_id || !item_type || !title || !href) {
+    // Supporta sia item_id che item_id_string
+    const finalItemId = item_id_string || item_id;
+
+    if (!finalItemId || !item_type || !title || !href) {
       return NextResponse.json(
         { error: 'Campi mancanti' },
         { status: 400 }
@@ -65,12 +68,13 @@ export async function POST(request: NextRequest) {
     }
 
     const { data, error } = await addFavorite(user.id, {
-      item_id,
+      item_id: finalItemId,
       item_type,
       title,
       description: description || null,
       href,
       icon: icon || null,
+      metadata: metadata || {},
     });
 
     if (error) {

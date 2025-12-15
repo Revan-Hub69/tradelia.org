@@ -1,7 +1,10 @@
+'use client';
+
 import * as React from 'react';
 import { AlertCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Button } from './button';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 export interface ErrorProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -12,12 +15,14 @@ export interface ErrorProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Error({
   className,
-  title = 'Errore',
+  title,
   message,
   onDismiss,
   variant = 'destructive',
   ...props
 }: ErrorProps) {
+  const { t } = useTranslations();
+  const defaultTitle = title || t('common.error') || 'Error';
   const variantClasses = {
     default: 'bg-bg-surface border-border-accent text-text-primary',
     destructive: 'bg-error/10 border-error/30 text-error',
@@ -44,12 +49,12 @@ export function Error({
         aria-hidden="true"
       />
       <div className="flex-1 min-w-0">
-        {title && (
+        {defaultTitle && (
           <h4 className="font-semibold text-sm mb-1" id="error-title">
-            {title}
+            {defaultTitle}
           </h4>
         )}
-        <p className="text-sm" id="error-message" aria-describedby={title ? 'error-title' : undefined}>
+        <p className="text-sm" id="error-message" aria-describedby={defaultTitle ? 'error-title' : undefined}>
           {message}
         </p>
       </div>
@@ -59,7 +64,7 @@ export function Error({
           size="icon"
           className="h-6 w-6 flex-shrink-0"
           onClick={onDismiss}
-          aria-label="Chiudi messaggio di errore"
+          aria-label={t('common.close') || 'Close error message'}
         >
           <X className="w-4 h-4" aria-hidden="true" />
         </Button>

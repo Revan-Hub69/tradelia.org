@@ -52,14 +52,14 @@
       "name": "Report",
       "short_name": "Report",
       "description": "Vedi tutti i report",
-      "url": "/dashboard#reports",
+      "url": "/dashboard/analysis",
       "icons": [{ "src": "/favicon.png", "sizes": "180x180" }]
     },
     {
       "name": "Votazione",
       "short_name": "Vota",
       "description": "Vota titoli per analisi",
-      "url": "/dashboard#voting",
+      "url": "/dashboard/analysis",
       "icons": [{ "src": "/favicon.png", "sizes": "180x180" }]
     }
   ],

@@ -46,16 +46,23 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
   const filteredModules = useMemo(() => {
     // Assicurati che modulesData sia sempre un array
     if (!modulesData || !Array.isArray(modulesData)) return [];
-    return priority 
-      ? modulesData.filter(m => m.priority === priority)
-      : modulesData;
+    
+    // Se priority è specificato, filtra per priorità
+    if (priority) {
+      return modulesData.filter(m => m.priority === priority);
+    }
+    
+    // Best Practice 2024-2025: Organizza moduli per priorità (primary prima, secondary dopo)
+    const primary = modulesData.filter(m => m.priority === 'primary');
+    const secondary = modulesData.filter(m => m.priority === 'secondary');
+    return [...primary, ...secondary];
   }, [modulesData, priority]);
 
   const title = priority === 'primary' 
     ? 'Moduli Principali' 
     : priority === 'secondary'
     ? 'Moduli Secondari'
-    : 'Moduli';
+    : 'Moduli e Funzionalità';
 
   if (loading) {
     return (
@@ -102,16 +109,20 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
       <div className="flex items-center gap-2 mb-4">
         <h2 className={styles.categoryTitle}>{title}</h2>
         <ContextualHelp
-          content={priority === 'primary' 
-            ? 'I moduli principali contengono le funzionalità più utilizzate. Clicca su un modulo per accedere.'
-            : 'I moduli secondari contengono funzionalità aggiuntive e avanzate.'}
+          content={priority 
+            ? (priority === 'primary' 
+                ? 'I moduli principali contengono le funzionalità più utilizzate. Clicca su un modulo per accedere.'
+                : 'I moduli secondari contengono funzionalità aggiuntive e avanzate.')
+            : 'Accedi a tutte le funzionalità della dashboard. I moduli principali sono mostrati per primi.'}
           aria-label="Informazioni sui moduli"
         />
       </div>
       <div 
         className={styles.modulesGrid}
         role="list"
-        aria-label={priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard'}
+        aria-label={priority 
+          ? (priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard')
+          : 'Moduli e funzionalità della dashboard'}
       >
         {filteredModules.map((module) => (
           <ModuleCard key={module.id} module={module} />
@@ -270,6 +281,23 @@ function ModuleIcon({ name }: { name: string }) {
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <line x1="3" y1="9" x2="21" y2="9" />
         <line x1="9" y1="21" x2="9" y2="9" />
+      </svg>
+    ),
+    star: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      </svg>
+    ),
+    eye: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    ),
+    'credit-card': (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+        <line x1="1" y1="10" x2="23" y2="10" />
       </svg>
     ),
   };

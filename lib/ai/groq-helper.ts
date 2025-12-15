@@ -1,41 +1,31 @@
 /**
- * Groq AI Helper
+ * Groq AI Helper - Funzione centralizzata per chiamare Groq AI
  * 
- * Integrazione con Groq AI per generare spiegazioni accademiche
- * seguendo lo stile Tradelia AI Communication Style.
- * 
- * Groq API: https://console.groq.com/docs
- * Rate limits: Generosi per free tier
+ * Usa i prompt enhanced con metodologia Tradelia AI
+ * Tutte le risposte sono in italiano
  */
 
+import { callGroqAI } from './indicator-prompts-enhanced';
 import { TRADELIA_AI_COMMUNICATION_STYLE } from './tradelia-ai-communication-style';
 
-interface GroqResponse {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: Array<{
-    index: number;
-    message: {
-      role: string;
-      content: string;
-    };
-    finish_reason: string;
-  }>;
-  usage: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-  };
+/**
+ * Chiama Groq AI con prompt enhanced
+ * 
+ * @param systemPrompt - System prompt (usare da indicator-prompts-enhanced)
+ * @param userPrompt - User prompt (usare template da indicator-prompts-enhanced)
+ * @param maxTokens - Max tokens (default 400 per spiegazioni complete)
+ * @returns Risposta AI in italiano
+ */
+export async function getAIReading(
+  systemPrompt: string,
+  userPrompt: string,
+  maxTokens: number = 400
+): Promise<string> {
+  return callGroqAI(systemPrompt, userPrompt, maxTokens);
 }
 
 /**
  * Genera spiegazione accademica tramite Groq AI
- * 
- * @param prompt - Prompt specifico per la spiegazione
- * @param context - Contesto aggiuntivo (dati, metriche, etc.)
- * @returns Spiegazione generata da Groq
  */
 export async function generateGroqExplanation(
   prompt: string,
@@ -68,7 +58,7 @@ ${prompt}
 
 GENERA:
 Una spiegazione accademica, educativa, seguendo tutti i principi Tradelia AI sopra definiti.
-Massimo 4 paragrafi per sezione.
+Massimo 6 paragrafi.
 Usa esempi concreti quando possibile.`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -78,7 +68,7 @@ Usa esempi concreti quando possibile.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile', // Modello Groq veloce e potente
+        model: 'llama-3.1-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -89,7 +79,7 @@ Usa esempi concreti quando possibile.`;
             content: fullPrompt,
           },
         ],
-        temperature: 0.7, // Bilanciamento creatività/precisione
+        temperature: 0.7,
         max_tokens: 1500,
       }),
     });
@@ -100,7 +90,7 @@ Usa esempi concreti quando possibile.`;
       return null;
     }
 
-    const data: GroqResponse = await response.json();
+    const data = await response.json();
 
     if (data.choices && data.choices.length > 0) {
       return data.choices[0].message.content;
@@ -114,32 +104,89 @@ Usa esempi concreti quando possibile.`;
 }
 
 /**
- * Genera spiegazione per Order Book / Market Depth
+ * Genera reading completo per una crypto
+ */
+export async function generateCryptoReading(
+  symbol: string,
+  data: {
+    price: number;
+    change24hPercent: number;
+    volume24h: number;
+    orderBook: {
+      totalBidVolume: number;
+      totalAskVolume: number;
+      spreadPercent: number;
+      imbalance: number;
+    };
+    supportResistance: Array<{
+      price: number;
+      strength: string;
+      type: 'support' | 'resistance';
+      distancePercent: number;
+    }>;
+    pressure: {
+      overall: number;
+      strength: string;
+      interpretation: string;
+    };
+    liquidity: {
+      score: number;
+      assessment: string;
+    };
+  }
+): Promise<string | null> {
+  const prompt = `Leggi e interpreta il mercato per ${symbol} basandoti su questi dati:
+
+PREZZO E PERFORMANCE:
+- Prezzo corrente: $${data.price.toLocaleString()}
+- Cambio 24h: ${data.change24hPercent >= 0 ? '+' : ''}${data.change24hPercent.toFixed(2)}%
+- Volume 24h: $${(data.volume24h / 1000000).toFixed(2)}M
+
+ORDER BOOK:
+- Volume Bid totale: ${data.orderBook.totalBidVolume.toLocaleString()}
+- Volume Ask totale: ${data.orderBook.totalAskVolume.toLocaleString()}
+- Spread: ${data.orderBook.spreadPercent.toFixed(3)}%
+- Imbalance: ${(data.orderBook.imbalance * 100).toFixed(1)}%
+
+SUPPORTI/RESISTENZE:
+${data.supportResistance.map(sr => `- ${sr.type === 'support' ? 'Supporto' : 'Resistenza'} a $${sr.price.toFixed(2)} (forza: ${sr.strength}, distanza: ${Math.abs(sr.distancePercent).toFixed(2)}%)`).join('\n')}
+
+PRESSIONE:
+- Pressione complessiva: ${(data.pressure.overall * 100).toFixed(1)}% (${data.pressure.strength})
+- ${data.pressure.interpretation}
+
+LIQUIDITÀ:
+- Score: ${data.liquidity.score}/100 (${data.liquidity.assessment})
+
+GENERA UNA LETTURA COMPLETA:
+1. Cosa sta succedendo con ${symbol} ORA (descrizione oggettiva)
+2. Quali sono i segnali più forti vs deboli
+3. Cosa significano supporti/resistenze identificati
+4. Cosa significa la pressione di mercato
+5. Limitazioni: cosa NON possiamo sapere da questi dati
+6. Warning: effetti piccoli, non garantiti, costi di transazione`;
+
+  return generateGroqExplanation(prompt, {
+    symbol,
+    ...data,
+    type: 'crypto_reading',
+  });
+}
+
+/**
+ * Funzioni legacy per compatibilità
  */
 export async function generateOrderBookExplanation(
   symbol: string,
   depth: number,
   exchange: string
 ): Promise<string | null> {
-  const prompt = `Spiega cosa significa "Order Book" o "Market Depth" per ${symbol} su ${exchange} con profondità ${depth} livelli.
-
-Includi:
-1. Cosa rappresenta l'order book (bids e asks)
-2. Perché la profondità (${depth} livelli) è importante
-3. Come interpretare i dati per capire la liquidità
-4. Limitazioni: quando i dati possono essere fuorvianti (fake liquidity, manipolazioni)`;
-
-  return generateGroqExplanation(prompt, {
-    symbol,
-    depth,
-    exchange,
-    type: 'order_book',
-  });
+  return generateGroqExplanation(
+    `Spiega cosa significa "Order Book" o "Market Depth" per ${symbol} su ${exchange} con profondità ${depth} livelli.`,
+    { symbol, depth, exchange, type: 'order_book' }
+  );
 }
 
-/**
- * Genera spiegazione per Bid/Ask Imbalance
- */
 export async function generateImbalanceExplanation(
   symbol: string,
   imbalance: number,
@@ -149,145 +196,29 @@ export async function generateImbalanceExplanation(
     currentPrice: number;
   }
 ): Promise<string | null> {
-  const prompt = `Spiega il "Bid/Ask Imbalance" per ${symbol}.
-
-Dati attuali:
-- Imbalance: ${imbalance.toFixed(4)} (${imbalance > 0 ? 'più domanda' : 'più offerta'})
-- Volume Bid: ${context.bidVolume}
-- Volume Ask: ${context.askVolume}
-- Prezzo corrente: ${context.currentPrice}
-
-Includi:
-1. Cosa misura l'imbalance e come si calcola
-2. Cosa significa un imbalance positivo vs negativo
-3. Relazione tra imbalance e movimenti di prezzo (breve orizzonte, effetti piccoli)
-4. Limitazioni: non è un segnale certo, effetti si esauriscono rapidamente, costi di transazione possono eliminare l'edge`;
-
-  return generateGroqExplanation(prompt, {
-    symbol,
-    imbalance,
-    ...context,
-    type: 'imbalance',
-  });
+  return generateGroqExplanation(
+    `Spiega il "Bid/Ask Imbalance" per ${symbol}. Imbalance: ${imbalance.toFixed(4)}.`,
+    { symbol, imbalance, ...context, type: 'imbalance' }
+  );
 }
 
-/**
- * Genera spiegazione per L400 Multi-Exchange
- */
 export async function generateMultiExchangeExplanation(
   symbol: string,
   exchanges: string[],
   aggregatedDepth: number
 ): Promise<string | null> {
-  const prompt = `Spiega l'approccio "L400 Multi-Exchange" per ${symbol}.
-
-Exchange aggregati: ${exchanges.join(', ')}
-Profondità aggregata totale: ${aggregatedDepth} livelli
-
-Includi:
-1. Perché aggregare dati da più exchange (copertura, riduzione bias)
-2. Vantaggi rispetto a singolo exchange
-3. Limitazioni: latenza, differenze di liquidità, frammentazione
-4. Come interpretare la profondità aggregata`;
-
-  return generateGroqExplanation(prompt, {
-    symbol,
-    exchanges,
-    aggregatedDepth,
-    type: 'multi_exchange',
-  });
+  return generateGroqExplanation(
+    `Spiega l'approccio "L400 Multi-Exchange" per ${symbol}. Exchange: ${exchanges.join(', ')}.`,
+    { symbol, exchanges, aggregatedDepth, type: 'multi_exchange' }
+  );
 }
 
-/**
- * Genera nota metodologica per un indicatore di microstruttura
- */
-export async function generateMethodologyNote(
-  indicatorName: string,
-  formula: string,
-  parameters: Record<string, any>
-): Promise<string | null> {
-  const prompt = `Genera una nota metodologica accademica per l'indicatore: ${indicatorName}
-
-Formula: ${formula}
-Parametri: ${JSON.stringify(parameters, null, 2)}
-
-La nota deve includere:
-1. Definizione accademica dell'indicatore
-2. Come viene calcolato (formula e parametri)
-3. Ipotesi teoriche su cui si basa
-4. Limitazioni e quando non usarlo
-5. Riferimenti impliciti alla letteratura di market microstructure`;
-
-  return generateGroqExplanation(prompt, {
-    indicatorName,
-    formula,
-    parameters,
-    type: 'methodology',
-  });
-}
-
-/**
- * Genera lettura completa del mercato (tutti i dati insieme)
- */
 export async function generateMarketReading(
   symbol: string,
-  data: {
-    orderBook?: {
-      totalBidVolume: number;
-      totalAskVolume: number;
-      spread: number;
-      spreadPercent: number;
-    };
-    imbalance?: {
-      overallImbalance: number;
-      imbalances: Array<{ range: string; imbalance: number }>;
-    };
-    futures?: {
-      fundingRate?: number;
-      openInterest?: number;
-      sentiment?: string;
-    };
-  }
+  data: any
 ): Promise<string | null> {
-  const prompt = `Leggi e interpreta il mercato per ${symbol} basandoti su questi dati:
-
-${data.orderBook ? `
-ORDER BOOK:
-- Volume Bid totale: ${data.orderBook.totalBidVolume.toLocaleString()}
-- Volume Ask totale: ${data.orderBook.totalAskVolume.toLocaleString()}
-- Spread: ${data.orderBook.spread.toFixed(2)} (${data.orderBook.spreadPercent.toFixed(3)}%)
-` : ''}
-
-${data.imbalance ? `
-BID/ASK IMBALANCE:
-- Imbalance complessivo: ${(data.imbalance.overallImbalance * 100).toFixed(2)}%
-${data.imbalance.imbalances.map(imb => `- ${imb.range}: ${(imb.imbalance * 100).toFixed(2)}%`).join('\n')}
-` : ''}
-
-${data.futures ? `
-FUTURES DATA:
-${data.futures.fundingRate !== undefined ? `- Funding Rate: ${(data.futures.fundingRate * 100).toFixed(4)}%` : ''}
-${data.futures.openInterest !== undefined ? `- Open Interest: $${data.futures.openInterest.toLocaleString()}` : ''}
-${data.futures.sentiment ? `- Sentiment: ${data.futures.sentiment}` : ''}
-` : ''}
-
-GENERA UNA LETTURA COMPLETA:
-1. Cosa sta succedendo nel mercato ORA (descrizione oggettiva)
-2. Quali sono i segnali più forti vs deboli
-3. Cosa significa per il trading (non consigli operativi, ma interpretazione)
-4. Limitazioni: cosa NON possiamo sapere da questi dati
-5. Warning: effetti piccoli, non garantiti, costi di transazione
-
-IMPORTANTE:
-- Non fare previsioni magiche
-- Spiega relazioni statistiche deboli
-- Includi sempre limitazioni e rischi
-- Mantieni tono accademico ma accessibile`;
-
-  return generateGroqExplanation(prompt, {
-    symbol,
-    ...data,
-    type: 'market_reading',
-  });
+  return generateGroqExplanation(
+    `Leggi il mercato per ${symbol} basandoti su questi dati: ${JSON.stringify(data)}`,
+    { symbol, ...data, type: 'market_reading' }
+  );
 }
-

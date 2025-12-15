@@ -21,13 +21,14 @@ interface PaymentData {
 }
 
 export function PaymentInstructions() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const paymentId = searchParams.get('payment');
+  const localePrefix = '';
 
   // Xolo Go payment link (da configurare)
   const XOLO_PAYMENT_LINK = process.env.NEXT_PUBLIC_XOLO_PAYMENT_LINK || 'https://pay.xolo.io';
@@ -35,7 +36,7 @@ export function PaymentInstructions() {
 
   useEffect(() => {
     if (!paymentId) {
-      router.push('/pricing');
+      router.push(`${localePrefix}/pricing`);
       return;
     }
 
@@ -46,18 +47,18 @@ export function PaymentInstructions() {
           const data = await response.json();
           setPaymentData(data);
         } else {
-          router.push('/pricing');
+          router.push(`${localePrefix}/pricing`);
         }
       } catch (error) {
         console.error('Error fetching payment:', error);
-        router.push('/pricing');
+        router.push(`${localePrefix}/pricing`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPayment();
-  }, [paymentId, router]);
+  }, [paymentId, router, localePrefix]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -102,7 +103,7 @@ export function PaymentInstructions() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-2xl p-4 md:p-6 card-mobile">
             <h2 className="text-lg font-semibold text-text-primary mb-4">
               {t('checkout.instructions.orderSummary') || 'Riepilogo Ordine'}
             </h2>
@@ -120,7 +121,7 @@ export function PaymentInstructions() {
                     : t('checkout.summary.billing.yearly') || 'Fatturazione annuale'}
                 </span>
               </div>
-              <div className="pt-3 border-t border-border-subtle">
+              <div className="pt-3 border-t border-premium">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-text-primary">
                     {t('checkout.summary.total') || 'Totale'}
@@ -242,13 +243,13 @@ export function PaymentInstructions() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
-              href="/dashboard"
+              href={`${localePrefix}/dashboard`}
               className="flex-1 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold text-center transition-all duration-200"
             >
               {t('checkout.instructions.backToDashboard') || 'Torna alla Dashboard'}
             </Link>
             <button
-              onClick={() => router.push(`/checkout/success?payment=${paymentId}`)}
+              onClick={() => router.push(`${localePrefix}/checkout/success?payment=${paymentId}`)}
               className="flex-1 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
             >
               {t('checkout.instructions.alreadyPaid') || 'Ho già pagato'}

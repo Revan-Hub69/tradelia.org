@@ -1,138 +1,246 @@
 /**
- * Binance Futures API Integration
+ * Binance Futures API
  * 
- * Dati futures: Funding Rates, Open Interest, Liquidazioni
- * 
- * Docs: https://binance-docs.github.io/apidocs/futures/en/
+ * Dati per trading intraday/scalping con leva:
+ * - Funding rates (real-time)
+ * - Open Interest
+ * - Liquidations
+ * - Long/Short Ratio
  */
 
-export interface FundingRate {
+interface BinanceFundingRate {
   symbol: string;
-  fundingRate: number; // Rate in percentuale (es. 0.01 = 0.01%)
-  fundingRatePercent: number; // Rate * 100 per display
-  nextFundingTime: number; // Timestamp prossimo funding
-  markPrice: number;
+  markPrice: string;
+  indexPrice: string;
+  estimatedSettlePrice: string;
+  lastFundingRate: string;
+  nextFundingTime: number;
+  interestRate: string;
+  nextFundingTimeStr?: string;
 }
 
-export interface OpenInterest {
+interface BinanceOpenInterest {
   symbol: string;
-  openInterest: number; // OI in USD
-  openInterestValue: number; // OI in contratto base
-  timestamp: number;
+  openInterest: string;
+  sumOpenInterest: string;
+  sumOpenInterestValue: string;
 }
 
-export interface LiquidationData {
+interface BinanceLiquidation {
   symbol: string;
-  longLiquidations: number; // USD
-  shortLiquidations: number; // USD
-  totalLiquidations: number; // USD
-  timestamp: number;
+  price: string;
+  side: 'BUY' | 'SELL';
+  size: string;
+  time: number;
 }
 
 /**
- * Ottiene funding rate corrente
+ * Ottiene funding rate corrente per perpetual futures
  */
-export async function getBinanceFundingRate(symbol: string): Promise<FundingRate | null> {
+export async function getBinanceFundingRate(symbol: string): Promise<{
+  fundingRate: number;
+  nextFundingTime: number;
+  markPrice: number;
+  indexPrice: number;
+} | null> {
   try {
     const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
-
+    
     const response = await fetch(
       `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
       {
-        headers: {
-          'Accept': 'application/json',
-        },
-        next: { revalidate: 30 }, // Cache 30 secondi (funding cambia ogni 8h)
-      }
-    );
-
-    if (!response.ok) {
-      console.error(`Binance futures funding error: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-
-    return {
-      symbol: data.symbol,
-      fundingRate: parseFloat(data.lastFundingRate),
-      fundingRatePercent: parseFloat(data.lastFundingRate) * 100,
-      nextFundingTime: data.nextFundingTime,
-      markPrice: parseFloat(data.markPrice),
-    };
-  } catch (error) {
-    console.error(`Error fetching Binance funding rate for ${symbol}:`, error);
-    return null;
-  }
-}
-
-/**
- * Ottiene Open Interest
- */
-export async function getBinanceOpenInterest(symbol: string): Promise<OpenInterest | null> {
-  try {
-    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
-
-    const response = await fetch(
-      `https://fapi.binance.com/fapi/v1/openInterest?symbol=${binanceSymbol}`,
-      {
-        headers: {
-          'Accept': 'application/json',
-        },
         next: { revalidate: 10 }, // Cache 10 secondi
       }
     );
 
     if (!response.ok) {
-      console.error(`Binance futures OI error: ${response.status}`);
       return null;
     }
 
-    const data = await response.json();
-
-    // Ottieni anche il prezzo per calcolare valore in USD
-    const markPriceResponse = await fetch(
-      `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
-      {
-        headers: {
-          'Accept': 'application/json',
-        },
-        next: { revalidate: 10 },
-      }
-    );
-
-    let markPrice = 0;
-    if (markPriceResponse.ok) {
-      const markData = await markPriceResponse.json();
-      markPrice = parseFloat(markData.markPrice);
-    }
+    const data: BinanceFundingRate = await response.json();
 
     return {
-      symbol: data.symbol,
-      openInterest: parseFloat(data.openInterest) * markPrice, // Valore in USD
-      openInterestValue: parseFloat(data.openInterest), // Valore in contratto
-      timestamp: Date.now(),
+      fundingRate: parseFloat(data.lastFundingRate) * 100, // In percentuale
+      nextFundingTime: data.nextFundingTime,
+      markPrice: parseFloat(data.markPrice),
+      indexPrice: parseFloat(data.indexPrice),
     };
   } catch (error) {
-    console.error(`Error fetching Binance OI for ${symbol}:`, error);
+    console.error(`Error fetching funding rate for ${symbol}:`, error);
     return null;
   }
 }
 
 /**
- * Ottiene dati liquidazioni (ultime 24h)
- * Nota: Binance non ha API diretta, usiamo stima da Coinglass o calcoliamo da altri dati
+ * Ottiene Open Interest per futures
  */
-export async function getBinanceLiquidations(symbol: string): Promise<LiquidationData | null> {
+export async function getBinanceOpenInterest(symbol: string): Promise<{
+  openInterest: number;
+  openInterestValue: number; // In USD
+} | null> {
   try {
-    // Binance non espone liquidazioni direttamente via API pubblica
-    // Possiamo usare Coinglass API (gratuita con limiti) o stimare da altri dati
-    // Per ora ritorniamo null e implementeremo Coinglass dopo
+    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
     
-    // TODO: Integrare Coinglass API per liquidazioni reali
-    return null;
+    const response = await fetch(
+      `https://fapi.binance.com/fapi/v1/openInterest?symbol=${binanceSymbol}`,
+      {
+        next: { revalidate: 10 },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data: BinanceOpenInterest = await response.json();
+
+    return {
+      openInterest: parseFloat(data.openInterest),
+      openInterestValue: parseFloat(data.sumOpenInterestValue),
+    };
   } catch (error) {
-    console.error(`Error fetching Binance liquidations for ${symbol}:`, error);
+    console.error(`Error fetching open interest for ${symbol}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Ottiene liquidazioni recenti (ultime 24h)
+ * 
+ * Nota: Binance non ha API pubblica per liquidazioni in tempo reale
+ * Usiamo dati aggregati da fonti terze o calcoliamo da price action
+ */
+export async function getBinanceLiquidationsEstimate(
+  symbol: string,
+  currentPrice: number,
+  fundingRate: number
+): Promise<{
+  estimatedLiquidationPriceLong: number;
+  estimatedLiquidationPriceShort: number;
+  liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
+} | null> {
+  try {
+    // Stima basata su funding rate e open interest
+    // Funding rate alto = molti long = rischio liquidazione long se prezzo scende
+    // Funding rate negativo = molti short = rischio liquidazione short se prezzo sale
+    
+    let liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
+    
+    if (Math.abs(fundingRate) > 0.1) {
+      liquidationRisk = 'very-high';
+    } else if (Math.abs(fundingRate) > 0.05) {
+      liquidationRisk = 'high';
+    } else if (Math.abs(fundingRate) > 0.02) {
+      liquidationRisk = 'medium';
+    } else {
+      liquidationRisk = 'low';
+    }
+
+    // Stima prezzi di liquidazione (semplificato, in produzione usare dati reali)
+    // Assumiamo leverage medio 10x
+    const avgLeverage = 10;
+    const estimatedLiquidationPriceLong = currentPrice * (1 - 1 / avgLeverage);
+    const estimatedLiquidationPriceShort = currentPrice * (1 + 1 / avgLeverage);
+
+    return {
+      estimatedLiquidationPriceLong,
+      estimatedLiquidationPriceShort,
+      liquidationRisk,
+    };
+  } catch (error) {
+    console.error(`Error estimating liquidations for ${symbol}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Ottiene Long/Short Ratio
+ */
+export async function getBinanceLongShortRatio(symbol: string): Promise<{
+  longShortRatio: number; // >1 = più long, <1 = più short
+  longAccount: number; // % account long
+  shortAccount: number; // % account short
+} | null> {
+  try {
+    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
+    
+    const response = await fetch(
+      `https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol=${binanceSymbol}&period=5m`,
+      {
+        next: { revalidate: 10 },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    const latest = Array.isArray(data) ? data[data.length - 1] : data;
+
+    if (!latest) return null;
+
+    const longAccount = parseFloat(latest.longAccount || latest.longShortRatio || '0.5');
+    const shortAccount = 1 - longAccount;
+    const longShortRatio = longAccount / shortAccount;
+
+    return {
+      longShortRatio,
+      longAccount: longAccount * 100,
+      shortAccount: shortAccount * 100,
+    };
+  } catch (error) {
+    console.error(`Error fetching long/short ratio for ${symbol}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Ottiene tutti i dati futures per una crypto
+ */
+export async function getBinanceFuturesData(symbol: string): Promise<{
+  fundingRate: number;
+  nextFundingTime: number;
+  markPrice: number;
+  indexPrice: number;
+  openInterest: number;
+  openInterestValue: number;
+  longShortRatio: number;
+  longAccount: number;
+  shortAccount: number;
+  liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
+  estimatedLiquidationPriceLong: number;
+  estimatedLiquidationPriceShort: number;
+} | null> {
+  try {
+    const [funding, oi, longShort] = await Promise.all([
+      getBinanceFundingRate(symbol),
+      getBinanceOpenInterest(symbol),
+      getBinanceLongShortRatio(symbol),
+    ]);
+
+    if (!funding || !oi || !longShort) {
+      return null;
+    }
+
+    const liquidations = await getBinanceLiquidationsEstimate(
+      symbol,
+      funding.markPrice,
+      funding.fundingRate
+    );
+
+    if (!liquidations) {
+      return null;
+    }
+
+    return {
+      ...funding,
+      ...oi,
+      ...longShort,
+      ...liquidations,
+    };
+  } catch (error) {
+    console.error(`Error fetching futures data for ${symbol}:`, error);
     return null;
   }
 }

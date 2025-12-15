@@ -43,10 +43,6 @@ const PortfolioManager = lazy(() =>
           import('./utilities/PACSimulator').then(module => ({ default: module.PACSimulator }))
         );
 
-        const ExpenseTracker = lazy(() => 
-          import('./utilities/ExpenseTracker').then(module => ({ default: module.ExpenseTracker }))
-        );
-
 interface Utility {
   id: string;
   icon: React.ReactNode;
@@ -125,13 +121,6 @@ export function ProUtilities() {
               icon: <TrendingUp className="w-5 h-5" />,
               label: t('proUtilities.pacSimulator.label') || 'Simulatore PAC',
               description: t('proUtilities.pacSimulator.description') || 'Simula investimenti periodici con interesse composto',
-              // Component rendered conditionally with Suspense
-            },
-            {
-              id: 'expense-tracker',
-              icon: <Wallet className="w-5 h-5" />,
-              label: t('proUtilities.expenseTracker.label') || 'Gestione Spese',
-              description: t('proUtilities.expenseTracker.description') || 'Traccia le tue spese e analizza i consumi',
               // Component rendered conditionally with Suspense
             },
     // PRO ONLY - Azioni
@@ -301,7 +290,6 @@ export function ProUtilities() {
                       {selectedUtility === 'calculator' && <FinancialCalculator />}
                       {selectedUtility === 'alerts' && <AlertSystem />}
                       {selectedUtility === 'pac-simulator' && <PACSimulator />}
-                      {selectedUtility === 'expense-tracker' && <ExpenseTracker />}
                     </Suspense>
                   </div>
                 ) : (
@@ -319,8 +307,8 @@ export function ProUtilities() {
                               // Banner già mostrato sopra, non fare nulla
                               return;
                             }
-                            // All utilities with id have components (portfolio, calculator, alerts, pac-simulator, expense-tracker)
-                            if (['portfolio', 'calculator', 'alerts', 'pac-simulator', 'expense-tracker'].includes(utility.id)) {
+                            // All utilities with id have components (portfolio, calculator, alerts, pac-simulator)
+                            if (['portfolio', 'calculator', 'alerts', 'pac-simulator'].includes(utility.id)) {
                               setSelectedUtility(utility.id);
                             } else if (utility.action) {
                               utility.action();

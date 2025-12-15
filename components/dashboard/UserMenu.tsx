@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, Settings, LogOut, Bell, ChevronDown, Mail } from 'lucide-react';
+import { User, Settings, LogOut, Bell, ChevronDown, Shield } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
@@ -28,10 +28,26 @@ export function UserMenu() {
   const [user, setUser] = useState<{ email?: string; name?: string } | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const isPro = useIsPro();
 
   // Blocca scroll quando menu è aperto
   useBodyScrollLock(isOpen);
+
+  // Calcola posizione per dropdown fixed
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    } else {
+      setMenuPosition(null);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,6 +59,20 @@ export function UserMenu() {
             email: session.user.email || undefined,
             name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
           });
+          
+          // Verifica se è admin
+          if (session.user.email) {
+            try {
+              const { data: roleData } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', session.user.id)
+                .single();
+              setIsAdmin(roleData?.role === 'admin');
+            } catch {
+              setIsAdmin(false);
+            }
+          }
           return;
         }
         
@@ -53,14 +83,30 @@ export function UserMenu() {
             email: user.email || undefined,
             name: user.user_metadata?.full_name || user.email?.split('@')[0],
           });
+          
+          // Verifica se è admin
+          if (user.email) {
+            try {
+              const { data: roleData } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', user.id)
+                .single();
+              setIsAdmin(roleData?.role === 'admin');
+            } catch {
+              setIsAdmin(false);
+            }
+          }
         } else {
           // Se non c'è utente, imposta null
           setUser(null);
+          setIsAdmin(false);
         }
       } catch (error) {
         // In caso di errore, imposta null e logga
         console.error('Error fetching user in UserMenu:', error);
         setUser(null);
+        setIsAdmin(false);
       }
     };
 
@@ -152,7 +198,7 @@ export function UserMenu() {
       id: 'profile',
       label: t('dashboard.userMenu.profile') || 'Profilo',
       icon: User,
-      href: '/dashboard#profile',
+      href: '/dashboard',
     },
     {
       id: 'notifications',
@@ -165,11 +211,19 @@ export function UserMenu() {
       id: 'settings',
       label: t('dashboard.userMenu.settings') || 'Impostazioni',
       icon: Settings,
-      href: '/dashboard#settings',
+      href: '/dashboard/settings',
     },
   ];
 
-  // Admin area rimossa - non più disponibile
+  // Aggiungi admin panel se l'utente è admin
+  if (isAdmin) {
+    menuItems.push({
+      id: 'admin',
+      label: 'Admin Panel',
+      icon: Shield,
+      href: '/dashboard/admin',
+    });
+  }
 
   menuItems.push({
     id: 'logout',
@@ -199,15 +253,16 @@ export function UserMenu() {
     .slice(0, 2) || user.email?.[0].toUpperCase() || 'U';
 
   return (
-    <div ref={menuRef} className="relative">
+    <div ref={menuRef} className="relative z-[10000]">
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group"
+        className="flex items-center gap-2 h-9 sm:h-10 px-2 sm:px-3 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group min-h-[36px] sm:min-h-[40px]"
         aria-label={t('dashboard.userMenu.open') || 'Menu utente'}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white text-xs font-semibold">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
           {initials}
         </div>
         <span className="hidden md:inline text-sm text-text-primary font-medium max-w-[120px] truncate">
@@ -215,7 +270,7 @@ export function UserMenu() {
         </span>
         <ChevronDown
           className={cn(
-            'w-4 h-4 text-text-tertiary transition-transform',
+            'w-4 h-4 text-text-tertiary transition-transform flex-shrink-0',
             isOpen && 'rotate-180'
           )}
         />
@@ -228,7 +283,11 @@ export function UserMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-2rem)] bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-50"
+            className="fixed w-64 max-w-[calc(100vw-2rem)] bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-[10000]"
+            style={menuPosition ? {
+              top: `${menuPosition.top}px`,
+              right: `${menuPosition.right}px`,
+            } : undefined}
             role="menu"
             aria-orientation="vertical"
           >
@@ -253,7 +312,7 @@ export function UserMenu() {
             </div>
 
             {/* Menu Items */}
-            <div className="p-2">
+            <div className="p-2 max-h-[70vh] overflow-y-auto">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const content = (
