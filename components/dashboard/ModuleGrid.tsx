@@ -71,7 +71,7 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
         <div className={styles.modulesGrid}>
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className={styles.moduleCard}>
-              <Skeleton variant="rectangular" height={80} />
+              <Skeleton height={80} />
             </div>
           ))}
         </div>
