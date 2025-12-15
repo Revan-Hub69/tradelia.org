@@ -75,3 +75,75 @@ export async function getBinancePriceWithFallback(symbol: string): Promise<numbe
   return null;
 }
 
+/**
+ * Order Book Entry
+ */
+export interface OrderBookEntry {
+  price: number;
+  quantity: number;
+}
+
+/**
+ * Order Book Response
+ */
+export interface BinanceOrderBook {
+  bids: OrderBookEntry[];
+  asks: OrderBookEntry[];
+  lastUpdateId: number;
+  timestamp: number;
+}
+
+/**
+ * Ottiene order book da Binance
+ * @param symbol - Simbolo crypto (es. BTC, ETH)
+ * @param limit - Numero di livelli (5, 10, 20, 50, 100, 500, 1000, 5000)
+ * @returns Order book con bids e asks
+ */
+export async function getBinanceOrderBook(
+  symbol: string,
+  limit: number = 100
+): Promise<BinanceOrderBook | null> {
+  try {
+    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
+    
+    // Binance accetta limit: 5, 10, 20, 50, 100, 500, 1000, 5000
+    const validLimits = [5, 10, 20, 50, 100, 500, 1000, 5000];
+    const closestLimit = validLimits.reduce((prev, curr) => 
+      Math.abs(curr - limit) < Math.abs(prev - limit) ? curr : prev
+    );
+
+    const response = await fetch(
+      `https://api.binance.com/api/v3/depth?symbol=${binanceSymbol}&limit=${closestLimit}`,
+      {
+        headers: {
+          'Accept': 'application/json',
+        },
+        next: { revalidate: 1 }, // Cache 1 secondo
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Binance order book error: ${response.status}`);
+      return null;
+    }
+
+    const data = await response.json();
+
+    return {
+      bids: data.bids.map(([price, qty]: [string, string]) => ({
+        price: parseFloat(price),
+        quantity: parseFloat(qty),
+      })),
+      asks: data.asks.map(([price, qty]: [string, string]) => ({
+        price: parseFloat(price),
+        quantity: parseFloat(qty),
+      })),
+      lastUpdateId: data.lastUpdateId,
+      timestamp: Date.now(),
+    };
+  } catch (error) {
+    console.error(`Error fetching Binance order book for ${symbol}:`, error);
+    return null;
+  }
+}
+
