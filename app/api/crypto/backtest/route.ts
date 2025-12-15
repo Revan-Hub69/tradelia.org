@@ -77,9 +77,20 @@ export async function POST(request: NextRequest) {
 
     // Convert to format expected by runBacktest
     // runBacktest expects: (data: any[], index: number) => { signal, confidence, stopLoss?, takeProfit? }
+    // Note: getStrategyFunction returns (data: OHLCV[], index: number) => StrategySignal
+    // We need to convert data format and call it correctly
     const adaptedSignalFunction = (data: any[], index: number) => {
       try {
-        const signal = strategyFunction(data, index);
+        // Convert data to OHLCV format if needed
+        const ohlcvData = data.map((d: any) => ({
+          timestamp: d.timestamp || d[0] || Date.now(),
+          open: d.open || d[1] || 0,
+          high: d.high || d[2] || 0,
+          low: d.low || d[3] || 0,
+          close: d.close || d[4] || 0,
+          volume: d.volume || d[5] || 0,
+        }));
+        const signal = strategyFunction(ohlcvData, index);
         return {
           signal: signal.type === 'buy' ? 'buy' : signal.type === 'sell' ? 'sell' : 'hold',
           confidence: signal.confidence || 0.5,
