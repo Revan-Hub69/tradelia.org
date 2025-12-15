@@ -43,9 +43,9 @@ export async function aggregateFuturesData(symbol: string): Promise<AggregatedFu
       exchanges.push({
         exchange: 'Binance',
         fundingRate: binance.value.fundingRate,
-        fundingRatePercent: binance.value.fundingRatePercent,
+        fundingRatePercent: binance.value.fundingRate, // fundingRate is already in percentage
         openInterest: binance.value.openInterest,
-        openInterestUsd: binance.value.openInterestUsd,
+        openInterestUsd: binance.value.openInterestValue,
         longShortRatio: binance.value.longShortRatio,
       });
     }
@@ -54,7 +54,7 @@ export async function aggregateFuturesData(symbol: string): Promise<AggregatedFu
       exchanges.push({
         exchange: 'OKX',
         fundingRate: okx.value.fundingRate,
-        fundingRatePercent: okx.value.fundingRatePercent,
+        fundingRatePercent: okx.value.fundingRate, // fundingRate is already in percentage
         openInterest: okx.value.openInterest,
         openInterestUsd: okx.value.openInterestUsd,
         longShortRatio: okx.value.longShortRatio,
@@ -65,7 +65,7 @@ export async function aggregateFuturesData(symbol: string): Promise<AggregatedFu
       exchanges.push({
         exchange: 'Bybit',
         fundingRate: bybit.value.fundingRate,
-        fundingRatePercent: bybit.value.fundingRatePercent,
+        fundingRatePercent: bybit.value.fundingRate, // fundingRate is already in percentage
         openInterest: bybit.value.openInterest,
         openInterestUsd: bybit.value.openInterestUsd,
         longShortRatio: bybit.value.longShortRatio,
