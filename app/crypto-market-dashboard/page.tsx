@@ -60,6 +60,8 @@ export default function CryptoMarketDashboardPage() {
   const [correlations, setCorrelations] = useState<any[]>([]);
   const [cryptoReadings, setCryptoReadings] = useState<Record<string, string>>({});
   const [loadingReading, setLoadingReading] = useState<string | null>(null);
+  const [solidIndicators, setSolidIndicators] = useState<Record<string, any>>({});
+  const [loadingIndicators, setLoadingIndicators] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -151,9 +153,30 @@ export default function CryptoMarketDashboardPage() {
     }
   };
 
+  const fetchSolidIndicators = async (symbol: string) => {
+    if (solidIndicators[symbol]) return; // Già caricato
+    
+    setLoadingIndicators(symbol);
+    try {
+      const response = await fetch(`/api/crypto/indicators/solid?symbol=${symbol}`);
+      if (response.ok) {
+        const data = await response.json();
+        setSolidIndicators((prev) => ({
+          ...prev,
+          [symbol]: data,
+        }));
+      }
+    } catch (error) {
+      console.error(`Error fetching solid indicators for ${symbol}:`, error);
+    } finally {
+      setLoadingIndicators(null);
+    }
+  };
+
   useEffect(() => {
     if (selectedCrypto) {
       fetchCryptoReading(selectedCrypto);
+      fetchSolidIndicators(selectedCrypto);
     }
   }, [selectedCrypto]);
 
