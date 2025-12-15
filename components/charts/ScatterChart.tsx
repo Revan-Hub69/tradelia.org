@@ -12,7 +12,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
 import { LineChart, LineChartData } from './LineChart';
 
 export interface ScatterDataPoint {
@@ -52,8 +51,6 @@ export function ScatterChart({
   height = 400,
   className = '',
 }: ScatterChartProps) {
-  const { t } = useTranslations();
-
   // Calcola bounds
   const bounds = useMemo(() => {
     if (data.length === 0) {

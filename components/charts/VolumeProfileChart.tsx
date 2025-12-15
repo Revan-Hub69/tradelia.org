@@ -12,7 +12,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
 
 export interface VolumeProfileLevel {
   price: number;

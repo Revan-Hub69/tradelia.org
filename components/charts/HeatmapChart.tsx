@@ -12,7 +12,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
 
 export interface HeatmapData {
   x: string;
@@ -49,8 +48,6 @@ export function HeatmapChart({
   showLegend = true,
   className = '',
 }: HeatmapChartProps) {
-  const { t } = useTranslations();
-
   // Estrai labels se non forniti
   const finalXLabels = useMemo(() => {
     if (xLabels) return xLabels;
