@@ -88,29 +88,35 @@ async function scanCrypto(symbol: string): Promise<ScannerResult | null> {
     const totalVolume = buyVolume + sellVolume;
     const orderFlowImbalance = totalVolume > 0 ? (buyVolume - sellVolume) / totalVolume : 0;
 
-    // Calculate support/resistance (simplified - fetch order book first)
+    // Calculate support/resistance and market pressure (fetch order book first)
     let supportResistance: any[] = [];
+    let marketPressure: any = { buying: 0, selling: 0, overall: 0, strength: 'weak' };
     try {
       const orderBookResponse = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}USDT&limit=20`);
       if (orderBookResponse.ok) {
         const orderBook = await orderBookResponse.json();
-        supportResistance = calculateSupportResistance(
-          orderBook.bids.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) })),
-          orderBook.asks.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) })),
+        const bids = orderBook.bids.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) }));
+        const asks = orderBook.asks.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) }));
+        
+        supportResistance = calculateSupportResistance(bids, asks, price, 10);
+        
+        // Calculate market pressure
+        const pressureResult = calculateMarketPressure(
+          bids,
+          asks,
           price,
-          10
+          futures?.fundingRate
         );
+        marketPressure = {
+          buying: pressureResult.overall > 0 ? pressureResult.overall : 0,
+          selling: pressureResult.overall < 0 ? Math.abs(pressureResult.overall) : 0,
+          overall: pressureResult.overall,
+          strength: pressureResult.strength,
+        };
       }
     } catch (error) {
       console.error(`Error fetching order book for ${symbol}:`, error);
     }
-
-    // Calculate market pressure
-    const marketPressure = calculateMarketPressure({
-      priceChange24h: change24h,
-      volume24h: parseFloat(ticker.volume),
-      orderFlowImbalance,
-    });
 
     // Generate signal
     const signal = calculateHighPrecisionSignal(
