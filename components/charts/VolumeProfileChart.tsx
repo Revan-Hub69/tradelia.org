@@ -47,7 +47,7 @@ export function VolumeProfileChart({
   priceBins = 50,
   className = '',
 }: VolumeProfileChartProps) {
-  const { t } = useTranslations();
+  // const { t } = useTranslations();
 
   // Processa dati: raggruppa per bin di prezzo
   const processedData = useMemo(() => {

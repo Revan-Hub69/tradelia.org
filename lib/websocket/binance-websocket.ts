@@ -12,6 +12,9 @@
  * Docs: https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams
  */
 
+// React hooks (client-side only)
+import { useState, useEffect } from 'react';
+
 export interface BinanceTrade {
   e: string; // Event type
   E: number; // Event time
@@ -328,7 +331,4 @@ export function useBinanceKlines(symbol: string, interval: string = '1m') {
 
   return { kline, klines };
 }
-
-// Import React hooks (for client-side only)
-import { useState, useEffect } from 'react';
 

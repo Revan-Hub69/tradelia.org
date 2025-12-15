@@ -18,6 +18,23 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { SkeletonCard, SkeletonChart, SkeletonTable } from '@/components/ui/Skeleton';
+import { useBinanceTrades, useBinanceOrderBook } from '@/lib/websocket/binance-websocket';
+import { calculateHighPrecisionSignal } from '@/lib/trading/signal-system';
+import { getPerformanceTracker } from '@/lib/trading/performance-tracker';
+import { getAlertSystem } from '@/lib/alerts/alert-system';
+import { createRiskManager } from '@/lib/risk/risk-manager';
+import { detectAllPatterns } from '@/lib/analysis/pattern-recognition';
+import { PerformanceDashboard } from '@/components/trading/PerformanceDashboard';
+import { AlertsPanel } from '@/components/trading/AlertsPanel';
+import { RiskManagerPanel } from '@/components/trading/RiskManagerPanel';
+import { AIAssistant } from '@/components/trading/AIAssistant';
+import { MarketScanner } from '@/components/trading/MarketScanner';
+import { PatternRecognition } from '@/components/trading/PatternRecognition';
+import { PortfolioTracker } from '@/components/trading/PortfolioTracker';
+import { BacktestingPanel } from '@/components/trading/BacktestingPanel';
+import { AdvancedCharts } from '@/components/trading/AdvancedCharts';
+import { MarketDepthAnalysis } from '@/components/trading/MarketDepthAnalysis';
+import type { DashboardData } from '@/lib/ai/groq-assistant';
 
 // Dynamic crypto list - no hardcoded values
 
@@ -60,6 +77,26 @@ export default function CryptoTradingDashboardPage() {
   // Decisione automatica
   const [decision, setDecision] = useState<TradingDecision | null>(null);
 
+  // Multi-timeframe data
+  const [multiTimeframeData, setMultiTimeframeData] = useState<any>(null);
+
+  // WebSocket real-time data
+  const binanceSymbol = useMemo(() => selectedCrypto.includes('USDT') ? selectedCrypto : `${selectedCrypto}USDT`, [selectedCrypto]);
+  const { trades: realTimeTrades, latestTrade } = useBinanceTrades(binanceSymbol);
+  const { orderBook: realTimeOrderBook } = useBinanceOrderBook(binanceSymbol, 20);
+
+  // Risk Manager
+  const [riskManager] = useState(() => createRiskManager({
+    accountBalance: 10000,
+    riskPerTrade: 0.01,
+    maxRiskPerDay: 0.05,
+    maxPositions: 5,
+    maxLeverage: 20,
+    stopLossPercent: 0.02,
+    takeProfitPercent: 0.04,
+    useKellyCriterion: false,
+  }));
+
   // Fetch dynamic crypto list
   const fetchCryptoList = useCallback(async () => {
     setCryptoListLoading(true);
@@ -88,11 +125,12 @@ export default function CryptoTradingDashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [marketRes, futuresRes, orderFlowRes, liquidationsRes] = await Promise.allSettled([
+      const [marketRes, futuresRes, orderFlowRes, liquidationsRes, multiTimeframeRes] = await Promise.allSettled([
         fetch(`/api/crypto/market-overview?limit=50`).then(r => r.ok ? r.json() : null).catch(() => null),
         fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
         fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null).catch(() => null),
         fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
+        fetch(`/api/crypto/indicators/multi-timeframe?symbol=${selectedCrypto}&timeframes=1m,5m,15m,1h`).then(r => r.ok ? r.json() : null).catch(() => null),
       ]);
 
       // Estrai dati da Promise.allSettled
@@ -100,6 +138,7 @@ export default function CryptoTradingDashboardPage() {
       const futuresData = futuresRes.status === 'fulfilled' ? futuresRes.value : null;
       const orderFlowData = orderFlowRes.status === 'fulfilled' ? orderFlowRes.value : null;
       const liquidationsData = liquidationsRes.status === 'fulfilled' ? liquidationsRes.value : null;
+      const multiTimeframeData = multiTimeframeRes.status === 'fulfilled' ? multiTimeframeRes.value : null;
 
       // Trova dati per crypto selezionata
       const cryptoMarketData = marketData?.cryptos?.find((c: any) => c.symbol === selectedCrypto);
@@ -107,15 +146,99 @@ export default function CryptoTradingDashboardPage() {
       setFuturesData(futuresData);
       setOrderFlow(orderFlowData);
       setLiquidations(liquidationsData);
+      setMultiTimeframeData(multiTimeframeData);
 
-      // Calcola decisione automatica (anche con dati parziali)
+      // Calcola decisione automatica con HIGH-PRECISION SIGNAL SYSTEM
       if (cryptoMarketData) {
-        const decision = calculateTradingDecision(
-          cryptoMarketData,
-          futuresData,
-          orderFlowData,
-          liquidationsData
+        // Usa nuovo sistema ad alta precisione
+        const highPrecisionSignal = calculateHighPrecisionSignal(
+          {
+            price: cryptoMarketData.price,
+            supportResistance: cryptoMarketData.supportResistance || [],
+            marketPressure: {
+              buying: cryptoMarketData.pressure?.buying || 0,
+              selling: cryptoMarketData.pressure?.selling || 0,
+            },
+          },
+          futuresData ? {
+            fundingRate: futuresData.fundingRate || 0,
+            openInterest: futuresData.openInterest || 0,
+            longShortRatio: futuresData.longShortRatio || 1,
+            liquidationRisk: futuresData.liquidationRisk || 'medium',
+          } : null,
+          orderFlowData ? {
+            imbalance: orderFlowData.summary?.imbalance || 0,
+            pressure: orderFlowData.summary?.buyPressure ? 'buying' : orderFlowData.summary?.sellPressure ? 'selling' : 'neutral',
+          } : null,
+          liquidationsData ? {
+            liquidationClusters: liquidationsData.liquidationClusters || [],
+          } : null,
+          orderFlowData?.combinedSignal
         );
+
+        // Converti a formato TradingDecision
+        const decision: TradingDecision = {
+          symbol: selectedCrypto,
+          recommendation: highPrecisionSignal.signal === 'STRONG_BUY' || highPrecisionSignal.signal === 'BUY' ? 'LONG' :
+                         highPrecisionSignal.signal === 'STRONG_SELL' || highPrecisionSignal.signal === 'SELL' ? 'SHORT' :
+                         highPrecisionSignal.signal === 'NEUTRAL' ? 'NEUTRAL' : 'AVOID',
+          confidence: highPrecisionSignal.confidence >= 85 ? 'high' :
+                     highPrecisionSignal.confidence >= 70 ? 'medium' : 'low',
+          reasoning: highPrecisionSignal.reasons,
+          entryPrice: highPrecisionSignal.entryPrice,
+          stopLoss: highPrecisionSignal.stopLoss,
+          takeProfit: highPrecisionSignal.takeProfit,
+          recommendedLeverage: highPrecisionSignal.recommendedLeverage,
+          riskLevel: highPrecisionSignal.riskLevel,
+        };
+
+        // Risk Management - Valida prima di registrare
+        if (decision.recommendation !== 'NEUTRAL' && decision.recommendation !== 'AVOID' && decision.entryPrice && decision.stopLoss) {
+          const riskAnalysis = riskManager.analyzeRisk(
+            selectedCrypto,
+            decision.entryPrice,
+            decision.stopLoss,
+            decision.takeProfit || decision.entryPrice * 1.02,
+            decision.recommendedLeverage,
+            highPrecisionSignal.winRate / 100,
+            decision.takeProfit ? (decision.takeProfit - decision.entryPrice) : 0,
+            decision.stopLoss ? (decision.entryPrice - decision.stopLoss) : 0
+          );
+
+          if (riskAnalysis.canOpenPosition) {
+            // Registra segnale per performance tracking
+            const tracker = getPerformanceTracker();
+            tracker.recordSignal({
+              symbol: selectedCrypto,
+              signal: highPrecisionSignal.signal,
+              confidence: highPrecisionSignal.confidence,
+              entryPrice: decision.entryPrice,
+              stopLoss: decision.stopLoss,
+              takeProfit: decision.takeProfit || decision.entryPrice * 1.02,
+              recommendedLeverage: decision.recommendedLeverage,
+              riskLevel: decision.riskLevel,
+            });
+
+            // Crea alert per segnali forti
+            const alertSystem = getAlertSystem();
+            if (highPrecisionSignal.confidence >= 80) {
+              alertSystem.createSignalAlert({
+                symbol: selectedCrypto,
+                signal: highPrecisionSignal.signal,
+                confidence: highPrecisionSignal.confidence,
+                entryPrice: decision.entryPrice,
+              });
+            }
+
+            // Check price alerts
+            alertSystem.checkPriceAlerts(selectedCrypto, cryptoMarketData.price);
+          } else {
+            // Segnale non valido per risk management
+            decision.recommendation = 'AVOID';
+            decision.reasoning.push(`⚠️ Rischio troppo alto: ${riskAnalysis.reason}`);
+          }
+        }
+
         setDecision(decision);
       }
 
@@ -188,9 +311,10 @@ export default function CryptoTradingDashboardPage() {
                     ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
-            >
-              {crypto}
-            </button>
+                title={`${crypto.name} - Market Cap: $${(crypto.marketCap / 1e9).toFixed(2)}B`}
+              >
+                {crypto.symbol}
+              </button>
           ))}
         </div>
         <label className="flex items-center gap-2 text-sm">
@@ -230,6 +354,192 @@ export default function CryptoTradingDashboardPage() {
         </div>
       ) : (
         <>
+          {/* PORTFOLIO TRACKER */}
+          <div className="mb-6">
+            <PortfolioTracker accountBalance={10000} />
+          </div>
+
+          {/* PERFORMANCE TRACKING */}
+          <div className="mb-6">
+            <PerformanceDashboard timeframe="24h" />
+          </div>
+
+          {/* ALERTS PANEL */}
+          <div className="mb-6">
+            <AlertsPanel />
+          </div>
+
+          {/* RISK MANAGER */}
+          <div className="mb-6">
+            <RiskManagerPanel accountBalance={10000} />
+          </div>
+
+          {/* AI ASSISTANT - Interpretazione Intelligente Dati */}
+          {marketData && futuresData && orderFlow && (
+            <div className="mb-6">
+              <AIAssistant
+                dashboardData={{
+                  marketData: {
+                    price: marketData.price,
+                    change24hPercent: marketData.change24hPercent,
+                    supportResistance: marketData.supportResistance || [],
+                    pressure: marketData.pressure || { buying: 0, selling: 0, overall: 0 },
+                  },
+                  futuresData: futuresData ? {
+                    fundingRate: futuresData.fundingRate || 0,
+                    openInterest: futuresData.openInterest || 0,
+                    longShortRatio: futuresData.longShortRatio || 1,
+                    liquidationRisk: futuresData.liquidationRisk || 'medium',
+                  } : null,
+                  orderFlow: orderFlow ? {
+                    imbalance: orderFlow.imbalance || 0,
+                    flowDirection: orderFlow.flowDirection || 'neutral',
+                    indicators: orderFlow.indicators || {},
+                  } : null,
+                  decision: decision ? {
+                    recommendation: decision.recommendation,
+                    confidence: decision.confidence,
+                    riskLevel: decision.riskLevel,
+                    reasoning: decision.reasoning,
+                  } : null,
+                }}
+                symbol={selectedCrypto}
+              />
+            </div>
+          )}
+
+          {/* PATTERN RECOGNITION */}
+          <div className="mb-6">
+            <PatternRecognition
+              symbol={selectedCrypto}
+              supportResistance={marketData?.supportResistance || []}
+              onPatternDetected={(pattern) => {
+                // Auto-create alert for high-confidence patterns
+                if (pattern.confidence >= 75) {
+                  const alertSystem = getAlertSystem();
+                  alertSystem.createPatternAlert(
+                    selectedCrypto,
+                    pattern.name,
+                    pattern.signal,
+                    pattern.description
+                  );
+                }
+              }}
+            />
+          </div>
+
+          {/* MULTI-TIMEFRAME ANALYSIS */}
+          {multiTimeframeData && (
+            <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                Multi-Timeframe Analysis
+              </h3>
+              {multiTimeframeData.analysis && (
+                <div className="mb-4">
+                  <div className={`p-4 rounded-lg ${
+                    multiTimeframeData.analysis.consensus === 'strong-buy' ? 'bg-green-100 dark:bg-green-900/20' :
+                    multiTimeframeData.analysis.consensus === 'strong-sell' ? 'bg-red-100 dark:bg-red-900/20' :
+                    'bg-gray-100 dark:bg-gray-700'
+                  }`}>
+                    <div className="font-semibold text-lg mb-2">
+                      Consensus: {multiTimeframeData.analysis.consensus.toUpperCase()}
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Alignment: {multiTimeframeData.analysis.alignment.toFixed(1)}% | 
+                      Confidence: {multiTimeframeData.analysis.consensusConfidence.toFixed(1)}%
+                    </div>
+                    <div className="text-sm mt-2">{multiTimeframeData.analysis.recommendation}</div>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {multiTimeframeData.timeframes?.map((tf: any) => (
+                  <div key={tf.timeframe} className="bg-gray-50 dark:bg-gray-700 rounded p-3">
+                    <div className="text-xs text-gray-600 dark:text-gray-400">{tf.timeframe}</div>
+                    <div className={`font-semibold ${
+                      tf.signal.includes('buy') ? 'text-green-600' :
+                      tf.signal.includes('sell') ? 'text-red-600' : 'text-gray-600'
+                    }`}>
+                      {tf.signal.toUpperCase()}
+                    </div>
+                    <div className="text-xs text-gray-500">{tf.confidence.toFixed(0)}%</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ORDER FLOW INDICATORS */}
+          {orderFlow && orderFlow.indicators && (
+            <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                Order Flow Indicators
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Delta</div>
+                  <div className={`font-semibold ${
+                    orderFlow.indicators.delta.deltaPercent > 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {orderFlow.indicators.delta.deltaPercent.toFixed(2)}%
+                  </div>
+                  <div className="text-xs text-gray-500">{orderFlow.indicators.delta.signal}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Taker Ratio</div>
+                  <div className={`font-semibold ${
+                    orderFlow.indicators.takerRatio.ratio > 1 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {orderFlow.indicators.takerRatio.ratio.toFixed(2)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Order Book Imbalance</div>
+                  <div className={`font-semibold ${
+                    orderFlow.indicators.orderBookImbalance.imbalancePercent > 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {orderFlow.indicators.orderBookImbalance.imbalancePercent.toFixed(2)}%
+                  </div>
+                </div>
+                {orderFlow.combinedSignal && (
+                  <div className="col-span-2 md:col-span-3">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                      <div className="font-semibold">{orderFlow.combinedSignal.signal}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Confidence: {orderFlow.combinedSignal.confidence}%
+                      </div>
+                      <div className="text-xs text-gray-500 mt-2">
+                        {orderFlow.combinedSignal.reasons.slice(0, 2).join(' | ')}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* REAL-TIME TRADES (WebSocket) */}
+          {latestTrade && (
+            <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                Real-Time Trades (WebSocket)
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Latest Trade</span>
+                  <span className={`font-semibold ${
+                    !latestTrade.m ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    ${parseFloat(latestTrade.p).toFixed(2)} ({parseFloat(latestTrade.q).toFixed(4)})
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {realTimeTrades.length} trades in buffer
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* DECISIONE AUTOMATICA - PRIMA COSA DA VEDERE */}
           {decision && (
             <div className={`mb-6 rounded-lg shadow-lg p-6 border-l-4 ${
@@ -408,6 +718,26 @@ export default function CryptoTradingDashboardPage() {
             )}
           </div>
 
+          {/* MARKET SCANNER - Trova Opportunità */}
+          <div className="mb-6">
+            <MarketScanner />
+          </div>
+
+          {/* MARKET DEPTH ANALYSIS - Volume, Whales, Exchange Flows */}
+          <div className="mb-6">
+            <MarketDepthAnalysis symbol={selectedCrypto} />
+          </div>
+
+          {/* ADVANCED CHARTS */}
+          <div className="mb-6">
+            <AdvancedCharts symbol={selectedCrypto} />
+          </div>
+
+          {/* BACKTESTING PANEL */}
+          <div className="mb-6">
+            <BacktestingPanel />
+          </div>
+
           {/* DETTAGLI COMPLETI - Espandibili */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Supporti/Resistenze */}
@@ -477,132 +807,4 @@ export default function CryptoTradingDashboardPage() {
   );
 }
 
-/**
- * Calcola decisione di trading automatica basata su tutti i dati
- */
-function calculateTradingDecision(
-  marketData: any,
-  futuresData: any,
-  orderFlow: any,
-  liquidations: any
-): TradingDecision {
-  const reasoning: string[] = [];
-  let recommendation: 'LONG' | 'SHORT' | 'NEUTRAL' | 'AVOID' = 'NEUTRAL';
-  let confidence: 'low' | 'medium' | 'high' = 'low';
-  let riskLevel: 'low' | 'medium' | 'high' | 'very-high' = 'medium';
-  let recommendedLeverage = 10;
-
-  const currentPrice = marketData.price;
-  let entryPrice = currentPrice;
-  let stopLoss: number | undefined;
-  let takeProfit: number | undefined;
-
-  // 1. Analizza Funding Rate
-  if (futuresData.fundingRate > 0.1) {
-    reasoning.push(`Funding rate molto alto (${futuresData.fundingRate.toFixed(4)}%) = molti long = rischio liquidazione long se prezzo scende`);
-    riskLevel = 'high';
-  } else if (futuresData.fundingRate < -0.1) {
-    reasoning.push(`Funding rate molto negativo (${futuresData.fundingRate.toFixed(4)}%) = molti short = rischio liquidazione short se prezzo sale`);
-    riskLevel = 'high';
-  }
-
-  // 2. Analizza Order Flow
-  if (orderFlow.imbalance > 0.2) {
-    reasoning.push(`Forte pressione rialzista (imbalance ${(orderFlow.imbalance * 100).toFixed(1)}%)`);
-    if (recommendation === 'NEUTRAL') {
-      recommendation = 'LONG';
-      confidence = 'medium';
-    }
-  } else if (orderFlow.imbalance < -0.2) {
-    reasoning.push(`Forte pressione ribassista (imbalance ${(orderFlow.imbalance * 100).toFixed(1)}%)`);
-    if (recommendation === 'NEUTRAL') {
-      recommendation = 'SHORT';
-      confidence = 'medium';
-    }
-  }
-
-  // 3. Analizza Market Pressure
-  if (marketData.pressure.overall > 0.3) {
-    reasoning.push(`Alta pressione di acquisto (${(marketData.pressure.overall * 100).toFixed(1)}%)`);
-    if (recommendation === 'LONG') confidence = 'high';
-    else if (recommendation === 'NEUTRAL') {
-      recommendation = 'LONG';
-      confidence = 'medium';
-    }
-  } else if (marketData.pressure.overall < -0.3) {
-    reasoning.push(`Alta pressione di vendita (${(marketData.pressure.overall * 100).toFixed(1)}%)`);
-    if (recommendation === 'SHORT') confidence = 'high';
-    else if (recommendation === 'NEUTRAL') {
-      recommendation = 'SHORT';
-      confidence = 'medium';
-    }
-  }
-
-  // 4. Analizza Supporti/Resistenze
-  const nearestSupport = marketData.supportResistance
-    .filter((sr: any) => sr.type === 'support' && sr.price < currentPrice)
-    .sort((a: any, b: any) => b.price - a.price)[0];
-  
-  const nearestResistance = marketData.supportResistance
-    .filter((sr: any) => sr.type === 'resistance' && sr.price > currentPrice)
-    .sort((a: any, b: any) => a.price - b.price)[0];
-
-  if (nearestSupport) {
-    reasoning.push(`Supporto più vicino: $${nearestSupport.price.toFixed(2)} (forza: ${nearestSupport.strength})`);
-    if (recommendation === 'LONG') {
-      stopLoss = nearestSupport.price * 0.99; // 1% sotto supporto
-      entryPrice = currentPrice;
-    }
-  }
-
-  if (nearestResistance) {
-    reasoning.push(`Resistenza più vicina: $${nearestResistance.price.toFixed(2)} (forza: ${nearestResistance.strength})`);
-    if (recommendation === 'SHORT') {
-      stopLoss = nearestResistance.price * 1.01; // 1% sopra resistenza
-      entryPrice = currentPrice;
-    }
-    if (recommendation === 'LONG') {
-      takeProfit = nearestResistance.price * 0.99; // 1% sotto resistenza
-    }
-  }
-
-  // 5. Analizza Liquidation Risk
-  if (futuresData.liquidationRisk === 'very-high' || futuresData.liquidationRisk === 'high') {
-    reasoning.push(`Rischio liquidazione ${futuresData.liquidationRisk} - usare leverage conservativo`);
-    recommendedLeverage = 5;
-    riskLevel = 'high';
-  } else {
-    recommendedLeverage = futuresData.leverageMetrics.recommendedLeverage;
-  }
-
-  // 6. Evita se conflitti
-  if (orderFlow.imbalance > 0.2 && futuresData.fundingRate > 0.1) {
-    reasoning.push(`⚠️ Conflitto: order flow rialzista ma funding alto = molti long già posizionati`);
-    recommendation = 'AVOID';
-    confidence = 'high';
-  } else if (orderFlow.imbalance < -0.2 && futuresData.fundingRate < -0.1) {
-    reasoning.push(`⚠️ Conflitto: order flow ribassista ma funding negativo = molti short già posizionati`);
-    recommendation = 'AVOID';
-    confidence = 'high';
-  }
-
-  // 7. Se nessun segnale chiaro
-  if (Math.abs(orderFlow.imbalance) < 0.1 && Math.abs(marketData.pressure.overall) < 0.2) {
-    reasoning.push(`Segnali deboli - attendere setup migliore`);
-    recommendation = 'NEUTRAL';
-    confidence = 'low';
-  }
-
-  return {
-    symbol: marketData.symbol,
-    recommendation,
-    confidence,
-    reasoning,
-    entryPrice,
-    stopLoss,
-    takeProfit,
-    recommendedLeverage,
-    riskLevel,
-  };
-}
 

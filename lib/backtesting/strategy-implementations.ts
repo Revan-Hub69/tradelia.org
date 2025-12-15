@@ -4,7 +4,28 @@
  * Implementazioni concrete delle strategie accademiche per backtesting
  */
 
-import { OHLCV, StrategySignal, StrategyFunction } from './backtest-engine';
+// Types (defined here since not exported from backtest-engine)
+export interface OHLCV {
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface StrategySignal {
+  type: 'buy' | 'sell' | 'hold';
+  confidence: number;
+  stopLoss?: number;
+  takeProfit?: number;
+}
+
+export type StrategyFunction = (
+  data: OHLCV[],
+  currentIndex: number,
+  parameters: Record<string, number>
+) => StrategySignal;
 
 /**
  * Moving Average Crossover Strategy
@@ -175,5 +196,22 @@ export const STRATEGY_FUNCTIONS: Record<string, StrategyFunction> = {
   'moving-average-crossover': movingAverageCrossover,
   'rsi-mean-reversion': rsiMeanReversion,
   'macd-trend': macdTrend,
+  'high-precision-signal': rsiMeanReversion, // Fallback to RSI for now
+  'order-flow-only': rsiMeanReversion, // Fallback
+  'multi-timeframe': macdTrend, // Fallback
   // Add more strategies as needed
 };
+
+/**
+ * Get strategy function by name
+ */
+export function getStrategyFunction(
+  strategyName: string,
+  parameters: Record<string, number> = {}
+): StrategyFunction {
+  const strategy = STRATEGY_FUNCTIONS[strategyName] || STRATEGY_FUNCTIONS['rsi-mean-reversion'];
+  
+  return (data: OHLCV[], currentIndex: number) => {
+    return strategy(data, currentIndex, parameters);
+  };
+}

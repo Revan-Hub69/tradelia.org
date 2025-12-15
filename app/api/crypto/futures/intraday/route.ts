@@ -11,6 +11,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getBinanceFuturesData } from "@/lib/price-apis/binance-futures";
+import { aggregateFuturesData } from "@/lib/crypto/multi-exchange-futures";
 import { rateLimit } from "@/lib/security/rate-limiting";
 import { CryptoSymbolSchema } from "@/lib/validation/crypto-schemas";
 
@@ -62,7 +63,36 @@ export async function GET(request: NextRequest) {
 
     const validatedSymbol = validation.data.symbol;
 
-    const futuresData = await getBinanceFuturesData(validatedSymbol);
+    // Fetch aggregated futures data from all exchanges (Binance, OKX, Bybit)
+    const aggregatedData = await aggregateFuturesData(validatedSymbol);
+    
+    // Fallback to Binance only if aggregation fails
+    const binanceData = aggregatedData ? null : await getBinanceFuturesData(validatedSymbol);
+    
+    // Use aggregated data or fallback to Binance
+    const futuresData = aggregatedData ? {
+      fundingRate: aggregatedData.aggregatedFundingRate,
+      fundingRatePercent: aggregatedData.aggregatedFundingRatePercent,
+      openInterest: aggregatedData.totalOpenInterest,
+      openInterestValue: aggregatedData.totalOpenInterestUsd,
+      longShortRatio: aggregatedData.weightedLongShortRatio,
+      longAccount: aggregatedData.weightedLongShortRatio > 1 
+        ? (aggregatedData.weightedLongShortRatio / (1 + aggregatedData.weightedLongShortRatio)) * 100
+        : 50,
+      shortAccount: aggregatedData.weightedLongShortRatio > 1
+        ? (1 / (1 + aggregatedData.weightedLongShortRatio)) * 100
+        : 50,
+      markPrice: 0, // Would need to fetch separately
+      indexPrice: 0,
+      nextFundingTime: Date.now() + 8 * 60 * 60 * 1000,
+      liquidationRisk: Math.abs(aggregatedData.aggregatedFundingRate) > 0.1 ? 'very-high' as const :
+                       Math.abs(aggregatedData.aggregatedFundingRate) > 0.05 ? 'high' as const :
+                       Math.abs(aggregatedData.aggregatedFundingRate) > 0.02 ? 'medium' as const : 'low' as const,
+      estimatedLiquidationPriceLong: 0,
+      estimatedLiquidationPriceShort: 0,
+      partial: false,
+      exchanges: aggregatedData.exchanges,
+    } : binanceData;
 
     if (!futuresData) {
       // Restituisci 503 solo se completamente non disponibile

@@ -125,7 +125,7 @@ async function getCryptoPriceData(symbol: string) {
   try {
     const response = await fetch(
       `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`,
-      { next: { revalidate: 10 } }
+      { cache: 'no-store' }
     );
     if (!response.ok) {
       return null;

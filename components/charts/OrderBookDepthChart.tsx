@@ -12,7 +12,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslations } from 'next-intl';
+// Translations removed - using static labels for now
+// import { useTranslations } from 'next-intl';
 
 export interface OrderBookLevel {
   price: number;
@@ -48,7 +49,7 @@ export function OrderBookDepthChart({
   maxLevels = 20,
   className = '',
 }: OrderBookDepthChartProps) {
-  const { t } = useTranslations();
+  // const { t } = useTranslations();
 
   // Processa e ordina levels
   const processedBids = useMemo(() => {
