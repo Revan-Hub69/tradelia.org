@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     const symbol = searchParams.get('symbol') || 'BTC';
 
     // Fetch all data in parallel
-    const [volumeData, whaleData, flowData, priceData] = await Promise.allSettled([
+    const [volumeData, whaleData, priceData] = await Promise.allSettled([
       aggregateVolume(symbol),
       analyzeWhaleMovements(symbol, 1000000), // $1M minimum
       // Get current price for exchange flows
