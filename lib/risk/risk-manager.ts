@@ -94,7 +94,11 @@ class RiskManager {
     riskAmount: number;
   } {
     if (avgLoss === 0) {
-      return this.calculatePositionSize(entryPrice, stopLoss);
+      const positionSize = this.calculatePositionSize(entryPrice, stopLoss);
+      return {
+        ...positionSize,
+        kellyPercent: 0,
+      };
     }
 
     const winLossRatio = Math.abs(avgWin / avgLoss);
