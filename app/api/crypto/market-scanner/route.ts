@@ -18,7 +18,7 @@ import { calculateHighPrecisionSignal } from '@/lib/trading/signal-system';
 import { getBinanceFuturesData } from '@/lib/price-apis/binance-futures';
 import { calculateSupportResistance } from '@/lib/analysis/support-resistance';
 import { calculateMarketPressure } from '@/lib/analysis/market-pressure';
-import { fetchTopCryptos } from '@/lib/crypto/top-crypto-list';
+import { getTopBinanceCryptocurrencies } from '@/lib/crypto/top-crypto-list';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -185,7 +185,10 @@ async function scanCrypto(symbol: string): Promise<ScannerResult | null> {
 }
 
 export async function GET(request: NextRequest) {
-  const rateLimitResult = await rateLimit(request, {
+  const identifier = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+  const rateLimitResult = await rateLimit(identifier, {
     maxRequests: 10, // Limit scanner calls
     windowMs: 60 * 1000,
   });
@@ -205,7 +208,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20');
 
     // Get top cryptos
-    const cryptos = await fetchTopCryptos(50, 'binance');
+    const cryptos = await getTopBinanceCryptocurrencies(50);
 
     // Scan all cryptos in parallel (with concurrency limit)
     const scanPromises: Promise<ScannerResult | null>[] = [];

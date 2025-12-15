@@ -15,7 +15,10 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   // Rate limiting
-  const rateLimitResult = await rateLimit(request, {
+  const identifier = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+  const rateLimitResult = await rateLimit(identifier, {
     maxRequests: 20, // Limit AI calls
     windowMs: 60 * 1000,
   });

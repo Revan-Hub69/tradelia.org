@@ -98,7 +98,10 @@ async function fetchOrderBook(symbol: string, limit = 20): Promise<{
 
 export async function GET(request: NextRequest) {
   // Rate limiting
-  const rateLimitResult = await rateLimit(request, {
+  const identifier = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+  const rateLimitResult = await rateLimit(identifier, {
     maxRequests: 60, // Più frequente per real-time
     windowMs: 60 * 1000,
   });

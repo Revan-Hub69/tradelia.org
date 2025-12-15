@@ -21,7 +21,10 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   // Rate limiting
-  const rateLimitResult = await rateLimit(request, {
+  const identifier = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+  const rateLimitResult = await rateLimit(identifier, {
     maxRequests: 30,
     windowMs: 60 * 1000,
   });
