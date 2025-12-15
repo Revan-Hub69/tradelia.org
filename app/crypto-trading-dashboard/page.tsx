@@ -309,13 +309,14 @@ export default function CryptoTradingDashboardPage() {
                 className={`px-4 py-2 rounded transition-colors ${
                   selectedCrypto === crypto.symbol
                     ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
-              }`}
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
                 title={`${crypto.name} - Market Cap: $${(crypto.marketCap / 1e9).toFixed(2)}B`}
               >
                 {crypto.symbol}
               </button>
-          ))}
+            ))
+          )}
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input
