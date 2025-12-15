@@ -39,7 +39,7 @@ export function movingAverageCrossover(
   const slowMA = parameters.slowMA || 50;
 
   if (currentIndex < slowMA) {
-    return { type: 'hold' };
+    return { type: 'hold', confidence: 0 };
   }
 
   // Calculate moving averages
@@ -76,7 +76,7 @@ export function movingAverageCrossover(
     return { type: 'sell', confidence: 1.0 };
   }
 
-  return { type: 'hold' };
+  return { type: 'hold', confidence: 0 };
 }
 
 /**
@@ -92,7 +92,7 @@ export function rsiMeanReversion(
   const overbought = parameters.overbought || 70;
 
   if (currentIndex < period) {
-    return { type: 'hold' };
+    return { type: 'hold', confidence: 0 };
   }
 
   // Calculate RSI
@@ -112,7 +112,7 @@ export function rsiMeanReversion(
   const avgLoss = losses / period;
 
   if (avgLoss === 0) {
-    return { type: 'hold' };
+    return { type: 'hold', confidence: 0 };
   }
 
   const rs = avgGain / avgLoss;
@@ -124,7 +124,7 @@ export function rsiMeanReversion(
     return { type: 'sell', confidence: (rsi - overbought) / (100 - overbought) };
   }
 
-  return { type: 'hold' };
+  return { type: 'hold', confidence: 0 };
 }
 
 /**
@@ -140,7 +140,7 @@ export function macdTrend(
   const signalPeriod = parameters.signalPeriod || 9;
 
   if (currentIndex < slowEMA + signalPeriod) {
-    return { type: 'hold' };
+    return { type: 'hold', confidence: 0 };
   }
 
   // Calculate EMAs
@@ -186,7 +186,7 @@ export function macdTrend(
     return { type: 'sell', confidence: 1.0 };
   }
 
-  return { type: 'hold' };
+  return { type: 'hold', confidence: 0 };
 }
 
 /**
