@@ -55,10 +55,14 @@ export function Dialog({
       isOpen={isOpen}
       onClose={onClose}
       title={title}
-      description={description}
       size={size}
       closeOnBackdrop={false}
     >
+      {description && (
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          {description}
+        </p>
+      )}
       {children && <div className="mb-6">{children}</div>}
       {/* Riferimento: Nielsen (1994) - Consistency, Material Design Dialog Actions */}
       {/* Button order: Cancel first (left), Confirm last (right) for LTR languages */}
