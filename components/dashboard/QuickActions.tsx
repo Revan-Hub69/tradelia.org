@@ -47,7 +47,7 @@ export const QuickActions = memo(function QuickActions() {
         <div className="flex flex-wrap gap-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex-1 min-w-[120px]">
-              <Skeleton variant="rectangular" height={48} />
+              <Skeleton height={48} />
             </div>
           ))}
         </div>

@@ -282,8 +282,8 @@ export function ProUtilities() {
                   <div className="p-6">
                     <Suspense fallback={
                       <div className="space-y-4">
-                        <Skeleton variant="rectangular" height={200} />
-                        <Skeleton variant="rectangular" height={100} />
+                        <Skeleton height={200} />
+                        <Skeleton height={100} />
                       </div>
                     }>
                       {selectedUtility === 'portfolio' && <PortfolioManager />}
