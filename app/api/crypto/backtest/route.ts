@@ -41,7 +41,16 @@ export async function POST(request: NextRequest) {
       leverage,
       stopLossPercent,
       takeProfitPercent,
-    } = body as Partial<BacktestConfig> & { symbol: string };
+    } = body as Partial<BacktestConfig> & { 
+      symbol: string;
+      strategy: string;
+      startDate?: string;
+      endDate?: string;
+      initialCapital?: number;
+      leverage?: number;
+      stopLossPercent?: number;
+      takeProfitPercent?: number;
+    };
 
     if (!symbol || !strategy || !startDate || !endDate) {
       return NextResponse.json(
