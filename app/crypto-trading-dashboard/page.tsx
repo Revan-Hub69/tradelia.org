@@ -412,9 +412,13 @@ export default function CryptoTradingDashboardPage() {
                   decision: decision ? {
                     recommendation: decision.recommendation,
                     confidence: decision.confidence,
-                    riskLevel: decision.riskLevel,
                     reasoning: decision.reasoning,
-                  } : null,
+                    entryPrice: decision.entryPrice,
+                    stopLoss: decision.stopLoss,
+                    takeProfit: decision.takeProfit,
+                    recommendedLeverage: decision.recommendedLeverage,
+                    riskLevel: decision.riskLevel,
+                  } : undefined,
                 }}
                 symbol={selectedCrypto}
               />
