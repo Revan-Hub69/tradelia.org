@@ -19,7 +19,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { SkeletonCard, SkeletonChart, SkeletonTable } from '@/components/ui/Skeleton';
 
-const TOP_CRYPTO = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'MATIC', 'LINK', 'DOT', 'UNI', 'ATOM', 'LTC', 'NEAR'];
+// Dynamic crypto list - no hardcoded values
 
 interface TradingDecision {
   symbol: string;
@@ -39,6 +39,12 @@ export default function CryptoTradingDashboardPage() {
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Dynamic crypto list
+  const [cryptoList, setCryptoList] = useState<Array<{ symbol: string; name: string; marketCap: number; price: number }>>([]);
+  const [cryptoListLoading, setCryptoListLoading] = useState(true);
+  const [cryptoSearch, setCryptoSearch] = useState('');
+  const [cryptoLimit, setCryptoLimit] = useState(50);
+  
   // Dati market overview (supporti/resistenze, pressione)
   const [marketData, setMarketData] = useState<any>(null);
   
@@ -53,6 +59,30 @@ export default function CryptoTradingDashboardPage() {
   
   // Decisione automatica
   const [decision, setDecision] = useState<TradingDecision | null>(null);
+
+  // Fetch dynamic crypto list
+  const fetchCryptoList = useCallback(async () => {
+    setCryptoListLoading(true);
+    try {
+      const response = await fetch(`/api/crypto/list?limit=${cryptoLimit}&exchange=binance${cryptoSearch ? `&search=${cryptoSearch}` : ''}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCryptoList(data.crypto || []);
+        // Auto-select first if current selection not in list
+        if (data.crypto.length > 0 && !data.crypto.find((c: any) => c.symbol === selectedCrypto)) {
+          setSelectedCrypto(data.crypto[0].symbol);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching crypto list:', error);
+    } finally {
+      setCryptoListLoading(false);
+    }
+  }, [cryptoLimit, cryptoSearch, selectedCrypto]);
+
+  useEffect(() => {
+    fetchCryptoList();
+  }, [fetchCryptoList]);
 
   const fetchAllData = useCallback(async () => {
     setLoading(true);
@@ -122,16 +152,40 @@ export default function CryptoTradingDashboardPage() {
         </p>
       </div>
 
-      {/* Crypto Selector */}
+      {/* Crypto Selector - Dynamic */}
       <div className="mb-6">
+        <div className="mb-4 flex gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Cerca crypto..."
+            value={cryptoSearch}
+            onChange={(e) => setCryptoSearch(e.target.value)}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white flex-1 max-w-md"
+          />
+          <select
+            value={cryptoLimit}
+            onChange={(e) => setCryptoLimit(parseInt(e.target.value))}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            <option value={25}>Top 25</option>
+            <option value={50}>Top 50</option>
+            <option value={100}>Top 100</option>
+            <option value={200}>Top 200</option>
+          </select>
+        </div>
         <div className="flex gap-2 flex-wrap mb-4">
-          {TOP_CRYPTO.map((crypto) => (
-            <button
-              key={crypto}
-              onClick={() => setSelectedCrypto(crypto)}
-              className={`px-4 py-2 rounded transition-colors ${
-                selectedCrypto === crypto
-                  ? 'bg-blue-600 text-white'
+          {cryptoListLoading ? (
+            <div className="text-gray-500 dark:text-gray-400">Caricamento crypto...</div>
+          ) : cryptoList.length === 0 ? (
+            <div className="text-gray-500 dark:text-gray-400">Nessuna crypto trovata</div>
+          ) : (
+            cryptoList.map((crypto) => (
+              <button
+                key={crypto.symbol}
+                onClick={() => setSelectedCrypto(crypto.symbol)}
+                className={`px-4 py-2 rounded transition-colors ${
+                  selectedCrypto === crypto.symbol
+                    ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
