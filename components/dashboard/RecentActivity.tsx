@@ -11,7 +11,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
-import { SkeletonList } from '@/components/ui/Skeleton';
 import { VirtualizedList } from './VirtualizedList';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
