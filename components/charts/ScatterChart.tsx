@@ -221,8 +221,9 @@ export function ScatterChart({
                 fill={color}
                 opacity={0.7}
                 className="cursor-pointer hover:opacity-100 transition-opacity"
-                title={point.label || `(${point.x.toFixed(2)}, ${point.y.toFixed(2)})`}
-              />
+              >
+                <title>{point.label || `(${point.x.toFixed(2)}, ${point.y.toFixed(2)})`}</title>
+              </circle>
             );
           })}
         </svg>
