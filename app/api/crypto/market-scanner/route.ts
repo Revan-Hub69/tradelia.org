@@ -122,7 +122,7 @@ async function scanCrypto(symbol: string): Promise<ScannerResult | null> {
     const signal = calculateHighPrecisionSignal(
       {
         price,
-        supportResistance: supportResistance.levels || [],
+        supportResistance: supportResistance || [],
         marketPressure: {
           buying: marketPressure.buying,
           selling: marketPressure.selling,
