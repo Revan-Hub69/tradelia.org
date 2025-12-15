@@ -111,10 +111,12 @@ export function ProposeAssetModal({
       isOpen={isOpen}
       onClose={onClose}
       title={t('dashboard.voting.propose') || 'Proponi Asset'}
-      description={t('dashboard.voting.proposeDescription') || 'Proponi un nuovo asset per l\'analisi della community'}
       size="md"
     >
       {/* Riferimento: WCAG 2.1 - Forms, Norman (2013) - Affordance, Nielsen (1994) - Error Prevention */}
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        {t('dashboard.voting.proposeDescription') || 'Proponi un nuovo asset per l\'analisi della community'}
+      </p>
       <form 
         onSubmit={handleSubmit} 
         className="space-y-4"
