@@ -1,6 +1,6 @@
 /**
  * Binance Futures API
- * 
+ *
  * Dati per trading intraday/scalping con leva:
  * - Funding rates (real-time)
  * - Open Interest
@@ -26,13 +26,14 @@ interface BinanceOpenInterest {
   sumOpenInterestValue: string;
 }
 
-interface BinanceLiquidation {
-  symbol: string;
-  price: string;
-  side: 'BUY' | 'SELL';
-  size: string;
-  time: number;
-}
+// Interface per liquidazioni (non usata direttamente, calcolata da funding rate)
+// interface BinanceLiquidation {
+//   symbol: string;
+//   price: string;
+//   side: 'BUY' | 'SELL';
+//   size: string;
+//   time: number;
+// }
 
 /**
  * Ottiene funding rate corrente per perpetual futures
@@ -44,8 +45,8 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
   indexPrice: number;
 } | null> {
   try {
-    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
-    
+    const binanceSymbol = symbol.includes("USDT") ? symbol : `${symbol}USDT`;
+
     const response = await fetch(
       `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
       {
@@ -79,8 +80,8 @@ export async function getBinanceOpenInterest(symbol: string): Promise<{
   openInterestValue: number; // In USD
 } | null> {
   try {
-    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
-    
+    const binanceSymbol = symbol.includes("USDT") ? symbol : `${symbol}USDT`;
+
     const response = await fetch(
       `https://fapi.binance.com/fapi/v1/openInterest?symbol=${binanceSymbol}`,
       {
@@ -106,7 +107,7 @@ export async function getBinanceOpenInterest(symbol: string): Promise<{
 
 /**
  * Ottiene liquidazioni recenti (ultime 24h)
- * 
+ *
  * Nota: Binance non ha API pubblica per liquidazioni in tempo reale
  * Usiamo dati aggregati da fonti terze o calcoliamo da price action
  */
@@ -117,23 +118,23 @@ export async function getBinanceLiquidationsEstimate(
 ): Promise<{
   estimatedLiquidationPriceLong: number;
   estimatedLiquidationPriceShort: number;
-  liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
+  liquidationRisk: "low" | "medium" | "high" | "very-high";
 } | null> {
   try {
     // Stima basata su funding rate e open interest
     // Funding rate alto = molti long = rischio liquidazione long se prezzo scende
     // Funding rate negativo = molti short = rischio liquidazione short se prezzo sale
-    
-    let liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
-    
+
+    let liquidationRisk: "low" | "medium" | "high" | "very-high";
+
     if (Math.abs(fundingRate) > 0.1) {
-      liquidationRisk = 'very-high';
+      liquidationRisk = "very-high";
     } else if (Math.abs(fundingRate) > 0.05) {
-      liquidationRisk = 'high';
+      liquidationRisk = "high";
     } else if (Math.abs(fundingRate) > 0.02) {
-      liquidationRisk = 'medium';
+      liquidationRisk = "medium";
     } else {
-      liquidationRisk = 'low';
+      liquidationRisk = "low";
     }
 
     // Stima prezzi di liquidazione (semplificato, in produzione usare dati reali)
@@ -162,8 +163,8 @@ export async function getBinanceLongShortRatio(symbol: string): Promise<{
   shortAccount: number; // % account short
 } | null> {
   try {
-    const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
-    
+    const binanceSymbol = symbol.includes("USDT") ? symbol : `${symbol}USDT`;
+
     const response = await fetch(
       `https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol=${binanceSymbol}&period=5m`,
       {
@@ -178,9 +179,11 @@ export async function getBinanceLongShortRatio(symbol: string): Promise<{
     const data = await response.json();
     const latest = Array.isArray(data) ? data[data.length - 1] : data;
 
-    if (!latest) return null;
+    if (!latest) {
+      return null;
+    }
 
-    const longAccount = parseFloat(latest.longAccount || latest.longShortRatio || '0.5');
+    const longAccount = parseFloat(latest.longAccount || latest.longShortRatio || "0.5");
     const shortAccount = 1 - longAccount;
     const longShortRatio = longAccount / shortAccount;
 
@@ -197,6 +200,7 @@ export async function getBinanceLongShortRatio(symbol: string): Promise<{
 
 /**
  * Ottiene tutti i dati futures per una crypto
+ * Restituisce dati parziali quando possibile invece di null
  */
 export async function getBinanceFuturesData(symbol: string): Promise<{
   fundingRate: number;
@@ -208,40 +212,71 @@ export async function getBinanceFuturesData(symbol: string): Promise<{
   longShortRatio: number;
   longAccount: number;
   shortAccount: number;
-  liquidationRisk: 'low' | 'medium' | 'high' | 'very-high';
+  liquidationRisk: "low" | "medium" | "high" | "very-high";
   estimatedLiquidationPriceLong: number;
   estimatedLiquidationPriceShort: number;
+  partial?: boolean; // Indica se alcuni dati mancano
 } | null> {
   try {
-    const [funding, oi, longShort] = await Promise.all([
+    const [funding, oi, longShort] = await Promise.allSettled([
       getBinanceFundingRate(symbol),
       getBinanceOpenInterest(symbol),
       getBinanceLongShortRatio(symbol),
     ]);
 
-    if (!funding || !oi || !longShort) {
+    const fundingData = funding.status === "fulfilled" ? funding.value : null;
+    const oiData = oi.status === "fulfilled" ? oi.value : null;
+    const longShortData = longShort.status === "fulfilled" ? longShort.value : null;
+
+    // Se manca funding, non possiamo procedere (serve per markPrice)
+    if (!fundingData) {
+      console.error(`Missing funding data for ${symbol}`);
       return null;
     }
 
+    // Usa valori di default se mancano dati
+    const openInterest = oiData?.openInterest || 0;
+    const openInterestValue = oiData?.openInterestValue || 0;
+    const longShortRatio = longShortData?.longShortRatio || 1;
+    const longAccount = longShortData?.longAccount || 50;
+    const shortAccount = longShortData?.shortAccount || 50;
+
+    // Calcola liquidazioni (sempre possibile se abbiamo funding)
     const liquidations = await getBinanceLiquidationsEstimate(
       symbol,
-      funding.markPrice,
-      funding.fundingRate
+      fundingData.markPrice,
+      fundingData.fundingRate
     );
 
     if (!liquidations) {
-      return null;
+      // Fallback con valori di default
+      const avgLeverage = 10;
+      return {
+        ...fundingData,
+        openInterest,
+        openInterestValue,
+        longShortRatio,
+        longAccount,
+        shortAccount,
+        liquidationRisk: "medium" as const,
+        estimatedLiquidationPriceLong: fundingData.markPrice * (1 - 1 / avgLeverage),
+        estimatedLiquidationPriceShort: fundingData.markPrice * (1 + 1 / avgLeverage),
+        partial: !oiData || !longShortData,
+      };
     }
 
     return {
-      ...funding,
-      ...oi,
-      ...longShort,
+      ...fundingData,
+      openInterest,
+      openInterestValue,
+      longShortRatio,
+      longAccount,
+      shortAccount,
       ...liquidations,
+      partial: !oiData || !longShortData,
     };
   } catch (error) {
     console.error(`Error fetching futures data for ${symbol}:`, error);
     return null;
   }
 }
-

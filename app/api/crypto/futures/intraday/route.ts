@@ -27,13 +27,38 @@ export async function GET(request: NextRequest) {
     const futuresData = await getBinanceFuturesData(symbol);
 
     if (!futuresData) {
+      // Restituisci 503 solo se completamente non disponibile
       return NextResponse.json(
         {
           error: "Dati futures non disponibili",
           symbol,
           timestamp: new Date().toISOString(),
+          retryAfter: 10, // secondi
         },
-        { status: 503 }
+        {
+          status: 503,
+          headers: {
+            "Retry-After": "10",
+          },
+        }
+      );
+    }
+
+    // Se dati parziali, restituisci 206 Partial Content
+    if (futuresData.partial) {
+      return NextResponse.json(
+        {
+          symbol,
+          timestamp: new Date().toISOString(),
+          ...futuresData,
+          warning: "Alcuni dati potrebbero essere incompleti",
+        },
+        {
+          status: 206, // Partial Content
+          headers: {
+            "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+          },
+        }
       );
     }
 

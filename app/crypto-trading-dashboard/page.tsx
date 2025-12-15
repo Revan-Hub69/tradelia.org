@@ -36,6 +36,7 @@ export default function CryptoTradingDashboardPage() {
   const [selectedCrypto, setSelectedCrypto] = useState('BTC');
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   // Dati market overview (supporti/resistenze, pressione)
   const [marketData, setMarketData] = useState<any>(null);
@@ -54,33 +55,46 @@ export default function CryptoTradingDashboardPage() {
 
   const fetchAllData = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const [marketRes, futuresRes, orderFlowRes, liquidationsRes] = await Promise.all([
-        fetch(`/api/crypto/market-overview?limit=50`).then(r => r.ok ? r.json() : null),
-        fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null),
-        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null),
-        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null),
+      const [marketRes, futuresRes, orderFlowRes, liquidationsRes] = await Promise.allSettled([
+        fetch(`/api/crypto/market-overview?limit=50`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
+        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
       ]);
 
-      // Trova dati per crypto selezionata
-      const cryptoMarketData = marketRes?.cryptos?.find((c: any) => c.symbol === selectedCrypto);
-      setMarketData(cryptoMarketData);
-      setFuturesData(futuresRes);
-      setOrderFlow(orderFlowRes);
-      setLiquidations(liquidationsRes);
+      // Estrai dati da Promise.allSettled
+      const marketData = marketRes.status === 'fulfilled' ? marketRes.value : null;
+      const futuresData = futuresRes.status === 'fulfilled' ? futuresRes.value : null;
+      const orderFlowData = orderFlowRes.status === 'fulfilled' ? orderFlowRes.value : null;
+      const liquidationsData = liquidationsRes.status === 'fulfilled' ? liquidationsRes.value : null;
 
-      // Calcola decisione automatica
-      if (cryptoMarketData && futuresRes && orderFlowRes && liquidationsRes) {
+      // Trova dati per crypto selezionata
+      const cryptoMarketData = marketData?.cryptos?.find((c: any) => c.symbol === selectedCrypto);
+      setMarketData(cryptoMarketData);
+      setFuturesData(futuresData);
+      setOrderFlow(orderFlowData);
+      setLiquidations(liquidationsData);
+
+      // Calcola decisione automatica (anche con dati parziali)
+      if (cryptoMarketData) {
         const decision = calculateTradingDecision(
           cryptoMarketData,
-          futuresRes,
-          orderFlowRes,
-          liquidationsRes
+          futuresData,
+          orderFlowData,
+          liquidationsData
         );
         setDecision(decision);
       }
+
+      // Mostra warning se dati parziali
+      if (futuresData?.partial || futuresData?.warning) {
+        setError('Alcuni dati potrebbero essere incompleti');
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError('Errore nel caricamento dati. Riprova tra qualche secondo.');
     } finally {
       setLoading(false);
     }
@@ -134,6 +148,24 @@ export default function CryptoTradingDashboardPage() {
           <span className="text-gray-600 dark:text-gray-400">Auto-refresh ogni 5 secondi</span>
         </label>
       </div>
+
+      {/* Error Banner */}
+      {error && (
+        <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 rounded">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <span className="text-yellow-800 dark:text-yellow-200 text-sm">{error}</span>
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className="text-yellow-800 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100"
+              aria-label="Chiudi avviso"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {loading && !marketData ? (
         <div className="text-center py-8 text-gray-500">Caricamento dati...</div>
