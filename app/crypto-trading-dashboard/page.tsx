@@ -398,7 +398,11 @@ export default function CryptoTradingDashboardPage() {
                     },
                   } : undefined,
                   orderFlow: orderFlow && orderFlow.indicators ? {
-                    indicators: orderFlow.indicators,
+                    indicators: {
+                      delta: orderFlow.indicators.delta || { deltaPercent: 0, signal: 'NEUTRAL' },
+                      takerRatio: orderFlow.indicators.takerRatio || { ratio: 1 },
+                      orderBookImbalance: orderFlow.indicators.orderBookImbalance || { imbalancePercent: 0 },
+                    },
                     combinedSignal: orderFlow.combinedSignal || {
                       signal: 'NEUTRAL',
                       confidence: 50,
@@ -660,17 +664,17 @@ export default function CryptoTradingDashboardPage() {
                 )}
 
                 {/* Order Flow Imbalance */}
-                {orderFlow && (
+                {orderFlow && orderFlow.indicators?.orderBookImbalance && (
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                     <div className="text-xs text-gray-500 mb-1">Order Flow</div>
                     <div className={`text-xl font-bold ${
-                      orderFlow.imbalance > 0.2 ? 'text-green-600' :
-                      orderFlow.imbalance < -0.2 ? 'text-red-600' : 'text-gray-600'
+                      orderFlow.indicators.orderBookImbalance.imbalancePercent > 20 ? 'text-green-600' :
+                      orderFlow.indicators.orderBookImbalance.imbalancePercent < -20 ? 'text-red-600' : 'text-gray-600'
                     }`}>
-                      {(orderFlow.imbalance * 100).toFixed(1)}%
+                      {orderFlow.indicators.orderBookImbalance.imbalancePercent.toFixed(1)}%
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {orderFlow.flowDirection}
+                      {orderFlow.combinedSignal?.signal || 'NEUTRAL'}
                     </div>
                   </div>
                 )}
