@@ -1,25 +1,21 @@
 /**
- * Backtesting Engine - Tradelia
+ * Backtesting Engine
  * 
- * Engine per backtesting reale di strategie su dati storici OHLCV
+ * Framework per testare strategie su dati storici
+ * Usa dati gratuiti da Binance API
  * 
- * Best Practice:
- * - Walk-Forward Optimization
- * - Out-of-Sample Testing
- * - Realistic execution simulation (slippage, commissions)
- * 
- * References:
- * - Prado, M. L. (2018): "Advances in Financial Machine Learning"
- * - Chan, E. P. (2013): "Algorithmic Trading: Winning Strategies and Their Rationale"
+ * Riferimenti:
+ * - Prado (2018) - "Advances in Financial Machine Learning"
  */
 
-export interface OHLCV {
-  timestamp: number; // Unix timestamp in milliseconds
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
+export interface BacktestConfig {
+  symbol: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  timeframe: string; // 1m, 5m, 15m, 1h, etc.
+  initialCapital: number;
+  leverage?: number;
+  commission?: number; // 0.001 = 0.1%
 }
 
 export interface Trade {
@@ -31,279 +27,287 @@ export interface Trade {
   side: 'long' | 'short';
   pnl: number;
   pnlPercent: number;
-  strategyId: string;
-  parameters: Record<string, number>;
+  leverage: number;
 }
 
 export interface BacktestResult {
-  trades: Trade[];
-  totalReturn: number;
-  totalReturnPercent: number;
-  sharpeRatio: number;
-  calmarRatio: number;
-  maxDrawdown: number;
-  maxDrawdownPercent: number;
-  winRate: number;
-  profitFactor: number;
   totalTrades: number;
   winningTrades: number;
   losingTrades: number;
-  averageWin: number;
-  averageLoss: number;
+  winRate: number;
+  totalPnL: number;
+  totalPnLPercent: number;
+  maxDrawdown: number;
+  maxDrawdownPercent: number;
+  sharpeRatio: number;
+  profitFactor: number;
+  avgWin: number;
+  avgLoss: number;
   largestWin: number;
   largestLoss: number;
-  expectancy: number;
-  equityCurve: Array<{ timestamp: number; equity: number }>;
+  trades: Trade[];
+  equityCurve: Array<{ time: number; equity: number }>;
 }
-
-export interface StrategySignal {
-  type: 'buy' | 'sell' | 'hold';
-  confidence?: number;
-  price?: number;
-}
-
-export type StrategyFunction = (
-  data: OHLCV[],
-  currentIndex: number,
-  parameters: Record<string, number>
-) => StrategySignal;
 
 /**
- * Backtesting Engine
- * 
- * Esegue backtesting di una strategia su dati storici OHLCV
+ * Fetch historical data from Binance
  */
-export class BacktestEngine {
-  private data: OHLCV[];
-  private strategy: StrategyFunction;
-  private parameters: Record<string, number>;
-  private initialCapital: number;
-  private slippage: number; // Slippage percentuale (es. 0.001 = 0.1%)
-  private commission: number; // Commissione fissa per trade
+async function fetchHistoricalData(
+  symbol: string,
+  interval: string,
+  startTime: number,
+  endTime: number
+): Promise<Array<{
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}>> {
+  const binanceSymbol = symbol.includes('USDT') ? symbol : `${symbol}USDT`;
+  const limit = 1000; // Max per request
+  const allData: any[] = [];
 
-  constructor(
-    data: OHLCV[],
-    strategy: StrategyFunction,
-    parameters: Record<string, number>,
-    options: {
-      initialCapital?: number;
-      slippage?: number;
-      commission?: number;
-    } = {}
-  ) {
-    this.data = data;
-    this.strategy = strategy;
-    this.parameters = parameters;
-    this.initialCapital = options.initialCapital || 10000;
-    this.slippage = options.slippage || 0.001; // 0.1% default
-    this.commission = options.commission || 0; // No commission default
+  let currentStart = startTime;
+
+  while (currentStart < endTime) {
+    const response = await fetch(
+      `https://api.binance.com/api/v3/klines?symbol=${binanceSymbol}&interval=${interval}&startTime=${currentStart}&limit=${limit}`,
+      { next: { revalidate: 3600 } } // Cache 1 hour
+    );
+
+    if (!response.ok) break;
+
+    const data = await response.json();
+    if (data.length === 0) break;
+
+    allData.push(...data);
+
+    currentStart = data[data.length - 1][0] + 1; // Next start time
+    if (data.length < limit) break; // No more data
   }
 
-  /**
-   * Esegue il backtesting completo
-   */
-  run(): BacktestResult {
-    const trades: Trade[] = [];
-    let position: {
-      side: 'long' | 'short';
-      entryPrice: number;
-      entryTime: number;
-      quantity: number;
-    } | null = null;
+  return allData.map((kline) => ({
+    timestamp: kline[0],
+    open: parseFloat(kline[1]),
+    high: parseFloat(kline[2]),
+    low: parseFloat(kline[3]),
+    close: parseFloat(kline[4]),
+    volume: parseFloat(kline[5]),
+  }));
+}
 
-    let equity = this.initialCapital;
-    const equityCurve: Array<{ timestamp: number; equity: number }> = [
-      { timestamp: this.data[0]?.timestamp || 0, equity }
-    ];
+/**
+ * Simple backtest engine
+ */
+export async function runBacktest(
+  config: BacktestConfig,
+  signalFunction: (data: any[], index: number) => {
+    signal: 'buy' | 'sell' | 'hold';
+    confidence: number;
+    stopLoss?: number;
+    takeProfit?: number;
+  }
+): Promise<BacktestResult> {
+  const startTime = new Date(config.startDate).getTime();
+  const endTime = new Date(config.endDate).getTime();
 
-    let peakEquity = equity;
-    let maxDrawdown = 0;
-    let maxDrawdownPercent = 0;
+  // Fetch historical data
+  const data = await fetchHistoricalData(config.symbol, config.timeframe, startTime, endTime);
 
-    // Iterate through historical data
-    for (let i = 1; i < this.data.length; i++) {
-      const currentBar = this.data[i];
-      const previousBars = this.data.slice(0, i + 1);
+  if (data.length === 0) {
+    throw new Error('No historical data available');
+  }
 
-      // Get strategy signal
-      const signal = this.strategy(previousBars, i, this.parameters);
+  const trades: Trade[] = [];
+  let equity = config.initialCapital;
+  const equityCurve: Array<{ time: number; equity: number }> = [
+    { time: startTime, equity },
+  ];
 
-      // Execute trades based on signal
-      if (signal.type === 'buy' && !position) {
-        // Open long position
-        const entryPrice = this.applySlippage(currentBar.close, 'buy');
-        const quantity = Math.floor(equity / entryPrice);
-        
-        if (quantity > 0) {
-          position = {
-            side: 'long',
-            entryPrice,
-            entryTime: currentBar.timestamp,
-            quantity,
-          };
-          equity -= (entryPrice * quantity) + this.commission;
-        }
-      } else if (signal.type === 'sell' && position) {
-        // Close position
-        const exitPrice = this.applySlippage(currentBar.close, position.side === 'long' ? 'sell' : 'buy');
-        const pnl = position.side === 'long'
-          ? (exitPrice - position.entryPrice) * position.quantity
-          : (position.entryPrice - exitPrice) * position.quantity;
-        const pnlPercent = (pnl / (position.entryPrice * position.quantity)) * 100;
+  let currentPosition: {
+    side: 'long' | 'short';
+    entryPrice: number;
+    entryTime: number;
+    quantity: number;
+    stopLoss?: number;
+    takeProfit?: number;
+  } | null = null;
 
-        trades.push({
-          entryTime: position.entryTime,
-          exitTime: currentBar.timestamp,
-          entryPrice: position.entryPrice,
-          exitPrice,
-          quantity: position.quantity,
-          side: position.side,
-          pnl: pnl - this.commission,
-          pnlPercent,
-          strategyId: 'strategy', // Will be set by caller
-          parameters: this.parameters,
-        });
+  const leverage = config.leverage || 1;
+  const commission = config.commission || 0.001;
 
-        equity += (exitPrice * position.quantity) - this.commission;
-        position = null;
-      }
+  for (let i = 1; i < data.length; i++) {
+    const current = data[i];
+    const prev = data[i - 1];
 
-      // Update equity curve
-      if (position) {
-        // Mark-to-market: calculate current equity with open position
-        const currentPrice = currentBar.close;
-        const unrealizedPnl = position.side === 'long'
-          ? (currentPrice - position.entryPrice) * position.quantity
-          : (position.entryPrice - currentPrice) * position.quantity;
-        const currentEquity = equity + (position.entryPrice * position.quantity) + unrealizedPnl;
-        equityCurve.push({ timestamp: currentBar.timestamp, equity: currentEquity });
+    // Check if current position hit stop loss or take profit
+    if (currentPosition) {
+      let shouldExit = false;
+      let exitPrice = current.close;
+      let exitReason = '';
 
-        // Update drawdown
-        if (currentEquity > peakEquity) {
-          peakEquity = currentEquity;
-        }
-        const drawdown = peakEquity - currentEquity;
-        const drawdownPercent = (drawdown / peakEquity) * 100;
-        if (drawdown > maxDrawdown) {
-          maxDrawdown = drawdown;
-        }
-        if (drawdownPercent > maxDrawdownPercent) {
-          maxDrawdownPercent = drawdownPercent;
+      if (currentPosition.side === 'long') {
+        if (currentPosition.stopLoss && current.low <= currentPosition.stopLoss) {
+          shouldExit = true;
+          exitPrice = currentPosition.stopLoss;
+          exitReason = 'stop-loss';
+        } else if (currentPosition.takeProfit && current.high >= currentPosition.takeProfit) {
+          shouldExit = true;
+          exitPrice = currentPosition.takeProfit;
+          exitReason = 'take-profit';
         }
       } else {
-        equityCurve.push({ timestamp: currentBar.timestamp, equity });
-        if (equity > peakEquity) {
-          peakEquity = equity;
+        // short
+        if (currentPosition.stopLoss && current.high >= currentPosition.stopLoss) {
+          shouldExit = true;
+          exitPrice = currentPosition.stopLoss;
+          exitReason = 'stop-loss';
+        } else if (currentPosition.takeProfit && current.low <= currentPosition.takeProfit) {
+          shouldExit = true;
+          exitPrice = currentPosition.takeProfit;
+          exitReason = 'take-profit';
         }
+      }
+
+      if (shouldExit) {
+        // Close position
+        const pnl = currentPosition.side === 'long'
+          ? (exitPrice - currentPosition.entryPrice) * currentPosition.quantity * leverage
+          : (currentPosition.entryPrice - exitPrice) * currentPosition.quantity * leverage;
+
+        const commissionCost = (currentPosition.entryPrice + exitPrice) * currentPosition.quantity * commission;
+        const netPnl = pnl - commissionCost;
+        const pnlPercent = (netPnl / (currentPosition.entryPrice * currentPosition.quantity)) * 100;
+
+        equity += netPnl;
+
+        trades.push({
+          entryTime: currentPosition.entryTime,
+          exitTime: current.timestamp,
+          entryPrice: currentPosition.entryPrice,
+          exitPrice,
+          quantity: currentPosition.quantity,
+          side: currentPosition.side,
+          pnl: netPnl,
+          pnlPercent,
+          leverage,
+        });
+
+        currentPosition = null;
       }
     }
 
-    // Close any open position at the end
-    if (position && this.data.length > 0) {
-      const lastBar = this.data[this.data.length - 1];
-      const exitPrice = this.applySlippage(lastBar.close, position.side === 'long' ? 'sell' : 'buy');
-      const pnl = position.side === 'long'
-        ? (exitPrice - position.entryPrice) * position.quantity
-        : (position.entryPrice - exitPrice) * position.quantity;
-      const pnlPercent = (pnl / (position.entryPrice * position.quantity)) * 100;
+    // Check for new signal if no position
+    if (!currentPosition) {
+      const signal = signalFunction(data, i);
 
-      trades.push({
-        entryTime: position.entryTime,
-        exitTime: lastBar.timestamp,
-        entryPrice: position.entryPrice,
-        exitPrice,
-        quantity: position.quantity,
-        side: position.side,
-        pnl: pnl - this.commission,
-        pnlPercent,
-        strategyId: 'strategy',
-        parameters: this.parameters,
-      });
-
-      equity += (exitPrice * position.quantity) - this.commission;
-      equityCurve.push({ timestamp: lastBar.timestamp, equity });
+      if (signal.signal === 'buy' && signal.confidence > 60) {
+        // Open long position
+        const quantity = (equity * 0.95) / current.close; // Use 95% of equity
+        currentPosition = {
+          side: 'long',
+          entryPrice: current.close,
+          entryTime: current.timestamp,
+          quantity,
+          stopLoss: signal.stopLoss,
+          takeProfit: signal.takeProfit,
+        };
+      } else if (signal.signal === 'sell' && signal.confidence > 60) {
+        // Open short position
+        const quantity = (equity * 0.95) / current.close;
+        currentPosition = {
+          side: 'short',
+          entryPrice: current.close,
+          entryTime: current.timestamp,
+          quantity,
+          stopLoss: signal.stopLoss,
+          takeProfit: signal.takeProfit,
+        };
+      }
     }
 
-    // Calculate statistics
-    const totalReturn = equity - this.initialCapital;
-    const totalReturnPercent = (totalReturn / this.initialCapital) * 100;
-
-    const winningTrades = trades.filter(t => t.pnl > 0);
-    const losingTrades = trades.filter(t => t.pnl < 0);
-    const winRate = trades.length > 0 ? (winningTrades.length / trades.length) * 100 : 0;
-
-    const averageWin = winningTrades.length > 0
-      ? winningTrades.reduce((sum, t) => sum + t.pnl, 0) / winningTrades.length
-      : 0;
-    const averageLoss = losingTrades.length > 0
-      ? losingTrades.reduce((sum, t) => sum + Math.abs(t.pnl), 0) / losingTrades.length
-      : 0;
-
-    const largestWin = winningTrades.length > 0
-      ? Math.max(...winningTrades.map(t => t.pnl))
-      : 0;
-    const largestLoss = losingTrades.length > 0
-      ? Math.min(...losingTrades.map(t => t.pnl))
-      : 0;
-
-    const profitFactor = averageLoss > 0
-      ? (averageWin * winningTrades.length) / (averageLoss * losingTrades.length)
-      : winningTrades.length > 0 ? Infinity : 0;
-
-    const expectancy = (winRate / 100) * averageWin - ((100 - winRate) / 100) * averageLoss;
-
-    // Calculate Sharpe Ratio (annualized)
-    const returns = equityCurve.slice(1).map((point, i) => {
-      const prevEquity = equityCurve[i].equity;
-      return (point.equity - prevEquity) / prevEquity;
-    });
-    const avgReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length;
-    const variance = returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length;
-    const stdDev = Math.sqrt(variance);
-    
-    // Annualize (assuming daily data, 252 trading days)
-    const annualizedReturn = avgReturn * 252;
-    const annualizedStdDev = stdDev * Math.sqrt(252);
-    const riskFreeRate = 0.02; // 2% annual
-    const sharpeRatio = annualizedStdDev > 0
-      ? (annualizedReturn - riskFreeRate) / annualizedStdDev
-      : 0;
-
-    // Calmar Ratio
-    const calmarRatio = maxDrawdownPercent > 0
-      ? (totalReturnPercent / 100) / (maxDrawdownPercent / 100)
-      : 0;
-
-    return {
-      trades,
-      totalReturn,
-      totalReturnPercent,
-      sharpeRatio,
-      calmarRatio,
-      maxDrawdown,
-      maxDrawdownPercent,
-      winRate,
-      profitFactor,
-      totalTrades: trades.length,
-      winningTrades: winningTrades.length,
-      losingTrades: losingTrades.length,
-      averageWin,
-      averageLoss,
-      largestWin,
-      largestLoss,
-      expectancy,
-      equityCurve,
-    };
-  }
-
-  /**
-   * Applica slippage al prezzo di esecuzione
-   */
-  private applySlippage(price: number, side: 'buy' | 'sell'): number {
-    if (side === 'buy') {
-      return price * (1 + this.slippage); // Pay more when buying
+    // Update equity curve
+    if (currentPosition) {
+      const currentValue = currentPosition.side === 'long'
+        ? (current.close - currentPosition.entryPrice) * currentPosition.quantity * leverage + equity
+        : (currentPosition.entryPrice - current.close) * currentPosition.quantity * leverage + equity;
+      equityCurve.push({ time: current.timestamp, equity: currentValue });
     } else {
-      return price * (1 - this.slippage); // Receive less when selling
+      equityCurve.push({ time: current.timestamp, equity });
     }
   }
+
+  // Calculate statistics
+  const winningTrades = trades.filter((t) => t.pnl > 0);
+  const losingTrades = trades.filter((t) => t.pnl <= 0);
+  const winRate = trades.length > 0 ? (winningTrades.length / trades.length) * 100 : 0;
+  const totalPnL = equity - config.initialCapital;
+  const totalPnLPercent = (totalPnL / config.initialCapital) * 100;
+
+  // Max drawdown
+  let maxEquity = config.initialCapital;
+  let maxDrawdown = 0;
+  let maxDrawdownPercent = 0;
+
+  equityCurve.forEach((point) => {
+    if (point.equity > maxEquity) {
+      maxEquity = point.equity;
+    }
+    const drawdown = maxEquity - point.equity;
+    const drawdownPercent = (drawdown / maxEquity) * 100;
+    if (drawdown > maxDrawdown) {
+      maxDrawdown = drawdown;
+      maxDrawdownPercent = drawdownPercent;
+    }
+  });
+
+  // Sharpe ratio (simplified)
+  const returns = equityCurve.slice(1).map((point, i) => {
+    const prevEquity = equityCurve[i].equity;
+    return (point.equity - prevEquity) / prevEquity;
+  });
+  const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const stdDev = Math.sqrt(
+    returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length
+  );
+  const sharpeRatio = stdDev > 0 ? (avgReturn / stdDev) * Math.sqrt(252) : 0; // Annualized
+
+  // Profit factor
+  const totalWins = winningTrades.reduce((sum, t) => sum + t.pnl, 0);
+  const totalLosses = Math.abs(losingTrades.reduce((sum, t) => sum + t.pnl, 0));
+  const profitFactor = totalLosses > 0 ? totalWins / totalLosses : totalWins > 0 ? 999 : 0;
+
+  const avgWin = winningTrades.length > 0
+    ? winningTrades.reduce((sum, t) => sum + t.pnl, 0) / winningTrades.length
+    : 0;
+  const avgLoss = losingTrades.length > 0
+    ? losingTrades.reduce((sum, t) => sum + t.pnl, 0) / losingTrades.length
+    : 0;
+  const largestWin = winningTrades.length > 0
+    ? Math.max(...winningTrades.map((t) => t.pnl))
+    : 0;
+  const largestLoss = losingTrades.length > 0
+    ? Math.min(...losingTrades.map((t) => t.pnl))
+    : 0;
+
+  return {
+    totalTrades: trades.length,
+    winningTrades: winningTrades.length,
+    losingTrades: losingTrades.length,
+    winRate,
+    totalPnL,
+    totalPnLPercent,
+    maxDrawdown,
+    maxDrawdownPercent,
+    sharpeRatio,
+    profitFactor,
+    avgWin,
+    avgLoss,
+    largestWin,
+    largestLoss,
+    trades,
+    equityCurve,
+  };
 }
