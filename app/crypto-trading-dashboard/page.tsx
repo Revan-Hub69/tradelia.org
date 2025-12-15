@@ -392,12 +392,16 @@ export default function CryptoTradingDashboardPage() {
                     openInterest: futuresData.openInterest || 0,
                     longShortRatio: futuresData.longShortRatio || 1,
                     liquidationRisk: futuresData.liquidationRisk || 'medium',
-                  } : null,
+                    leverageMetrics: futuresData.leverageMetrics || {
+                      recommendedLeverage: decision?.recommendedLeverage || 10,
+                      maxSafeLeverage: 20,
+                    },
+                  } : undefined,
                   orderFlow: orderFlow ? {
                     imbalance: orderFlow.imbalance || 0,
                     flowDirection: orderFlow.flowDirection || 'neutral',
                     indicators: orderFlow.indicators || {},
-                  } : null,
+                  } : undefined,
                   decision: decision ? {
                     recommendation: decision.recommendation,
                     confidence: decision.confidence,
