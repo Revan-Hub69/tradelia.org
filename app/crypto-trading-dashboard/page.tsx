@@ -17,7 +17,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { SkeletonCard, SkeletonChart, SkeletonTable } from '@/components/ui/skeleton';
+import { SkeletonCard, SkeletonChart, SkeletonTable } from '@/components/ui/Skeleton';
 
 const TOP_CRYPTO = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'MATIC', 'LINK', 'DOT', 'UNI', 'ATOM', 'LTC', 'NEAR'];
 
