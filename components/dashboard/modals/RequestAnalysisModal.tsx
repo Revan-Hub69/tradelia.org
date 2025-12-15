@@ -106,10 +106,12 @@ export function RequestAnalysisModal({
       isOpen={isOpen}
       onClose={onClose}
       title={t('dashboard.requests.newRequest') || 'Richiedi Analisi'}
-      description={t('dashboard.requests.modalDescription') || 'Richiedi un\'analisi personalizzata su un asset specifico'}
       size="md"
     >
       {/* Riferimento: WCAG 2.1 - Forms, Norman (2013) - Affordance, Nielsen (1994) - Error Prevention */}
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        {t('dashboard.requests.modalDescription') || 'Richiedi un\'analisi personalizzata su un asset specifico'}
+      </p>
       <form 
         onSubmit={handleSubmit} 
         className="space-y-4"
