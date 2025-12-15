@@ -352,3 +352,324 @@ export function calculateSMA(values: number[], period: number): number {
   return slice.reduce((a, b) => a + b, 0) / period;
 }
 
+/**
+ * ADX (Average Directional Index)
+ * Misura la forza del trend (non la direzione)
+ * 
+ * Formula:
+ * - +DI = (Smoothed +DM / ATR) * 100
+ * - -DI = (Smoothed -DM / ATR) * 100
+ * - DX = (|+DI - -DI| / |+DI + -DI|) * 100
+ * - ADX = EMA of DX (14 periodi)
+ * 
+ * Interpretazione:
+ * - ADX > 25: Trend forte
+ * - ADX < 20: Trend debole o laterale
+ * - +DI > -DI: Trend rialzista
+ * - -DI > +DI: Trend ribassista
+ */
+export function calculateADX(
+  prices: PriceData[],
+  period = 14
+): {
+  adx: number;
+  plusDI: number;
+  minusDI: number;
+  trend: 'strong-uptrend' | 'strong-downtrend' | 'weak-trend' | 'no-trend';
+} {
+  if (prices.length < period * 2) {
+    return { adx: 0, plusDI: 0, minusDI: 0, trend: 'no-trend' };
+  }
+
+  // Calcola +DM e -DM
+  const plusDM: number[] = [];
+  const minusDM: number[] = [];
+
+  for (let i = 1; i < prices.length; i++) {
+    const highDiff = prices[i].high - prices[i - 1].high;
+    const lowDiff = prices[i - 1].low - prices[i].low;
+
+    plusDM.push(highDiff > lowDiff && highDiff > 0 ? highDiff : 0);
+    minusDM.push(lowDiff > highDiff && lowDiff > 0 ? lowDiff : 0);
+  }
+
+  // Smooth +DM e -DM
+  const smoothedPlusDM = calculateEMA(plusDM, period);
+  const smoothedMinusDM = calculateEMA(minusDM, period);
+
+  // Calcola ATR
+  const atrValues = calculateATR(prices, period);
+  const atr = atrValues.atr;
+
+  if (atr === 0) {
+    return { adx: 0, plusDI: 0, minusDI: 0, trend: 'no-trend' };
+  }
+
+  // Calcola +DI e -DI
+  const plusDI = (smoothedPlusDM[smoothedPlusDM.length - 1] / atr) * 100;
+  const minusDI = (smoothedMinusDM[smoothedMinusDM.length - 1] / atr) * 100;
+
+  // Calcola DX
+  const diSum = plusDI + minusDI;
+  const diDiff = Math.abs(plusDI - minusDI);
+  const dx = diSum === 0 ? 0 : (diDiff / diSum) * 100;
+
+  // Calcola ADX (EMA of DX)
+  // Per semplicità, usiamo una media mobile semplice del DX
+  const dxValues: number[] = [];
+  for (let i = period; i < prices.length; i++) {
+    const periodPlusDM = smoothedPlusDM.slice(i - period, i);
+    const periodMinusDM = smoothedMinusDM.slice(i - period, i);
+    const periodATR = calculateATR(prices.slice(i - period, i), period).atr;
+
+    if (periodATR > 0) {
+      const pDI = (periodPlusDM[periodPlusDM.length - 1] / periodATR) * 100;
+      const mDI = (periodMinusDM[periodMinusDM.length - 1] / periodATR) * 100;
+      const diSum2 = pDI + mDI;
+      const diDiff2 = Math.abs(pDI - mDI);
+      const dxValue = diSum2 === 0 ? 0 : (diDiff2 / diSum2) * 100;
+      dxValues.push(dxValue);
+    }
+  }
+
+  const adx = dxValues.length > 0
+    ? dxValues.reduce((a, b) => a + b, 0) / dxValues.length
+    : dx;
+
+  // Determina trend
+  let trend: 'strong-uptrend' | 'strong-downtrend' | 'weak-trend' | 'no-trend';
+  if (adx > 25) {
+    if (plusDI > minusDI) trend = 'strong-uptrend';
+    else if (minusDI > plusDI) trend = 'strong-downtrend';
+    else trend = 'weak-trend';
+  } else if (adx > 20) {
+    trend = 'weak-trend';
+  } else {
+    trend = 'no-trend';
+  }
+
+  return { adx, plusDI, minusDI, trend };
+}
+
+/**
+ * Fibonacci Retracements
+ * Livelli di supporto/resistenza basati su sequenza Fibonacci
+ * 
+ * Livelli standard:
+ * - 0% (High/Low)
+ * - 23.6%
+ * - 38.2%
+ * - 50% (non Fibonacci, ma comune)
+ * - 61.8% (Golden Ratio)
+ * - 78.6%
+ * - 100% (opposto)
+ * 
+ * Interpretazione:
+ * - Prezzo spesso rimbalza o trova supporto/resistenza a questi livelli
+ * - 61.8% è il livello più importante (Golden Ratio)
+ */
+export function calculateFibonacciRetracements(
+  high: number,
+  low: number,
+  isUptrend: boolean
+): {
+  level: number;
+  price: number;
+  percentage: number;
+}[] {
+  const diff = high - low;
+  const levels = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0];
+
+  if (isUptrend) {
+    // Uptrend: retracement dal high
+    return levels.map((level) => ({
+      level,
+      price: high - diff * level,
+      percentage: level * 100,
+    }));
+  } else {
+    // Downtrend: retracement dal low
+    return levels.map((level) => ({
+      level,
+      price: low + diff * level,
+      percentage: level * 100,
+    }));
+  }
+}
+
+/**
+ * Ichimoku Cloud
+ * Sistema di analisi tecnica giapponese completo
+ * 
+ * Componenti:
+ * - Tenkan-sen (Conversion Line): (9-period high + low) / 2
+ * - Kijun-sen (Base Line): (26-period high + low) / 2
+ * - Senkou Span A (Leading Span A): (Tenkan + Kijun) / 2, shifted 26 periods
+ * - Senkou Span B (Leading Span B): (52-period high + low) / 2, shifted 26 periods
+ * - Chikou Span (Lagging Span): Close price, shifted -26 periods
+ * 
+ * Interpretazione:
+ * - Cloud (Kumo): Area tra Senkou Span A e B
+ * - Prezzo sopra cloud: Bullish
+ * - Prezzo sotto cloud: Bearish
+ * - Cloud spessore: Support/resistance strength
+ */
+export function calculateIchimoku(
+  prices: PriceData[]
+): {
+  tenkan: number;
+  kijun: number;
+  senkouA: number;
+  senkouB: number;
+  chikou: number;
+  cloudTop: number;
+  cloudBottom: number;
+  signal: 'bullish' | 'bearish' | 'neutral';
+} {
+  if (prices.length < 52) {
+    const currentPrice = prices[prices.length - 1].close;
+    return {
+      tenkan: currentPrice,
+      kijun: currentPrice,
+      senkouA: currentPrice,
+      senkouB: currentPrice,
+      chikou: currentPrice,
+      cloudTop: currentPrice,
+      cloudBottom: currentPrice,
+      signal: 'neutral',
+    };
+  }
+
+  const currentPrice = prices[prices.length - 1].close;
+
+  // Tenkan-sen (9 periodi)
+  const tenkanPeriod = 9;
+  const tenkanHighs = prices.slice(-tenkanPeriod).map((p) => p.high);
+  const tenkanLows = prices.slice(-tenkanPeriod).map((p) => p.low);
+  const tenkan = (Math.max(...tenkanHighs) + Math.min(...tenkanLows)) / 2;
+
+  // Kijun-sen (26 periodi)
+  const kijunPeriod = 26;
+  const kijunHighs = prices.slice(-kijunPeriod).map((p) => p.high);
+  const kijunLows = prices.slice(-kijunPeriod).map((p) => p.low);
+  const kijun = (Math.max(...kijunHighs) + Math.min(...kijunLows)) / 2;
+
+  // Senkou Span A (proiettato 26 periodi avanti)
+  const senkouA = (tenkan + kijun) / 2;
+
+  // Senkou Span B (52 periodi, proiettato 26 periodi avanti)
+  const senkouBPeriod = 52;
+  const senkouBHighs = prices.slice(-senkouBPeriod).map((p) => p.high);
+  const senkouBLows = prices.slice(-senkouBPeriod).map((p) => p.low);
+  const senkouB = (Math.max(...senkouBHighs) + Math.min(...senkouBLows)) / 2;
+
+  // Chikou Span (close price 26 periodi fa)
+  const chikouIndex = prices.length - 26;
+  const chikou = chikouIndex >= 0 ? prices[chikouIndex].close : currentPrice;
+
+  // Cloud
+  const cloudTop = Math.max(senkouA, senkouB);
+  const cloudBottom = Math.min(senkouA, senkouB);
+
+  // Segnale
+  let signal: 'bullish' | 'bearish' | 'neutral';
+  if (currentPrice > cloudTop) {
+    signal = 'bullish';
+  } else if (currentPrice < cloudBottom) {
+    signal = 'bearish';
+  } else {
+    signal = 'neutral';
+  }
+
+  return {
+    tenkan,
+    kijun,
+    senkouA,
+    senkouB,
+    chikou,
+    cloudTop,
+    cloudBottom,
+    signal,
+  };
+}
+
+/**
+ * Parabolic SAR
+ * Stop and Reverse indicator - mostra potenziali inversioni di trend
+ * 
+ * Formula:
+ * - SAR(t) = SAR(t-1) + AF * (EP - SAR(t-1))
+ * - AF (Acceleration Factor): Inizia a 0.02, incrementa di 0.02 ad ogni nuovo EP
+ * - EP (Extreme Point): Highest high (uptrend) o Lowest low (downtrend)
+ * 
+ * Interpretazione:
+ * - SAR sotto prezzo: Uptrend
+ * - SAR sopra prezzo: Downtrend
+ * - Inversione SAR: Possibile cambio trend
+ */
+export function calculateParabolicSAR(
+  prices: PriceData[],
+  acceleration = 0.02,
+  maximum = 0.2
+): {
+  sar: number;
+  trend: 'uptrend' | 'downtrend';
+  reversal: boolean;
+} {
+  if (prices.length < 2) {
+    return { sar: prices[0]?.close || 0, trend: 'uptrend', reversal: false };
+  }
+
+  let sar = prices[0].low;
+  let trend: 'uptrend' | 'downtrend' = 'uptrend';
+  let ep = prices[0].high;
+  let af = acceleration;
+
+  for (let i = 1; i < prices.length; i++) {
+    const price = prices[i];
+
+    if (trend === 'uptrend') {
+      // Uptrend: SAR sotto prezzo
+      sar = sar + af * (ep - sar);
+
+      // Se prezzo scende sotto SAR, inversione
+      if (price.low <= sar) {
+        trend = 'downtrend';
+        sar = ep;
+        ep = price.low;
+        af = acceleration;
+      } else {
+        // Aggiorna EP e AF
+        if (price.high > ep) {
+          ep = price.high;
+          af = Math.min(af + acceleration, maximum);
+        }
+      }
+    } else {
+      // Downtrend: SAR sopra prezzo
+      sar = sar + af * (ep - sar);
+
+      // Se prezzo sale sopra SAR, inversione
+      if (price.high >= sar) {
+        trend = 'uptrend';
+        sar = ep;
+        ep = price.high;
+        af = acceleration;
+      } else {
+        // Aggiorna EP e AF
+        if (price.low < ep) {
+          ep = price.low;
+          af = Math.min(af + acceleration, maximum);
+        }
+      }
+    }
+  }
+
+  const currentPrice = prices[prices.length - 1].close;
+  const reversal =
+    (trend === 'uptrend' && currentPrice < sar) ||
+    (trend === 'downtrend' && currentPrice > sar);
+
+  return { sar, trend, reversal };
+}
+
