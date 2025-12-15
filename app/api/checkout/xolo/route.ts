@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import type { User } from "@supabase/supabase-js";
 
 /**
  * API Route per gestione pagamenti manuali Xolo Go
@@ -113,7 +114,7 @@ export async function PUT(request: NextRequest) {
       if (userEmail) {
         // Cerca utente esistente
         const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-        const user = existingUsers?.users.find((u) => u.email === userEmail);
+        const user = existingUsers?.users?.find((u: User) => u.email === userEmail);
 
         if (user) {
           userId = user.id;
