@@ -218,12 +218,14 @@ export default function CryptoTradingDashboardPage() {
               leverage: decision.recommendedLeverage,
             });
 
-            // Crea alert per segnali forti
+            // Crea alert per segnali forti (escludi NEUTRAL)
             const alertSystem = getAlertSystem();
-            if (highPrecisionSignal.confidence >= 80) {
+            if (highPrecisionSignal.confidence >= 80 && 
+                highPrecisionSignal.signal !== 'NEUTRAL' &&
+                decision.entryPrice) {
               alertSystem.createSignalAlert({
                 symbol: selectedCrypto,
-                signal: highPrecisionSignal.signal,
+                signal: highPrecisionSignal.signal as 'STRONG_BUY' | 'BUY' | 'SELL' | 'STRONG_SELL',
                 confidence: highPrecisionSignal.confidence,
                 entryPrice: decision.entryPrice,
               });
