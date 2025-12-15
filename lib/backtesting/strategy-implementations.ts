@@ -204,11 +204,12 @@ export const STRATEGY_FUNCTIONS: Record<string, StrategyFunction> = {
 
 /**
  * Get strategy function by name
+ * Returns a function that accepts only data and index (parameters are already bound)
  */
 export function getStrategyFunction(
   strategyName: string,
   parameters: Record<string, number> = {}
-): StrategyFunction {
+): (data: OHLCV[], currentIndex: number) => StrategySignal {
   const strategy = STRATEGY_FUNCTIONS[strategyName] || STRATEGY_FUNCTIONS['rsi-mean-reversion'];
   
   return (data: OHLCV[], currentIndex: number) => {
