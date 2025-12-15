@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useMemo } from 'react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { getChartConfig, type ChartConfig } from '@/lib/data/chart-types-config';
@@ -38,7 +39,7 @@ export interface BarChartProps {
  * 
  * Supporta chart config automatico tramite indicatorId
  */
-export function BarChart({
+function BarChartComponent({
   data,
   bars,
   xAxisKey = 'name',
@@ -52,18 +53,40 @@ export function BarChart({
 }: BarChartProps) {
   const { t, locale } = useTranslations();
 
-  // Usa chart config se disponibile
-  const chartConfig = indicatorId ? getChartConfig(indicatorId) : config;
-  const finalHeight = height ?? chartConfig?.height ?? 300;
-  const finalShowGrid = showGrid ?? chartConfig?.showGrid ?? true;
-  const finalShowLegend = showLegend ?? chartConfig?.showLegend ?? true;
-  const defaultColors = chartConfig?.colors ?? ['#3b82f6'];
+  // Memoize chart config
+  const chartConfig = useMemo(() => 
+    indicatorId ? getChartConfig(indicatorId) : config,
+    [indicatorId, config]
+  );
+  
+  const finalHeight = useMemo(() => 
+    height ?? chartConfig?.height ?? 300,
+    [height, chartConfig?.height]
+  );
+  
+  const finalShowGrid = useMemo(() => 
+    showGrid ?? chartConfig?.showGrid ?? true,
+    [showGrid, chartConfig?.showGrid]
+  );
+  
+  const finalShowLegend = useMemo(() => 
+    showLegend ?? chartConfig?.showLegend ?? true,
+    [showLegend, chartConfig?.showLegend]
+  );
+  
+  const defaultColors = useMemo(() => 
+    chartConfig?.colors ?? ['#3b82f6'],
+    [chartConfig?.colors]
+  );
 
-  // Applica colori dal config se non specificati
-  const barsWithColors = bars.map((bar, index) => ({
-    ...bar,
-    color: bar.color || defaultColors[index % defaultColors.length],
-  }));
+  // Memoize bars with colors
+  const barsWithColors = useMemo(() => 
+    bars.map((bar, index) => ({
+      ...bar,
+      color: bar.color || defaultColors[index % defaultColors.length],
+    })),
+    [bars, defaultColors]
+  );
 
   // Accessibilità WCAG 2.2 (Borkin et al. 2025)
   const chartTitle = indicatorId 
@@ -134,4 +157,7 @@ export function BarChart({
     </div>
   );
 }
+
+// Memoized export per evitare re-render inutili
+export const BarChart = memo(BarChartComponent);
 

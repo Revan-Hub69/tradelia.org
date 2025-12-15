@@ -6,26 +6,64 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getBinanceFuturesData } from "@/lib/price-apis/binance-futures";
+import { rateLimit } from "@/lib/security/rate-limiting";
+import { CryptoSymbolSchema } from "@/lib/validation/crypto-schemas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip =
+      request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitResult = await rateLimit(`liquidations:${ip}`, {
+      maxRequests: 30,
+      windowMs: 60000,
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: "Troppe richieste",
+          retryAfter: rateLimitResult.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimitResult.retryAfter || 60),
+            "X-RateLimit-Limit": "30",
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimitResult.reset),
+          },
+        }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const symbol = searchParams.get("symbol")?.toUpperCase();
 
-    if (!symbol) {
-      return NextResponse.json({ error: "Symbol richiesto" }, { status: 400 });
+    // Input validation
+    const validation = CryptoSymbolSchema.safeParse({ symbol });
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          error: "Symbol non valido",
+          details: validation.error.errors,
+        },
+        { status: 400 }
+      );
     }
 
-    const futuresData = await getBinanceFuturesData(symbol);
+    const validatedSymbol = validation.data.symbol;
+
+    const futuresData = await getBinanceFuturesData(validatedSymbol);
 
     if (!futuresData) {
       return NextResponse.json(
         {
           error: "Dati futures non disponibili",
-          symbol,
+          symbol: validatedSymbol,
           timestamp: new Date().toISOString(),
         },
         { status: 503 }
@@ -79,7 +117,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       {
-        symbol,
+        symbol: validatedSymbol,
         timestamp: new Date().toISOString(),
         currentPrice,
         liquidationClusters,
@@ -91,6 +129,9 @@ export async function GET(request: NextRequest) {
       {
         headers: {
           "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+          "X-RateLimit-Limit": "30",
+          "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+          "X-RateLimit-Reset": String(rateLimitResult.reset),
         },
       }
     );

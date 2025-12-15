@@ -16,7 +16,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { SkeletonCard, SkeletonChart, SkeletonTable } from '@/components/ui/skeleton';
 
 const TOP_CRYPTO = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'MATIC', 'LINK', 'DOT', 'UNI', 'ATOM', 'LTC', 'NEAR'];
 
@@ -53,7 +54,7 @@ export default function CryptoTradingDashboardPage() {
   // Decisione automatica
   const [decision, setDecision] = useState<TradingDecision | null>(null);
 
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -98,7 +99,7 @@ export default function CryptoTradingDashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCrypto]);
 
   useEffect(() => {
     fetchAllData();
@@ -168,7 +169,11 @@ export default function CryptoTradingDashboardPage() {
       )}
 
       {loading && !marketData ? (
-        <div className="text-center py-8 text-gray-500">Caricamento dati...</div>
+        <div className="space-y-6">
+          <SkeletonCard />
+          <SkeletonChart height={400} />
+          <SkeletonTable rows={5} cols={4} />
+        </div>
       ) : (
         <>
           {/* DECISIONE AUTOMATICA - PRIMA COSA DA VEDERE */}

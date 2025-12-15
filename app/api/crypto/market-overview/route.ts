@@ -1,20 +1,39 @@
 /**
  * API: Crypto Market Overview
- * 
+ *
  * Dashboard completa con top crypto, indicatori, supporti/resistenze, pressione
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getBinanceOrderBook, OrderBookEntry } from '@/lib/price-apis/binance';
-import { getOKXOrderBook } from '@/lib/price-apis/okx';
-import { getBybitOrderBook } from '@/lib/price-apis/bybit';
-import { calculateSupportResistance } from '@/lib/analysis/support-resistance';
-import { calculateMarketPressure } from '@/lib/analysis/market-pressure';
+import { NextRequest, NextResponse } from "next/server";
+import { getBinanceOrderBook, OrderBookEntry } from "@/lib/price-apis/binance";
+import { getOKXOrderBook } from "@/lib/price-apis/okx";
+import { getBybitOrderBook } from "@/lib/price-apis/bybit";
+import { calculateSupportResistance } from "@/lib/analysis/support-resistance";
+import { calculateMarketPressure } from "@/lib/analysis/market-pressure";
+import { rateLimit } from "@/lib/security/rate-limiting";
 
 // Top 20 crypto per market cap
 const TOP_CRYPTO = [
-  'BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'TRX', 'AVAX', 'SHIB',
-  'DOT', 'MATIC', 'LINK', 'UNI', 'ATOM', 'ETC', 'LTC', 'NEAR', 'XLM', 'ALGO',
+  "BTC",
+  "ETH",
+  "BNB",
+  "SOL",
+  "XRP",
+  "ADA",
+  "DOGE",
+  "TRX",
+  "AVAX",
+  "SHIB",
+  "DOT",
+  "MATIC",
+  "LINK",
+  "UNI",
+  "ATOM",
+  "ETC",
+  "LTC",
+  "NEAR",
+  "XLM",
+  "ALGO",
 ];
 
 interface CryptoOverview {
@@ -34,7 +53,7 @@ interface CryptoOverview {
   supportResistance: Array<{
     price: number;
     strength: string;
-    type: 'support' | 'resistance';
+    type: "support" | "resistance";
     distancePercent: number;
   }>;
   pressure: {
@@ -44,7 +63,7 @@ interface CryptoOverview {
   };
   liquidity: {
     score: number; // 0-100, più alto = più liquido
-    assessment: 'low' | 'medium' | 'high' | 'very-high';
+    assessment: "low" | "medium" | "high" | "very-high";
   };
 }
 
@@ -108,7 +127,9 @@ async function getCryptoPriceData(symbol: string) {
       `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`,
       { next: { revalidate: 10 } }
     );
-    if (!response.ok) return null;
+    if (!response.ok) {
+      return null;
+    }
     const data = await response.json();
     return {
       price: parseFloat(data.lastPrice),
@@ -128,37 +149,79 @@ function calculateLiquidityScore(
   totalBidVolume: number,
   totalAskVolume: number,
   spreadPercent: number
-): { score: number; assessment: 'low' | 'medium' | 'high' | 'very-high' } {
+): { score: number; assessment: "low" | "medium" | "high" | "very-high" } {
   const totalVolume = totalBidVolume + totalAskVolume;
-  
+
   // Score basato su volume totale e spread
   let score = 0;
-  
+
   // Volume component (0-60 punti)
-  if (totalVolume > 1000) score += 60;
-  else if (totalVolume > 500) score += 40;
-  else if (totalVolume > 200) score += 20;
-  else if (totalVolume > 100) score += 10;
-  
+  if (totalVolume > 1000) {
+    score += 60;
+  } else if (totalVolume > 500) {
+    score += 40;
+  } else if (totalVolume > 200) {
+    score += 20;
+  } else if (totalVolume > 100) {
+    score += 10;
+  }
+
   // Spread component (0-40 punti)
-  if (spreadPercent < 0.01) score += 40;
-  else if (spreadPercent < 0.05) score += 30;
-  else if (spreadPercent < 0.1) score += 20;
-  else if (spreadPercent < 0.2) score += 10;
-  
-  let assessment: 'low' | 'medium' | 'high' | 'very-high';
-  if (score >= 80) assessment = 'very-high';
-  else if (score >= 60) assessment = 'high';
-  else if (score >= 40) assessment = 'medium';
-  else assessment = 'low';
-  
+  if (spreadPercent < 0.01) {
+    score += 40;
+  } else if (spreadPercent < 0.05) {
+    score += 30;
+  } else if (spreadPercent < 0.1) {
+    score += 20;
+  } else if (spreadPercent < 0.2) {
+    score += 10;
+  }
+
+  let assessment: "low" | "medium" | "high" | "very-high";
+  if (score >= 80) {
+    assessment = "very-high";
+  } else if (score >= 60) {
+    assessment = "high";
+  } else if (score >= 40) {
+    assessment = "medium";
+  } else {
+    assessment = "low";
+  }
+
   return { score, assessment };
 }
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip =
+      request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitResult = await rateLimit(`market-overview:${ip}`, {
+      maxRequests: 20, // 20 richieste
+      windowMs: 60000, // per minuto
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: "Troppe richieste",
+          retryAfter: rateLimitResult.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimitResult.retryAfter || 60),
+            "X-RateLimit-Limit": "20",
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimitResult.reset),
+          },
+        }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const limitParam = searchParams.get("limit");
+    const limit = limitParam ? Math.min(Math.max(parseInt(limitParam, 10), 1), 50) : 20; // Clamp 1-50
     const symbols = TOP_CRYPTO.slice(0, limit);
 
     // Fetch dati per tutte le crypto in parallelo
@@ -169,7 +232,12 @@ export async function GET(request: NextRequest) {
           getAggregatedOrderBook(symbol),
         ]);
 
-        if (!priceData || !orderBook || orderBook.bids.length === 0 || orderBook.asks.length === 0) {
+        if (
+          !priceData ||
+          !orderBook ||
+          orderBook.bids.length === 0 ||
+          orderBook.asks.length === 0
+        ) {
           return null;
         }
 
@@ -180,9 +248,10 @@ export async function GET(request: NextRequest) {
         const bestAsk = orderBook.asks[0].price;
         const spread = bestAsk - bestBid;
         const spreadPercent = (spread / currentPrice) * 100;
-        const imbalance = totalBidVolume + totalAskVolume > 0
-          ? (totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume)
-          : 0;
+        const imbalance =
+          totalBidVolume + totalAskVolume > 0
+            ? (totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume)
+            : 0;
 
         // Calcola supporti/resistenze
         const supportResistance = calculateSupportResistance(
@@ -193,11 +262,7 @@ export async function GET(request: NextRequest) {
         );
 
         // Calcola pressione
-        const pressure = calculateMarketPressure(
-          orderBook.bids,
-          orderBook.asks,
-          currentPrice
-        );
+        const pressure = calculateMarketPressure(orderBook.bids, orderBook.asks, currentPrice);
 
         // Calcola liquidità
         const liquidity = calculateLiquidityScore(totalBidVolume, totalAskVolume, spreadPercent);
@@ -239,21 +304,23 @@ export async function GET(request: NextRequest) {
     const results = await Promise.all(cryptoDataPromises);
     const validResults = results.filter((r): r is CryptoOverview => r !== null);
 
-    return NextResponse.json({
-      timestamp: new Date().toISOString(),
-      cryptos: validResults,
-      total: validResults.length,
-    }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
-      },
-    });
-  } catch (error) {
-    console.error('Error in /api/crypto/market-overview:', error);
     return NextResponse.json(
-      { error: 'Errore nel recupero market overview' },
-      { status: 500 }
+      {
+        timestamp: new Date().toISOString(),
+        cryptos: validResults,
+        total: validResults.length,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+          "X-RateLimit-Limit": "20",
+          "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+          "X-RateLimit-Reset": String(rateLimitResult.reset),
+        },
+      }
     );
+  } catch (error) {
+    console.error("Error in /api/crypto/market-overview:", error);
+    return NextResponse.json({ error: "Errore nel recupero market overview" }, { status: 500 });
   }
 }
-

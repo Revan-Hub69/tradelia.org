@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useMemo } from 'react';
 import { PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export interface PieChartData {
@@ -32,14 +33,18 @@ const DEFAULT_COLORS = [
  * Grafico a torta per proporzioni e allocazioni
  * Riferimento: Few (2006) - Information Dashboard Design
  */
-export function PieChart({
+function PieChartComponent({
   data,
   height = 300,
   showLegend = true,
   showLabel = false,
   className,
 }: PieChartProps) {
-  const colors = data.map((d, i) => d.color || DEFAULT_COLORS[i % DEFAULT_COLORS.length]);
+  // Memoize colors
+  const colors = useMemo(() => 
+    data.map((d, i) => d.color || DEFAULT_COLORS[i % DEFAULT_COLORS.length]),
+    [data]
+  );
 
   const renderLabel = (entry: PieChartData) => {
     if (!showLabel) return null;
@@ -88,4 +93,7 @@ export function PieChart({
     </div>
   );
 }
+
+// Memoized export per evitare re-render inutili
+export const PieChart = memo(PieChartComponent);
 
