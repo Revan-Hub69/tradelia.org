@@ -397,10 +397,13 @@ export default function CryptoTradingDashboardPage() {
                       maxSafeLeverage: 20,
                     },
                   } : undefined,
-                  orderFlow: orderFlow ? {
-                    imbalance: orderFlow.imbalance || 0,
-                    flowDirection: orderFlow.flowDirection || 'neutral',
-                    indicators: orderFlow.indicators || {},
+                  orderFlow: orderFlow && orderFlow.indicators ? {
+                    indicators: orderFlow.indicators,
+                    combinedSignal: orderFlow.combinedSignal || {
+                      signal: 'NEUTRAL',
+                      confidence: 50,
+                      reasons: [],
+                    },
                   } : undefined,
                   decision: decision ? {
                     recommendation: decision.recommendation,
