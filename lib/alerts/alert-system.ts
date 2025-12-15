@@ -129,7 +129,12 @@ class AlertSystem {
       timestamp: Date.now(),
       priority: alert.confidence > 85 ? 'high' : alert.confidence > 70 ? 'medium' : 'low',
       read: false,
-      data: alert,
+      data: {
+        symbol: alert.symbol,
+        signal: alert.signal,
+        confidence: alert.confidence,
+        entryPrice: alert.entryPrice,
+      },
       actionUrl: `/crypto-trading-dashboard?symbol=${alert.symbol}`,
     };
 
