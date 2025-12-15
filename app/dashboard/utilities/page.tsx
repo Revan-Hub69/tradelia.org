@@ -61,9 +61,9 @@ const StrategyBuilder = lazy(() =>
 // Loading fallback component
 const CalculatorSkeleton = () => (
   <div className="space-y-6">
-    <Skeleton variant="rectangular" height={80} />
-    <Skeleton variant="rectangular" height={200} />
-    <Skeleton variant="rectangular" height={300} />
+    <Skeleton height={80} />
+    <Skeleton height={200} />
+    <Skeleton height={300} />
   </div>
 );
 
