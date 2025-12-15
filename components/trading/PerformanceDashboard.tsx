@@ -178,17 +178,14 @@ export function PerformanceDashboard({ timeframe = 'all' }: PerformanceDashboard
             </div>
           </div>
           <div>
-            <div className="text-gray-600 dark:text-gray-400">Largest Win</div>
-            <div className="font-semibold text-green-600">${stats.largestWin.toFixed(2)}</div>
+            <div className="text-gray-600 dark:text-gray-400">Avg Win</div>
+            <div className="font-semibold text-green-600">${stats.avgWin.toFixed(2)}</div>
           </div>
           <div>
-            <div className="text-gray-600 dark:text-gray-400">Largest Loss</div>
-            <div className="font-semibold text-red-600">${stats.largestLoss.toFixed(2)}</div>
+            <div className="text-gray-600 dark:text-gray-400">Avg Loss</div>
+            <div className="font-semibold text-red-600">${stats.avgLoss.toFixed(2)}</div>
           </div>
-          <div>
-            <div className="text-gray-600 dark:text-gray-400">Sharpe Ratio</div>
-            <div className="font-semibold text-gray-900 dark:text-white">{stats.sharpeRatio.toFixed(2)}</div>
-          </div>
+          {/* TODO: Calculate Sharpe Ratio from signals history if needed */}
           <div>
             <div className="text-gray-600 dark:text-gray-400">Avg Loss</div>
             <div className="font-semibold text-red-600">${stats.avgLoss.toFixed(2)}</div>
