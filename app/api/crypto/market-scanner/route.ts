@@ -139,7 +139,7 @@ async function scanCrypto(symbol: string): Promise<ScannerResult | null> {
         pressure: orderFlowImbalance > 0.1 ? 'buying' : orderFlowImbalance < -0.1 ? 'selling' : 'neutral',
       },
       null,
-      null
+      undefined
     );
 
     // Calculate score (0-100)
