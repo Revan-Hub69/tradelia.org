@@ -172,12 +172,13 @@ export async function GET(request: NextRequest) {
 
     // Genera spiegazione AI se richiesta
     if (includeExplanation) {
+      const depth = aggregated.bids.length + aggregated.asks.length;
       const [orderBookExplanation, multiExchangeExplanation] = await Promise.all([
         generateOrderBookExplanation(symbol, aggregated.bids.length, 'Multi-Exchange'),
         generateMultiExchangeExplanation(
           symbol,
           exchangeBooks.map((e) => e.name),
-          aggregated.depth
+          depth
         ),
       ]);
 
