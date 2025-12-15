@@ -431,13 +431,13 @@ export default function CryptoTradingDashboardPage() {
               symbol={selectedCrypto}
               supportResistance={marketData?.supportResistance || []}
               onPatternDetected={(pattern) => {
-                // Auto-create alert for high-confidence patterns
-                if (pattern.confidence >= 75) {
+                // Auto-create alert for high-confidence patterns (only bullish/bearish, skip neutral)
+                if (pattern.confidence >= 75 && pattern.signal !== 'neutral') {
                   const alertSystem = getAlertSystem();
                   alertSystem.createPatternAlert(
                     selectedCrypto,
                     pattern.name,
-                    pattern.signal,
+                    pattern.signal as 'bullish' | 'bearish',
                     pattern.description
                   );
                 }
