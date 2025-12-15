@@ -56,7 +56,7 @@ export function Dialog({
       onClose={onClose}
       title={title}
       size={size}
-      closeOnBackdrop={false}
+      closeOnOverlayClick={false}
     >
       {description && (
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
