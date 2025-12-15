@@ -88,8 +88,22 @@ async function scanCrypto(symbol: string): Promise<ScannerResult | null> {
     const totalVolume = buyVolume + sellVolume;
     const orderFlowImbalance = totalVolume > 0 ? (buyVolume - sellVolume) / totalVolume : 0;
 
-    // Calculate support/resistance (simplified)
-    const supportResistance = await calculateSupportResistance(symbol);
+    // Calculate support/resistance (simplified - fetch order book first)
+    let supportResistance: any[] = [];
+    try {
+      const orderBookResponse = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}USDT&limit=20`);
+      if (orderBookResponse.ok) {
+        const orderBook = await orderBookResponse.json();
+        supportResistance = calculateSupportResistance(
+          orderBook.bids.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) })),
+          orderBook.asks.map(([price, qty]: [string, string]) => ({ price: parseFloat(price), quantity: parseFloat(qty) })),
+          price,
+          10
+        );
+      }
+    } catch (error) {
+      console.error(`Error fetching order book for ${symbol}:`, error);
+    }
 
     // Calculate market pressure
     const marketPressure = calculateMarketPressure({
