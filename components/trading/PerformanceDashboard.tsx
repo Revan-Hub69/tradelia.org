@@ -44,11 +44,9 @@ export function PerformanceDashboard({ timeframe = 'all' }: PerformanceDashboard
     );
   }
 
-  // Equity curve data
-  const equityData: LineChartData[] = stats.equityCurve?.map((point, index) => ({
-    name: new Date(point.time).toLocaleDateString(),
-    value: point.equity,
-  })) || [];
+  // Equity curve data - TODO: Calculate from signals history if needed
+  // For now, using empty array as equityCurve is not in PerformanceStats
+  const equityData: LineChartData[] = [];
 
   // Win rate by signal type
   const winRateData: BarChartData[] = [
