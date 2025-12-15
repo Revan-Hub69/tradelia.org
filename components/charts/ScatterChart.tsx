@@ -107,7 +107,7 @@ export function ScatterChart({
 
   // Raggruppa per categoria
   const categories = useMemo(() => {
-    const cats = new Set(data.map((d) => d.category).filter(Boolean));
+    const cats = new Set(data.map((d) => d.category).filter((cat): cat is string => Boolean(cat)));
     return Array.from(cats);
   }, [data]);
 
@@ -126,7 +126,9 @@ export function ScatterChart({
 
     const colorMap: Record<string, string> = {};
     categories.forEach((cat, index) => {
-      colorMap[cat] = colors[index % colors.length];
+      if (cat) {
+        colorMap[cat] = colors[index % colors.length];
+      }
     });
 
     return colorMap;
