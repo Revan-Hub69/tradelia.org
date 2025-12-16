@@ -46,27 +46,39 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
 } | null> {
   try {
     const binanceSymbol = symbol.includes("USDT") ? symbol : `${symbol}USDT`;
+    const url = `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`;
 
-    const response = await fetch(
-      `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
-      {
-        next: { revalidate: 10 }, // Cache 10 secondi
-      }
-    );
+    console.log(`[Binance Futures] Fetching funding rate for ${symbol} -> ${binanceSymbol} from ${url}`);
+
+    const response = await fetch(url, {
+      // Rimuoviamo la cache per debugging
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    console.log(`[Binance Futures] Response status: ${response.status} for ${symbol}`);
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error');
+      console.error(`[Binance Futures] Error for ${symbol}: ${response.status} - ${response.statusText} - ${errorText}`);
+      
       // 400 = symbol non esiste
       if (response.status === 400) {
-        console.warn(`Symbol ${symbol} non esiste su Binance Futures (400)`);
+        console.warn(`[Binance Futures] Symbol ${symbol} (${binanceSymbol}) non esiste su Binance Futures (400)`);
         return null; // Symbol non esiste
       }
-      // Altri errori = problema temporaneo, log ma non bloccare
-      console.error(`Binance Futures API error per ${symbol}: ${response.status} - ${response.statusText}`);
-      // Per errori temporanei (429, 500, 503), potremmo voler retry, ma per ora restituiamo null
+      // Altri errori = problema temporaneo
+      console.error(`[Binance Futures] API error temporaneo per ${symbol}: ${response.status}`);
       return null;
     }
 
     const data: BinanceFundingRate = await response.json();
+    console.log(`[Binance Futures] Successfully fetched funding rate for ${symbol}:`, {
+      fundingRate: data.lastFundingRate,
+      markPrice: data.markPrice,
+    });
 
     return {
       fundingRate: parseFloat(data.lastFundingRate) * 100, // In percentuale
