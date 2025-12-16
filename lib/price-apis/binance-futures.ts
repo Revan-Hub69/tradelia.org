@@ -55,6 +55,12 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
     );
 
     if (!response.ok) {
+      // 400 = symbol non esiste, altri errori = problema temporaneo
+      if (response.status === 400) {
+        console.warn(`Symbol ${symbol} non esiste su Binance Futures`);
+      } else {
+        console.error(`Binance Futures API error per ${symbol}: ${response.status}`);
+      }
       return null;
     }
 

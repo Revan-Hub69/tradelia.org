@@ -55,6 +55,7 @@ export default function CryptoTradingDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unavailableSymbols, setUnavailableSymbols] = useState<Set<string>>(new Set());
   
   // Dynamic crypto list
   const [cryptoList, setCryptoList] = useState<Array<{ symbol: string; name: string; marketCap: number; price: number }>>([]);
@@ -122,6 +123,11 @@ export default function CryptoTradingDashboardPage() {
   }, [fetchCryptoList]);
 
   const fetchAllData = useCallback(async () => {
+    if (!selectedCrypto) return;
+    // Non fare richieste se il symbol è già noto come non disponibile
+    if (unavailableSymbols.has(selectedCrypto)) {
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -183,9 +189,21 @@ export default function CryptoTradingDashboardPage() {
 
       // Verifica se il symbol è disponibile su Binance Futures
       if (!futuresData && selectedCrypto) {
-        setError(`⚠️ ${selectedCrypto} non è disponibile per il trading futures su Binance. Prova con un symbol supportato (es. BTC, ETH, SOL, BNB).`);
+        // Aggiungi alla lista di symbol non disponibili per evitare richieste ripetute
+        if (!unavailableSymbols.has(selectedCrypto)) {
+          setUnavailableSymbols(prev => new Set(prev).add(selectedCrypto));
+          setError(`⚠️ ${selectedCrypto} non è disponibile per il trading futures su Binance. Prova con un symbol supportato (es. BTC, ETH, SOL, BNB).`);
+        }
+        // Non continuare a processare se il symbol non è disponibile
+        setLoading(false);
+        return;
       } else if (error && futuresData) {
-        // Se abbiamo dati futures, cancella l'errore precedente
+        // Se abbiamo dati futures, cancella l'errore precedente e rimuovi dalla lista
+        setUnavailableSymbols(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(selectedCrypto);
+          return newSet;
+        });
         setError(null);
       }
 
@@ -310,12 +328,19 @@ export default function CryptoTradingDashboardPage() {
 
   useEffect(() => {
     if (!autoRefresh) return;
+    // Non fare refresh se il symbol non è disponibile
+    if (unavailableSymbols.has(selectedCrypto)) {
+      return;
+    }
     // Aumentato a 15 secondi per ridurre ricaricamenti continui
     const interval = setInterval(() => {
-      fetchAllData();
+      // Non fare refresh se il symbol non è disponibile
+      if (!unavailableSymbols.has(selectedCrypto)) {
+        fetchAllData();
+      }
     }, 15000); // 15 secondi
     return () => clearInterval(interval);
-  }, [autoRefresh, fetchAllData]);
+  }, [autoRefresh, fetchAllData, selectedCrypto, unavailableSymbols]);
 
   return (
     <div className="container mx-auto px-4 py-8">
