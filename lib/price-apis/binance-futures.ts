@@ -234,9 +234,15 @@ export async function getBinanceFuturesData(symbol: string): Promise<{
     const oiData = oi.status === "fulfilled" ? oi.value : null;
     const longShortData = longShort.status === "fulfilled" ? longShort.value : null;
 
-    // Se manca funding, non possiamo procedere (serve per markPrice)
+    // Se manca funding, verifica se è un errore 400 (symbol non esiste) o altro
     if (!fundingData) {
-      console.error(`Missing funding data for ${symbol}`);
+      // Se funding è rejected con errore 400, il symbol non esiste
+      if (funding.status === 'rejected' || (funding.reason && funding.reason.status === 400)) {
+        console.warn(`Symbol ${symbol} non esiste su Binance Futures`);
+        return null; // Symbol non esiste
+      }
+      // Altrimenti è un errore temporaneo - log ma non bloccare
+      console.error(`Missing funding data for ${symbol} (temporaneo?)`);
       return null;
     }
 
