@@ -241,8 +241,16 @@ export function calculateHighPrecisionSignal(
       takeProfit = entryPrice + risk * 2.5;
     }
 
+    // Calcola risk level per questo trade
+    const riskDistance = Math.abs(entryPrice - stopLoss) / entryPrice;
+    let currentRiskLevel: 'low' | 'medium' | 'high' | 'very-high';
+    if (riskDistance < 0.01) currentRiskLevel = 'very-high';
+    else if (riskDistance < 0.015) currentRiskLevel = 'high';
+    else if (riskDistance < 0.02) currentRiskLevel = 'medium';
+    else currentRiskLevel = 'low';
+
     // Leverage basato su confidence e risk
-    if (confidence > 85 && riskLevel === 'low') {
+    if (confidence > 85 && currentRiskLevel === 'low') {
       recommendedLeverage = 15;
     } else if (confidence > 75) {
       recommendedLeverage = 12;
@@ -268,8 +276,16 @@ export function calculateHighPrecisionSignal(
       takeProfit = entryPrice - risk * 2.5;
     }
 
+    // Calcola risk level per questo trade
+    const riskDistance = Math.abs(entryPrice - stopLoss) / entryPrice;
+    let currentRiskLevel: 'low' | 'medium' | 'high' | 'very-high';
+    if (riskDistance < 0.01) currentRiskLevel = 'very-high';
+    else if (riskDistance < 0.015) currentRiskLevel = 'high';
+    else if (riskDistance < 0.02) currentRiskLevel = 'medium';
+    else currentRiskLevel = 'low';
+
     // Leverage
-    if (confidence > 85 && riskLevel === 'low') {
+    if (confidence > 85 && currentRiskLevel === 'low') {
       recommendedLeverage = 15;
     } else if (confidence > 75) {
       recommendedLeverage = 12;
