@@ -53,7 +53,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.binance.com https://fapi.binance.com https://api.coingecko.com https://api.whale-alert.io https://api.finnhub.io https://api.alphavantage.co https://api.tradingeconomics.com https://api.santiment.net https://api.reddit.com https://api.github.com https://api.groq.com https://api.openai.com https://api.fred.stlouisfed.org https://api.cboe.com https://newsapi.org https://api.glassnode.com wss://stream.binance.com wss://fstream.binance.com",
+              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.binance.com https://fapi.binance.com https://api.coingecko.com https://api.whale-alert.io https://api.finnhub.io https://api.alphavantage.co https://api.tradingeconomics.com https://api.santiment.net https://api.reddit.com https://api.github.com https://api.groq.com https://api.openai.com https://api.fred.stlouisfed.org https://api.cboe.com https://newsapi.org https://api.glassnode.com wss://stream.binance.com wss://stream.binance.com:9443 wss://fstream.binance.com wss://fstream.binance.com:9443",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -76,7 +76,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.binance.com https://api.coingecko.com https://api.whale-alert.io",
+              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.binance.com https://fapi.binance.com https://api.coingecko.com https://api.whale-alert.io wss://stream.binance.com wss://stream.binance.com:9443 wss://fstream.binance.com wss://fstream.binance.com:9443",
               "frame-ancestors 'self'", // Allow embedding in own domain for PWA
               "base-uri 'self'",
               "form-action 'self'",
