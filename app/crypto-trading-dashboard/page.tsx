@@ -181,6 +181,14 @@ export default function CryptoTradingDashboardPage() {
       const liquidationsData = liquidationsRes.status === 'fulfilled' ? liquidationsRes.value : null;
       const multiTimeframeData = multiTimeframeRes.status === 'fulfilled' ? multiTimeframeRes.value : null;
 
+      // Verifica se il symbol è disponibile su Binance Futures
+      if (!futuresData && selectedCrypto) {
+        setError(`⚠️ ${selectedCrypto} non è disponibile per il trading futures su Binance. Prova con un symbol supportato (es. BTC, ETH, SOL, BNB).`);
+      } else if (error && futuresData) {
+        // Se abbiamo dati futures, cancella l'errore precedente
+        setError(null);
+      }
+
       // Trova dati per crypto selezionata
       const cryptoMarketData = marketData?.cryptos?.find((c: any) => c.symbol === selectedCrypto);
       setMarketData(cryptoMarketData);
