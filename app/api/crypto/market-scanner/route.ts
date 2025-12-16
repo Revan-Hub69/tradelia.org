@@ -209,7 +209,7 @@ export async function GET(request: NextRequest) {
                      request.headers.get('x-real-ip') || 
                      'unknown';
   const rateLimitResult = await rateLimit(identifier, {
-    maxRequests: 10, // Limit scanner calls
+    maxRequests: 20, // Aumentato per supportare refresh ogni 15 secondi
     windowMs: 60 * 1000,
   });
 

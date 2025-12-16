@@ -59,14 +59,25 @@ export async function GET(request: NextRequest) {
 
     const futuresData = await getBinanceFuturesData(validatedSymbol);
 
+    // Se i dati non sono disponibili, restituisci dati di fallback invece di errore
     if (!futuresData) {
       return NextResponse.json(
         {
-          error: "Dati futures non disponibili",
           symbol: validatedSymbol,
           timestamp: new Date().toISOString(),
+          currentPrice: 0,
+          liquidationClusters: [],
+          estimatedLiquidations: {
+            longRisk: "unknown",
+            shortRisk: "unknown",
+            totalLiquidationValue: 0,
+          },
+          liquidationRisk: "medium",
+          estimatedLiquidationPriceLong: 0,
+          estimatedLiquidationPriceShort: 0,
+          warning: "Dati futures non disponibili - usando valori di default",
         },
-        { status: 503 }
+        { status: 200 } // Restituisci 200 con warning invece di 503
       );
     }
 

@@ -128,9 +128,18 @@ export default function CryptoTradingDashboardPage() {
       const [marketRes, futuresRes, orderFlowRes, liquidationsRes, multiTimeframeRes] = await Promise.allSettled([
         fetch(`/api/crypto/market-overview?limit=50`).then(r => r.ok ? r.json() : null).catch(() => null),
         fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
-        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
-        fetch(`/api/crypto/indicators/multi-timeframe?symbol=${selectedCrypto}&timeframes=1m,5m,15m,1h`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null).catch((e) => {
+          console.warn('Order flow API error:', e);
+          return null;
+        }),
+        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 || r.status === 503 ? r.json().catch(() => null) : null).catch((e) => {
+          console.warn('Liquidations API error:', e);
+          return null;
+        }),
+        fetch(`/api/crypto/indicators/multi-timeframe?symbol=${selectedCrypto}&timeframes=1m,5m,15m,1h`).then(r => r.ok ? r.json() : null).catch((e) => {
+          console.warn('Multi-timeframe API error:', e);
+          return null;
+        }),
       ]);
 
       // Estrai dati da Promise.allSettled
@@ -257,13 +266,16 @@ export default function CryptoTradingDashboardPage() {
 
   useEffect(() => {
     fetchAllData();
-  }, [selectedCrypto]);
+  }, [fetchAllData]);
 
   useEffect(() => {
     if (!autoRefresh) return;
-    const interval = setInterval(fetchAllData, 5000); // 5 secondi
+    // Aumentato a 15 secondi per ridurre ricaricamenti continui
+    const interval = setInterval(() => {
+      fetchAllData();
+    }, 15000); // 15 secondi
     return () => clearInterval(interval);
-  }, [autoRefresh, selectedCrypto]);
+  }, [autoRefresh, fetchAllData]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -272,7 +284,7 @@ export default function CryptoTradingDashboardPage() {
           Crypto Trading Dashboard
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Tutti i dati per decidere su quale crypto operare e come - Aggiornato ogni 5 secondi
+          Tutti i dati per decidere su quale crypto operare e come - Aggiornato ogni 15 secondi
         </p>
       </div>
 

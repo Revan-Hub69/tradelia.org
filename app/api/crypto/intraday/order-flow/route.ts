@@ -124,8 +124,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const validationResult = CryptoSymbolSchema.safeParse(symbol);
+    // Normalizza symbol (rimuovi USDT se presente, sarà aggiunto dopo)
+    const normalizedSymbol = symbol.toUpperCase().replace('USDT', '');
+    
+    const validationResult = CryptoSymbolSchema.safeParse({ symbol: normalizedSymbol });
     if (!validationResult.success) {
+      console.error('Symbol validation failed:', normalizedSymbol, validationResult.error.errors);
       return NextResponse.json(
         { error: 'Symbol non valido', details: validationResult.error.errors },
         { status: 400 }
@@ -134,8 +138,8 @@ export async function GET(request: NextRequest) {
 
     // Fetch trades and order book
     const [trades, orderBook] = await Promise.all([
-      fetchRecentTrades(symbol, 100),
-      fetchOrderBook(symbol, 20),
+      fetchRecentTrades(normalizedSymbol, 100),
+      fetchOrderBook(normalizedSymbol, 20),
     ]);
 
     if (trades.length === 0) {
@@ -154,7 +158,7 @@ export async function GET(request: NextRequest) {
     const combinedSignal = calculateCombinedOrderFlowSignal(trades, orderBook.bids, orderBook.asks);
 
     return NextResponse.json({
-      symbol,
+      symbol: normalizedSymbol,
       timestamp: Date.now(),
       indicators: {
         delta,

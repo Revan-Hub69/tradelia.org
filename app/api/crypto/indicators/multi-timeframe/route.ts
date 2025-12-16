@@ -89,8 +89,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const validationResult = CryptoSymbolSchema.safeParse(symbol);
+    // Normalizza symbol (rimuovi USDT se presente, sarà aggiunto dopo)
+    const normalizedSymbol = symbol.toUpperCase().replace('USDT', '');
+    
+    const validationResult = CryptoSymbolSchema.safeParse({ symbol: normalizedSymbol });
     if (!validationResult.success) {
+      console.error('Symbol validation failed:', normalizedSymbol, validationResult.error.errors);
       return NextResponse.json(
         { error: 'Symbol non valido', details: validationResult.error.errors },
         { status: 400 }
@@ -102,7 +106,7 @@ export async function GET(request: NextRequest) {
     // Fetch data for each timeframe
     const timeframeData = await Promise.all(
       timeframes.map(async (tf) => {
-        const data = await fetchPriceData(symbol, tf, 100);
+        const data = await fetchPriceData(normalizedSymbol, tf, 100);
         if (data.length === 0) return null;
 
         const rsi = calculateRSI(data);
@@ -169,7 +173,7 @@ export async function GET(request: NextRequest) {
       : null;
 
     return NextResponse.json({
-      symbol,
+      symbol: normalizedSymbol,
       timestamp: Date.now(),
       timeframes: validSignals,
       analysis,
