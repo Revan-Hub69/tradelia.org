@@ -11,8 +11,7 @@ app.post('/api/order', (req,res)=>{
     return res.json({status:'demo', exchange, symbol, direction});
   }
 
-  // Qui integreresti l'API privata dell'exchange
-  // placeholder
+  // Integreresti qui l'API privata dell'exchange
   console.log(`Placing ${direction} order on ${symbol} (${exchange})`);
   res.json({status:'ok', exchange, symbol, direction});
 });
