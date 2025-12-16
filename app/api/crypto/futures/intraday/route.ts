@@ -95,35 +95,19 @@ export async function GET(request: NextRequest) {
     } : binanceData;
 
     if (!futuresData) {
-      // Restituisci dati di fallback invece di errore, così il frontend non si blocca
+      // Symbol non disponibile su Binance Futures - restituisci errore chiaro
       return NextResponse.json(
         {
+          error: "Symbol non disponibile su Binance Futures",
           symbol: validatedSymbol,
+          message: `Il symbol ${validatedSymbol} non è disponibile per il trading futures su Binance. Prova con un symbol supportato (es. BTC, ETH, SOL).`,
+          available: false,
           timestamp: new Date().toISOString(),
-          fundingRate: 0,
-          fundingRatePercent: 0,
-          openInterest: 0,
-          openInterestValue: 0,
-          longShortRatio: 1,
-          longAccount: 50,
-          shortAccount: 50,
-          markPrice: 0,
-          indexPrice: 0,
-          nextFundingTime: Date.now() + 8 * 60 * 60 * 1000,
-          liquidationRisk: "low" as const,
-          estimatedLiquidationPriceLong: 0,
-          estimatedLiquidationPriceShort: 0,
-          leverageMetrics: {
-            estimatedAvgLeverage: 10,
-            maxLeverage: 125,
-            recommendedLeverage: 10,
-          },
-          warning: "Dati futures non disponibili per questo symbol",
         },
         {
-          status: 200,
+          status: 404, // Not Found
           headers: {
-            "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
           },
         }
       );

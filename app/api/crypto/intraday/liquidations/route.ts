@@ -59,25 +59,22 @@ export async function GET(request: NextRequest) {
 
     const futuresData = await getBinanceFuturesData(validatedSymbol);
 
-    // Se i dati non sono disponibili, restituisci dati di fallback invece di errore
+    // Se i dati non sono disponibili, restituisci errore chiaro
     if (!futuresData) {
       return NextResponse.json(
         {
+          error: "Symbol non disponibile per analisi liquidazioni",
           symbol: validatedSymbol,
+          message: `Il symbol ${validatedSymbol} non è disponibile su Binance Futures. Impossibile calcolare liquidazioni.`,
+          available: false,
           timestamp: new Date().toISOString(),
-          currentPrice: 0,
-          liquidationClusters: [],
-          estimatedLiquidations: {
-            longRisk: "unknown",
-            shortRisk: "unknown",
-            totalLiquidationValue: 0,
-          },
-          liquidationRisk: "medium",
-          estimatedLiquidationPriceLong: 0,
-          estimatedLiquidationPriceShort: 0,
-          warning: "Dati futures non disponibili - usando valori di default",
         },
-        { status: 200 } // Restituisci 200 con warning invece di 503
+        { 
+          status: 404, // Not Found
+          headers: {
+            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          },
+        }
       );
     }
 

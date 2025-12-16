@@ -127,16 +127,48 @@ export default function CryptoTradingDashboardPage() {
     try {
       const [marketRes, futuresRes, orderFlowRes, liquidationsRes, multiTimeframeRes] = await Promise.allSettled([
         fetch(`/api/crypto/market-overview?limit=50`).then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 ? r.json() : null).catch(() => null),
-        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(r => r.ok ? r.json() : null).catch((e) => {
+        fetch(`/api/crypto/futures/intraday?symbol=${selectedCrypto}`).then(async (r) => {
+          if (r.ok || r.status === 206) return r.json();
+          if (r.status === 404) {
+            const error = await r.json().catch(() => ({}));
+            console.warn(`Futures non disponibili per ${selectedCrypto}:`, error.message || 'Symbol non supportato');
+            return null; // Symbol non disponibile, ma non è un errore critico
+          }
+          return null;
+        }).catch(() => null),
+        fetch(`/api/crypto/intraday/order-flow?symbol=${selectedCrypto}`).then(async (r) => {
+          if (r.ok) return r.json();
+          if (r.status === 404) {
+            const error = await r.json().catch(() => ({}));
+            console.warn(`Order flow non disponibile per ${selectedCrypto}:`, error.message || 'Symbol non supportato');
+            return null;
+          }
+          return null;
+        }).catch((e) => {
           console.warn('Order flow API error:', e);
           return null;
         }),
-        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(r => r.ok || r.status === 206 || r.status === 503 ? r.json().catch(() => null) : null).catch((e) => {
+        fetch(`/api/crypto/intraday/liquidations?symbol=${selectedCrypto}`).then(async (r) => {
+          if (r.ok || r.status === 206) return r.json();
+          if (r.status === 404) {
+            const error = await r.json().catch(() => ({}));
+            console.warn(`Liquidations non disponibili per ${selectedCrypto}:`, error.message || 'Symbol non supportato');
+            return null;
+          }
+          return null;
+        }).catch((e) => {
           console.warn('Liquidations API error:', e);
           return null;
         }),
-        fetch(`/api/crypto/indicators/multi-timeframe?symbol=${selectedCrypto}&timeframes=1m,5m,15m,1h`).then(r => r.ok ? r.json() : null).catch((e) => {
+        fetch(`/api/crypto/indicators/multi-timeframe?symbol=${selectedCrypto}&timeframes=1m,5m,15m,1h`).then(async (r) => {
+          if (r.ok) return r.json();
+          if (r.status === 404) {
+            const error = await r.json().catch(() => ({}));
+            console.warn(`Multi-timeframe non disponibile per ${selectedCrypto}:`, error.message || 'Symbol non supportato');
+            return null;
+          }
+          return null;
+        }).catch((e) => {
           console.warn('Multi-timeframe API error:', e);
           return null;
         }),
