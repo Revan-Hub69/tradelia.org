@@ -55,12 +55,14 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
     );
 
     if (!response.ok) {
-      // 400 = symbol non esiste, altri errori = problema temporaneo
+      // 400 = symbol non esiste
       if (response.status === 400) {
-        console.warn(`Symbol ${symbol} non esiste su Binance Futures`);
-      } else {
-        console.error(`Binance Futures API error per ${symbol}: ${response.status}`);
+        console.warn(`Symbol ${symbol} non esiste su Binance Futures (400)`);
+        return null; // Symbol non esiste
       }
+      // Altri errori = problema temporaneo, log ma non bloccare
+      console.error(`Binance Futures API error per ${symbol}: ${response.status} - ${response.statusText}`);
+      // Per errori temporanei (429, 500, 503), potremmo voler retry, ma per ora restituiamo null
       return null;
     }
 

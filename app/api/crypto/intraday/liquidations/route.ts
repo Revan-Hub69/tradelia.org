@@ -59,20 +59,48 @@ export async function GET(request: NextRequest) {
 
     const futuresData = await getBinanceFuturesData(validatedSymbol);
 
-    // Se i dati non sono disponibili, restituisci errore chiaro
+    // Se i dati non sono disponibili, potrebbe essere un errore temporaneo o symbol non esiste
     if (!futuresData) {
+      // Prova a verificare se il symbol esiste facendo una chiamata diretta
+      const binanceSymbol = validatedSymbol.includes("USDT") ? validatedSymbol : `${validatedSymbol}USDT`;
+      const testResponse = await fetch(
+        `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
+        { next: { revalidate: 0 } }
+      ).catch(() => null);
+
+      // Se la chiamata diretta restituisce 400, il symbol non esiste
+      if (testResponse?.status === 400) {
+        return NextResponse.json(
+          {
+            error: "Symbol non disponibile per analisi liquidazioni",
+            symbol: validatedSymbol,
+            message: `Il symbol ${validatedSymbol} non è disponibile su Binance Futures. Impossibile calcolare liquidazioni.`,
+            available: false,
+            timestamp: new Date().toISOString(),
+          },
+          { 
+            status: 404, // Not Found
+            headers: {
+              "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+            },
+          }
+        );
+      }
+
+      // Altrimenti è un errore temporaneo
       return NextResponse.json(
         {
-          error: "Symbol non disponibile per analisi liquidazioni",
+          error: "Errore temporaneo nel recupero dati",
           symbol: validatedSymbol,
-          message: `Il symbol ${validatedSymbol} non è disponibile su Binance Futures. Impossibile calcolare liquidazioni.`,
-          available: false,
+          message: `Impossibile recuperare i dati futures per ${validatedSymbol}. Riprova tra qualche secondo.`,
+          retryAfter: 10,
           timestamp: new Date().toISOString(),
         },
         { 
-          status: 404, // Not Found
+          status: 503, // Service Unavailable
           headers: {
-            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+            "Retry-After": "10",
+            "Cache-Control": "public, s-maxage=10, stale-while-revalidate=20",
           },
         }
       );
