@@ -248,17 +248,26 @@ export async function getBinanceFuturesData(symbol: string): Promise<{
     const oiData = oi.status === "fulfilled" ? oi.value : null;
     const longShortData = longShort.status === "fulfilled" ? longShort.value : null;
 
+    console.log(`[Binance Futures] Results for ${symbol}:`, {
+      funding: funding.status,
+      fundingData: fundingData ? 'OK' : 'NULL',
+      oi: oi.status,
+      oiData: oiData ? 'OK' : 'NULL',
+      longShort: longShort.status,
+      longShortData: longShortData ? 'OK' : 'NULL',
+    });
+
     // Se manca funding, non possiamo procedere (serve per markPrice)
     if (!fundingData) {
-      // Se funding è rejected, potrebbe essere un errore 400 (symbol non esiste)
       if (funding.status === 'rejected') {
-        console.warn(`Symbol ${symbol} non disponibile su Binance Futures (rejected)`);
-        return null;
+        console.error(`[Binance Futures] Funding rejected for ${symbol}:`, funding.reason);
+      } else {
+        console.error(`[Binance Futures] Missing funding data for ${symbol} (status: ${funding.status})`);
       }
-      // Altrimenti è un errore temporaneo o symbol non esiste
-      console.error(`Missing funding data for ${symbol}`);
       return null;
     }
+
+    console.log(`[Binance Futures] Successfully got futures data for ${symbol}`);
 
     // Usa valori di default se mancano dati
     const openInterest = oiData?.openInterest || 0;
