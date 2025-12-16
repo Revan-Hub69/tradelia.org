@@ -95,18 +95,35 @@ export async function GET(request: NextRequest) {
     } : binanceData;
 
     if (!futuresData) {
-      // Restituisci 503 solo se completamente non disponibile
+      // Restituisci dati di fallback invece di errore, così il frontend non si blocca
       return NextResponse.json(
         {
-          error: "Dati futures non disponibili",
           symbol: validatedSymbol,
           timestamp: new Date().toISOString(),
-          retryAfter: 10, // secondi
+          fundingRate: 0,
+          fundingRatePercent: 0,
+          openInterest: 0,
+          openInterestValue: 0,
+          longShortRatio: 1,
+          longAccount: 50,
+          shortAccount: 50,
+          markPrice: 0,
+          indexPrice: 0,
+          nextFundingTime: Date.now() + 8 * 60 * 60 * 1000,
+          liquidationRisk: "low" as const,
+          estimatedLiquidationPriceLong: 0,
+          estimatedLiquidationPriceShort: 0,
+          leverageMetrics: {
+            estimatedAvgLeverage: 10,
+            maxLeverage: 125,
+            recommendedLeverage: 10,
+          },
+          warning: "Dati futures non disponibili per questo symbol",
         },
         {
-          status: 503,
+          status: 200,
           headers: {
-            "Retry-After": "10",
+            "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
           },
         }
       );
