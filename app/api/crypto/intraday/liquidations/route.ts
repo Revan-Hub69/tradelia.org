@@ -57,34 +57,71 @@ export async function GET(request: NextRequest) {
 
     const validatedSymbol = validation.data.symbol;
 
+    console.log(`[Liquidations API] Fetching futures data for ${validatedSymbol}`);
     const futuresData = await getBinanceFuturesData(validatedSymbol);
+    console.log(`[Liquidations API] Futures data result for ${validatedSymbol}:`, futuresData ? 'OK' : 'NULL');
 
     // Se i dati non sono disponibili, potrebbe essere un errore temporaneo o symbol non esiste
     if (!futuresData) {
+      console.error(`[Liquidations API] No futures data for ${validatedSymbol}, testing direct API call`);
+      
       // Prova a verificare se il symbol esiste facendo una chiamata diretta
       const binanceSymbol = validatedSymbol.includes("USDT") ? validatedSymbol : `${validatedSymbol}USDT`;
-      const testResponse = await fetch(
-        `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`,
-        { next: { revalidate: 0 } }
-      ).catch(() => null);
-
-      // Se la chiamata diretta restituisce 400, il symbol non esiste
-      if (testResponse?.status === 400) {
-        return NextResponse.json(
-          {
-            error: "Symbol non disponibile per analisi liquidazioni",
-            symbol: validatedSymbol,
-            message: `Il symbol ${validatedSymbol} non è disponibile su Binance Futures. Impossibile calcolare liquidazioni.`,
-            available: false,
-            timestamp: new Date().toISOString(),
-          },
-          { 
-            status: 404, // Not Found
-            headers: {
-              "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      const testUrl = `https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${binanceSymbol}`;
+      console.log(`[Liquidations API] Testing direct call to: ${testUrl}`);
+      
+      try {
+        const testResponse = await fetch(testUrl, {
+          cache: 'no-store',
+          headers: { 'Accept': 'application/json' },
+        });
+        
+        console.log(`[Liquidations API] Direct test response status: ${testResponse.status} for ${validatedSymbol}`);
+        
+        // Se la chiamata diretta restituisce 400, il symbol non esiste
+        if (testResponse.status === 400) {
+          const errorText = await testResponse.text().catch(() => '');
+          console.log(`[Liquidations API] Symbol ${validatedSymbol} does not exist (400): ${errorText}`);
+          return NextResponse.json(
+            {
+              error: "Symbol non disponibile per analisi liquidazioni",
+              symbol: validatedSymbol,
+              message: `Il symbol ${validatedSymbol} non è disponibile su Binance Futures. Impossibile calcolare liquidazioni.`,
+              available: false,
+              timestamp: new Date().toISOString(),
             },
-          }
-        );
+            { 
+              status: 404, // Not Found
+              headers: {
+                "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+              },
+            }
+          );
+        }
+
+        // Se la chiamata diretta funziona, è un problema interno
+        if (testResponse.ok) {
+          const testData = await testResponse.json().catch(() => null);
+          console.log(`[Liquidations API] Direct call succeeded but getBinanceFuturesData failed for ${validatedSymbol}`, testData);
+          return NextResponse.json(
+            {
+              error: "Errore interno nel recupero dati",
+              symbol: validatedSymbol,
+              message: `Impossibile processare i dati futures per ${validatedSymbol}. Riprova tra qualche secondo.`,
+              retryAfter: 10,
+              timestamp: new Date().toISOString(),
+            },
+            { 
+              status: 503, // Service Unavailable
+              headers: {
+                "Retry-After": "10",
+                "Cache-Control": "public, s-maxage=10, stale-while-revalidate=20",
+              },
+            }
+          );
+        }
+      } catch (testError) {
+        console.error(`[Liquidations API] Error testing direct call for ${validatedSymbol}:`, testError);
       }
 
       // Altrimenti è un errore temporaneo

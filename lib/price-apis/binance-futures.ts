@@ -78,7 +78,14 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
     console.log(`[Binance Futures] Successfully fetched funding rate for ${symbol}:`, {
       fundingRate: data.lastFundingRate,
       markPrice: data.markPrice,
+      rawData: data,
     });
+
+    // Verifica che i dati siano validi
+    if (!data.lastFundingRate || !data.markPrice || !data.indexPrice) {
+      console.error(`[Binance Futures] Invalid data structure for ${symbol}:`, data);
+      return null;
+    }
 
     return {
       fundingRate: parseFloat(data.lastFundingRate) * 100, // In percentuale
@@ -87,7 +94,11 @@ export async function getBinanceFundingRate(symbol: string): Promise<{
       indexPrice: parseFloat(data.indexPrice),
     };
   } catch (error) {
-    console.error(`Error fetching funding rate for ${symbol}:`, error);
+    console.error(`[Binance Futures] Error fetching funding rate for ${symbol}:`, error);
+    if (error instanceof Error) {
+      console.error(`[Binance Futures] Error message: ${error.message}`);
+      console.error(`[Binance Futures] Error stack: ${error.stack}`);
+    }
     return null;
   }
 }
