@@ -9,16 +9,8 @@
     "dev:web": "pnpm -C apps/web dev",
     "build:web": "pnpm -C apps/web build",
     "lint:web": "pnpm -C apps/web lint",
-    "typecheck:web": "pnpm -C apps/web typecheck"
-  },
-  "scripts": {
-  "dev:web": "pnpm -C apps/web dev",
-  "build:web": "pnpm -C apps/web build",
-  "lint:web": "pnpm -C apps/web lint",
-  "typecheck:web": "pnpm -C apps/web typecheck",
-
-  "build": "pnpm -C apps/web build",
-  "start": "pnpm -C apps/web start"
-}
-
+    "typecheck:web": "pnpm -C apps/web typecheck",
+    "build": "pnpm -C apps/web build",
+    "start": "pnpm -C apps/web start"
+  }
 }
