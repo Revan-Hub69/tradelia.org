@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "if [ -d apps/web ]; then npm run build --prefix apps/web; else npm run build; fi",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install",
+  "installCommand": "if [ -d apps/web ]; then npm install --prefix apps/web; else npm install; fi",
   "framework": null
 }
