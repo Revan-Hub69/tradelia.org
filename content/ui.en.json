@@ -1,0 +1,90 @@
+{
+  "global": {
+    "informational_only": "Informational indicator. Not a trading signal.",
+    "not_trading_signals": "Market context. Not signals.",
+    "learn_more": "Learn how to read this data",
+    "method_and_limits": "Method & limits",
+    "sources": "Data sources"
+  },
+  "badges": {
+    "risk_on": {
+      "label": "Risk-On",
+      "description": "Contained risk conditions."
+    },
+    "neutral": {
+      "label": "Neutral",
+      "description": "Mixed signals, no dominant regime."
+    },
+    "risk_off": {
+      "label": "Risk-Off",
+      "description": "Stress or imbalance present."
+    }
+  },
+  "sections": {
+    "market_snapshot": {
+      "title": "Market Snapshot",
+      "subtitle": "Market context summary."
+    },
+    "risk_regime": {
+      "title": "Market Risk Regime",
+      "subtitle": "Risk context classification."
+    },
+    "market_movers": {
+      "title": "Market Movers (24h)",
+      "subtitle": "Past price moves.",
+      "warning": "Past performance is not indicative of future results."
+    },
+    "futures_overlay": {
+      "title": "Futures & Perpetuals",
+      "subtitle": "Leverage and stress indicators."
+    },
+    "binance_watch": {
+      "title": "Binance Watch",
+      "subtitle": "Official communications."
+    },
+    "academy": {
+      "title": "Academy",
+      "subtitle": "Key concepts to read the market."
+    }
+  },
+  "indicators": {
+    "funding_rate": {
+      "title": "Funding Rate",
+      "what": "Measures the balance between long and short positions in perpetual futures.",
+      "how": "Extreme values indicate crowding and potential fragility.",
+      "not": "Not a directional indicator."
+    },
+    "open_interest": {
+      "title": "Open Interest",
+      "what": "Represents the total amount of open positions.",
+      "how": "Rising values indicate leverage entering the market.",
+      "not": "Does not predict price."
+    },
+    "liquidations": {
+      "title": "Liquidations",
+      "what": "Forced closures of leveraged positions.",
+      "how": "Spikes indicate market stress.",
+      "not": "Do not imply reversals."
+    },
+    "volatility": {
+      "title": "Volatility",
+      "what": "Intensity of price fluctuations.",
+      "how": "Higher volatility increases operational risk.",
+      "not": "Not directional."
+    },
+    "market_breadth": {
+      "title": "Market Breadth",
+      "what": "Extent of price movement across assets.",
+      "how": "Broad participation suggests greater stability.",
+      "not": "Does not select individual assets."
+    }
+  },
+  "mobile": {
+    "show_more": "Show more",
+    "collapse": "Collapse",
+    "compact_note": "Compact view. Tap for details."
+  },
+  "footer": {
+    "disclaimer": "The information provided is for informational and educational purposes only. It does not constitute financial advice, personalized recommendations, or investment solicitation. Cryptocurrency markets involve high risk, including the possible loss of capital."
+  }
+}
