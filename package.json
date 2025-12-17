@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "type": "module",
   "description": "Tradelia AI Dashboard - Next.js Application",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "supabase:check": "node scripts/supabase/check-schema.mjs",
     "supabase:setup": "node scripts/supabase/setup.mjs",
@@ -13,7 +13,7 @@
     "supabase:check-project": "node scripts/supabase/check-project.mjs",
     "dev": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start -p ${PORT:-3000}",
     "start:next": "next start -p ${PORT:-3000}",
     "lint": "eslint . --ext .js,.ts,.tsx --fix",
     "lint:check": "eslint . --ext .js,.ts,.tsx",
