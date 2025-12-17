@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
+import '../globals.css'
 
 export const metadata: Metadata = {
-  title: 'Tradelia — Crypto Market Context',
-  description: 'Crypto market risk indicators and context. No trading signals.',
+  title: 'Tradelia — Analisi Quantitativa Crypto',
+  description: 'Indicatori crypto istituzionali basati su ricerca accademica. Analisi quantitative real-time senza segnali di trading.',
 }
 
 export default function RootLayout({
@@ -11,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
-      <body>{children}</body>
+    <html lang="it">
+      <body className="antialiased">{children}</body>
     </html>
   )
 }
