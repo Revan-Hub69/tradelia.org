@@ -60,7 +60,7 @@ export async function generateIndicatorFAQSchema(indicatorId: string) {
   const tooltip = INDICATOR_TOOLTIPS[indicatorId];
   if (!tooltip) return null;
 
-  const faqs = await generateIndicatorFAQ(indicatorId, tooltip.name);
+  const faqs = await generateIndicatorFAQ(indicatorId, tooltip.name ?? indicatorId);
 
   return {
     '@context': 'https://schema.org',
@@ -97,7 +97,7 @@ export function generateIndicatorHowToSchema(indicatorId: string) {
       {
         '@type': 'HowToStep',
         name: 'Interpretare il segnale',
-        text: `Segnale positivo: ${tooltip.interpretation.positive}. Segnale negativo: ${tooltip.interpretation.negative}.`,
+        text: `Segnale positivo: ${tooltip.interpretation?.positive ?? ''}. Segnale negativo: ${tooltip.interpretation?.negative ?? ''}.`,
       },
       {
         '@type': 'HowToStep',
