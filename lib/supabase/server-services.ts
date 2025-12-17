@@ -150,7 +150,7 @@ export async function searchDashboardContent(userId: string, query: string) {
     .filter(indicator => {
       const nameMatch = indicator.name.toLowerCase().includes(queryLower);
       const descMatch = indicator.description.toLowerCase().includes(queryLower);
-      const howToUseMatch = indicator.howToUse.toLowerCase().includes(queryLower);
+      const howToUseMatch = indicator.howToUse?.toLowerCase().includes(queryLower) ?? false;
       return nameMatch || descMatch || howToUseMatch;
     })
     .slice(0, 5)
@@ -158,7 +158,7 @@ export async function searchDashboardContent(userId: string, query: string) {
       id: indicator.id,
       name: indicator.name,
       description: indicator.description,
-      howToUse: indicator.howToUse,
+      howToUse: indicator.howToUse ?? '',
     }));
 
   // Search modules

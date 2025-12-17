@@ -13,17 +13,17 @@ import { join } from "path";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const hasSupabaseCreds = Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error("Missing Supabase credentials");
+let supabase: ReturnType<typeof createClient> | null = null;
+if (hasSupabaseCreds) {
+  supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
 
 function loadMigration(version: string): string {
   const migrationsDir = join(process.cwd(), "supabase", "migrations");
@@ -120,6 +120,13 @@ export async function POST(request: NextRequest) {
 // GET endpoint to check migration status
 export async function GET() {
   try {
+    if (!hasSupabaseCreds || !supabase) {
+      return NextResponse.json({
+        applied: [],
+        message: "Supabase credentials not configured in this environment",
+      });
+    }
+
     // Check which tables exist
     const { data, error } = await supabase
       .from("schema_migrations")
@@ -134,7 +141,7 @@ export async function GET() {
       });
     }
 
-    const applied = data?.map((r) => r.version) || [];
+    const applied = (data as any)?.map((r: any) => r.version) || [];
 
     // Try to get table list (requires custom RPC or direct SQL)
     return NextResponse.json({

@@ -239,7 +239,7 @@ export const GenericIndicatorEnhanced = memo(function GenericIndicatorEnhanced({
   // Prepare chart data based on type
   let chart: React.ReactNode = null;
 
-  if (history.length > 0 && chartConfig.type === 'line') {
+  if (history.length > 0 && chartConfig?.type === 'line') {
     const chartData: LineChartData[] = history.map((item: any) => ({
       name: new Date(item.date || item.timestamp).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }),
       value: item.value || item.price || item.dominance || 0,
@@ -274,7 +274,7 @@ export const GenericIndicatorEnhanced = memo(function GenericIndicatorEnhanced({
       <IndicatorCardSEO
         indicatorId={indicatorId}
         currentValue={String(value)}
-        chartType={chartConfig.type}
+        chartType={chartConfig?.type ?? 'unknown'}
       />
       
       <IndicatorCardEnhanced

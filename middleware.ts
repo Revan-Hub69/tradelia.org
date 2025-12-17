@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+// NOTE: Avoid importing `@supabase/ssr` in Edge middleware because it pulls in
+// Node APIs not supported by the Edge runtime (e.g. process.version). This caused
+// build warnings and potential runtime failures. If you need to sync supabase
+// sessions/cookies, handle that in server-side (Node) API routes or server components.
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,67 +16,10 @@ export async function middleware(request: NextRequest) {
   // Security headers sono già gestiti da next.config.js
   // Qui aggiungiamo solo header aggiuntivi se necessario
 
-  // Crea un client Supabase per sincronizzare i cookie
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  // NOTE: Supabase session sync removed from middleware to keep Edge runtime safe.
+  // If you want to reintroduce session sync, do it inside server-side endpoints.
+  // For now we keep middleware lightweight and non-blocking.
 
-  if (supabaseUrl && supabaseAnonKey) {
-    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(
-          name: string,
-          value: string,
-          options: { name?: string; value?: string; [key: string]: unknown }
-        ) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: { name?: string; value?: string; [key: string]: unknown }) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-        },
-      },
-    });
-
-    // Aggiorna la sessione per sincronizzare i cookie
-    // Non bloccare se c'è un errore, solo logga
-    try {
-      await supabase.auth.getUser();
-    } catch (error) {
-      // Non bloccare il flusso se c'è un errore nella sincronizzazione
-      console.error('Error syncing session in middleware:', error);
-    }
-  }
 
   // Prevent /it URLs - redirect to root
   if (pathname.startsWith("/it")) {
