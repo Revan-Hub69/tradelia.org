@@ -1,0 +1,90 @@
+{
+  "global": {
+    "informational_only": "Indicatore informativo. Non è un segnale operativo.",
+    "not_trading_signals": "Contesto di mercato. Non segnali.",
+    "learn_more": "Scopri come leggere questi dati",
+    "method_and_limits": "Metodo e limiti",
+    "sources": "Fonti dati"
+  },
+  "badges": {
+    "risk_on": {
+      "label": "Risk-On",
+      "description": "Condizioni di rischio contenute."
+    },
+    "neutral": {
+      "label": "Neutral",
+      "description": "Segnali misti, nessun regime dominante."
+    },
+    "risk_off": {
+      "label": "Risk-Off",
+      "description": "Presenza di stress o squilibri."
+    }
+  },
+  "sections": {
+    "market_snapshot": {
+      "title": "Market Snapshot",
+      "subtitle": "Sintesi del contesto di mercato."
+    },
+    "risk_regime": {
+      "title": "Market Risk Regime",
+      "subtitle": "Classificazione del contesto di rischio."
+    },
+    "market_movers": {
+      "title": "Market Movers (24h)",
+      "subtitle": "Movimenti già avvenuti.",
+      "warning": "Le performance passate non indicano risultati futuri."
+    },
+    "futures_overlay": {
+      "title": "Futures & Perpetuals",
+      "subtitle": "Indicatori di leva e stress."
+    },
+    "binance_watch": {
+      "title": "Binance Watch",
+      "subtitle": "Comunicazioni ufficiali."
+    },
+    "academy": {
+      "title": "Academy",
+      "subtitle": "Concetti chiave per leggere il mercato."
+    }
+  },
+  "indicators": {
+    "funding_rate": {
+      "title": "Funding Rate",
+      "what": "Misura l’equilibrio tra posizioni long e short nei futures perpetui.",
+      "how": "Valori estremi indicano crowding e potenziale fragilità.",
+      "not": "Non è un indicatore direzionale."
+    },
+    "open_interest": {
+      "title": "Open Interest",
+      "what": "Rappresenta la quantità totale di posizioni aperte.",
+      "how": "Un aumento indica ingresso di leva, non direzione.",
+      "not": "Non anticipa il prezzo."
+    },
+    "liquidations": {
+      "title": "Liquidazioni",
+      "what": "Chiusure forzate di posizioni a leva.",
+      "how": "Picchi indicano stress di mercato.",
+      "not": "Non implicano inversioni."
+    },
+    "volatility": {
+      "title": "Volatilità",
+      "what": "Intensità delle variazioni di prezzo.",
+      "how": "Volatilità elevata aumenta il rischio operativo.",
+      "not": "Non indica direzione."
+    },
+    "market_breadth": {
+      "title": "Market Breadth",
+      "what": "Ampiezza del movimento tra più asset.",
+      "how": "Movimenti diffusi indicano maggiore stabilità.",
+      "not": "Non seleziona singoli asset."
+    }
+  },
+  "mobile": {
+    "show_more": "Mostra altri",
+    "collapse": "Riduci",
+    "compact_note": "Vista compatta. Tocca per i dettagli."
+  },
+  "footer": {
+    "disclaimer": "Le informazioni fornite hanno finalità esclusivamente informative ed educative. Non costituiscono consulenza finanziaria, raccomandazioni personalizzate o inviti all’investimento. I mercati delle criptovalute comportano rischi elevati, inclusa la possibile perdita totale del capitale."
+  }
+}
