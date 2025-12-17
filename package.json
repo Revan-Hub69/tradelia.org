@@ -1,16 +1,12 @@
 {
   "name": "tradelia",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=18 <23"
   },
   "scripts": {
-    "dev:web": "pnpm -C apps/web dev",
-    "build:web": "pnpm -C apps/web build",
-    "lint:web": "pnpm -C apps/web lint",
-    "typecheck:web": "pnpm -C apps/web typecheck",
-    "build": "pnpm -C apps/web build",
-    "start": "pnpm -C apps/web start"
+    "build": "cd apps/web && npm run build",
+    "start": "cd apps/web && npm run start",
+    "dev": "cd apps/web && npm run dev"
   }
 }
