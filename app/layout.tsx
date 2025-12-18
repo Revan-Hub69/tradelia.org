@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import './globals.css'
+import '../globals.css'
 
 const jsonLd = {
   '@context': 'https://schema.org',
