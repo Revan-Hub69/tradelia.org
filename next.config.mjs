@@ -1,19 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Output for static export (Cloudflare compatibility)
-  output: process.env.CF_PAGES ? 'export' : undefined,
+  // Static export for Cloudflare Pages
+  output: 'export',
   trailingSlash: true,
   
-  // Performance optimizations
-  experimental: {
-    optimizePackageImports: ['lucide-react'],
-  },
-  
-  // Image optimization (disabled for static export)
+  // Disable image optimization for static export
   images: {
-    unoptimized: process.env.CF_PAGES ? true : false,
-    formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 31536000, // 1 year
+    unoptimized: true,
   },
 
   // Compression

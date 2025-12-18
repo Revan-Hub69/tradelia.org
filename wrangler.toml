@@ -1,33 +1,10 @@
 name = "tradelia"
 compatibility_date = "2024-12-18"
-pages_build_output_dir = ".next"
 
 [build]
 command = "npm run build"
+cwd = "."
+watch_dir = "."
 
 [build.environment_variables]
 NODE_VERSION = "18"
-NEXT_TELEMETRY_DISABLED = "1"
-
-[[pages.headers]]
-for = "/*"
-[pages.headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
-Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-
-[[pages.headers]]
-for = "/api/*"
-[pages.headers.values]
-Cache-Control = "public, max-age=300, stale-while-revalidate=60"
-
-[[pages.headers]]
-for = "*.js"
-[pages.headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[pages.headers]]
-for = "*.css"
-[pages.headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
