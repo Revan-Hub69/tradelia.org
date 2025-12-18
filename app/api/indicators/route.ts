@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-// Cache per 5 minuti
-export const revalidate = 300
+// Edge runtime for Cloudflare compatibility
+export const runtime = 'edge'
 
 interface IndicatorData {
   name: string
@@ -14,7 +14,10 @@ interface IndicatorData {
 
 async function fetchFearGreedIndex(): Promise<number> {
   try {
-    const response = await fetch('https://api.alternative.me/fng/')
+    const response = await fetch('https://api.alternative.me/fng/', {
+      headers: { 'User-Agent': 'Tradelia/1.0' }
+    })
+    if (!response.ok) throw new Error('API error')
     const data = await response.json()
     return parseInt(data.data[0].value)
   } catch {
@@ -24,7 +27,10 @@ async function fetchFearGreedIndex(): Promise<number> {
 
 async function fetchBitcoinPrice(): Promise<number> {
   try {
-    const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+    const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', {
+      headers: { 'User-Agent': 'Tradelia/1.0' }
+    })
+    if (!response.ok) throw new Error('API error')
     const data = await response.json()
     return data.bitcoin.usd
   } catch {
@@ -40,8 +46,8 @@ export async function GET() {
     ])
 
     // Calcoli semplificati per demo
-    const mvrv = (btcPrice / 25000).toFixed(1) // Simplified MVRV
-    const nvt = (btcPrice / 1600).toFixed(1) // Simplified NVT
+    const mvrv = (btcPrice / 25000).toFixed(1)
+    const nvt = (btcPrice / 1600).toFixed(1)
     const longShort = (2.1 + (fearGreed - 50) / 100).toFixed(1)
 
     const indicators: IndicatorData[] = [
@@ -82,6 +88,11 @@ export async function GET() {
     return NextResponse.json({ 
       indicators,
       timestamp: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=60',
+        'Access-Control-Allow-Origin': '*',
+      }
     })
 
   } catch (error) {

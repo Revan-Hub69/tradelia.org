@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Edge runtime for Cloudflare compatibility
+export const runtime = 'edge'
+
 export async function POST(request: NextRequest) {
   try {
     const { indicator, value, status } = await request.json()
 
+    // Fallback response if no Groq API key
     if (!process.env.GROQ_API_KEY) {
-      return NextResponse.json(
-        { error: 'AI service not configured' },
-        { status: 503 }
-      )
+      const fallbackExplanation = `Il ${indicator} con valore ${value} (${status}) indica le condizioni attuali del mercato. Questa metrica è importante per valutare il rischio operativo nel trading crypto. Considera sempre il contesto di mercato completo prima di prendere decisioni.`
+      
+      return NextResponse.json({ 
+        explanation: fallbackExplanation,
+        timestamp: new Date().toISOString(),
+        source: 'fallback'
+      })
     }
 
     const prompt = `Come esperto quantitativo in analisi crypto, spiega in modo istituzionale e accademico:
@@ -29,6 +36,7 @@ Mantieni un tono professionale, neutrale e accademico. Non fornire consigli di i
       headers: {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json',
+        'User-Agent': 'Tradelia/1.0'
       },
       body: JSON.stringify({
         model: 'llama-3.1-70b-versatile',
@@ -56,14 +64,31 @@ Mantieni un tono professionale, neutrale e accademico. Non fornire consigli di i
 
     return NextResponse.json({ 
       explanation,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      source: 'groq'
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=300',
+        'Access-Control-Allow-Origin': '*',
+      }
     })
 
   } catch (error) {
     console.error('AI explanation error:', error)
-    return NextResponse.json(
-      { error: 'Failed to generate explanation' },
-      { status: 500 }
-    )
+    
+    // Fallback response on error
+    const fallbackExplanation = `Analisi temporaneamente non disponibile. L'indicatore mostra condizioni di mercato che richiedono attenzione. Consulta sempre multiple fonti prima di operare.`
+    
+    return NextResponse.json({ 
+      explanation: fallbackExplanation,
+      timestamp: new Date().toISOString(),
+      source: 'fallback'
+    }, {
+      status: 200, // Return 200 with fallback instead of error
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+      }
+    })
   }
 }
