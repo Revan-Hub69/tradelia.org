@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import '../globals.css'
 
 export const metadata: Metadata = {
-  title: 'Tradelia — Analisi Quantitativa Crypto',
-  description: 'Indicatori crypto istituzionali basati su ricerca accademica. Analisi quantitative real-time senza segnali di trading.',
+  title: 'Tradelia — Test',
+  description: 'Test page',
 }
 
 export default function RootLayout({
@@ -13,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it">
-      <body className="antialiased">{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
