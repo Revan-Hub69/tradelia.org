@@ -1,7 +1,7 @@
 import { HeroSection } from '@/components/sections/HeroSection'
 import { ProblemSection } from '@/components/sections/ProblemSection'
 import { SolutionSection } from '@/components/sections/SolutionSection'
-import { MetricsDashboard } from '@/components/sections/MetricsDashboard'
+import { ValuePreview } from '@/components/sections/ValuePreview'
 
 export default function HomePage() {
   return (
@@ -9,7 +9,7 @@ export default function HomePage() {
       <HeroSection />
       <ProblemSection />
       <SolutionSection />
-      <MetricsDashboard />
+      <ValuePreview />
       
       {/* Footer minimale */}
       <footer className="py-16 border-t border-slate-800/50">

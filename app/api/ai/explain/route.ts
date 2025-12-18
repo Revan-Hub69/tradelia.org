@@ -7,7 +7,10 @@ export const revalidate = 300
 
 export async function POST(request: NextRequest) {
   try {
-    const { indicator, value, status } = await request.json()
+    const { indicator, value, status, metric_id, visual_type, allowed_scope, no_advice, question } = await request.json()
+    
+    // Use structured input if provided
+    const metricName = metric_id ? metric_id.replace('_', ' ') : indicator
 
     // Fallback response if no Groq API key
     if (!process.env.GROQ_API_KEY) {
@@ -20,18 +23,20 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const prompt = `Come esperto quantitativo in analisi crypto, spiega in modo istituzionale e accademico:
+    const prompt = question || `Come esperto quantitativo in analisi crypto, spiega in modo istituzionale e accademico:
 
-Indicatore: ${indicator}
-Valore attuale: ${value}
-Status: ${status}
+Metrica: ${metricName}
+Tipo visualizzazione: ${visual_type || 'standard'}
+Valore attuale: ${value || 'N/A'}
+Status: ${status || 'N/A'}
 
 Fornisci una spiegazione di 2-3 frasi che includa:
-1. Significato del valore attuale nel contesto di mercato
-2. Implicazioni per investitori istituzionali
+1. Significato della metrica nel contesto di mercato
+2. Interpretazione della visualizzazione ${visual_type || 'standard'}
 3. Limitazioni metodologiche da considerare
 
-Mantieni un tono professionale, neutrale e accademico. Non fornire consigli di investimento.`
+Scope: ${allowed_scope || 'general_interpretation'}
+Mantieni un tono professionale, neutrale e accademico. ${no_advice ? 'NON fornire consigli di investimento.' : ''}`
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
