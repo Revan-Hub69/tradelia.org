@@ -10,11 +10,9 @@ export function HeroSection() {
       
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
         {/* Logo */}
-        <AnimatedSection delay={0}>
-          <div className="flex justify-center mb-8 sm:mb-12">
-            <Logo size="lg" />
-          </div>
-        </AnimatedSection>
+        <div className="flex justify-center mb-8 sm:mb-12">
+          <Logo size="lg" />
+        </div>
 
         {/* Main headline */}
         <div className="mb-6 sm:mb-8">
