@@ -7,23 +7,74 @@ export const revalidate = 300
 
 export async function POST(request: NextRequest) {
   try {
-    const { indicator, value, status, metric_id, visual_type, allowed_scope, no_advice, question } = await request.json()
+    const { 
+      topic_id, 
+      topic_title, 
+      context, 
+      user_question, 
+      mode, 
+      constraints,
+      // Legacy support
+      indicator, 
+      value, 
+      status, 
+      metric_id, 
+      visual_type, 
+      allowed_scope, 
+      no_advice, 
+      question 
+    } = await request.json()
     
-    // Use structured input if provided
-    const metricName = metric_id ? metric_id.replace('_', ' ') : indicator
-
+    // Support new prompt contract format
+    const isNewFormat = topic_id && context
+    
     // Fallback response if no Groq API key
     if (!process.env.GROQ_API_KEY) {
-      const fallbackExplanation = `Il ${indicator} con valore ${value} (${status}) indica le condizioni attuali del mercato. Questa metrica è importante per valutare il rischio operativo nel trading crypto. Considera sempre il contesto di mercato completo prima di prendere decisioni.`
+      const fallbackResponse = {
+        answer: isNewFormat ? 
+          `Analisi per ${topic_title}: ${context.state} con confidence ${context.quality?.confidence_bucket || 'Medium'}. Questa metrica indica le condizioni attuali del mercato crypto.` :
+          `Il ${indicator} con valore ${value} (${status}) indica le condizioni attuali del mercato.`,
+        evidence: ['Dati di mercato in tempo reale', 'Analisi quantitativa'],
+        interpretation: 'Contesto generale di mercato da considerare nelle decisioni',
+        limitations: ['Analisi AI temporaneamente non disponibile', 'Consultare sempre fonti multiple'],
+        not_implying: 'Questo non implica raccomandazioni di investimento',
+        suggested_questions: ['Come interpretare questo dato?', 'Quali sono i limiti?', 'Cosa guardare ora?']
+      }
       
-      return NextResponse.json({ 
-        explanation: fallbackExplanation,
-        timestamp: new Date().toISOString(),
-        source: 'fallback'
-      })
+      return NextResponse.json(fallbackResponse)
     }
 
-    const prompt = question || `Come esperto quantitativo in analisi crypto, spiega in modo istituzionale e accademico:
+    let prompt: string
+    
+    if (isNewFormat) {
+      // New structured prompt format
+      prompt = `Come analista quantitativo crypto, rispondi alla domanda dell'utente:
+
+Topic: ${topic_title}
+Stato corrente: ${context.state}
+Drivers attivi: ${context.drivers?.join(', ') || 'N/A'}
+Confidence: ${context.quality?.confidence_bucket || 'Medium'}
+Freshness: ${context.quality?.freshness || 'T-0'}
+As of: ${context.asof}
+
+Domanda utente: "${user_question}"
+
+Rispondi seguendo questo formato:
+1. HYPOTHESIS: Spiegazione diretta della domanda
+2. EVIDENCE: Dati/driver che supportano la risposta
+3. INTERPRETATION: Cosa significa nel contesto attuale
+4. LIMITATIONS: Cosa NON possiamo concludere
+
+Constraints:
+- Lingua: ${constraints?.language || 'it'}
+- Stile: ${constraints?.style || 'academic_clear'}
+- No advice: ${constraints?.no_advice ? 'SÌ' : 'NO'}
+- No predictions: ${constraints?.no_predictions ? 'SÌ' : 'NO'}
+- Scope: ${constraints?.scope_only_topic ? 'Solo questo topic' : 'Generale'}`
+    } else {
+      // Legacy format support
+      const metricName = metric_id ? metric_id.replace('_', ' ') : indicator
+      prompt = question || `Come esperto quantitativo in analisi crypto, spiega in modo istituzionale e accademico:
 
 Metrica: ${metricName}
 Tipo visualizzazione: ${visual_type || 'standard'}
@@ -37,6 +88,7 @@ Fornisci una spiegazione di 2-3 frasi che includa:
 
 Scope: ${allowed_scope || 'general_interpretation'}
 Mantieni un tono professionale, neutrale e accademico. ${no_advice ? 'NON fornire consigli di investimento.' : ''}`
+    }
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -67,30 +119,70 @@ Mantieni un tono professionale, neutrale e accademico. ${no_advice ? 'NON fornir
     }
 
     const data = await response.json()
-    const explanation = data.choices[0]?.message?.content
+    const rawResponse = data.choices[0]?.message?.content
 
-    return NextResponse.json({ 
-      explanation,
-      timestamp: new Date().toISOString(),
-      source: 'groq'
-    }, {
-      headers: {
-        'Cache-Control': 'public, max-age=300',
-        'Access-Control-Allow-Origin': '*',
+    if (isNewFormat) {
+      // Parse structured response
+      try {
+        const sections = rawResponse.split(/\d+\.|HYPOTHESIS:|EVIDENCE:|INTERPRETATION:|LIMITATIONS:/i)
+        const cleanSections = sections.filter(s => s.trim()).map(s => s.trim())
+        
+        return NextResponse.json({
+          answer: cleanSections[0] || rawResponse,
+          evidence: cleanSections[1] ? cleanSections[1].split('\n').filter(l => l.trim()) : [],
+          interpretation: cleanSections[2] || '',
+          limitations: cleanSections[3] ? cleanSections[3].split('\n').filter(l => l.trim()) : [],
+          not_implying: 'Questo non implica consigli di investimento o previsioni di prezzo',
+          suggested_questions: [
+            'Quando potrebbe cambiare questo stato?',
+            'Quali sono i principali rischi ora?',
+            'Come interpretare i driver attivi?'
+          ]
+        }, {
+          headers: {
+            'Cache-Control': 'public, max-age=300',
+            'Access-Control-Allow-Origin': '*',
+          }
+        })
+      } catch (parseError) {
+        // Fallback to simple response if parsing fails
+        return NextResponse.json({
+          answer: rawResponse,
+          evidence: [],
+          interpretation: '',
+          limitations: ['Risposta non strutturata'],
+          not_implying: 'Questo non implica consigli di investimento',
+          suggested_questions: []
+        })
       }
-    })
+    } else {
+      // Legacy format
+      return NextResponse.json({ 
+        explanation: rawResponse,
+        timestamp: new Date().toISOString(),
+        source: 'groq'
+      }, {
+        headers: {
+          'Cache-Control': 'public, max-age=300',
+          'Access-Control-Allow-Origin': '*',
+        }
+      })
+    }
 
   } catch (error) {
     console.error('AI explanation error:', error)
     
     // Fallback response on error
-    const fallbackExplanation = `Analisi temporaneamente non disponibile. L'indicatore mostra condizioni di mercato che richiedono attenzione. Consulta sempre multiple fonti prima di operare.`
+    const fallbackResponse = {
+      answer: 'Analisi temporaneamente non disponibile. Consulta sempre multiple fonti prima di operare.',
+      evidence: ['Servizio AI temporaneamente non disponibile'],
+      interpretation: 'Impossibile fornire interpretazione contestuale',
+      limitations: ['Analisi AI non disponibile', 'Utilizzare dati con cautela'],
+      not_implying: 'Questo non implica consigli di investimento',
+      suggested_questions: ['Riprova più tardi', 'Consulta documentazione metodologica']
+    }
     
-    return NextResponse.json({ 
-      explanation: fallbackExplanation,
-      timestamp: new Date().toISOString(),
-      source: 'fallback'
-    }, {
+    return NextResponse.json(fallbackResponse, {
       status: 200, // Return 200 with fallback instead of error
       headers: {
         'Cache-Control': 'no-cache',

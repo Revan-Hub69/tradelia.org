@@ -4,7 +4,7 @@ import { Logo } from '@/components/ui/Logo'
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-pattern">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Subtle background elements */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/95 to-slate-950"></div>
       
@@ -16,30 +16,52 @@ export function HeroSection() {
 
         {/* Main headline */}
         <h1 className="text-5xl md:text-7xl font-light mb-8 leading-tight">
-          <span className="text-gradient font-extralight">Capisci il rischio</span>
+          <span className="text-gradient font-extralight">Evidence-Based</span>
           <br />
-          <span className="text-slate-400 text-4xl md:text-5xl font-light">del mercato cripto,</span>
-          <br />
-          <span className="text-accent font-medium text-3xl md:text-4xl">prima di operare</span>
+          <span className="text-slate-300 text-4xl md:text-6xl font-light">Crypto Analysis</span>
         </h1>
         
         {/* Sub-headline */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <p className="text-xl text-slate-300 mb-4 font-light leading-relaxed">
-            Analisi quantitativa in tempo reale basata su dati istituzionali
+        <div className="max-w-3xl mx-auto mb-12">
+          <p className="text-xl text-slate-300 mb-6 font-light leading-relaxed">
+            Crypto intelligence, not noise: metriche + spiegazione guidata del "perché", con incertezza e limiti.
           </p>
-          <p className="text-slate-500 text-lg">
-            Nessun segnale • Nessuna promessa di profitto • Solo contesto
+          <p className="text-slate-500 text-lg italic">
+            We explain, you decide.
           </p>
+        </div>
+
+        {/* Visual: noise → method → insight */}
+        <div className="flex items-center justify-center gap-8 mb-12 text-slate-400">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-2">
+              <span className="text-2xl">📊</span>
+            </div>
+            <span className="text-sm">Noise</span>
+          </div>
+          <div className="text-slate-600">→</div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-2">
+              <span className="text-2xl">🧠</span>
+            </div>
+            <span className="text-sm">Method</span>
+          </div>
+          <div className="text-slate-600">→</div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-2">
+              <span className="text-2xl">💡</span>
+            </div>
+            <span className="text-sm">Insight</span>
+          </div>
         </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <button className="btn-primary">
-            Accedi al Dashboard
+            Analyze Current Market
           </button>
           <button className="btn-secondary">
-            Scopri la metodologia
+            See Methodology
           </button>
         </div>
 
