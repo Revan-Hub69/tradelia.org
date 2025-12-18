@@ -1,3 +1,5 @@
+import { IndependenceIcon, NeutralityIcon, TransparencyIcon, DocumentIcon, AnalysisIcon, VerificationIcon, ReportIcon } from '@/components/ui/AcademicIcons'
+
 export function TrustSection() {
   return (
     <section className="py-24 relative">
@@ -12,8 +14,8 @@ export function TrustSection() {
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-2xl flex items-center justify-center">
-              <span className="text-3xl">🔒</span>
+            <div className="w-16 h-16 mx-auto mb-6 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center">
+              <IndependenceIcon className="text-slate-300" size={24} />
             </div>
             <h3 className="text-xl font-medium text-slate-200 mb-4">Indipendenza</h3>
             <p className="text-slate-400 leading-relaxed">
@@ -22,8 +24,8 @@ export function TrustSection() {
           </div>
 
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-2xl flex items-center justify-center">
-              <span className="text-3xl">⚖️</span>
+            <div className="w-16 h-16 mx-auto mb-6 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center">
+              <NeutralityIcon className="text-slate-300" size={24} />
             </div>
             <h3 className="text-xl font-medium text-slate-200 mb-4">Neutralità</h3>
             <p className="text-slate-400 leading-relaxed">
@@ -32,8 +34,8 @@ export function TrustSection() {
           </div>
 
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-2xl flex items-center justify-center">
-              <span className="text-3xl">🔍</span>
+            <div className="w-16 h-16 mx-auto mb-6 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center">
+              <TransparencyIcon className="text-slate-300" size={24} />
             </div>
             <h3 className="text-xl font-medium text-slate-200 mb-4">Trasparenza</h3>
             <p className="text-slate-400 leading-relaxed">
@@ -49,32 +51,32 @@ export function TrustSection() {
           
           <div className="grid md:grid-cols-4 gap-6 mb-8">
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <span className="text-xl">📄</span>
+              <div className="w-12 h-12 mx-auto mb-4 bg-slate-800/50 rounded-lg flex items-center justify-center">
+                <DocumentIcon className="text-slate-300" size={20} />
               </div>
               <h4 className="font-medium text-slate-200 mb-2">1. Raccolta</h4>
               <p className="text-sm text-slate-400">Documentazione ufficiale e termini di servizio</p>
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <span className="text-xl">🤖</span>
+              <div className="w-12 h-12 mx-auto mb-4 bg-slate-800/50 rounded-lg flex items-center justify-center">
+                <AnalysisIcon className="text-slate-300" size={20} />
               </div>
               <h4 className="font-medium text-slate-200 mb-2">2. Analisi</h4>
               <p className="text-sm text-slate-400">Analisi automatizzata di costi, limiti e vincoli</p>
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <span className="text-xl">✅</span>
+              <div className="w-12 h-12 mx-auto mb-4 bg-slate-800/50 rounded-lg flex items-center justify-center">
+                <VerificationIcon className="text-slate-300" size={20} />
               </div>
               <h4 className="font-medium text-slate-200 mb-2">3. Verifica</h4>
               <p className="text-sm text-slate-400">Controllo incrociato e validazione delle informazioni</p>
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                <span className="text-xl">📊</span>
+              <div className="w-12 h-12 mx-auto mb-4 bg-slate-800/50 rounded-lg flex items-center justify-center">
+                <ReportIcon className="text-slate-300" size={20} />
               </div>
               <h4 className="font-medium text-slate-200 mb-2">4. Report</h4>
               <p className="text-sm text-slate-400">Sintesi chiara di vantaggi, svantaggi e limitazioni</p>
