@@ -125,7 +125,7 @@ Mantieni un tono professionale, neutrale e accademico. ${no_advice ? 'NON fornir
       // Parse structured response
       try {
         const sections = rawResponse.split(/\d+\.|HYPOTHESIS:|EVIDENCE:|INTERPRETATION:|LIMITATIONS:/i)
-        const cleanSections = sections.filter(s => s.trim()).map(s => s.trim())
+        const cleanSections = sections.filter((s: string) => s.trim()).map((s: string) => s.trim())
         
         return NextResponse.json({
           answer: cleanSections[0] || rawResponse,
