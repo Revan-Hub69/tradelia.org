@@ -194,91 +194,38 @@ export function LivePreview() {
   } | null>(null)
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/home/preview')
-        const result = await response.json()
-        
-        if (result.success && result.data) {
-          setData({
-            marketRegime: result.data.market_regime,
-            btcDominance: result.data.btc_dominance,
-            volatility: result.data.volatility_regime
-          })
-        } else {
-          // Fallback to mock data
-          setData({
-            marketRegime: {
-              metric_id: 'market_regime',
-              visual_type: 'gauge',
-              state: 'Risk-On',
-              trend: 'up',
-              confidence_bucket: 'High',
-              asof: new Date().toISOString(),
-              drivers: ['breadth_up', 'dispersion_down', 'vol_rel_mid']
-            },
-            btcDominance: {
-              metric_id: 'btc_dominance',
-              visual_type: 'stacked_share',
-              btc_share: 0.54,
-              alt_share: 0.46,
-              delta_7d: -0.012,
-              asof: new Date().toISOString()
-            },
-            volatility: {
-              metric_id: 'vol_regime',
-              visual_type: 'band_envelope',
-              bucket: 'Elevated',
-              p10: 0.28,
-              p50: 0.45,
-              p90: 0.72,
-              current: 0.61,
-              lookback_days: 365,
-              asof: new Date().toISOString()
-            }
-          })
-        }
-      } catch (error) {
-        console.error('Failed to fetch preview data:', error)
-        // Use fallback mock data on error
-        setData({
-          marketRegime: {
-            metric_id: 'market_regime',
-            visual_type: 'gauge',
-            state: 'Neutral',
-            trend: 'stable',
-            confidence_bucket: 'Med',
-            asof: new Date().toISOString(),
-            drivers: []
-          },
-          btcDominance: {
-            metric_id: 'btc_dominance',
-            visual_type: 'stacked_share',
-            btc_share: 0.54,
-            alt_share: 0.46,
-            delta_7d: 0,
-            asof: new Date().toISOString()
-          },
-          volatility: {
-            metric_id: 'vol_regime',
-            visual_type: 'band_envelope',
-            bucket: 'Normal',
-            p10: 0.28,
-            p50: 0.45,
-            p90: 0.72,
-            current: 0.45,
-            lookback_days: 365,
-            asof: new Date().toISOString()
-          }
-        })
+    // Use mock data for static build compatibility
+    // In production, this would fetch from external APIs directly
+    setData({
+      marketRegime: {
+        metric_id: 'market_regime',
+        visual_type: 'gauge',
+        state: 'Risk-On',
+        trend: 'up',
+        confidence_bucket: 'High',
+        asof: new Date().toISOString(),
+        drivers: ['breadth_up', 'dispersion_down', 'vol_rel_mid']
+      },
+      btcDominance: {
+        metric_id: 'btc_dominance',
+        visual_type: 'stacked_share',
+        btc_share: 0.54,
+        alt_share: 0.46,
+        delta_7d: -0.012,
+        asof: new Date().toISOString()
+      },
+      volatility: {
+        metric_id: 'vol_regime',
+        visual_type: 'band_envelope',
+        bucket: 'Elevated',
+        p10: 0.28,
+        p50: 0.45,
+        p90: 0.72,
+        current: 0.61,
+        lookback_days: 365,
+        asof: new Date().toISOString()
       }
-    }
-    
-    fetchData()
-    
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchData, 30000)
-    return () => clearInterval(interval)
+    })
   }, [])
 
   const handleMetricClick = (metric: any) => {

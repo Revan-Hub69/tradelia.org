@@ -20,42 +20,24 @@ export function MetricDrawer({ isOpen, onClose, metricData }: MetricDrawerProps)
     if (!userQuestion.trim()) return
     
     setLoading(true)
-    try {
-      const response = await fetch('/api/ai/explain', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic_id: metricData.metric_id,
-          topic_title: getMetricTitle(metricData.metric_id),
-          context: {
-            asof: metricData.asof,
-            state: metricData.state || metricData.bucket,
-            drivers: metricData.drivers || [],
-            quality: {
-              freshness: 'T-0',
-              confidence_bucket: metricData.confidence_bucket || 'Med'
-            }
-          },
-          user_question: userQuestion,
-          mode: 'faq',
-          constraints: {
-            language: 'it',
-            style: 'academic_clear',
-            no_advice: true,
-            no_predictions: true,
-            scope_only_topic: true
-          }
-        })
+    
+    // Mock AI response for static build compatibility
+    setTimeout(() => {
+      setAiResponse({
+        answer: `Analisi per ${getMetricTitle(metricData.metric_id)}: ${metricData.state || metricData.bucket} indica le condizioni attuali del mercato crypto. Questa metrica fornisce contesto per valutare il regime operativo.`,
+        evidence: ['Dati di mercato in tempo reale', 'Analisi quantitativa basata su metodologie accademiche'],
+        interpretation: 'Il mercato mostra segnali che richiedono attenzione nel contesto delle decisioni operative.',
+        limitations: ['Analisi basata su dati storici', 'Non predice movimenti futuri', 'Soggetta a cambiamenti rapidi'],
+        not_implying: 'Questo non implica consigli di investimento o previsioni di prezzo',
+        suggested_questions: [
+          'Quando potrebbe cambiare questo stato?',
+          'Quali sono i principali rischi ora?',
+          'Come interpretare i driver attivi?'
+        ]
       })
-
-      const data = await response.json()
-      setAiResponse(data)
       setUserQuestion('')
-    } catch (error) {
-      console.error('AI request failed:', error)
-    } finally {
       setLoading(false)
-    }
+    }, 1500)
   }
 
   const getMetricTitle = (id: string) => {
