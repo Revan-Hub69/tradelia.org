@@ -48,34 +48,18 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
 
-  // Conditional configuration for Vercel vs Cloudflare
+  // Conditional configuration
   ...(process.env.NEXT_EXPORT === 'true' 
     ? {
-        // Cloudflare Pages static export
         output: 'export',
         trailingSlash: true,
         images: {
           unoptimized: true
-        },
-        experimental: {
-          optimizeCss: true
         }
       }
     : {
-        // Vercel dynamic with edge optimization
         experimental: {
-          optimizeCss: true,
-          serverComponentsExternalPackages: [],
-          optimizePackageImports: ['lucide-react']
-        },
-        // Vercel edge functions
-        async rewrites() {
-          return [
-            {
-              source: '/sitemap.xml',
-              destination: '/api/sitemap'
-            }
-          ]
+          optimizeCss: true
         }
       }
   )

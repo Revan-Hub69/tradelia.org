@@ -3,12 +3,14 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-
-/api/*
-  Cache-Control: public, max-age=300, stale-while-revalidate=60
+  X-DNS-Prefetch-Control: on
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 /*.js
   Cache-Control: public, max-age=31536000, immutable
 
 /*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
   Cache-Control: public, max-age=31536000, immutable
