@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
+import '../globals.css'
 
 export const metadata: Metadata = {
-  title: 'Tradelia — Test',
-  description: 'Test page',
+  title: 'Tradelia — Market Intelligence Cripto',
+  description: 'Capisci il rischio del mercato cripto prima di fare qualsiasi operazione. Dati ufficiali in streaming + analisi contestuale. Nessun segnale, nessuna promessa di profitto.',
 }
 
 export default function RootLayout({
@@ -12,33 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it">
-      <head>
-        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta httpEquiv="Pragma" content="no-cache" />
-        <meta httpEquiv="Expires" content="0" />
-      </head>
-      <body>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // Clear service worker and cache
-            if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                  registration.unregister();
-                }
-              });
-            }
-            if ('caches' in window) {
-              caches.keys().then(function(names) {
-                for (let name of names) {
-                  caches.delete(name);
-                }
-              });
-            }
-          `
-        }} />
-        {children}
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   )
 }
