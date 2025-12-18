@@ -47,7 +47,7 @@ export function TrustSection() {
             Come funziona l'analisi
           </h3>
           
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 bg-blue-500/20 rounded-lg flex items-center justify-center">
                 <span className="text-xl">📄</span>
@@ -79,6 +79,38 @@ export function TrustSection() {
               <h4 className="font-medium text-slate-200 mb-2">4. Report</h4>
               <p className="text-sm text-slate-400">Sintesi chiara di vantaggi, svantaggi e limitazioni</p>
             </div>
+          </div>
+
+          {/* Academic Foundation */}
+          <div className="border-t border-slate-800/50 pt-6">
+            <h4 className="text-lg font-medium text-slate-200 mb-4 text-center">Base Metodologica</h4>
+            <div className="text-sm text-slate-400 space-y-2">
+              <p className="text-center">
+                <strong className="text-slate-300">Analisi documentale:</strong> Basata su principi di Document Analysis (Bowen, 2009)
+              </p>
+              <p className="text-center">
+                <strong className="text-slate-300">Verifica incrociata:</strong> Cross-validation methodology (Creswell & Plano Clark, 2017)
+              </p>
+              <p className="text-center">
+                <strong className="text-slate-300">Trasparenza:</strong> Open methodology principles (Nosek et al., 2015)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Legal Compliance */}
+        <div className="mt-8 bg-amber-500/10 border border-amber-500/20 rounded-xl p-6">
+          <h4 className="text-lg font-medium text-amber-400 mb-3 text-center">Disclaimer Legale</h4>
+          <div className="text-sm text-amber-400/80 space-y-2">
+            <p className="text-center">
+              <strong>Tradelia non fornisce consulenza finanziaria.</strong> Le informazioni sono fornite esclusivamente a scopo educativo e di verifica.
+            </p>
+            <p className="text-center">
+              L'utente è responsabile delle proprie decisioni finanziarie. Consultare sempre un consulente qualificato.
+            </p>
+            <p className="text-center text-xs">
+              Conforme a: MiFID II (2014/65/EU), GDPR (2016/679), Direttiva PSD2 (2015/2366)
+            </p>
           </div>
         </div>
       </div>

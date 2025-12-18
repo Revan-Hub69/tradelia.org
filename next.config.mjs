@@ -3,6 +3,7 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
+  swcMinify: true,
   
   // Security headers
   async headers() {
@@ -25,6 +26,14 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()'
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains'
           }
         ]
       }
@@ -34,37 +43,42 @@ const nextConfig = {
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 31536000, // 1 year
+    minimumCacheTTL: 31536000,
+    dangerouslyAllowSVG: false,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
 
-  // Conditional configuration based on environment
+  // Conditional configuration for Vercel vs Cloudflare
   ...(process.env.NEXT_EXPORT === 'true' 
     ? {
+        // Cloudflare Pages static export
         output: 'export',
         trailingSlash: true,
         images: {
           unoptimized: true
+        },
+        experimental: {
+          optimizeCss: true
         }
       }
     : {
-        // Dynamic configuration for Vercel/Railway
+        // Vercel dynamic with edge optimization
         experimental: {
           optimizeCss: true,
+          serverComponentsExternalPackages: [],
+          optimizePackageImports: ['lucide-react']
+        },
+        // Vercel edge functions
+        async rewrites() {
+          return [
+            {
+              source: '/sitemap.xml',
+              destination: '/api/sitemap'
+            }
+          ]
         }
       }
-  ),
-
-  // Bundle analyzer in development
-  ...(process.env.ANALYZE === 'true' && {
-    webpack: (config) => {
-      config.plugins.push(
-        new (require('@next/bundle-analyzer')({
-          enabled: true
-        }))()
-      )
-      return config
-    }
-  })
+  )
 }
 
 export default nextConfig
