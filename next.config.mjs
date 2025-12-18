@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
+const isStatic = process.env.NEXT_EXPORT === 'true'
+
 const nextConfig = {
-  // Static export for Cloudflare Pages
-  output: 'export',
-  trailingSlash: true,
+  // Conditional output
+  output: isStatic ? 'export' : undefined,
+  trailingSlash: isStatic,
   
-  // Disable image optimization for static export
+  // Image optimization
   images: {
-    unoptimized: true,
+    unoptimized: isStatic,
   },
 
   // Compression

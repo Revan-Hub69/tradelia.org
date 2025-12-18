@@ -2,9 +2,12 @@ name = "tradelia"
 compatibility_date = "2024-12-18"
 
 [build]
-command = "npm run build"
+command = "npm run build:static"
 cwd = "."
 watch_dir = "."
+
+[build.environment_variables]
+NEXT_EXPORT = "true"
 
 [build.environment_variables]
 NODE_VERSION = "18"

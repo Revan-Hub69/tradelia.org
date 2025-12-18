@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 
 // Edge runtime for Cloudflare compatibility
 export const runtime = 'edge'
+export const dynamic = 'force-static'
+export const revalidate = 300
 
 interface IndicatorData {
   name: string
