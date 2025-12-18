@@ -1,6 +1,3 @@
 {
-  "buildCommand": "if [ -d apps/web ]; then npm install --prefix apps/web && npm run build --prefix apps/web; else npm install && npm run build; fi",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "echo 'Using conditional install in buildCommand'",
-  "framework": null
+  "framework": "nextjs"
 }
