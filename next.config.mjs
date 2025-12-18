@@ -1,20 +1,10 @@
 /** @type {import('next').NextConfig} */
-const isStatic = process.env.NEXT_EXPORT === 'true'
-
 const nextConfig = {
-  // Conditional output
-  output: isStatic ? 'export' : undefined,
-  trailingSlash: isStatic,
-  
-  // Image optimization
-  images: {
-    unoptimized: isStatic,
-  },
-
-  // Compression
+  // Performance optimizations
   compress: true,
-
-  // Headers for security and performance
+  poweredByHeader: false,
+  
+  // Security headers
   async headers() {
     return [
       {
@@ -22,43 +12,59 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'DENY'
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            value: 'nosniff'
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin'
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
-      {
-        source: '/api/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=300, stale-while-revalidate=60',
-          },
-        ],
-      },
+            value: 'camera=(), microphone=(), geolocation=()'
+          }
+        ]
+      }
     ]
   },
 
-  // PWA and caching
-  async rewrites() {
-    return [
-      {
-        source: '/sw.js',
-        destination: '/_next/static/sw.js',
-      },
-    ]
+  // Image optimization
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 31536000, // 1 year
   },
+
+  // Conditional configuration based on environment
+  ...(process.env.NEXT_EXPORT === 'true' 
+    ? {
+        output: 'export',
+        trailingSlash: true,
+        images: {
+          unoptimized: true
+        }
+      }
+    : {
+        // Dynamic configuration for Vercel/Railway
+        experimental: {
+          optimizeCss: true,
+        }
+      }
+  ),
+
+  // Bundle analyzer in development
+  ...(process.env.ANALYZE === 'true' && {
+    webpack: (config) => {
+      config.plugins.push(
+        new (require('@next/bundle-analyzer')({
+          enabled: true
+        }))()
+      )
+      return config
+    }
+  })
 }
 
 export default nextConfig
