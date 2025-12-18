@@ -7,7 +7,5 @@ cwd = "."
 watch_dir = "."
 
 [build.environment_variables]
-NEXT_EXPORT = "true"
-
-[build.environment_variables]
 NODE_VERSION = "18"
+NEXT_EXPORT = "true"
