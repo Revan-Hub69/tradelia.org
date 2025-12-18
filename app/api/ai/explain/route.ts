@@ -129,9 +129,9 @@ Mantieni un tono professionale, neutrale e accademico. ${no_advice ? 'NON fornir
         
         return NextResponse.json({
           answer: cleanSections[0] || rawResponse,
-          evidence: cleanSections[1] ? cleanSections[1].split('\n').filter(l => l.trim()) : [],
+          evidence: cleanSections[1] ? cleanSections[1].split('\n').filter((l: string) => l.trim()) : [],
           interpretation: cleanSections[2] || '',
-          limitations: cleanSections[3] ? cleanSections[3].split('\n').filter(l => l.trim()) : [],
+          limitations: cleanSections[3] ? cleanSections[3].split('\n').filter((l: string) => l.trim()) : [],
           not_implying: 'Questo non implica consigli di investimento o previsioni di prezzo',
           suggested_questions: [
             'Quando potrebbe cambiare questo stato?',
