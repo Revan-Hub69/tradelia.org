@@ -2,16 +2,16 @@ import { NextResponse } from 'next/server'
 
 import { assessmentFormSchema } from '@/lib/schemas/assessment'
 import { prisma } from '@/lib/db/prisma'
-import { computeAssessment } from '@/lib/engine/assessment'
+import { computeAssessment, type ProviderProfile } from '@/lib/engine/assessment'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const payload = assessmentFormSchema.parse(body)
 
-    const providers = await prisma.provider.findMany({
+    const providers = (await prisma.provider.findMany({
       select: { id: true, name: true, products: true, regions: true }
-    })
+    })) as ProviderProfile[]
 
     const result = computeAssessment(payload, providers.map((provider) => ({
       id: provider.id,
