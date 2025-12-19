@@ -30,13 +30,22 @@ export const metadata: Metadata = {
     url: 'https://tradelia.org',
     siteName: 'Tradelia',
     locale: 'it_IT',
-    type: 'website'
+    type: 'website',
+    images: [
+      {
+        url: '/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'Tradelia'
+      }
+    ]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
     description:
-      'Fonti ufficiali, criteri auditabili e zero ranking promozionali per scelte finanziarie più chiare.'
+      'Fonti ufficiali, criteri auditabili e zero ranking promozionali per scelte finanziarie più chiare.',
+    images: ['/icon-512.png']
   },
   robots: {
     index: true,
@@ -62,3 +71,4 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   )
 }
+

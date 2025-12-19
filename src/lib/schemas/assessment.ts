@@ -30,6 +30,7 @@ export const assessmentFormSchema = z.object({
   needsApi: z.boolean(),
   currentProviders: z
     .string()
+    .max(200, 'Elenco provider troppo lungo.')
     .optional()
     .transform((value) =>
       value
@@ -37,6 +38,8 @@ export const assessmentFormSchema = z.object({
             .split(',')
             .map((item) => item.trim())
             .filter(Boolean)
+            .slice(0, 8)
+            .map((item) => item.slice(0, 50))
         : []
     )
 })

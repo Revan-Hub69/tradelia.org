@@ -46,7 +46,7 @@ const domainCards = [
     ),
     bullets: [
       'Commissioni marginali reali',
-      'Chargeback / freeze risk',
+      'Rischio chargeback / freeze',
       'Lock-in e compliance operativa'
     ],
     href: '/business',

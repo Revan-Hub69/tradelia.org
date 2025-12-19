@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { LogoMark } from './LogoMark'
 
 const navItems = [
-  { href: '#domini', label: 'Domini' },
+  { href: '/#domini', label: 'Domini' },
   { href: '/metodo', label: 'Metodo' },
   { href: '/trasparenza', label: 'Trasparenza' }
 ]
@@ -65,6 +65,9 @@ export function SiteHeader() {
       return
     }
 
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
     const closeOnOutsideClick = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpen(false)
@@ -72,7 +75,10 @@ export function SiteHeader() {
     }
 
     document.addEventListener('mousedown', closeOnOutsideClick)
-    return () => document.removeEventListener('mousedown', closeOnOutsideClick)
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick)
+      document.body.style.overflow = previousOverflow
+    }
   }, [open])
 
   const handleNavClick = () => setOpen(false)
@@ -144,9 +150,11 @@ export function SiteHeader() {
 
       {open && (
         <div className="md:hidden">
-          <div className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm" aria-hidden="true" />
           <div
             id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
             ref={menuRef}
             className="absolute inset-x-4 top-20 z-50 space-y-4 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 shadow-2xl"
           >

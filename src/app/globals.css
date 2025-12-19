@@ -216,6 +216,9 @@
   .animate-fade-up {
     animation: none;
   }
+  .pattern-layer {
+    animation: none;
+  }
 }
 
 .animated-grid {

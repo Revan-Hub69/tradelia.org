@@ -4,9 +4,21 @@ import { assessmentFormSchema } from '@/lib/schemas/assessment'
 import { prisma } from '@/lib/db/prisma'
 import { computeAssessment } from '@/lib/engine/assessment'
 
+const MAX_BODY_BYTES = 20_000
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
+    const contentLength = request.headers.get('content-length')
+    if (contentLength && Number(contentLength) > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Payload troppo grande.' }, { status: 413 })
+    }
+
+    const buffer = await request.arrayBuffer()
+    if (buffer.byteLength > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: 'Payload troppo grande.' }, { status: 413 })
+    }
+
+    const body = JSON.parse(Buffer.from(buffer).toString())
     const payload = assessmentFormSchema.parse(body)
 
     const providers = await prisma.provider.findMany({
