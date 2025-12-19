@@ -20,27 +20,27 @@ export function SiteFooter() {
             <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Piattaforma</p>
             <ul className="space-y-2">
               <li>
-                <Link className="hover-link" href="/metodo">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/metodo">
                   Metodo
                 </Link>
               </li>
               <li>
-                <Link className="hover-link" href="/trasparenza">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/trasparenza">
                   Trasparenza
                 </Link>
               </li>
               <li>
-                <Link className="hover-link" href="/investimenti">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/investimenti">
                   Investimenti
                 </Link>
               </li>
               <li>
-                <Link className="hover-link" href="/finanza-personale">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/finanza-personale">
                   Finanza personale
                 </Link>
               </li>
               <li>
-                <Link className="hover-link" href="/business">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/business">
                   Business
                 </Link>
               </li>
@@ -51,12 +51,12 @@ export function SiteFooter() {
             <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Policy</p>
             <ul className="space-y-2">
               <li>
-                <Link className="hover-link" href="/privacy">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/privacy">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link className="hover-link" href="/disclaimer">
+                <Link className="hover-link underline-offset-4 hover:underline" href="/disclaimer">
                   Disclaimer
                 </Link>
               </li>

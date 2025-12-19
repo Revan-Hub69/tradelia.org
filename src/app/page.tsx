@@ -6,6 +6,11 @@ const domainCards = [
   {
     title: 'Investimenti',
     description: 'Broker, exchange, wallet, piattaforme.',
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-sky-300">
+        <path fill="currentColor" d="M4 5h5l2 3h9v2h-4l-2 3H4V5zm0 11h9.5l1.5-2h5v2h-3l-2 3H4v-3z" />
+      </svg>
+    ),
     bullets: [
       'Regolamentazione e tutele reali',
       'Custodia e rischio operativo',
@@ -17,6 +22,11 @@ const domainCards = [
   {
     title: 'Finanza personale',
     description: 'Conti, carte, banche, fintech.',
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-sky-300">
+        <path fill="currentColor" d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-11Zm6 1.5h-1v1H7v-1H6V7h1V6h2v1h1v1Zm-1 6h6v2h-6v-2Zm5-8v2h-4V6h4Z" />
+      </svg>
+    ),
     bullets: [
       'Fee nel tempo e condizioni',
       'Limiti operativi e requisiti',
@@ -28,6 +38,12 @@ const domainCards = [
   {
     title: 'Business & pagamenti',
     description: 'POS, gateway, incassi, conti business.',
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-sky-300">
+        <path fill="currentColor" d="M4 5h16v3H4V5Zm0 5h16v3H4v-3Zm0 5h16v4H4v-4Z" />
+        <path fill="currentColor" d="M6 6h2v2H6V6Zm0 5h2v2H6v-2Zm0 5h2v2H6v-2Zm10-10h2v2h-2V6Zm0 5h2v2h-2v-2Zm0 5h2v2h-2v-2Z" />
+      </svg>
+    ),
     bullets: [
       'Commissioni marginali reali',
       'Chargeback / freeze risk',
@@ -233,4 +249,5 @@ export default function HomePage() {
     </main>
   )
 }
+
 

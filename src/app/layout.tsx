@@ -6,6 +6,18 @@ import { SiteHeader } from '@/components/site/Header'
 
 import './globals.css'
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Tradelia',
+  url: 'https://tradelia.org',
+  description:
+    'Guida decisionale indipendente basata su fonti ufficiali e criteri verificabili per scelte finanziarie.',
+  sameAs: [
+    'https://tradelia.org'
+  ]
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://tradelia.org'),
   title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
@@ -39,6 +51,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a className="skip-to-content" href="#contenuto-principale">
           Salta al contenuto principale
         </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <SiteHeader />
         {children}
         <SiteFooter />
