@@ -36,13 +36,14 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
     .filter((value): value is string => Boolean(value))
 
   const providers = await prisma.provider.findMany({
-    where: { id: { in: providerIds } }
+    where: { id: { in: providerIds } },
+    select: { id: true, name: true }
   })
 
-  const providerMap = new Map(
-    providers.map(
-      (provider: { id: string; name: string | null }) => [provider.id, provider] as const
-    )
+  type ProviderRecord = { id: string; name: string | null }
+
+  const providerMap: Map<string, ProviderRecord> = new Map(
+    providers.map((provider) => [provider.id, provider])
   )
 
   return (
@@ -136,18 +137,17 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
             </Card>
           ) : (
             result.perDomain.map((domain) => {
-              const provider = domain.suggestedProviderId
-                ? providerMap.get(domain.suggestedProviderId)
-                : null
+              const providerName =
+                domain.suggestedProviderId && providerMap.get(domain.suggestedProviderId)?.name
+                  ? providerMap.get(domain.suggestedProviderId)?.name
+                  : 'Non valutabile'
               return (
                 <Card key={domain.domainKey} className="space-y-3">
                   <h3 className="text-base font-semibold text-slate-900">
                     {domain.domainKey}
                   </h3>
                   <p className="text-sm text-slate-700">
-                    {provider && typeof provider === 'object' && 'name' in provider && provider.name
-                      ? provider.name
-                      : 'Non valutabile'}
+                    {providerName}
                   </p>
                   <p className="text-sm text-slate-600">
                     Motivazione stub: copertura coerente con il profilo e attrito operativo
