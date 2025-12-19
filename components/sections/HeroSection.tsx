@@ -1,6 +1,6 @@
 'use client'
 
-import { Logo } from '@/components/ui/Logo'
+import { Logo } from '../ui/Logo'
 
 export default function HeroSection() {
   return (
