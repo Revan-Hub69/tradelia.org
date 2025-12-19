@@ -155,3 +155,18 @@
     @apply border-slate-500;
   }
 }
+
+.animated-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px;
+  animation: gridShift 14s linear infinite;
+}
+
+@keyframes gridShift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-60px, -60px, 0); }
+}

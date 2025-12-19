@@ -50,6 +50,7 @@ export default function HomePage() {
         <div className="absolute inset-x-[-20%] top-[-10%] h-[420px] rounded-full bg-sky-500/10 blur-[120px]" />
         <div className="absolute left-[-10%] top-1/3 h-[320px] w-[320px] rounded-full bg-slate-800/50 blur-[100px]" />
         <div className="absolute right-[-10%] top-1/4 h-[260px] w-[260px] rounded-full bg-sky-700/20 blur-[100px]" />
+        <div className="animated-grid opacity-50" aria-hidden />
       </div>
 
       {/* HERO */}
@@ -198,20 +199,12 @@ export default function HomePage() {
                 Tradelia non vende prodotti finanziari e non pubblica segnali. Se esistono affiliazioni, sono dichiarate
                 e non influenzano i criteri.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/trasparenza"
-                  className="rounded-xl border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                >
-                  Vai alla Trasparenza
-                </Link>
-                <Link
-                  href="/metodo"
-                  className="rounded-xl border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                >
-                  Vai al Metodo
-                </Link>
-              </div>
+              <Link
+                href="/trasparenza"
+                className="mt-3 inline-flex rounded-xl border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              >
+                Vai alla Trasparenza
+              </Link>
             </div>
 
             <div className="grid flex-1 gap-4 lg:grid-cols-2">
