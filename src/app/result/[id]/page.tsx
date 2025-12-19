@@ -13,9 +13,11 @@ const coverageVariantMap: Record<PerDomainResult['coverageLevel'], 'full' | 'par
   INFO: 'info'
 }
 
-export default async function ResultPage({ params }: { params: { id: string } }) {
+export default async function ResultPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   const assessment = await prisma.assessment.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { result: true }
   })
 
