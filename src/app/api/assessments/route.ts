@@ -15,17 +15,24 @@ export async function POST(request: Request) {
 
     const result = computeAssessment(
       payload,
-      providers.map((provider): {
-        id: string
-        name: string
-        products: string[]
-        regions: string[]
-      } => ({
-        id: provider.id,
-        name: provider.name,
-        products: provider.products as string[],
-        regions: provider.regions as string[]
-      }))
+      providers.map(
+        (provider: {
+          id: string
+          name: string
+          products: unknown
+          regions: unknown
+        }): {
+          id: string
+          name: string
+          products: string[]
+          regions: string[]
+        } => ({
+          id: provider.id,
+          name: provider.name,
+          products: provider.products as string[],
+          regions: provider.regions as string[]
+        })
+      )
     )
 
     const assessment = await prisma.assessment.create({
