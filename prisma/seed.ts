@@ -280,13 +280,18 @@ async function main() {
       where: { name: provider.name },
       update: {
         type: provider.type,
-        regions: provider.regions,
-        regulatedIn: provider.regulatedIn,
-        products: provider.products,
+        regions: JSON.stringify(provider.regions),
+        regulatedIn: JSON.stringify(provider.regulatedIn),
+        products: JSON.stringify(provider.products),
         website: provider.website,
         description: provider.description
       },
-      create: provider
+      create: {
+        ...provider,
+        regions: JSON.stringify(provider.regions),
+        regulatedIn: JSON.stringify(provider.regulatedIn),
+        products: JSON.stringify(provider.products)
+      }
     })
 
     providerMap.set(provider.name, record.id)
@@ -312,7 +317,7 @@ async function main() {
         fxFeePct: fee.fxFeePct ?? null,
         financingRatePolicy: fee.financingRatePolicy ?? null,
         spreadPolicy: fee.spreadPolicy,
-        withdrawalFees: fee.withdrawalFees,
+        withdrawalFees: JSON.stringify(fee.withdrawalFees),
         sourceUrl: fee.sourceUrl
       },
       create: {
@@ -326,7 +331,7 @@ async function main() {
         fxFeePct: fee.fxFeePct ?? null,
         financingRatePolicy: fee.financingRatePolicy ?? null,
         spreadPolicy: fee.spreadPolicy,
-        withdrawalFees: fee.withdrawalFees,
+        withdrawalFees: JSON.stringify(fee.withdrawalFees),
         sourceUrl: fee.sourceUrl,
         lastVerifiedAt: new Date(),
         notes: 'Dati fittizi per MVP.'

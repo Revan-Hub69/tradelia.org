@@ -12,16 +12,16 @@ model Assessment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  markets               Json
+  markets               String
   horizon               String
   frequencyPerWeek      Int
-  orderTypes            Json
+  orderTypes            String
   typicalNotionalBucket String
   slippageTolerance     String
   regulatoryPreference  String
   needsApi              Boolean @default(false)
   baseCurrency          String
-  currentProviders      Json
+  currentProviders      String
 
   result AssessmentResult?
 
@@ -32,9 +32,9 @@ model AssessmentResult {
   id           String   @id @default(cuid())
   createdAt    DateTime @default(now())
   assessmentId String   @unique
-  perDomain    Json
-  overall      Json
-  audit        Json
+  perDomain    String
+  overall      String
+  audit        String
 
   assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
@@ -48,9 +48,9 @@ model Provider {
 
   name        String   @unique
   type        String
-  regions     Json
-  regulatedIn Json
-  products    Json
+  regions     String
+  regulatedIn String
+  products    String
 
   website     String?
   description String?
@@ -81,7 +81,7 @@ model FeeSchedule {
   financingRatePolicy String?
   spreadPolicy        String  @default("variable")
 
-  withdrawalFees Json?
+  withdrawalFees String?
 
   sourceUrl      String?
   lastVerifiedAt DateTime?

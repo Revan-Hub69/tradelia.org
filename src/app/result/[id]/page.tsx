@@ -29,9 +29,9 @@ export default async function ResultPage({
   }
 
   const result: AssessmentResult = {
-    perDomain: assessment.result.perDomain as PerDomainResult[],
-    overall: assessment.result.overall as AssessmentResult['overall'],
-    audit: assessment.result.audit as AssessmentResult['audit']
+    perDomain: JSON.parse(assessment.result.perDomain) as PerDomainResult[],
+    overall: JSON.parse(assessment.result.overall) as AssessmentResult['overall'],
+    audit: JSON.parse(assessment.result.audit) as AssessmentResult['audit']
   }
 
   const providerIds = result.perDomain
@@ -64,7 +64,7 @@ export default async function ResultPage({
               Mercati
             </h3>
             <p className="text-sm text-slate-700">
-              {(assessment.markets as string[]).join(', ')}
+              {(JSON.parse(assessment.markets) as string[]).join(', ')}
             </p>
           </Card>
           <Card className="space-y-2">

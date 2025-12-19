@@ -13,34 +13,37 @@ export async function POST(request: Request) {
       select: { id: true, name: true, products: true, regions: true }
     })) as ProviderProfile[]
 
-    const result = computeAssessment(payload, providers.map((provider) => ({
-      id: provider.id,
-      name: provider.name,
-      products: provider.products as string[],
-      regions: provider.regions as string[]
-    })))
+    const result = computeAssessment(
+      payload,
+      providers.map((provider) => ({
+        id: provider.id,
+        name: provider.name,
+        products: JSON.parse(provider.products) as string[],
+        regions: JSON.parse(provider.regions) as string[]
+      }))
+    )
 
     const assessment = await prisma.assessment.create({
       data: {
-        markets: payload.markets,
+        markets: JSON.stringify(payload.markets),
         horizon: payload.horizon,
         frequencyPerWeek: payload.frequencyPerWeek,
-        orderTypes: payload.orderTypes,
+        orderTypes: JSON.stringify(payload.orderTypes),
         typicalNotionalBucket: payload.typicalNotionalBucket,
         slippageTolerance: payload.slippageTolerance,
         regulatoryPreference: payload.regulatoryPreference,
         needsApi: payload.needsApi,
         baseCurrency: payload.baseCurrency,
-        currentProviders: payload.currentProviders
+        currentProviders: JSON.stringify(payload.currentProviders)
       }
     })
 
     await prisma.assessmentResult.create({
       data: {
         assessmentId: assessment.id,
-        perDomain: result.perDomain,
-        overall: result.overall,
-        audit: result.audit
+        perDomain: JSON.stringify(result.perDomain),
+        overall: JSON.stringify(result.overall),
+        audit: JSON.stringify(result.audit)
       }
     })
 
