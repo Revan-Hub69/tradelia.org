@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import Script from 'next/script'
+import { headers } from 'next/headers'
 
 import { SiteFooter } from '@/components/site/Footer'
 import { SiteHeader } from '@/components/site/Header'
@@ -53,16 +55,21 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const headerList = await headers()
+  const nonce = headerList.get('x-nonce') ?? undefined
+
   return (
     <html lang="it">
       <body className="bg-slate-950 text-slate-100 antialiased">
         <a className="skip-to-content" href="#contenuto-principale">
           Salta al contenuto principale
         </a>
-        <script
+        <Script
+          id="tradelia-organization-jsonld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          nonce={nonce}
         />
         <SiteHeader />
         {children}
@@ -71,4 +78,3 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   )
 }
-

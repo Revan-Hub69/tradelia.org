@@ -1,9 +1,12 @@
+import Script from 'next/script'
+
 interface StructuredDataProps {
   type: 'WebApplication' | 'FAQPage' | 'Organization'
-  data: any
+  data: Record<string, unknown>
+  nonce?: string
 }
 
-export function StructuredData({ type, data }: StructuredDataProps) {
+export function StructuredData({ type, data, nonce }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': type,
@@ -11,9 +14,11 @@ export function StructuredData({ type, data }: StructuredDataProps) {
   }
 
   return (
-    <script
+    <Script
+      id={`structured-data-${type.toLowerCase()}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      nonce={nonce}
     />
   )
 }
