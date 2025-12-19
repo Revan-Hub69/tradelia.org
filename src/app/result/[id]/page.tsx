@@ -39,7 +39,11 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
     where: { id: { in: providerIds } }
   })
 
-  const providerMap = new Map(providers.map((provider) => [provider.id, provider]))
+  const providerMap = new Map(
+    providers.map(
+      (provider: { id: string; name: string | null }) => [provider.id, provider] as const
+    )
+  )
 
   return (
     <main className="bg-white text-slate-900">
