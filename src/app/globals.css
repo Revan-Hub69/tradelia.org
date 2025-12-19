@@ -11,6 +11,7 @@
   html {
     scroll-behavior: smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    scroll-padding-top: 5rem;
   }
   
   body {
@@ -153,6 +154,51 @@
   
   .card-premium {
     @apply border-slate-500;
+  }
+}
+
+.animated-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px;
+  animation: gridShift 14s linear infinite;
+}
+
+@keyframes gridShift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-60px, -60px, 0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.9s ease-out both;
+}
+
+.hover-link {
+  @apply transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+}
+
+.link-ghost {
+  @apply rounded-xl border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition duration-200 hover:border-slate-700 hover:text-white active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+}
+
+.link-ghost-sky {
+  @apply rounded-xl border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition duration-200 hover:border-sky-300/50 hover:text-white active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-grid {
+    animation: none;
+  }
+  .animate-fade-up {
+    animation: none;
   }
 }
 
