@@ -39,10 +39,16 @@ export default async function ResultPage({
     .filter((value): value is string => Boolean(value))
 
   const providers = await prisma.provider.findMany({
-    where: { id: { in: providerIds } }
+    where: { id: { in: providerIds } },
+    select: { id: true, name: true }
   })
 
-  const providerMap = new Map(providers.map((provider) => [provider.id, provider]))
+  const providerMap = new Map(
+    providers.map((provider: { id: string; name: string }) => [
+      provider.id,
+      provider
+    ])
+  )
 
   return (
     <main className="bg-white text-slate-900">
