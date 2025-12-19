@@ -10,7 +10,7 @@ const domainCards = [
       'Costi espliciti e nascosti'
     ],
     href: '/investimenti',
-    cta: 'Vai a Investimenti'
+    cta: 'Vai a Investimenti →'
   },
   {
     title: 'Finanza personale',
@@ -21,7 +21,7 @@ const domainCards = [
       'Compatibilità con il profilo'
     ],
     href: '/finanza-personale',
-    cta: 'Vai a Finanza personale'
+    cta: 'Vai a Finanza personale →'
   },
   {
     title: 'Business & pagamenti',
@@ -32,7 +32,7 @@ const domainCards = [
       'Lock-in e compliance operativa'
     ],
     href: '/business',
-    cta: 'Vai a Business'
+    cta: 'Vai a Business →'
   }
 ]
 
@@ -52,6 +52,7 @@ export default function HomePage() {
         <div className="absolute right-[-10%] top-1/4 h-[260px] w-[260px] rounded-full bg-sky-700/20 blur-[100px]" />
       </div>
 
+      {/* HERO */}
       <section className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-16 pt-14 sm:px-6 lg:px-8 lg:pt-20">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-6 lg:max-w-3xl">
@@ -81,27 +82,35 @@ export default function HomePage() {
             </div>
             <p className="text-sm text-slate-400">Informativo/educativo. Non è consulenza finanziaria.</p>
           </div>
+        </div>
+      </section>
 
-          <div className="card-premium w-full max-w-md space-y-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientamento</p>
-            <p className="text-lg font-semibold text-white">
-              Decisioni basate su criteri verificabili, non su promesse o "classifiche".
-            </p>
-            <div className="space-y-2 text-sm text-slate-300">
-              <p>• Fonti ufficiali e note metodologiche aperte.</p>
-              <p>• Focalizzata su compatibilità, rischi operativi e costi nel tempo.</p>
-              <p>• Nessun modello opaco: ogni criterio è dichiarato.</p>
+      {/* ORIENTAMENTO */}
+      <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="card-premium space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientamento</p>
+              <Link
+                href="/trasparenza"
+                className="text-sm font-semibold text-sky-200 underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Vai alla Trasparenza
+              </Link>
             </div>
-            <Link
-              href="/trasparenza"
-              className="inline-flex items-center text-sm font-semibold text-sky-200 underline-offset-4 transition hover:text-white hover:underline"
-            >
-              Vai alla trasparenza
-            </Link>
+            <h2 className="text-lg font-semibold text-white">
+              Decisioni basate su criteri verificabili, non su promesse o "classifiche".
+            </h2>
+            <ul className="space-y-2 text-sm text-slate-200">
+              <li>• Fonti ufficiali e note metodologiche aperte</li>
+              <li>• Focalizzata su compatibilità, rischi operativi e costi nel tempo</li>
+              <li>• Nessun modello opaco: ogni criterio è dichiarato</li>
+            </ul>
           </div>
         </div>
       </section>
 
+      {/* DOMINI */}
       <section
         id="domini"
         className="relative border-t border-slate-800/60 bg-slate-950/60 py-14 sm:py-16"
@@ -110,7 +119,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Domini</p>
-              <h2 className="text-2xl font-semibold text-white sm:text-3xl">Scegli il perimetro da analizzare</h2>
+              <h2 className="text-2xl font-semibold text-white sm:text-3xl">Scegli il perimetro da analizzare.</h2>
               <p className="mt-2 max-w-2xl text-sm text-slate-400">
                 Percorsi separati per rischi, requisiti e costi diversi. Nessuna spinta commerciale: solo contesto e
                 criteri verificabili.
@@ -120,7 +129,7 @@ export default function HomePage() {
               href="/metodo"
               className="rounded-full border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
-              Leggi il metodo
+              Leggi il Metodo
             </Link>
           </div>
 
@@ -150,9 +159,6 @@ export default function HomePage() {
                     className="inline-flex items-center justify-between rounded-xl border border-sky-400/30 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                   >
                     {card.cta}
-                    <span aria-hidden className="ml-2 text-base">
-                      &gt;
-                    </span>
                   </Link>
                 </div>
               </article>
@@ -161,6 +167,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* METODO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
           <div className="lg:max-w-xl">
@@ -173,9 +180,6 @@ export default function HomePage() {
           <div className="grid flex-1 gap-4 sm:grid-cols-2">
             {metodoPillole.map((item) => (
               <div key={item} className="card-premium space-y-3 border-slate-800/60 bg-slate-900/70 p-6">
-                <div className="h-10 w-10 rounded-full bg-sky-500/15 text-center text-lg font-semibold text-sky-100">
-                  <span className="relative top-2.5">•</span>
-                </div>
                 <p className="text-sm text-slate-200">{item}</p>
               </div>
             ))}
@@ -183,6 +187,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* TRASPARENZA & CONFINI */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
@@ -198,7 +203,7 @@ export default function HomePage() {
                   href="/trasparenza"
                   className="rounded-xl border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                 >
-                  Vai a Trasparenza
+                  Vai alla Trasparenza
                 </Link>
                 <Link
                   href="/metodo"
