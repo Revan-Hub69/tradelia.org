@@ -21,6 +21,10 @@ export default function DisclaimerPage() {
         Ogni decisione resta responsabilità dell&apos;utente. Quando sono presenti affiliazioni o partnership, vengono
         dichiarate e non modificano i criteri di valutazione. Per maggiori dettagli consultare Metodo e Trasparenza.
       </p>
+      <p className="mt-3 text-lg text-slate-300">
+        Tradelia Main non raccoglie né memorizza dati personali e non utilizza tracciamento. La nostra priorità è
+        fornire contesto, non profilare persone.
+      </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
         <Link
