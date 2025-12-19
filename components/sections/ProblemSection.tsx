@@ -1,4 +1,4 @@
-import { SecurityIcon, WarningIcon, DocumentIcon, TransparencyIcon, ReportIcon, VerificationIcon } from '@/components/ui/AcademicIcons'
+import { SecurityIcon, WarningIcon, DocumentIcon, TransparencyIcon, ReportIcon, VerificationIcon } from '../ui/AcademicIcons'
 
 export function ProblemSection() {
   const problems = [

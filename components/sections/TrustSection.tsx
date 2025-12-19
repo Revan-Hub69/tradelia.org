@@ -1,4 +1,4 @@
-import { IndependenceIcon, NeutralityIcon, TransparencyIcon, DocumentIcon, AnalysisIcon, VerificationIcon, ReportIcon } from '@/components/ui/AcademicIcons'
+import { IndependenceIcon, NeutralityIcon, TransparencyIcon, DocumentIcon, AnalysisIcon, VerificationIcon, ReportIcon } from '../ui/AcademicIcons'
 
 export function TrustSection() {
   return (

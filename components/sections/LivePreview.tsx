@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MetricDrawer } from '@/components/ui/MetricDrawer'
+import { MetricDrawer } from '../ui/MetricDrawer'
 
 interface MarketRegimeData {
   metric_id: string

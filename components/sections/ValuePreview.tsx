@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MarketMoodGauge } from '@/components/metrics/MarketMoodGauge'
+import { MarketMoodGauge } from '../metrics/MarketMoodGauge'
 
 interface DrawerProps {
   isOpen: boolean

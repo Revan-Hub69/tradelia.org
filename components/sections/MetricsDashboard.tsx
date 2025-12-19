@@ -1,8 +1,8 @@
-import { MarketMoodGauge } from '@/components/metrics/MarketMoodGauge'
-import { BTCDominance } from '@/components/metrics/BTCDominance'
-import { VolatilityBand } from '@/components/metrics/VolatilityBand'
-import { TopMovers } from '@/components/metrics/TopMovers'
-import { VolumeHeatmap } from '@/components/metrics/VolumeHeatmap'
+import { MarketMoodGauge } from '../metrics/MarketMoodGauge'
+import { BTCDominance } from '../metrics/BTCDominance'
+import { VolatilityBand } from '../metrics/VolatilityBand'
+import { TopMovers } from '../metrics/TopMovers'
+import { VolumeHeatmap } from '../metrics/VolumeHeatmap'
 
 // Mock data - replace with real API calls
 const mockData = {
