@@ -1,21 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --font-inter: 'Inter', sans-serif;
+    --font-serif: 'IBM Plex Serif', serif;
+  }
+  
   html {
     scroll-behavior: smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   
   body {
-    @apply bg-slate-900 text-slate-50 font-sans antialiased;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-    background-attachment: fixed;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+  
+  .font-serif {
+    font-family: var(--font-serif);
   }
 
   * {
@@ -66,11 +72,11 @@
   }
 
   .text-gradient {
-    @apply text-slate-100 font-serif;
+    @apply text-slate-900 font-serif;
   }
 
   .text-accent {
-    @apply text-slate-300;
+    @apply text-slate-600;
   }
 
   .section-divider {

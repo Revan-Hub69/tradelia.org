@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Assessment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User Profile Data
+  markets                 String[] // JSON array: ["CRYPTO", "CFD", "EQUITY"]
+  instruments            String[] // JSON array: ["BTC", "EUR/USD", "SPY"]
+  horizon                String   // "scalping" | "intraday" | "swing" | "long"
+  frequencyPerWeek       Int
+  orderTypes             String[] // ["market", "limit", "stop"]
+  typicalNotionalBucket  String   // "lt200" | "200to1k" | "1kto5k" | "gt5k"
+  slippageTolerance      String   // "low" | "med" | "high"
+  timezone               String   @default("Europe/Rome")
+  regulatoryPreference   String   // "EU_ONLY" | "OK_NON_EU"
+  needsApi               Boolean  @default(false)
+  baseCurrency           String   @default("EUR")
+  currentProviders       String[] // JSON array of provider IDs
+
+  // Computed Results (JSON stored as string)
+  results String? // JSON: { perDomain: [], overall: {}, audit: [] }
+  
+  @@map("assessments")
+}
+
+model Provider {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  name        String
+  type        String   // "EXCHANGE" | "BROKER" | "CFD_PROVIDER"
+  regions     String[] // ["EU", "US", "GLOBAL"]
+  regulatedIn String[] // ["ESMA", "FCA", "SEC"]
+  products    String[] // ["CRYPTO", "CFD", "EQUITY", "FUTURES", "BONDS"]
+  
+  // Basic info
+  website     String?
+  description String?
+  
+  // Fee schedules (related)
+  feeSchedules FeeSchedule[]
+  
+  @@map("providers")
+}
+
+model FeeSchedule {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  
+  // Product/Market specific
+  product    String   // "CRYPTO" | "CFD" | "EQUITY"
+  instrument String?  // "BTC/EUR" | "EUR/USD" | "SPY" (null = general)
+  
+  // Fee structure
+  makerFeePct         Float?  // Crypto maker fee %
+  takerFeePct         Float?  // Crypto taker fee %
+  commissionPerTrade  Float?  // Fixed commission per trade
+  minCommission       Float?  // Minimum commission
+  maxCommission       Float?  // Maximum commission
+  fxFeePct            Float?  // FX conversion fee %
+  
+  // CFD specific
+  financingRatePolicy String? // "LIBOR+2.5%" | "Variable"
+  spreadPolicy        String  @default("variable") // "fixed" | "variable" | "unknown"
+  
+  // Withdrawal/Funding
+  withdrawalFees      String? // JSON: {"EUR": 0, "USD": 25}
+  
+  // Metadata
+  sourceUrl           String?
+  lastVerifiedAt      DateTime?
+  notes               String?
+  
+  @@map("fee_schedules")
+}
