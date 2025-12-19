@@ -12,24 +12,33 @@ model Assessment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // User Profile Data
-  markets                 String[] // JSON array: ["CRYPTO", "CFD", "EQUITY"]
-  instruments            String[] // JSON array: ["BTC", "EUR/USD", "SPY"]
-  horizon                String   // "scalping" | "intraday" | "swing" | "long"
-  frequencyPerWeek       Int
-  orderTypes             String[] // ["market", "limit", "stop"]
-  typicalNotionalBucket  String   // "lt200" | "200to1k" | "1kto5k" | "gt5k"
-  slippageTolerance      String   // "low" | "med" | "high"
-  timezone               String   @default("Europe/Rome")
-  regulatoryPreference   String   // "EU_ONLY" | "OK_NON_EU"
-  needsApi               Boolean  @default(false)
-  baseCurrency           String   @default("EUR")
-  currentProviders       String[] // JSON array of provider IDs
+  markets               Json
+  horizon               String
+  frequencyPerWeek      Int
+  orderTypes            Json
+  typicalNotionalBucket String
+  slippageTolerance     String
+  regulatoryPreference  String
+  needsApi              Boolean @default(false)
+  baseCurrency          String
+  currentProviders      Json
 
-  // Computed Results (JSON stored as string)
-  results String? // JSON: { perDomain: [], overall: {}, audit: [] }
-  
+  result AssessmentResult?
+
   @@map("assessments")
+}
+
+model AssessmentResult {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  assessmentId String   @unique
+  perDomain    Json
+  overall      Json
+  audit        Json
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@map("assessment_results")
 }
 
 model Provider {
@@ -37,19 +46,17 @@ model Provider {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  name        String
-  type        String   // "EXCHANGE" | "BROKER" | "CFD_PROVIDER"
-  regions     String[] // ["EU", "US", "GLOBAL"]
-  regulatedIn String[] // ["ESMA", "FCA", "SEC"]
-  products    String[] // ["CRYPTO", "CFD", "EQUITY", "FUTURES", "BONDS"]
-  
-  // Basic info
+  name        String   @unique
+  type        String
+  regions     Json
+  regulatedIn Json
+  products    Json
+
   website     String?
   description String?
-  
-  // Fee schedules (related)
+
   feeSchedules FeeSchedule[]
-  
+
   @@map("providers")
 }
 
@@ -60,30 +67,26 @@ model FeeSchedule {
 
   providerId String
   provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  
-  // Product/Market specific
-  product    String   // "CRYPTO" | "CFD" | "EQUITY"
-  instrument String?  // "BTC/EUR" | "EUR/USD" | "SPY" (null = general)
-  
-  // Fee structure
-  makerFeePct         Float?  // Crypto maker fee %
-  takerFeePct         Float?  // Crypto taker fee %
-  commissionPerTrade  Float?  // Fixed commission per trade
-  minCommission       Float?  // Minimum commission
-  maxCommission       Float?  // Maximum commission
-  fxFeePct            Float?  // FX conversion fee %
-  
-  // CFD specific
-  financingRatePolicy String? // "LIBOR+2.5%" | "Variable"
-  spreadPolicy        String  @default("variable") // "fixed" | "variable" | "unknown"
-  
-  // Withdrawal/Funding
-  withdrawalFees      String? // JSON: {"EUR": 0, "USD": 25}
-  
-  // Metadata
-  sourceUrl           String?
-  lastVerifiedAt      DateTime?
-  notes               String?
-  
+
+  product    String
+  instrument String?
+
+  makerFeePct        Float?
+  takerFeePct        Float?
+  commissionPerTrade Float?
+  minCommission      Float?
+  maxCommission      Float?
+  fxFeePct           Float?
+
+  financingRatePolicy String?
+  spreadPolicy        String  @default("variable")
+
+  withdrawalFees Json?
+
+  sourceUrl      String?
+  lastVerifiedAt DateTime?
+  notes          String?
+
+  @@unique([providerId, product, instrument])
   @@map("fee_schedules")
 }
