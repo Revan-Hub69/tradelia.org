@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-static'
+
 const routes = ['/', '/investimenti', '/finanza-personale', '/business', '/metodo', '/trasparenza', '/privacy', '/disclaimer']
 
 export function GET() {
