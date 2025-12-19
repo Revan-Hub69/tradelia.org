@@ -43,7 +43,7 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
   type ProviderRecord = { id: string; name: string | null }
 
   const providerMap: Map<string, ProviderRecord> = new Map(
-    providers.map((provider) => [provider.id, provider])
+    providers.map((provider: ProviderRecord) => [provider.id, provider])
   )
 
   return (
