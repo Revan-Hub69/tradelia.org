@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="space-y-3 max-w-xl">
           <p className="text-sm font-semibold tracking-tight text-white">Tradelia</p>
           <p className="text-sm text-slate-400">
-            Analisi istituzionale per decisioni finanziarie informate. Nessun ranking, nessuna promozione camuffata
+            Analisi rigorosa per decisioni finanziarie informate. Nessun ranking, nessuna promozione camuffata
             da guida.
           </p>
           <p className="text-xs text-slate-500">

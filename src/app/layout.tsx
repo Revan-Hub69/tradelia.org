@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
     description:
-      'Analisi istituzionale basata su fonti ufficiali per valutare costi nascosti, vincoli tecnici e tutele reali.',
+      'Analisi rigorosa e indipendente basata su fonti ufficiali per valutare costi nascosti, vincoli tecnici e tutele reali.',
     url: 'https://tradelia.org',
     siteName: 'Tradelia',
     locale: 'it_IT',
