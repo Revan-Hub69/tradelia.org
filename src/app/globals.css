@@ -14,7 +14,7 @@
   }
   
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased;
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -25,11 +25,11 @@
   }
 
   * {
-    border-color: rgba(148, 163, 184, 0.1);
+    border-color: rgba(148, 163, 184, 0.12);
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-blue-500/50 ring-offset-2 ring-offset-slate-950;
+    @apply outline-none ring-2 ring-sky-500/60 ring-offset-2 ring-offset-slate-950;
   }
 
   /* Improved touch targets for mobile */
@@ -52,43 +52,55 @@
 }
 
 @layer components {
-  .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-           text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium 
-           transition-all duration-300 shadow-lg hover:shadow-blue-500/25 
-           border border-blue-500/20 active:scale-95 
-           focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-slate-950;
+  .section-divider {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent;
   }
-  
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-slate-950 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-sky-900/40 border border-sky-400/40 active:scale-95 focus:ring-2 focus:ring-sky-500/60 focus:ring-offset-2 focus:ring-offset-slate-950;
+  }
+
   .btn-secondary {
-    @apply border border-slate-700 hover:border-slate-600 bg-slate-900/50 hover:bg-slate-800/50 
-           text-slate-200 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium 
-           transition-all duration-300 backdrop-blur-sm active:scale-95
-           focus:ring-2 focus:ring-slate-500/50 focus:ring-offset-2 focus:ring-offset-slate-950;
+    @apply border border-slate-800 hover:border-slate-700 bg-slate-900/70 hover:bg-slate-900 text-slate-100 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm active:scale-95 focus:ring-2 focus:ring-sky-500/60 focus:ring-offset-2 focus:ring-offset-slate-950;
   }
 
   .card-premium {
-    @apply bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-8 transition-all duration-500 hover:border-slate-700/50 hover:bg-slate-900/60;
+    @apply rounded-2xl border border-slate-800/70 bg-slate-900/60 p-8 shadow-[0_25px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-slate-700/80 hover:shadow-[0_35px_100px_rgba(0,0,0,0.45)];
   }
 
   .text-gradient {
-    @apply text-slate-900 font-serif;
+    @apply bg-gradient-to-r from-white via-slate-100 to-sky-200 bg-clip-text text-transparent font-serif;
   }
 
   .text-accent {
-    @apply text-slate-600;
+    @apply text-slate-400;
   }
+}
 
-  .section-divider {
-    @apply w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent;
-  }
+.skip-to-content {
+  position: absolute;
+  top: -999px;
+  left: 1rem;
+  z-index: 50;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  background: #0ea5e9;
+  color: #0b1221;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+  transition: top 0.2s ease, transform 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+  transform: translateY(0);
 }
 
 /* Subtle grid pattern */
 .grid-pattern {
-  background-image: 
-    linear-gradient(rgba(148, 163, 184, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.02) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -102,14 +114,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-800 rounded-full;
+  @apply rounded-full bg-slate-800;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-700;
 }
 
-/* Performance optimizations */
+/* Performance helpers */
 .will-change-transform {
   will-change: transform;
 }
@@ -125,22 +137,21 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background: linear-gradient(90deg, #0f172a 25%, #111827 50%, #0f172a 75%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
   .text-gradient {
     @apply text-white;
   }
   
   .text-accent {
-    @apply text-blue-300;
+    @apply text-sky-200;
   }
   
   .card-premium {
-    @apply border-slate-600;
+    @apply border-slate-500;
   }
 }

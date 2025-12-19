@@ -1,7 +1,7 @@
 {
-  "name": "Tradelia - Market Intelligence Cripto",
+  "name": "Tradelia - Guida decisionale indipendente",
   "short_name": "Tradelia",
-  "description": "Risk & Context Engine per mercati crypto",
+  "description": "Analisi informativa per decisioni finanziarie basate su fonti ufficiali e criteri verificabili.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
