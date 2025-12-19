@@ -56,8 +56,8 @@ const domainCards = [
 
 const metodoPillole = [
   'Fonti: documentazione ufficiale e regolatori (quando disponibili)',
-  'Criteri: costi, vincoli, tutele, affidabilita operativa',
-  'Output: scenari condizionati + incompatibilita + limiti espliciti',
+  'Criteri: costi, vincoli, tutele, affidabilità operativa',
+  'Output: scenari condizionati + incompatibilità + limiti espliciti',
   'Indipendenza: niente marketing camuffato da guida'
 ]
 
@@ -249,5 +249,7 @@ export default function HomePage() {
     </main>
   )
 }
+
+
 
 
