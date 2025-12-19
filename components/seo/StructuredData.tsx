@@ -2,7 +2,7 @@ import Script from 'next/script'
 
 interface StructuredDataProps {
   type: 'WebApplication' | 'FAQPage' | 'Organization'
-  data: unknown
+  data: Record<string, unknown>
   nonce?: string
 }
 
