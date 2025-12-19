@@ -1,4 +1,4 @@
-export function MethodSection() {
+export default function MethodSection() {
   const steps = [
     {
       number: '01',
