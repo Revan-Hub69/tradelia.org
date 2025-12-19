@@ -145,7 +145,9 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
                     {domain.domainKey}
                   </h3>
                   <p className="text-sm text-slate-700">
-                    {provider ? provider.name : 'Non valutabile'}
+                    {provider && typeof provider === 'object' && 'name' in provider && provider.name
+                      ? provider.name
+                      : 'Non valutabile'}
                   </p>
                   <p className="text-sm text-slate-600">
                     Motivazione stub: copertura coerente con il profilo e attrito operativo
