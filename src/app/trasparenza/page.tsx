@@ -21,6 +21,10 @@ export default function TrasparenzaPage() {
         Non esistono ranking o "top list": le valutazioni sono orientate a compatibilità, attrito operativo e limiti
         espliciti. Nessuna promessa di rendimento o approvazione, solo contesto verificabile.
       </p>
+      <p className="mt-3 text-lg text-slate-300">
+        Privacy by default: nessuna raccolta o memorizzazione di dati personali su Tradelia Main, nessun tracciamento,
+        nessun pixel. La trasparenza include anche la scelta di non inseguire dati inutili.
+      </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
         <Link
