@@ -26,11 +26,12 @@ export function SiteHeader() {
         return
       }
 
-      if (event.key !== 'Tab' || !menuRef.current) {
+      const menuEl = menuRef.current
+      if (event.key !== 'Tab' || !menuEl) {
         return
       }
 
-      const focusable = menuRef.current.querySelectorAll<HTMLElement>('a, button')
+      const focusable = menuEl.querySelectorAll<HTMLElement>('a, button')
       if (focusable.length === 0) {
         return
       }
@@ -49,7 +50,7 @@ export function SiteHeader() {
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    const firstLink = menuRef.current.querySelector<HTMLElement>('a, button')
+    const firstLink = menuRef.current?.querySelector<HTMLElement>('a, button')
     firstLink?.focus()
 
     return () => {
