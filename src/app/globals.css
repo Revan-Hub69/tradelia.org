@@ -171,6 +171,18 @@
   animation: gridShift 12s linear infinite;
 }
 
+.pattern-layer {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+  background-size: 110px 110px;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  animation: gridShift 16s linear infinite;
+}
+
 @keyframes gridShift {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-60px, -60px, 0); }

@@ -18,17 +18,15 @@ export function LogoMark({ className }: LogoMarkProps) {
         </linearGradient>
       </defs>
       <rect x="6" y="6" width="68" height="68" rx="16" fill="url(#tradelia-grad)" />
+      <rect x="11" y="11" width="58" height="58" rx="12" fill="#0b1729" opacity="0.25" />
       <path
-        d="M22 20h12v20l20-20h12l-32 34v14H22V20Z"
+        d="M22 20h36v8H46v32h-8V28H22v-8Z"
         fill="#e2e8f0"
       />
       <path
-        d="M40 48l16-18h8L40 56l-6 6"
-        stroke="#0ea5e9"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.9"
+        d="M22 20h36v8H46v4l-8 9V28H22v-8Z"
+        fill="#38bdf8"
+        opacity="0.85"
       />
     </svg>
   )

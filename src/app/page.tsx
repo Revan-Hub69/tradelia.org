@@ -68,7 +68,7 @@ export default function HomePage() {
         <div className="absolute inset-x-[-20%] top-[-10%] h-[420px] rounded-full bg-sky-500/10 blur-[120px]" />
         <div className="absolute left-[-10%] top-1/3 h-[320px] w-[320px] rounded-full bg-slate-800/50 blur-[100px]" />
         <div className="absolute right-[-10%] top-1/4 h-[260px] w-[260px] rounded-full bg-sky-700/20 blur-[100px]" />
-        <div className="animated-grid opacity-50" aria-hidden />
+        <div className="animated-grid opacity-70" aria-hidden />
       </div>
 
       {/* HERO */}
@@ -106,6 +106,7 @@ export default function HomePage() {
 
       {/* ORIENTAMENTO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
+        <div className="pattern-layer" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="card-premium space-y-4">
             <div className="flex items-center justify-between">
@@ -134,6 +135,7 @@ export default function HomePage() {
         id="domini"
         className="relative border-t border-slate-800/60 bg-slate-950/60 py-14 sm:py-16"
       >
+        <div className="pattern-layer opacity-40" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -188,6 +190,7 @@ export default function HomePage() {
 
       {/* METODO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
+        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
           <FadeIn className="lg:max-w-xl">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Metodo</p>
@@ -208,6 +211,7 @@ export default function HomePage() {
 
       {/* TRASPARENZA & CONFINI */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
+        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
             <FadeIn className="space-y-3 lg:max-w-xl">
