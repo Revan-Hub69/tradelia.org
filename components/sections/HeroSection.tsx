@@ -2,7 +2,7 @@
 
 import { Logo } from '@/components/ui/Logo'
 
-export function HeroSection() {
+export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Clean academic background */}
