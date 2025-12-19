@@ -4,7 +4,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-800/60 bg-slate-950">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8 md:flex-row md:items-start md:justify-between">
-        <div className="space-y-3 max-w-xl">
+        <div className="max-w-xl space-y-3">
           <p className="text-sm font-semibold tracking-tight text-white">Tradelia</p>
           <p className="text-sm text-slate-300">
             Analisi rigorosa per decisioni finanziarie informate. Nessun ranking, nessuna promozione camuffata
@@ -13,9 +13,13 @@ export function SiteFooter() {
           <p className="text-xs text-slate-400">
             Informativo/educativo. Non è consulenza finanziaria.
           </p>
+          <p className="text-xs text-slate-400">
+            Cookie e privacy: nessun pixel di tracciamento, nessuna profilazione, nessuna memorizzazione dati su Tradelia
+            Main.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 text-sm text-slate-300 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 text-sm text-slate-300 sm:grid-cols-3">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Piattaforma</p>
             <ul className="space-y-2">
@@ -59,6 +63,32 @@ export function SiteFooter() {
                 <Link className="hover-link underline-offset-4 hover:underline" href="/disclaimer">
                   Disclaimer
                 </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Contatti</p>
+            <ul className="space-y-2">
+              <li>
+                <a className="hover-link underline-offset-4 hover:underline" href="mailto:info@tradelia.org">
+                  info@tradelia.org
+                </a>
+              </li>
+              <li>
+                <a className="hover-link underline-offset-4 hover:underline" href="mailto:support@tradelia.org">
+                  support@tradelia.org
+                </a>
+              </li>
+              <li>
+                <a className="hover-link underline-offset-4 hover:underline" href="mailto:privacy@tradelia.org">
+                  privacy@tradelia.org
+                </a>
+              </li>
+              <li>
+                <a className="hover-link underline-offset-4 hover:underline" href="mailto:transparency@tradelia.org">
+                  transparency@tradelia.org
+                </a>
               </li>
             </ul>
           </div>

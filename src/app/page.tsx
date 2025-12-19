@@ -64,22 +64,15 @@ const metodoPillole = [
 export default function HomePage() {
   return (
     <main id="contenuto-principale" className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-[-20%] top-[-10%] h-[420px] rounded-full bg-sky-500/10 blur-[120px]" />
-        <div className="absolute left-[-10%] top-1/3 h-[320px] w-[320px] rounded-full bg-slate-800/50 blur-[100px]" />
-        <div className="absolute right-[-10%] top-1/4 h-[260px] w-[260px] rounded-full bg-sky-700/20 blur-[100px]" />
-        <div className="animated-grid opacity-70" aria-hidden />
-      </div>
-
       {/* HERO */}
       <section className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-14 pt-12 sm:px-6 lg:px-8 lg:pt-20 lg:pb-16">
         <FadeIn className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-6 lg:max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100 shadow-lg shadow-sky-900/30">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100">
               Piattaforma indipendente
             </div>
             <div className="space-y-4">
-              <h1 className="text-gradient text-4xl leading-tight sm:text-5xl">
+              <h1 className="text-4xl leading-tight text-white sm:text-5xl">
                 Tradelia: guida decisionale indipendente per scelte finanziarie.
               </h1>
               <p className="text-lg text-slate-300 sm:text-xl">
@@ -219,7 +212,8 @@ export default function HomePage() {
               <h2 className="text-2xl font-semibold text-white sm:text-3xl">Trasparenza & confini</h2>
               <p className="text-sm text-slate-300">
                 Tradelia non vende prodotti finanziari e non pubblica segnali. Se esistono affiliazioni, sono dichiarate
-                e non influenzano i criteri.
+                e non influenzano i criteri. Su Tradelia Main non raccogliamo né memorizziamo dati personali e non
+                usiamo tracking.
               </p>
               <Link
                 href="/trasparenza"
@@ -228,32 +222,10 @@ export default function HomePage() {
                 Vai alla Trasparenza
               </Link>
             </FadeIn>
-
-            <FadeIn className="grid flex-1 gap-4 lg:grid-cols-2">
-              <div className="card-premium space-y-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Cosa facciamo</p>
-                <ul className="space-y-2 text-sm text-slate-200">
-                  <li>• Analisi informativa basata su documentazione ufficiale.</li>
-                  <li>• Evidenza di costi, vincoli tecnici e tutele reali.</li>
-                  <li>• Scenari condizionati e limiti espliciti.</li>
-                </ul>
-              </div>
-              <div className="card-premium space-y-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Cosa non facciamo</p>
-                <ul className="space-y-2 text-sm text-slate-200">
-                  <li>• Non vendiamo prodotti o segnali.</li>
-                  <li>• Niente classifiche o "top broker".</li>
-                  <li>• Nessuna promessa di rendimento.</li>
-                </ul>
-              </div>
-            </FadeIn>
           </div>
         </div>
       </section>
     </main>
   )
 }
-
-
-
 
