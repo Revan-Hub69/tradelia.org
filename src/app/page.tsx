@@ -12,7 +12,7 @@ const domainCards = [
       'Costi espliciti e nascosti'
     ],
     href: '/investimenti',
-    cta: 'Vai a Investimenti →'
+    cta: 'Vai a Investimenti ->'
   },
   {
     title: 'Finanza personale',
@@ -20,10 +20,10 @@ const domainCards = [
     bullets: [
       'Fee nel tempo e condizioni',
       'Limiti operativi e requisiti',
-      'Compatibilità con il profilo'
+      'Compatibilita con il profilo'
     ],
     href: '/finanza-personale',
-    cta: 'Vai a Finanza personale →'
+    cta: 'Vai a Finanza personale ->'
   },
   {
     title: 'Business & pagamenti',
@@ -34,14 +34,14 @@ const domainCards = [
       'Lock-in e compliance operativa'
     ],
     href: '/business',
-    cta: 'Vai a Business →'
+    cta: 'Vai a Business ->'
   }
 ]
 
 const metodoPillole = [
   'Fonti: documentazione ufficiale e regolatori (quando disponibili)',
-  'Criteri: costi, vincoli, tutele, affidabilità operativa',
-  'Output: scenari condizionati + incompatibilità + limiti espliciti',
+  'Criteri: costi, vincoli, tutele, affidabilita operativa',
+  'Output: scenari condizionati + incompatibilita + limiti espliciti',
   'Indipendenza: niente marketing camuffato da guida'
 ]
 
@@ -233,3 +233,4 @@ export default function HomePage() {
     </main>
   )
 }
+
