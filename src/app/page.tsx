@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { FadeIn } from '@/components/site/FadeIn'
+
 const domainCards = [
   {
     title: 'Investimenti',
@@ -54,8 +56,8 @@ export default function HomePage() {
       </div>
 
       {/* HERO */}
-      <section className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-16 pt-14 sm:px-6 lg:px-8 lg:pt-20">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <section className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-14 pt-12 sm:px-6 lg:px-8 lg:pt-20 lg:pb-16">
+        <FadeIn className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-6 lg:max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100 shadow-lg shadow-sky-900/30">
               Piattaforma indipendente
@@ -83,18 +85,18 @@ export default function HomePage() {
             </div>
             <p className="text-sm text-slate-400">Informativo/educativo. Non è consulenza finanziaria.</p>
           </div>
-        </div>
+        </FadeIn>
       </section>
 
       {/* ORIENTAMENTO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="card-premium space-y-4">
+          <FadeIn className="card-premium space-y-4">
             <div className="flex items-center justify-between">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientamento</p>
               <Link
                 href="/trasparenza"
-                className="text-sm font-semibold text-sky-200 underline-offset-4 transition hover:text-white hover:underline"
+                className="text-sm font-semibold text-sky-200 underline-offset-4 transition hover:text-white hover:underline active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Vai alla Trasparenza
               </Link>
@@ -107,7 +109,7 @@ export default function HomePage() {
               <li>• Focalizzata su compatibilità, rischi operativi e costi nel tempo</li>
               <li>• Nessun modello opaco: ogni criterio è dichiarato</li>
             </ul>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -117,7 +119,7 @@ export default function HomePage() {
         className="relative border-t border-slate-800/60 bg-slate-950/60 py-14 sm:py-16"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <FadeIn className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Domini</p>
               <h2 className="text-2xl font-semibold text-white sm:text-3xl">Scegli il perimetro da analizzare.</h2>
@@ -128,13 +130,13 @@ export default function HomePage() {
             </div>
             <Link
               href="/metodo"
-              className="rounded-full border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="link-ghost"
             >
               Leggi il Metodo
             </Link>
-          </div>
+          </FadeIn>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <FadeIn className="mt-10 grid gap-6 lg:grid-cols-3">
             {domainCards.map((card) => (
               <article key={card.title} className="card-premium flex h-full flex-col justify-between">
                 <div className="space-y-4">
@@ -164,27 +166,27 @@ export default function HomePage() {
                 </div>
               </article>
             ))}
-          </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* METODO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
-          <div className="lg:max-w-xl">
+          <FadeIn className="lg:max-w-xl">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Metodo</p>
             <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Metodo in pillole</h2>
             <p className="mt-3 text-sm text-slate-300">
               Approccio deterministico, verificabile e documentato. Ogni ipotesi è dichiarata e aggiornata con le fonti.
             </p>
-          </div>
-          <div className="grid flex-1 gap-4 sm:grid-cols-2">
+          </FadeIn>
+          <FadeIn className="grid flex-1 gap-4 sm:grid-cols-2">
             {metodoPillole.map((item) => (
               <div key={item} className="card-premium space-y-3 border-slate-800/60 bg-slate-900/70 p-6">
                 <p className="text-sm text-slate-200">{item}</p>
               </div>
             ))}
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -192,7 +194,7 @@ export default function HomePage() {
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
-            <div className="space-y-3 lg:max-w-xl">
+            <FadeIn className="space-y-3 lg:max-w-xl">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Trasparenza</p>
               <h2 className="text-2xl font-semibold text-white sm:text-3xl">Trasparenza & confini</h2>
               <p className="text-sm text-slate-300">
@@ -201,13 +203,13 @@ export default function HomePage() {
               </p>
               <Link
                 href="/trasparenza"
-                className="mt-3 inline-flex rounded-xl border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                className="link-ghost"
               >
                 Vai alla Trasparenza
               </Link>
-            </div>
+            </FadeIn>
 
-            <div className="grid flex-1 gap-4 lg:grid-cols-2">
+            <FadeIn className="grid flex-1 gap-4 lg:grid-cols-2">
               <div className="card-premium space-y-3">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Cosa facciamo</p>
                 <ul className="space-y-2 text-sm text-slate-200">
@@ -224,7 +226,7 @@ export default function HomePage() {
                   <li>• Nessuna promessa di rendimento.</li>
                 </ul>
               </div>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </section>

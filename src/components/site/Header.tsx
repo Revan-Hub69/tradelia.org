@@ -81,9 +81,13 @@ export function SiteHeader() {
         <Link
           href="/"
           className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          aria-label="Tradelia, torna alla homepage"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500/70 to-slate-900 text-sm font-black text-slate-950 shadow-lg shadow-sky-900/40 transition group-hover:scale-105 group-hover:shadow-sky-900/60">
-            T
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500/70 to-slate-900 p-1.5 shadow-lg shadow-sky-900/40 transition group-hover:scale-105 group-hover:shadow-sky-900/60">
+            <svg viewBox="0 0 32 32" role="img" aria-hidden="true" className="h-full w-full text-slate-950">
+              <rect x="2" y="2" width="28" height="28" rx="6" className="fill-white/85" />
+              <path d="M10 6h4v9l8-9h4l-12 15v5h-4z" className="fill-sky-600" />
+            </svg>
           </span>
           <span className="leading-none">Tradelia</span>
         </Link>
