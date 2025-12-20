@@ -158,175 +158,89 @@ export default function FinanzaPersonalePage() {
           </div>
         </section>
 
-        {/* Validazione accademica */}
+        {/* Validazione accademica + Dati reali unificati */}
         <section className="border-b border-slate-800/60 bg-gradient-to-br from-slate-900 to-slate-950">
           <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="text-center space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-4 py-2">
-                <div className="h-2 w-2 rounded-full bg-blue-400" />
-                <span className="text-sm font-semibold text-blue-400">VALIDAZIONE ACCADEMICA</span>
-              </div>
-              
-              <h2 className="text-xl font-bold text-white">
-                Non stiamo inventando il problema
-              </h2>
-              
-              <p className="text-slate-300 max-w-3xl mx-auto">
-                La ricerca accademica conferma sistematicamente questi limiti nelle decisioni finanziarie.
-              </p>
-              
-              <div className="grid gap-4 md:grid-cols-2 text-left">
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Sovraccarico informativo</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Iyengar & Lepper (2000)</strong>: Troppa scelta riduce la qualità decisionale. 
-                    <strong>Schwartz (2004)</strong>: Il "paradosso della scelta" in contesti finanziari.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Asimmetrie informative</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Akerlof (1970)</strong>: Mercati con informazione imperfetta. 
-                    <strong>Campbell (2006)</strong>: Complessità contrattuale e decisioni subottimali.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Bias cognitivi</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Kahneman & Tversky (1979)</strong>: Euristica e bias nelle scelte finanziarie. 
-                    <strong>Thaler & Sunstein (2008)</strong>: Architettura delle scelte.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Costi nascosti</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Gabaix & Laibson (2006)</strong>: Shrouded attributes nei mercati finanziari. 
-                    <strong>Heidhues & Kőszegi (2010)</strong>: Sfruttamento di bias comportamentali.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Complessità contrattuale</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Lusardi & Mitchell (2014)</strong>: Financial literacy e decisioni subottimali. 
-                    <strong>Woodward & Hall (2012)</strong>: Complessità deliberata nei contratti finanziari.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Manipolazione comportamentale</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Ariely & Silva (2002)</strong>: Anchoring effects nei prezzi finanziari. 
-                    <strong>Shu & Gneezy (2010)</strong>: Default options e scelte automatiche.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Trasparenza insufficiente</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Bar-Gill (2012)</strong>: Seduction by Contract nei servizi finanziari. 
-                    <strong>Willis (2006)</strong>: Limiti strutturali della disclosure finanziaria.
-                  </p>
-                </div>
-                
-                <div className="card-premium p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-white">Ricerca e switching costs</h3>
-                  <p className="text-xs text-slate-300">
-                    <strong>Klemperer (1995)</strong>: Competition when consumers have switching costs. 
-                    <strong>Farrell & Shapiro (1988)</strong>: Dynamic competition with switching costs.
-                  </p>
-                </div>
-              </div>
-              
-              <p className="text-xs text-slate-400 max-w-2xl mx-auto">
-                Questi studi dimostrano che il problema non è "essere più attenti", 
-                ma che <strong>il sistema informativo attuale è strutturalmente inadeguato</strong> per decisioni razionali.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Dati reali sui problemi */}
-        <section className="border-b border-slate-800/60 bg-slate-900">
-          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="text-center space-y-8">
               <div className="inline-flex items-center gap-2 rounded-full bg-red-500/20 px-4 py-2">
                 <div className="h-2 w-2 rounded-full bg-red-400" />
-                <span className="text-sm font-semibold text-red-400">DATI REALI</span>
+                <span className="text-sm font-semibold text-red-400">EVIDENZE</span>
               </div>
               
               <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                I problemi che nessuno ti dice
+                I dati che confermano il problema
               </h2>
               
               <p className="text-lg text-slate-300 max-w-3xl mx-auto">
-                Dati auditabili da <strong>Banca d'Italia, CONSOB e reclami verificati</strong> sui problemi reali che affrontano gli utenti.
+                Ricerca accademica e statistiche ufficiali dimostrano che il sistema attuale non funziona.
               </p>
               
-              <div className="grid gap-6 md:grid-cols-3">
-                <div className="card-premium p-6 text-center space-y-4">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              {/* Dati reali - Mobile first */}
+              <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
+                <div className="card-premium p-4 sm:p-6 text-center space-y-3">
+                  <div className="mx-auto flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
+                    <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">Conti bloccati</h3>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-red-400">23.847</p>
-                    <p className="text-sm text-slate-300">Reclami per blocchi imprevisti nel 2023</p>
-                    <p className="text-xs text-slate-400">Fonte: Banca d'Italia - Relazione Annuale</p>
+                  <div className="space-y-1">
+                    <p className="text-xl sm:text-2xl font-bold text-red-400">23.847</p>
+                    <p className="text-sm text-slate-300">Conti bloccati nel 2023</p>
+                    <p className="text-xs text-slate-400">Banca d'Italia</p>
                   </div>
-                  <p className="text-xs text-slate-400">
-                    Spesso per "verifiche di sicurezza" non comunicate, lasciando utenti senza accesso ai propri fondi per settimane.
-                  </p>
                 </div>
                 
-                <div className="card-premium p-6 text-center space-y-4">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="card-premium p-4 sm:p-6 text-center space-y-3">
+                  <div className="mx-auto flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
+                    <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25c0-1.372-.465-2.637-1.244-3.626l-5.106-6.383a1.125 1.125 0 00-1.756 0l-5.106 6.383C7.465 16.863 7 18.128 7 19.5a2.25 2.25 0 002.25 2.25h2.25zM12 9v3.75" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">Assistenza inesistente</h3>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-orange-400">67%</p>
-                    <p className="text-sm text-slate-300">Reclami per assistenza inadeguata</p>
-                    <p className="text-xs text-slate-400">Fonte: CONSOB - Bollettino Statistiche</p>
+                  <div className="space-y-1">
+                    <p className="text-xl sm:text-2xl font-bold text-orange-400">67%</p>
+                    <p className="text-sm text-slate-300">Assistenza inadeguata</p>
+                    <p className="text-xs text-slate-400">CONSOB</p>
                   </div>
-                  <p className="text-xs text-slate-400">
-                    Tempi di risposta oltre 30 giorni, chatbot inutili, call center che rimbalzano il problema senza risolverlo.
-                  </p>
                 </div>
                 
-                <div className="card-premium p-6 text-center space-y-4">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 text-yellow-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="card-premium p-4 sm:p-6 text-center space-y-3">
+                  <div className="mx-auto flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-yellow-500/20 text-yellow-400">
+                    <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">Pagamenti non autorizzati</h3>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-yellow-400">€127M</p>
-                    <p className="text-sm text-slate-300">Perdite per frodi in Italia nel 2023</p>
-                    <p className="text-xs text-slate-400">Fonte: Banca d'Italia - Fraud Report</p>
+                  <div className="space-y-1">
+                    <p className="text-xl sm:text-2xl font-bold text-yellow-400">€127M</p>
+                    <p className="text-sm text-slate-300">Perdite per frodi</p>
+                    <p className="text-xs text-slate-400">Banca d'Italia</p>
                   </div>
-                  <p className="text-xs text-slate-400">
-                    Addebiti non autorizzati, difficoltà nel recupero, procedure di rimborso complesse che durano mesi.
-                  </p>
                 </div>
               </div>
               
-              <div className="bg-slate-800/50 rounded-lg p-6 text-left space-y-4">
-                <h3 className="text-lg font-semibold text-white">Il problema nascosto</h3>
-                <p className="text-slate-300">
-                  Questi problemi <strong>non emergono nei confronti standard</strong>. Si manifestano quando hai davvero bisogno 
-                  del servizio: emergenze, viaggi, problemi tecnici, contestazioni.
-                </p>
-                <p className="text-sm text-slate-400">
-                  I comparatori tradizionali non considerano questi rischi perché <strong>non sono misurabili con metriche di marketing</strong>.
+              {/* Ricerca accademica - Accordion per mobile */}
+              <details className="card-premium p-4 sm:p-6 text-left group">
+                <summary className="cursor-pointer list-none flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-white">Ricerca accademica</h3>
+                  <svg className="h-5 w-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div className="mt-4 space-y-3 text-sm text-slate-300">
+                  <p><strong>Kahneman & Tversky (1979)</strong>: Bias cognitivi nelle scelte finanziarie</p>
+                  <p><strong>Gabaix & Laibson (2006)</strong>: Costi nascosti nei mercati finanziari</p>
+                  <p><strong>Akerlof (1970)</strong>: Asimmetrie informative</p>
+                  <p><strong>Iyengar & Lepper (2000)</strong>: Troppa scelta riduce la qualità decisionale</p>
+                  <p className="text-xs text-slate-400 pt-2">
+                    + 4 altri studi che confermano: il sistema informativo attuale è strutturalmente inadeguato.
+                  </p>
+                </div>
+              </details>
+              
+              <div className="bg-slate-800/50 rounded-lg p-4 text-left space-y-3">
+                <h3 className="text-base font-semibold text-white">Il punto chiave</h3>
+                <p className="text-sm text-slate-300">
+                  Questi problemi emergono solo in situazioni critiche: emergenze, viaggi, contestazioni. 
+                  I comparatori non li considerano perché <strong>non sono misurabili con metriche di marketing</strong>.
                 </p>
               </div>
             </div>
@@ -544,6 +458,13 @@ export default function FinanzaPersonalePage() {
           </div>
         </section>
       </main>
+      
+      {/* Sticky CTA Mobile */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-sm border-t border-slate-800/60 p-4 sm:hidden">
+        <Link href="#analisi" className="btn-primary w-full text-center">
+          Avvia analisi compatibilità
+        </Link>
+      </div>
     </>
   )
 }
