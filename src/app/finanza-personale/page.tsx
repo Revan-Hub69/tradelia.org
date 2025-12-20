@@ -27,11 +27,11 @@ export default function FinanzaPersonalePage() {
               
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
                 Finanza personale
-                <span className="block text-gradient mt-2">senza filtri</span>
+                <span className="block text-gradient mt-2">basata su compatibilità</span>
               </h1>
               
               <p className="mx-auto max-w-2xl text-lg text-slate-300">
-                Decisioni finanziarie basate su <strong>compatibilità reale</strong>, non su ranking o promesse.
+                Decisioni finanziarie informate attraverso <strong>analisi di compatibilità</strong> invece di ranking o promesse.
               </p>
               
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -51,10 +51,10 @@ export default function FinanzaPersonalePage() {
           <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="text-center space-y-6">
               <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                Il problema non è la mancanza di informazioni
+                Perché le scelte finanziarie falliscono
               </h2>
               <p className="text-lg text-slate-300">
-                È l'eccesso di informazioni <strong>non progettate</strong> per aiutare una decisione reale.
+                Non per mancanza di informazioni, ma per <strong>eccesso di informazioni</strong> non progettate per decisioni reali.
               </p>
               
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-8">
@@ -111,12 +111,12 @@ export default function FinanzaPersonalePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Input operativo</h3>
+                    <h3 className="text-lg font-semibold text-white">Raccolta dati</h3>
                     <p className="text-sm text-slate-300">
-                      Raccogliamo <strong>solo</strong> condizioni reali d'uso: residenza, frequenza, limiti critici.
+                      <strong>Solo</strong> condizioni operative reali: residenza, frequenza d'uso, limiti critici.
                     </p>
                     <p className="text-xs text-slate-400">
-                      Nessuna preferenza soggettiva
+                      Zero preferenze soggettive
                     </p>
                   </div>
                 </div>
@@ -128,12 +128,12 @@ export default function FinanzaPersonalePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Matching</h3>
+                    <h3 className="text-lg font-semibold text-white">Analisi compatibilità</h3>
                     <p className="text-sm text-slate-300">
-                      Contratti ufficiali, clausole verificabili, <strong>costi nel tempo</strong>.
+                      Contratti ufficiali, clausole verificabili, <strong>costi reali nel tempo</strong>.
                     </p>
                     <p className="text-xs text-slate-400">
-                      Dati aggregati anonimi
+                      Fonti primarie e dati aggregati
                     </p>
                   </div>
                 </div>
@@ -145,12 +145,12 @@ export default function FinanzaPersonalePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Esclusione</h3>
+                    <h3 className="text-lg font-semibold text-white">Filtro esclusione</h3>
                     <p className="text-sm text-slate-300">
-                      Opzioni incompatibili <strong>eliminate</strong> prima di qualsiasi suggerimento.
+                      Opzioni incompatibili <strong>eliminate automaticamente</strong> prima di qualsiasi suggerimento.
                     </p>
                     <p className="text-xs text-slate-400">
-                      Anche se popolari
+                      Indipendentemente dalla popolarità
                     </p>
                   </div>
                 </div>
@@ -169,16 +169,16 @@ export default function FinanzaPersonalePage() {
               </div>
               
               <h2 className="text-xl font-bold text-white">
-                Se una condizione fallisce → opzione esclusa
+                Regola di esclusione automatica
               </h2>
               
               <p className="text-slate-300">
-                Anche se popolare. Anche se sponsorizzata.
+                Se anche una sola condizione di compatibilità fallisce → <strong>opzione esclusa</strong>
               </p>
               
               <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-                L'obiettivo non è trovare "la migliore". È <strong>ridurre il rischio</strong> di scegliere 
-                qualcosa che non funzionerà nel tuo contesto.
+                Indipendentemente da popolarità, sponsorizzazioni o marketing. L'obiettivo è <strong>ridurre il rischio</strong> 
+                di incompatibilità nel tuo contesto specifico.
               </p>
             </div>
           </div>
@@ -199,12 +199,12 @@ export default function FinanzaPersonalePage() {
               </h2>
               
               <p className="text-slate-300 max-w-xl mx-auto">
-                Richiede informazioni di <strong>contesto operativo</strong>. 
-                Non raccoglie dati superflui.
+                Processo basato su <strong>contesto operativo reale</strong>. 
+                Nessun dato superfluo o profilazione.
               </p>
               
               <div className="bg-slate-800/50 rounded-lg p-4 text-sm text-slate-400">
-                ⚠️ In alcuni casi può indicare "nessuna soluzione adatta". È un risultato valido.
+                ⚠️ Possibile esito: "Nessuna soluzione compatibile nelle condizioni attuali". È un risultato valido e trasparente.
               </div>
               
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
