@@ -3,9 +3,6 @@ import type { ReactNode } from 'react'
 import Script from 'next/script'
 import { headers } from 'next/headers'
 
-import { SiteFooter } from '@/components/site/Footer'
-import { SiteHeader } from '@/components/site/Header'
-
 import './globals.css'
 
 const jsonLd = {
@@ -77,9 +74,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           nonce={nonce}
         />
-        <SiteHeader />
         {children}
-        <SiteFooter />
       </body>
     </html>
   )
