@@ -2,75 +2,177 @@
 
 import Link from 'next/link'
 import { LogoMark } from '@/components/site/LogoMark'
+import { useEffect, useState } from 'react'
+
+// Hook per intersection observer
+function useInView(threshold = 0.1) {
+  const [ref, setRef] = useState<HTMLElement | null>(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    if (!ref) return
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold }
+    )
+    
+    observer.observe(ref)
+    return () => observer.disconnect()
+  }, [ref, threshold])
+
+  return [setRef, inView] as const
+}
+
+// Hook per scroll progress
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrolled = window.scrollY
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      setProgress((scrolled / maxScroll) * 100)
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    return () => window.removeEventListener('scroll', updateProgress)
+  }, [])
+
+  return progress
+}
 
 function FinanzaPersonaleHeader() {
+  const progress = useScrollProgress()
+  
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <div className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition">
-            <LogoMark className="h-full w-full" />
-          </span>
-          <span className="leading-none">Tradelia</span>
-          <span className="text-sm text-slate-400">Finanza Personale</span>
-        </div>
-
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione finanza personale">
-          <Link
-            href="#problema"
-            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Il Problema
-          </Link>
-          <Link
-            href="#come-funziona"
-            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Come Funziona
-          </Link>
-          <Link
-            href="#analisi"
-            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Avvia Analisi
-          </Link>
-        </nav>
+    <>
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-slate-900">
+        <div 
+          className="h-full bg-gradient-to-r from-sky-500 to-blue-500 transition-all duration-300 ease-out"
+          style={{ width: `${progress}%` }}
+        />
       </div>
-    </header>
+      
+      <header className="sticky top-0 z-40 border-b border-slate-800/60 bg-slate-950/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <div className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition-all duration-300 group-hover:ring-sky-500/50">
+              <LogoMark className="h-full w-full transition-transform duration-300 group-hover:scale-110" />
+            </span>
+            <span className="leading-none">Tradelia</span>
+            <span className="text-sm text-slate-400">Finanza Personale</span>
+          </div>
+
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione finanza personale">
+            <Link
+              href="#problema"
+              className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              Il Problema
+            </Link>
+            <Link
+              href="#come-funziona"
+              className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              Come Funziona
+            </Link>
+            <Link
+              href="#analisi"
+              className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              Avvia Analisi
+            </Link>
+          </nav>
+        </div>
+      </header>
+    </>
   )
 }
 
 export default function FinanzaPersonalePage() {
+  const [heroRef, heroInView] = useInView(0.3)
+  const [problemRef, problemInView] = useInView(0.2)
+  const [evidenceRef, evidenceInView] = useInView(0.2)
+  const [solutionRef, solutionInView] = useInView(0.2)
+  const [ctaRef, ctaInView] = useInView(0.3)
+  const [socialProof, setSocialProof] = useState(1247)
+  
+  // Animate social proof counter
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSocialProof(prev => prev + Math.floor(Math.random() * 3))
+    }, 30000) // Update every 30 seconds
+    
+    return () => clearInterval(interval)
+  }, [])
+  
+  // Exit-intent detection
+  useEffect(() => {
+    let exitIntentShown = false
+    
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !exitIntentShown && window.innerWidth > 768) {
+        exitIntentShown = true
+        const popup = document.getElementById('exit-intent-popup')
+        if (popup) {
+          popup.classList.remove('hidden')
+          popup.classList.add('flex')
+        }
+      }
+    }
+    
+    document.addEventListener('mouseleave', handleMouseLeave)
+    return () => document.removeEventListener('mouseleave', handleMouseLeave)
+  }, [])
+  
   return (
     <>
       <FinanzaPersonaleHeader />
       <main id="contenuto-principale" className="relative">
-        {/* Hero compatto */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        {/* Hero compatto con animazioni */}
+        <section ref={heroRef} className={`relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 transition-all duration-1000 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="absolute inset-0 bg-grid-pattern opacity-10" />
           
           <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="text-center space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-sm font-medium text-sky-100">
-                <div className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                Decision Support
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-sm font-medium text-sky-100 animate-pulse">
+                <div className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-ping" />
+                <span className="animate-none">Decision Support</span>
               </div>
               
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              <h1 className={`text-4xl font-bold tracking-tight text-white sm:text-5xl transition-all duration-700 delay-300 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 Finanza personale
                 <span className="block text-gradient mt-2">basata su compatibilità</span>
               </h1>
               
-              <p className="mx-auto max-w-2xl text-lg text-slate-300">
+              <p className={`mx-auto max-w-2xl text-lg text-slate-300 transition-all duration-700 delay-500 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 Decisioni finanziarie informate attraverso <strong>analisi di compatibilità</strong> invece di ranking o promesse.
               </p>
               
-              <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Link href="#analisi" className="btn-primary">
-                  Avvia analisi compatibilità
+              {/* Social proof */}
+              <div className={`inline-flex items-center gap-2 text-sm text-slate-400 transition-all duration-700 delay-700 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <div className="flex -space-x-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 border-2 border-slate-950" />
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-blue-500 border-2 border-slate-950" />
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 border-2 border-slate-950" />
+                </div>
+                <span>{socialProof.toLocaleString()} analisi completate</span>
+              </div>
+              
+              <div className={`flex flex-col gap-3 sm:flex-row sm:justify-center transition-all duration-700 delay-900 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <Link href="#analisi" className="btn-primary group">
+                  <span>Avvia analisi compatibilità</span>
+                  <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                 </Link>
-                <Link href="#come-funziona" className="btn-secondary">
-                  Come funziona
+                <Link href="#come-funziona" className="btn-secondary group">
+                  <span>Come funziona</span>
+                  <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </Link>
               </div>
             </div>
@@ -459,11 +561,45 @@ export default function FinanzaPersonalePage() {
         </section>
       </main>
       
-      {/* Sticky CTA Mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-sm border-t border-slate-800/60 p-4 sm:hidden">
-        <Link href="#analisi" className="btn-primary w-full text-center">
-          Avvia analisi compatibilità
+      {/* Sticky CTA Mobile con haptic feedback */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-sm border-t border-slate-800/60 p-4 sm:hidden transform transition-transform duration-300">
+        <Link 
+          href="#analisi" 
+          className="btn-primary w-full text-center group relative overflow-hidden"
+          onClick={() => {
+            // Haptic feedback per iOS
+            if ('vibrate' in navigator) {
+              navigator.vibrate(50)
+            }
+          }}
+        >
+          <span className="relative z-10">Avvia analisi compatibilità</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-sky-600 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
         </Link>
+      </div>
+      
+      {/* Exit-intent popup */}
+      <div id="exit-intent-popup" className="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md mx-4 transform scale-95 transition-all duration-300">
+          <div className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-white">Aspetta!</h3>
+            <p className="text-slate-300">Non rischiare di scegliere il prodotto finanziario sbagliato. La nostra analisi è gratuita e richiede solo 3 minuti.</p>
+            <div className="flex gap-3">
+              <button className="btn-primary flex-1" onClick={() => {
+                document.getElementById('exit-intent-popup')?.classList.add('hidden')
+                document.getElementById('analisi')?.scrollIntoView({ behavior: 'smooth' })
+              }}>Analisi gratuita</button>
+              <button className="btn-secondary" onClick={() => {
+                document.getElementById('exit-intent-popup')?.classList.add('hidden')
+              }}>Chiudi</button>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )
