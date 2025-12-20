@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { SiteHeader } from '@/components/site/Header'
-import { SiteFooter } from '@/components/site/Footer'
 
 export const metadata: Metadata = {
   title: 'Finanza personale | Decision support per scelte finanziarie | Tradelia',
@@ -11,9 +9,7 @@ export const metadata: Metadata = {
 
 export default function FinanzaPersonalePage() {
   return (
-    <>
-      <SiteHeader />
-      <main id="contenuto-principale" className="relative">
+    <main id="contenuto-principale" className="relative">
         {/* Hero compatto */}
         <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
           <div className="absolute inset-0 bg-grid-pattern opacity-10" />
@@ -277,7 +273,5 @@ export default function FinanzaPersonalePage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
-    </>
   )
 }
