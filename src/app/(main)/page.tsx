@@ -16,8 +16,9 @@ const domainCards = [
       'Custodia e rischio operativo',
       'Costi espliciti e nascosti'
     ],
-    href: '/investimenti',
-    cta: 'Vai a Investimenti ->'
+    href: '#coming-soon',
+    cta: 'Coming soon',
+    locked: true
   },
   {
     title: 'Finanza personale',
@@ -49,8 +50,9 @@ const domainCards = [
       'Rischio chargeback / freeze',
       'Lock-in e compliance operativa'
     ],
-    href: '/business',
-    cta: 'Vai a Business ->'
+    href: '#coming-soon',
+    cta: 'Coming soon',
+    locked: true
   }
 ]
 
@@ -101,7 +103,7 @@ export default function HomePage() {
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="card-premium space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientamento</p>
               <Link
                 href="/trasparenza"
@@ -147,8 +149,11 @@ export default function HomePage() {
 
           <FadeIn className="mt-10 grid gap-6 lg:grid-cols-3">
             {domainCards.map((card) => (
-              <article key={card.title} className="card-premium flex h-full flex-col justify-between">
-                <div className="space-y-4">
+              <article
+                key={card.title}
+                className="card-premium relative flex h-full flex-col justify-between overflow-hidden"
+              >
+                <div className={card.locked ? 'space-y-4 opacity-50' : 'space-y-4'}>
                   <div className="inline-flex rounded-full border border-slate-800 px-3 py-1 text-xs font-semibold text-slate-300">
                     {card.title}
                   </div>
@@ -166,13 +171,35 @@ export default function HomePage() {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <Link
-                    href={card.href}
-                    className="link-ghost-sky inline-flex items-center justify-between px-4 py-3"
-                  >
-                    {card.cta}
-                  </Link>
+                  {card.locked ? (
+                    <span
+                      aria-disabled="true"
+                      className="link-ghost-sky inline-flex cursor-not-allowed items-center justify-between px-4 py-3 text-slate-300"
+                    >
+                      Coming soon
+                    </span>
+                  ) : (
+                    <Link
+                      href={card.href}
+                      className="link-ghost-sky inline-flex items-center justify-between px-4 py-3"
+                    >
+                      {card.cta}
+                    </Link>
+                  )}
                 </div>
+                {card.locked ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-950/85 text-center">
+                    <div className="flex items-center gap-2 rounded-full border border-slate-700/70 bg-slate-900/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-slate-200">
+                        <path
+                          fill="currentColor"
+                          d="M12 2a4 4 0 0 0-4 4v3H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V6a4 4 0 0 0-4-4Zm-2 7V6a2 2 0 1 1 4 0v3h-4Z"
+                        />
+                      </svg>
+                      Coming soon
+                    </div>
+                  </div>
+                ) : null}
               </article>
             ))}
           </FadeIn>
