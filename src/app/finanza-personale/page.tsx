@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { LogoMark } from '@/components/site/LogoMark'
-import { SiteFooter } from '@/components/site/Footer'
 
 function FinanzaPersonaleHeader() {
   return (
@@ -545,7 +544,6 @@ export default function FinanzaPersonalePage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
     </>
   )
 }
