@@ -13,8 +13,8 @@ export default function PrivacyPage() {
       <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Policy</p>
       <h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">Privacy</h1>
       <p className="mt-4 text-lg text-slate-300">
-        Tradelia Main opera senza raccolta o memorizzazione di dati personali. Nessun account, nessuna profilazione,
-        nessun pixel di tracciamento.
+        Tradelia Main opera con zero raccolta o memorizzazione di dati personali. Nessun account, nessuna profilazione,
+        nessun tracciamento o pixel.
       </p>
       <p className="mt-3 text-lg text-slate-300">
         Usiamo solo risorse tecniche essenziali per far funzionare il sito. Non utilizziamo cookie pubblicitari, tracker

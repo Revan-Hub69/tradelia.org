@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
   description:
     'Basata su fonti ufficiali e criteri verificabili per far emergere costi, vincoli tecnici e tutele reali. Nessun ranking, nessuna promessa di rendimento.',
+  alternates: {
+    canonical: 'https://tradelia.org'
+  },
   openGraph: {
     title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
     description:
@@ -35,9 +38,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon-512.png',
-        width: 512,
-        height: 512,
+        url: '/og.svg',
+        width: 1200,
+        height: 630,
         alt: 'Tradelia'
       }
     ]
@@ -47,7 +50,10 @@ export const metadata: Metadata = {
     title: 'Tradelia | Guida decisionale indipendente per scelte finanziarie',
     description:
       'Fonti ufficiali, criteri auditabili e zero ranking promozionali per scelte finanziarie più chiare.',
-    images: ['/icon-512.png']
+    images: ['/og.svg']
+  },
+  icons: {
+    icon: '/icon.svg'
   },
   robots: {
     index: true,

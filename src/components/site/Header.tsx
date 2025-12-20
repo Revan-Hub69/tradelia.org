@@ -91,7 +91,7 @@ export function SiteHeader() {
           className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           aria-label="Tradelia, torna alla homepage"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/70 p-1.5 transition group-hover:scale-105">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition">
             <LogoMark className="h-full w-full" />
           </span>
           <span className="leading-none">Tradelia</span>
@@ -102,7 +102,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-slate-200 underline underline-offset-8 decoration-slate-600 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:translate-y-[1px]"
+              className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:translate-y-[1px]"
             >
               {item.label}
             </Link>
