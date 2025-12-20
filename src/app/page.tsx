@@ -99,7 +99,6 @@ export default function HomePage() {
 
       {/* ORIENTAMENTO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
-        <div className="pattern-layer" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="card-premium space-y-4">
             <div className="flex items-center justify-between">
@@ -126,9 +125,8 @@ export default function HomePage() {
       {/* DOMINI */}
       <section
         id="domini"
-        className="relative border-t border-slate-800/60 bg-slate-950/60 py-14 sm:py-16"
+        className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16"
       >
-        <div className="pattern-layer opacity-40" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -183,7 +181,6 @@ export default function HomePage() {
 
       {/* METODO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
-        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
           <FadeIn className="lg:max-w-xl">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Metodo</p>
@@ -204,7 +201,6 @@ export default function HomePage() {
 
       {/* TRASPARENZA & CONFINI */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
-        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
             <FadeIn className="space-y-3 lg:max-w-xl">
@@ -215,9 +211,14 @@ export default function HomePage() {
                 e non influenzano i criteri. Su Tradelia Main non raccogliamo né memorizziamo dati personali e non
                 usiamo tracking.
               </p>
+              <ul className="space-y-2 text-sm text-slate-200">
+                <li>• Criteri dichiarati e verificabili per ogni analisi</li>
+                <li>• Nessun ranking o promesse di rendimento</li>
+                <li>• No tracking: zero raccolta o memorizzazione dati</li>
+              </ul>
               <Link
                 href="/trasparenza"
-                className="link-ghost mt-4"
+                className="link-ghost mt-6"
               >
                 Vai alla Trasparenza
               </Link>
