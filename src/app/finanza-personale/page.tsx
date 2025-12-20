@@ -1,15 +1,8 @@
 'use client'
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LogoMark } from '@/components/site/LogoMark'
 import { SiteFooter } from '@/components/site/Footer'
-
-export const metadata: Metadata = {
-  title: 'Finanza personale | Decision support per scelte finanziarie | Tradelia',
-  description:
-    'Decision support per conti, carte e servizi finanziari. Analisi di compatibilità basata su costi reali, limiti operativi e requisiti verificabili. Nessun ranking, solo compatibilità.'
-}
 
 function FinanzaPersonaleHeader() {
   return (
