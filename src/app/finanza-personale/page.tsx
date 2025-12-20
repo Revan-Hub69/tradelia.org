@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LogoMark } from '@/components/site/LogoMark'
+import { SiteFooter } from '@/components/site/Footer'
 
 export const metadata: Metadata = {
   title: 'Finanza personale | Decision support per scelte finanziarie | Tradelia',
@@ -483,9 +484,9 @@ export default function FinanzaPersonalePage() {
                 <Link href="#procedi" className="btn-primary">
                   Procedi all'analisi
                 </Link>
-                <Link href="/metodo" className="btn-secondary">
+                <button onClick={() => alert('Popup Metodo - Coming Soon')} className="btn-secondary">
                   Approfondisci metodo
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -522,12 +523,12 @@ export default function FinanzaPersonalePage() {
                 </div>
               </div>
               
-              <Link href="/trasparenza" className="link-ghost-sky inline-flex items-center gap-2">
+              <button onClick={() => alert('Popup Trasparenza - Coming Soon')} className="link-ghost-sky inline-flex items-center gap-2">
                 <span>Dettagli trasparenza</span>
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </Link>
+              </button>
             </div>
           </div>
         </section>
@@ -539,16 +540,17 @@ export default function FinanzaPersonalePage() {
               <p className="font-semibold text-white">Tradelia · Finanza Personale</p>
               <p>Supporto decisionale per strumenti finanziari personali</p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link href="/metodo" className="hover-link">Metodo</Link>
-                <Link href="/trasparenza" className="hover-link">Trasparenza</Link>
-                <Link href="/privacy" className="hover-link">Privacy</Link>
-                <Link href="/disclaimer" className="hover-link">Disclaimer</Link>
+                <button className="hover-link" onClick={() => alert('Popup Metodo - Coming Soon')}>Metodo</button>
+                <button className="hover-link" onClick={() => alert('Popup Trasparenza - Coming Soon')}>Trasparenza</button>
+                <button className="hover-link" onClick={() => alert('Popup Privacy - Coming Soon')}>Privacy</button>
+                <button className="hover-link" onClick={() => alert('Popup Disclaimer - Coming Soon')}>Disclaimer</button>
               </div>
               <p className="text-xs">Informativo / educativo. Non è consulenza finanziaria.</p>
             </div>
           </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   )
 }
