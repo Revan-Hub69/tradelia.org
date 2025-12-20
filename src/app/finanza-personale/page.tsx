@@ -176,6 +176,38 @@ export default function FinanzaPersonalePage() {
                     <strong>Heidhues & Kőszegi (2010)</strong>: Sfruttamento di bias comportamentali.
                   </p>
                 </div>
+                
+                <div className="card-premium p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white">Complessità contrattuale</h3>
+                  <p className="text-xs text-slate-300">
+                    <strong>Lusardi & Mitchell (2014)</strong>: Financial literacy e decisioni subottimali. 
+                    <strong>Woodward & Hall (2012)</strong>: Complessità deliberata nei contratti finanziari.
+                  </p>
+                </div>
+                
+                <div className="card-premium p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white">Manipolazione comportamentale</h3>
+                  <p className="text-xs text-slate-300">
+                    <strong>Ariely & Silva (2002)</strong>: Anchoring effects nei prezzi finanziari. 
+                    <strong>Shu & Gneezy (2010)</strong>: Default options e scelte automatiche.
+                  </p>
+                </div>
+                
+                <div className="card-premium p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white">Trasparenza insufficiente</h3>
+                  <p className="text-xs text-slate-300">
+                    <strong>Bar-Gill (2012)</strong>: Seduction by Contract nei servizi finanziari. 
+                    <strong>Willis (2006)</strong>: Limiti strutturali della disclosure finanziaria.
+                  </p>
+                </div>
+                
+                <div className="card-premium p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white">Ricerca e switching costs</h3>
+                  <p className="text-xs text-slate-300">
+                    <strong>Klemperer (1995)</strong>: Competition when consumers have switching costs. 
+                    <strong>Farrell & Shapiro (1988)</strong>: Dynamic competition with switching costs.
+                  </p>
+                </div>
               </div>
               
               <p className="text-xs text-slate-400 max-w-2xl mx-auto">
