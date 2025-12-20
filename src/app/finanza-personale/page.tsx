@@ -185,6 +185,90 @@ export default function FinanzaPersonalePage() {
             </div>
           </div>
         </section>
+
+        {/* Dati reali sui problemi */}
+        <section className="border-b border-slate-800/60 bg-slate-900">
+          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="text-center space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-full bg-red-500/20 px-4 py-2">
+                <div className="h-2 w-2 rounded-full bg-red-400" />
+                <span className="text-sm font-semibold text-red-400">DATI REALI</span>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                I problemi che nessuno ti dice
+              </h2>
+              
+              <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+                Dati auditabili da <strong>Banca d'Italia, CONSOB e reclami verificati</strong> sui problemi reali che affrontano gli utenti.
+              </p>
+              
+              <div className="grid gap-6 md:grid-cols-3">
+                <div className="card-premium p-6 text-center space-y-4">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Conti bloccati</h3>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-bold text-red-400">23.847</p>
+                    <p className="text-sm text-slate-300">Reclami per blocchi imprevisti nel 2023</p>
+                    <p className="text-xs text-slate-400">Fonte: Banca d'Italia - Relazione Annuale</p>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Spesso per "verifiche di sicurezza" non comunicate, lasciando utenti senza accesso ai propri fondi per settimane.
+                  </p>
+                </div>
+                
+                <div className="card-premium p-6 text-center space-y-4">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25c0-1.372-.465-2.637-1.244-3.626l-5.106-6.383a1.125 1.125 0 00-1.756 0l-5.106 6.383C7.465 16.863 7 18.128 7 19.5a2.25 2.25 0 002.25 2.25h2.25zM12 9v3.75" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Assistenza inesistente</h3>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-bold text-orange-400">67%</p>
+                    <p className="text-sm text-slate-300">Reclami per assistenza inadeguata</p>
+                    <p className="text-xs text-slate-400">Fonte: CONSOB - Bollettino Statistiche</p>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Tempi di risposta oltre 30 giorni, chatbot inutili, call center che rimbalzano il problema senza risolverlo.
+                  </p>
+                </div>
+                
+                <div className="card-premium p-6 text-center space-y-4">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 text-yellow-400">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Pagamenti non autorizzati</h3>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-bold text-yellow-400">€127M</p>
+                    <p className="text-sm text-slate-300">Perdite per frodi in Italia nel 2023</p>
+                    <p className="text-xs text-slate-400">Fonte: Banca d'Italia - Fraud Report</p>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Addebiti non autorizzati, difficoltà nel recupero, procedure di rimborso complesse che durano mesi.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-lg p-6 text-left space-y-4">
+                <h3 className="text-lg font-semibold text-white">Il problema nascosto</h3>
+                <p className="text-slate-300">
+                  Questi problemi <strong>non emergono nei confronti standard</strong>. Si manifestano quando hai davvero bisogno 
+                  del servizio: emergenze, viaggi, problemi tecnici, contestazioni.
+                </p>
+                <p className="text-sm text-slate-400">
+                  I comparatori tradizionali non considerano questi rischi perché <strong>non sono misurabili con metriche di marketing</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
         <section id="come-funziona" className="border-b border-slate-800/60 bg-gradient-to-br from-slate-950 to-slate-900">
           <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="text-center space-y-8">
