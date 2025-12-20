@@ -495,25 +495,7 @@ export default function FinanzaPersonalePage() {
             </div>
           </div>
         </section>
-
-        {/* Footer interno */}
-        <section className="border-t border-slate-800/60 bg-slate-950 py-8">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center text-sm text-slate-400 space-y-3">
-              <p className="font-semibold text-white">Tradelia · Finanza Personale</p>
-              <p>Supporto decisionale per strumenti finanziari personali</p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link href="/metodo" className="hover-link">Metodo</Link>
-                <Link href="/trasparenza" className="hover-link">Trasparenza</Link>
-                <Link href="/privacy" className="hover-link">Privacy</Link>
-                <Link href="/disclaimer" className="hover-link">Disclaimer</Link>
-              </div>
-              <p className="text-xs">Informativo / educativo. Non è consulenza finanziaria.</p>
-            </div>
-          </div>
-        </section>
       </main>
-      <SiteFooter />
     </>
   )
 }
