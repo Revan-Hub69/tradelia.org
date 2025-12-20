@@ -12,17 +12,13 @@ function FinanzaPersonaleHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link
-          href="/finanza-personale"
-          className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          aria-label="Tradelia Finanza Personale"
-        >
+        <div className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition">
             <LogoMark className="h-full w-full" />
           </span>
           <span className="leading-none">Tradelia</span>
           <span className="text-sm text-slate-400">Finanza Personale</span>
-        </Link>
+        </div>
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione finanza personale">
           <Link
