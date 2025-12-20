@@ -84,14 +84,14 @@ export function SiteHeader() {
   const handleNavClick = () => setOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           aria-label="Tradelia, torna alla homepage"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/70 p-1.5 shadow-lg shadow-sky-900/40 ring-1 ring-sky-500/30 transition group-hover:scale-105 group-hover:shadow-sky-900/60">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition">
             <LogoMark className="h-full w-full" />
           </span>
           <span className="leading-none">Tradelia</span>
@@ -102,27 +102,12 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-slate-200 transition hover:text-white hover:underline underline-offset-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:translate-y-[1px]"
+              className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:translate-y-[1px]"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/metodo"
-            className="rounded-lg border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-400/60 hover:text-white active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Metodo
-          </Link>
-          <Link
-            href="/trasparenza"
-            className="rounded-lg border border-slate-800 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Trasparenza
-          </Link>
-        </div>
 
         <button
           type="button"
@@ -168,22 +153,6 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <div className="flex gap-3">
-              <Link
-                href="/metodo"
-                onClick={handleNavClick}
-                className="flex-1 rounded-xl border border-sky-500/40 bg-sky-500/10 px-4 py-3 text-center text-sm font-semibold text-sky-100 transition hover:border-sky-400/60 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Metodo
-              </Link>
-              <Link
-                href="/trasparenza"
-                onClick={handleNavClick}
-                className="flex-1 rounded-xl border border-slate-800 px-4 py-3 text-center text-sm font-semibold text-slate-200 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Trasparenza
-              </Link>
-            </div>
             <button
               type="button"
               className="w-full rounded-xl border border-slate-800 px-4 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"

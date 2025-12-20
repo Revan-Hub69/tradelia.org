@@ -16,8 +16,9 @@ const domainCards = [
       'Custodia e rischio operativo',
       'Costi espliciti e nascosti'
     ],
-    href: '/investimenti',
-    cta: 'Vai a Investimenti ->'
+    href: '#coming-soon',
+    cta: 'Coming soon',
+    locked: true
   },
   {
     title: 'Finanza personale',
@@ -49,8 +50,9 @@ const domainCards = [
       'Rischio chargeback / freeze',
       'Lock-in e compliance operativa'
     ],
-    href: '/business',
-    cta: 'Vai a Business ->'
+    href: '#coming-soon',
+    cta: 'Coming soon',
+    locked: true
   }
 ]
 
@@ -64,22 +66,15 @@ const metodoPillole = [
 export default function HomePage() {
   return (
     <main id="contenuto-principale" className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-[-20%] top-[-10%] h-[420px] rounded-full bg-sky-500/10 blur-[120px]" />
-        <div className="absolute left-[-10%] top-1/3 h-[320px] w-[320px] rounded-full bg-slate-800/50 blur-[100px]" />
-        <div className="absolute right-[-10%] top-1/4 h-[260px] w-[260px] rounded-full bg-sky-700/20 blur-[100px]" />
-        <div className="animated-grid opacity-70" aria-hidden />
-      </div>
-
       {/* HERO */}
       <section className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-14 pt-12 sm:px-6 lg:px-8 lg:pt-20 lg:pb-16">
         <FadeIn className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-6 lg:max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100 shadow-lg shadow-sky-900/30">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100">
               Piattaforma indipendente
             </div>
             <div className="space-y-4">
-              <h1 className="text-gradient text-4xl leading-tight sm:text-5xl">
+              <h1 className="text-4xl leading-tight text-white sm:text-5xl">
                 Tradelia: guida decisionale indipendente per scelte finanziarie.
               </h1>
               <p className="text-lg text-slate-300 sm:text-xl">
@@ -106,10 +101,9 @@ export default function HomePage() {
 
       {/* ORIENTAMENTO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-12 sm:py-14">
-        <div className="pattern-layer" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="card-premium space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientamento</p>
               <Link
                 href="/trasparenza"
@@ -133,9 +127,8 @@ export default function HomePage() {
       {/* DOMINI */}
       <section
         id="domini"
-        className="relative border-t border-slate-800/60 bg-slate-950/60 py-14 sm:py-16"
+        className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16"
       >
-        <div className="pattern-layer opacity-40" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -156,8 +149,11 @@ export default function HomePage() {
 
           <FadeIn className="mt-10 grid gap-6 lg:grid-cols-3">
             {domainCards.map((card) => (
-              <article key={card.title} className="card-premium flex h-full flex-col justify-between">
-                <div className="space-y-4">
+              <article
+                key={card.title}
+                className="card-premium relative flex h-full flex-col justify-between overflow-hidden"
+              >
+                <div className={card.locked ? 'space-y-4 opacity-50' : 'space-y-4'}>
                   <div className="inline-flex rounded-full border border-slate-800 px-3 py-1 text-xs font-semibold text-slate-300">
                     {card.title}
                   </div>
@@ -175,13 +171,35 @@ export default function HomePage() {
                   </ul>
                 </div>
                 <div className="mt-6">
-                  <Link
-                    href={card.href}
-                    className="inline-flex items-center justify-between rounded-xl border border-sky-400/30 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-300/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                  >
-                    {card.cta}
-                  </Link>
+                  {card.locked ? (
+                    <span
+                      aria-disabled="true"
+                      className="link-ghost-sky inline-flex cursor-not-allowed items-center justify-between px-4 py-3 text-slate-300"
+                    >
+                      Coming soon
+                    </span>
+                  ) : (
+                    <Link
+                      href={card.href}
+                      className="link-ghost-sky inline-flex items-center justify-between px-4 py-3"
+                    >
+                      {card.cta}
+                    </Link>
+                  )}
                 </div>
+                {card.locked ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-950/85 text-center">
+                    <div className="flex items-center gap-2 rounded-full border border-slate-700/70 bg-slate-900/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-slate-200">
+                        <path
+                          fill="currentColor"
+                          d="M12 2a4 4 0 0 0-4 4v3H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V6a4 4 0 0 0-4-4Zm-2 7V6a2 2 0 1 1 4 0v3h-4Z"
+                        />
+                      </svg>
+                      Coming soon
+                    </div>
+                  </div>
+                ) : null}
               </article>
             ))}
           </FadeIn>
@@ -190,7 +208,6 @@ export default function HomePage() {
 
       {/* METODO */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
-        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
           <FadeIn className="lg:max-w-xl">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Metodo</p>
@@ -211,7 +228,6 @@ export default function HomePage() {
 
       {/* TRASPARENZA & CONFINI */}
       <section className="relative border-t border-slate-800/60 bg-slate-950 py-14 sm:py-16">
-        <div className="pattern-layer opacity-35" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
             <FadeIn className="space-y-3 lg:max-w-xl">
@@ -219,33 +235,20 @@ export default function HomePage() {
               <h2 className="text-2xl font-semibold text-white sm:text-3xl">Trasparenza & confini</h2>
               <p className="text-sm text-slate-300">
                 Tradelia non vende prodotti finanziari e non pubblica segnali. Se esistono affiliazioni, sono dichiarate
-                e non influenzano i criteri.
+                e non influenzano i criteri. Su Tradelia Main non raccogliamo né memorizziamo dati personali e non
+                usiamo tracking.
               </p>
+              <ul className="space-y-2 text-sm text-slate-200">
+                <li>• Criteri dichiarati e verificabili per ogni analisi</li>
+                <li>• Nessun ranking o promesse di rendimento</li>
+                <li>• No tracking: zero raccolta o memorizzazione dati</li>
+              </ul>
               <Link
                 href="/trasparenza"
-                className="link-ghost"
+                className="link-ghost mt-6"
               >
                 Vai alla Trasparenza
               </Link>
-            </FadeIn>
-
-            <FadeIn className="grid flex-1 gap-4 lg:grid-cols-2">
-              <div className="card-premium space-y-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Cosa facciamo</p>
-                <ul className="space-y-2 text-sm text-slate-200">
-                  <li>• Analisi informativa basata su documentazione ufficiale.</li>
-                  <li>• Evidenza di costi, vincoli tecnici e tutele reali.</li>
-                  <li>• Scenari condizionati e limiti espliciti.</li>
-                </ul>
-              </div>
-              <div className="card-premium space-y-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Cosa non facciamo</p>
-                <ul className="space-y-2 text-sm text-slate-200">
-                  <li>• Non vendiamo prodotti o segnali.</li>
-                  <li>• Niente classifiche o "top broker".</li>
-                  <li>• Nessuna promessa di rendimento.</li>
-                </ul>
-              </div>
             </FadeIn>
           </div>
         </div>
@@ -253,7 +256,3 @@ export default function HomePage() {
     </main>
   )
 }
-
-
-
-

@@ -13,14 +13,15 @@ export default function PrivacyPage() {
       <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Policy</p>
       <h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">Privacy</h1>
       <p className="mt-4 text-lg text-slate-300">
-        Tradelia opera con dati minimi e finalità esclusivamente informative. Quando vengono raccolti dati di contatto
-        o di utilizzo, sono impiegati per offrire contenuti e aggiornamenti richiesti dall&apos;utente e non sono ceduti
-        a terzi per finalità commerciali.
+        Tradelia Main opera con zero raccolta o memorizzazione di dati personali. Nessun account, nessuna profilazione,
+        nessun tracciamento o pixel.
       </p>
       <p className="mt-3 text-lg text-slate-300">
-        Le fonti analitiche provengono da documentazione ufficiale e non includono profilazioni pubblicitarie o tracker
-        di terze parti. Per qualsiasi richiesta di accesso o rettifica è possibile fare riferimento alla pagina
-        Trasparenza.
+        Usiamo solo risorse tecniche essenziali per far funzionare il sito. Non utilizziamo cookie pubblicitari, tracker
+        di terze parti o sistemi di analytics invasivi. È una scelta precisa: meno dati, più fiducia.
+      </p>
+      <p className="mt-3 text-lg text-slate-300">
+        Per richieste o chiarimenti puoi scrivere a privacy@tradelia.org oppure consultare la pagina Trasparenza.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
