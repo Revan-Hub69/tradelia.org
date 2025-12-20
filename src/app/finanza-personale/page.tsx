@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { SiteHeader } from '@/components/site/Header'
-import { SiteFooter } from '@/components/site/Footer'
+import { LogoMark } from '@/components/site/LogoMark'
 
 export const metadata: Metadata = {
   title: 'Finanza personale | Decision support per scelte finanziarie | Tradelia',
@@ -9,10 +8,51 @@ export const metadata: Metadata = {
     'Decision support per conti, carte e servizi finanziari. Analisi di compatibilità basata su costi reali, limiti operativi e requisiti verificabili. Nessun ranking, solo compatibilità.'
 }
 
+function FinanzaPersonaleHeader() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <Link
+          href="/finanza-personale"
+          className="group flex items-center gap-2 text-lg font-semibold tracking-tight text-white transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          aria-label="Tradelia Finanza Personale"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/50 p-1.5 ring-1 ring-slate-800/60 transition">
+            <LogoMark className="h-full w-full" />
+          </span>
+          <span className="leading-none">Tradelia</span>
+          <span className="text-sm text-slate-400">Finanza Personale</span>
+        </Link>
+
+        <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione finanza personale">
+          <Link
+            href="#problema"
+            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          >
+            Il Problema
+          </Link>
+          <Link
+            href="#come-funziona"
+            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          >
+            Come Funziona
+          </Link>
+          <Link
+            href="#analisi"
+            className="text-sm font-semibold text-slate-100 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          >
+            Avvia Analisi
+          </Link>
+        </nav>
+      </div>
+    </header>
+  )
+}
+
 export default function FinanzaPersonalePage() {
   return (
     <>
-      <SiteHeader />
+      <FinanzaPersonaleHeader />
       <main id="contenuto-principale" className="relative">
         {/* Hero compatto */}
         <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -492,6 +532,23 @@ export default function FinanzaPersonalePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer interno */}
+        <section className="border-t border-slate-800/60 bg-slate-950 py-8">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center text-sm text-slate-400 space-y-3">
+              <p className="font-semibold text-white">Tradelia · Finanza Personale</p>
+              <p>Supporto decisionale per strumenti finanziari personali</p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link href="/metodo" className="hover-link">Metodo</Link>
+                <Link href="/trasparenza" className="hover-link">Trasparenza</Link>
+                <Link href="/privacy" className="hover-link">Privacy</Link>
+                <Link href="/disclaimer" className="hover-link">Disclaimer</Link>
+              </div>
+              <p className="text-xs">Informativo / educativo. Non è consulenza finanziaria.</p>
             </div>
           </div>
         </section>
