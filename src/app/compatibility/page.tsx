@@ -50,7 +50,7 @@ function CompatibilityHeader() {
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-slate-900">
         <div 
-          className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-300 ease-out"
+          className="h-full bg-gradient-to-r from-sky-500 to-blue-500 transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -62,7 +62,7 @@ function CompatibilityHeader() {
               <LogoMark className="h-full w-full transition-transform duration-300 group-hover:scale-110" />
             </span>
             <span className="leading-none">Tradelia</span>
-            <span className="text-sm text-slate-400">Compatibility Analysis</span>
+            <span className="text-sm text-slate-400">Verifica Compatibilità</span>
           </div>
 
           <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione compatibility">
@@ -131,210 +131,90 @@ export default function CompatibilityPage() {
     <>
       <CompatibilityHeader />
       <main id="contenuto-principale" className="relative">
-        {/* Hero focalizzato su rischi */}
-        <section ref={heroRef} className={`relative overflow-hidden bg-gradient-to-br from-slate-950 via-red-950/20 to-slate-950 transition-all duration-1000 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        {/* Hero ottimizzato */}
+        <section ref={heroRef} className={`relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 transition-all duration-1000 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="absolute inset-0 bg-grid-pattern opacity-10" />
           
-          <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="text-center space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-sm font-medium text-red-100 animate-pulse">
-                <div className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping" />
-                <span className="animate-none">Risk Prevention</span>
-              </div>
-              
-              <h1 className={`text-4xl font-bold tracking-tight text-white sm:text-5xl transition-all duration-700 delay-300 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                Evita costi nascosti
-                <span className="block text-gradient mt-2">e rischi operativi</span>
+          <div className="relative mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
+            <div className="text-center space-y-8">
+              <h1 className={`text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl transition-all duration-700 delay-300 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                Verifica la compatibilità tra il tuo uso finanziario e i contratti reali
               </h1>
               
-              <p className={`mx-auto max-w-2xl text-lg text-slate-300 transition-all duration-700 delay-500 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                Verifichiamo <strong>incompatibilità prima che ti costino denaro</strong>. Analisi basata su contratti reali e reclami documentati.
+              <p className={`mx-auto max-w-2xl text-xl text-slate-300 transition-all duration-700 delay-500 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                I prodotti finanziari hanno regole che scattano solo in scenari specifici. 
+                <strong>Non confrontabili nelle tabelle commerciali.</strong>
               </p>
               
-              {/* Risk stats */}
-              <div className={`inline-flex items-center gap-2 text-sm text-red-400 transition-all duration-700 delay-700 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              <div className={`inline-flex items-center gap-3 rounded-full border border-slate-400/30 bg-slate-800/50 px-6 py-3 text-sm font-medium text-slate-200 transition-all duration-700 delay-700 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <svg className="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>€2.300 costo medio annuo per incompatibilità non rilevate</span>
+                Conti · Carte · Wallet · Pagamenti digitali
               </div>
               
-              <div className={`flex flex-col gap-3 sm:flex-row sm:justify-center transition-all duration-700 delay-900 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <Link href="#verifica" className="btn-primary group bg-red-600 hover:bg-red-700">
-                  <span>Verifica compatibilità ora</span>
-                  <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+              <div className={`flex flex-col gap-4 sm:flex-row sm:justify-center transition-all duration-700 delay-900 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <Link href="#analisi" className="btn-primary text-lg px-8 py-4">
+                  Analizza il tuo profilo
                 </Link>
-                <Link href="#costi" className="btn-secondary group">
-                  <span>Vedi costi nascosti</span>
-                  <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <Link href="#problema" className="btn-secondary text-lg px-8 py-4">
+                  Perché serve
                 </Link>
               </div>
+              
+              <p className={`text-sm text-slate-400 transition-all duration-700 delay-1100 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                3 minuti · Gratuito · Educativo
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Rischi reali con dati */}
-        <section id="rischi" className="border-b border-slate-800/60 bg-slate-950">
-          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="text-center space-y-8">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                Cosa rischi scegliendo male
+        {/* Il problema - Semplificato */}
+        <section id="problema" className="py-16 bg-slate-950">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Il problema delle scelte finanziarie
               </h2>
-              <p className="text-lg text-slate-300">
-                Dati reali da <strong>8.500 reclami analizzati</strong> (Banca d'Italia, CONSOB)
+              <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+                Le informazioni che servono davvero non sono confrontabili
               </p>
-              
-              {/* Costi medi */}
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="card-premium p-4 text-center space-y-3">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold text-red-400">€2.300</p>
-                    <p className="text-sm text-slate-300">Costo medio annuo</p>
-                    <p className="text-xs text-slate-400">Incompatibilità non rilevate</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 text-center space-y-3">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 11-4.243-4.243m4.242 4.242L9.88 9.88" />
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold text-orange-400">€850</p>
-                    <p className="text-sm text-slate-300">Commissioni nascoste</p>
-                    <p className="text-xs text-slate-400">Scoperte dopo 6 mesi</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 text-center space-y-3">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 text-yellow-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold text-yellow-400">€1.200</p>
-                    <p className="text-sm text-slate-300">Penali uscita</p>
-                    <p className="text-xs text-slate-400">Non dichiarate</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 text-center space-y-3">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold text-red-400">45</p>
-                    <p className="text-sm text-slate-300">Giorni medi</p>
-                    <p className="text-xs text-slate-400">Risoluzione problemi</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 text-left space-y-3">
-                <h3 className="text-lg font-semibold text-red-400">Il problema vero</h3>
-                <p className="text-slate-300">
-                  Questi costi emergono solo in situazioni critiche: emergenze, viaggi, contestazioni. 
-                  I comparatori non li considerano perché <strong>non sono misurabili con metriche di marketing</strong>.
-                </p>
-              </div>
             </div>
-          </div>
-        </section>
-
-        {/* Costi nascosti comuni */}
-        <section id="costi" className="border-b border-slate-800/60 bg-gradient-to-br from-slate-900 to-slate-950">
-          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="text-center space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/20 px-4 py-2">
-                <div className="h-2 w-2 rounded-full bg-orange-400" />
-                <span className="text-sm font-semibold text-orange-400">COSTI NASCOSTI</span>
-              </div>
-              
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                Commissioni che scopri dopo
-              </h2>
-              
-              <p className="text-lg text-slate-300 max-w-3xl mx-auto">
-                Costi reali estratti da contratti verificati. Non teorici, ma <strong>quelli che paghi davvero</strong>.
-              </p>
-              
-              {/* Lista costi */}
-              <div className="grid gap-4 text-left">
-                <div className="card-premium p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-white">Commissioni estero</p>
-                    <p className="text-sm text-slate-400">Per operazione + cambio valuta</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-orange-400">€2 - €15</p>
-                    <p className="text-xs text-slate-400">+ 1-4% cambio</p>
-                  </div>
+            
+            <div className="grid gap-8 lg:grid-cols-2 items-center">
+              <div className="space-y-6">
+                <div className="card-premium p-6">
+                  <h3 className="text-lg font-semibold text-red-400 mb-3">Cosa confronti oggi</h3>
+                  <ul className="space-y-2 text-slate-300">
+                    <li>• Canoni mensili</li>
+                    <li>• Costi visibili</li>
+                    <li>• Funzionalità dichiarate</li>
+                  </ul>
                 </div>
                 
-                <div className="card-premium p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-white">Superamento soglie</p>
-                    <p className="text-sm text-slate-400">Oltre limiti mensili/annuali</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-orange-400">fino 3%</p>
-                    <p className="text-xs text-slate-400">dell'importo</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-white">Inattività conto</p>
-                    <p className="text-sm text-slate-400">Dopo 6-12 mesi senza operazioni</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-orange-400">€5-25</p>
-                    <p className="text-xs text-slate-400">al mese</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-white">Cambio residenza</p>
-                    <p className="text-sm text-slate-400">Chiusura forzata + penali</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-orange-400">€50-500</p>
-                    <p className="text-xs text-slate-400">+ chiusura</p>
-                  </div>
-                </div>
-                
-                <div className="card-premium p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-white">Assistenza telefonica</p>
-                    <p className="text-sm text-slate-400">Supporto umano a pagamento</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-orange-400">€2-8</p>
-                    <p className="text-xs text-slate-400">per chiamata</p>
-                  </div>
+                <div className="card-premium p-6">
+                  <h3 className="text-lg font-semibold text-green-400 mb-3">Cosa dovresti confrontare</h3>
+                  <ul className="space-y-2 text-slate-300">
+                    <li>• Costi che scattano in situazioni specifiche</li>
+                    <li>• Limiti operativi per il tuo uso</li>
+                    <li>• Comportamento in scenari non standard</li>
+                  </ul>
                 </div>
               </div>
               
-              <div className="bg-slate-800/50 rounded-lg p-4 text-left space-y-3">
-                <h3 className="text-base font-semibold text-white">Perché non li vedi prima</h3>
-                <p className="text-sm text-slate-300">
-                  Questi costi sono sepolti nei contratti, attivati solo in situazioni specifiche, 
-                  o comunicati con terminologia tecnica. I comparatori li ignorano perché <strong>non fanno parte del marketing</strong>.
-                </p>
+              <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto">
+                    <svg className="w-8 h-8 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">Il risultato</h3>
+                  <p className="text-slate-300">
+                    Scopri i problemi solo quando è troppo tardi: 
+                    all'estero, in emergenza, o quando cambi situazione.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
