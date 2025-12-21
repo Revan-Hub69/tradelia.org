@@ -7,86 +7,111 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Assessment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  markets               Json
-  horizon               String
-  frequencyPerWeek      Int
-  orderTypes            Json
-  typicalNotionalBucket String
-  slippageTolerance     String
-  regulatoryPreference  String
-  needsApi              Boolean @default(false)
-  baseCurrency          String
-  currentProviders      Json
-
-  result AssessmentResult?
-
-  @@map("assessments")
+model Session {
+  id               String   @id @default(cuid())
+  mode             String   // DEMO_STRESS|DEMO_REALISTIC|LIVE_MICRO|LIVE_SCALE
+  screenerProfile  String   // A|B
+  executionMode    String   // confirm|auto
+  binanceEnv       String   // testnet|live
+  status           String   // RUNNING|STOPPED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  tradePlans       TradePlan[]
+  jobs             Job[]
+  
+  @@map("sessions")
 }
 
-model AssessmentResult {
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  assessmentId String   @unique
-  perDomain    Json
-  overall      Json
-  audit        Json
-
-  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-
-  @@map("assessment_results")
+model TradePlan {
+  id              String   @id @default(cuid())
+  sessionId       String
+  env             String   // testnet|live
+  mode            String
+  screenerProfile String   // A|B
+  symbol          String
+  side            String   // LONG|SHORT
+  entry           Json     // {type, price}
+  risk            Json     // {sl, tp1, tp2, trail}
+  sizing          Json     // {qty, leverage, marginType}
+  gates           Json     // {setup_pass, micro_pass, funding_mode, expires_at}
+  why             Json     // array of reasons
+  metrics         Json     // {obi5, obi20, delta_fast, delta_slow, spread, atrp15m, funding}
+  status          String   @default("PENDING") // PENDING|EXECUTED|EXPIRED|CANCELLED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  session         Session  @relation(fields: [sessionId], references: [id])
+  orders          Order[]
+  
+  @@map("trade_plans")
 }
 
-model Provider {
+model Job {
   id          String   @id @default(cuid())
+  sessionId   String
+  planId      String?
+  requestId   String   @unique
+  type        String   // EXECUTE_PLAN|MONITOR_POSITION|UPDATE_MARKET_DATA
+  payload     Json
+  status      String   @default("PENDING") // PENDING|PROCESSING|COMPLETED|FAILED
+  attempts    Int      @default(0)
+  maxAttempts Int      @default(3)
+  error       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  name        String   @unique
-  type        String
-  regions     Json
-  regulatedIn Json
-  products    Json
-
-  website     String?
-  description String?
-
-  feeSchedules FeeSchedule[]
-
-  @@map("providers")
+  
+  session     Session  @relation(fields: [sessionId], references: [id])
+  
+  @@map("jobs")
 }
 
-model FeeSchedule {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model Order {
+  id              String   @id @default(cuid())
+  planId          String
+  clientOrderId   String   @unique
+  binanceOrderId  String?
+  symbol          String
+  side            String   // BUY|SELL
+  type            String   // MARKET|LIMIT|STOP_MARKET
+  quantity        String
+  price           String?
+  stopPrice       String?
+  status          String   // NEW|FILLED|CANCELLED|REJECTED
+  fills           Json?    // array of fill objects
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  tradePlan       TradePlan @relation(fields: [planId], references: [id])
+  
+  @@map("orders")
+}
 
-  providerId String
-  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+model Position {
+  id              String   @id @default(cuid())
+  symbol          String   @unique
+  side            String   // LONG|SHORT|FLAT
+  size            String
+  entryPrice      String?
+  markPrice       String?
+  unrealizedPnl   String?
+  marginType      String   // ISOLATED|CROSS
+  leverage        String
+  status          String   // FLAT|PENDING|OPEN|EXITING
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("positions")
+}
 
-  product    String
-  instrument String?
-
-  makerFeePct        Float?
-  takerFeePct        Float?
-  commissionPerTrade Float?
-  minCommission      Float?
-  maxCommission      Float?
-  fxFeePct           Float?
-
-  financingRatePolicy String?
-  spreadPolicy        String  @default("variable")
-
-  withdrawalFees Json?
-
-  sourceUrl      String?
-  lastVerifiedAt DateTime?
-  notes          String?
-
-  @@unique([providerId, product, instrument])
-  @@map("fee_schedules")
+model MarketData {
+  id          String   @id @default(cuid())
+  symbol      String
+  type        String   // KLINE|DEPTH|FUNDING|TICKER
+  data        Json
+  timestamp   DateTime
+  createdAt   DateTime @default(now())
+  
+  @@index([symbol, type, timestamp])
+  @@map("market_data")
 }

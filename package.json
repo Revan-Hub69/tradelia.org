@@ -1,45 +1,28 @@
 {
-    "name": "tradelia-analyzer",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "prisma generate && next build",
-        "build:cf": "NEXT_EXPORT=true next build",
-        "start": "next start",
-        "lint": "next lint",
-        "test": "vitest",
-        "db:generate": "prisma generate",
-        "db:push": "prisma db push",
-        "db:seed": "tsx prisma/seed.ts",
-        "db:studio": "prisma studio",
-        "type-check": "tsc --noEmit"
-    },
-    "dependencies": {
-        "@hookform/resolvers": "^3.3.2",
-        "@prisma/client": "^5.22.0",
-        "clsx": "^2.0.0",
-        "next": "15.5.9",
-        "react": "19.0.0",
-        "react-dom": "19.0.0",
-        "react-hook-form": "^7.48.2",
-        "tailwind-merge": "^2.2.0",
-        "zod": "^3.22.4"
-    },
-    "devDependencies": {
-        "@types/node": "^20.10.5",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.0.0",
-        "@vitejs/plugin-react": "^4.2.1",
-        "autoprefixer": "^10.4.16",
-        "eslint": "^8.56.0",
-        "eslint-config-next": "15.5.9",
-        "postcss": "^8.4.32",
-        "prettier": "^3.1.1",
-        "prisma": "^5.22.0",
-        "tailwindcss": "^3.4.0",
-        "tsx": "^4.6.2",
-        "typescript": "^5.6.3",
-        "vitest": "^1.1.0"
-    }
+  "name": "tradelia-futures-engine",
+  "version": "1.0.0",
+  "description": "Tradelia Futures Engine - MAX Sustainable v1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
