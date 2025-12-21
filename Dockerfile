@@ -1,10 +1,9 @@
 FROM node:18-alpine
 
-# Prisma (and some Node native deps) need OpenSSL available in Alpine.
-# This avoids runtime surprises where Prisma can't find the expected libssl.
-RUN apk add --no-cache openssl libc6-compat
-
 WORKDIR /app
+
+# Prisma (and some native deps) may require OpenSSL presence on Alpine.
+RUN apk add --no-cache openssl libc6-compat
 
 # Copy package files
 COPY package*.json ./
