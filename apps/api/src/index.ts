@@ -1,9 +1,14 @@
+import dotenv from 'dotenv';
+
+// IMPORTANT: load .env BEFORE importing env validator
+dotenv.config();
+
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import { PrismaClient } from '@prisma/client';
-import dotenv from 'dotenv';
+
 import { sessionRoutes } from './routes/session';
 import { screenerRoutes } from './routes/screener';
 import { signalsRoutes } from './routes/signals';
@@ -13,16 +18,17 @@ import { ordersRoutes } from './routes/orders';
 import { marketRoutes } from './routes/market';
 import { env } from './config/env';
 
-dotenv.config();
-
 const prisma = new PrismaClient();
 
 const server = Fastify({
   logger: {
     level: env.LOG_LEVEL,
-    transport: env.NODE_ENV === 'development' ? {
-      target: 'pino-pretty'
-    } : undefined
+    transport:
+      env.NODE_ENV === 'development'
+        ? {
+            target: 'pino-pretty'
+          }
+        : undefined
   },
   trustProxy: env.TRUST_PROXY
 });
