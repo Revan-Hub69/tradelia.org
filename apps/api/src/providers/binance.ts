@@ -23,6 +23,12 @@ export class BinanceProvider implements MarketDataProvider, TradingProvider {
     });
   }
 
+  private ensureSignedCredentials() {
+    if (!this.apiKey || !this.apiSecret) {
+      throw new Error('BINANCE_API_KEY and BINANCE_API_SECRET are required for signed requests.');
+    }
+  }
+
   private sign(queryString: string): string {
     return crypto
       .createHmac('sha256', this.apiSecret)
@@ -31,10 +37,12 @@ export class BinanceProvider implements MarketDataProvider, TradingProvider {
   }
 
   private async makeSignedRequest(method: string, endpoint: string, params: any = {}) {
+    this.ensureSignedCredentials();
     const timestamp = Date.now();
     const queryString = new URLSearchParams({
       ...params,
-      timestamp: timestamp.toString()
+      timestamp: timestamp.toString(),
+      recvWindow: params.recvWindow?.toString() ?? '5000'
     }).toString();
     
     const signature = this.sign(queryString);
@@ -126,6 +134,26 @@ export class BinanceProvider implements MarketDataProvider, TradingProvider {
     };
   }
 
+  async getExchangeInfo(): Promise<any> {
+    const response = await this.client.get('/fapi/v1/exchangeInfo');
+    return response.data;
+  }
+
+  async getBookTickers(): Promise<any[]> {
+    const response = await this.client.get('/fapi/v1/bookTicker');
+    return response.data;
+  }
+
+  async get24hTickers(): Promise<any[]> {
+    const response = await this.client.get('/fapi/v1/ticker/24hr');
+    return response.data;
+  }
+
+  async getPremiumIndex(): Promise<any[]> {
+    const response = await this.client.get('/fapi/v1/premiumIndex');
+    return response.data;
+  }
+
   // Trading methods
   async setMarginType(symbol: string, marginType: 'ISOLATED' | 'CROSS'): Promise<void> {
     await this.makeSignedRequest('POST', '/fapi/v1/marginType', {
@@ -155,10 +183,24 @@ export class BinanceProvider implements MarketDataProvider, TradingProvider {
     return response.data;
   }
 
-  async getOrder(symbol: string, orderId: string): Promise<any> {
+  async modifyOrder(params: {
+    symbol: string;
+    orderId?: string;
+    origClientOrderId?: string;
+    side?: 'BUY' | 'SELL';
+    price?: string;
+    quantity?: string;
+    stopPrice?: string;
+  }): Promise<any> {
+    const response = await this.makeSignedRequest('PUT', '/fapi/v1/order', params);
+    return response.data;
+  }
+
+  async getOrder(symbol: string, orderId?: string, origClientOrderId?: string): Promise<any> {
     const response = await this.makeSignedRequest('GET', '/fapi/v1/order', {
       symbol,
-      orderId
+      orderId,
+      origClientOrderId
     });
     return response.data;
   }

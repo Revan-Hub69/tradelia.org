@@ -1,5 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import { sessionRoutes } from './routes/session';
@@ -7,6 +9,9 @@ import { screenerRoutes } from './routes/screener';
 import { signalsRoutes } from './routes/signals';
 import { tradePlansRoutes } from './routes/tradeplans';
 import { executeRoutes } from './routes/execute';
+import { ordersRoutes } from './routes/orders';
+import { marketRoutes } from './routes/market';
+import { env } from './config/env';
 
 dotenv.config();
 
@@ -14,20 +19,31 @@ const prisma = new PrismaClient();
 
 const server = Fastify({
   logger: {
-    level: process.env.LOG_LEVEL || 'info',
-    transport: process.env.NODE_ENV === 'development' ? {
+    level: env.LOG_LEVEL,
+    transport: env.NODE_ENV === 'development' ? {
       target: 'pino-pretty'
     } : undefined
-  }
+  },
+  trustProxy: env.TRUST_PROXY
 });
 
 // Register CORS
 server.register(cors, {
-  origin: process.env.CORS_ORIGIN || true
+  origin: env.CORS_ORIGIN ?? false
+});
+
+server.register(helmet);
+server.register(rateLimit, {
+  max: env.RATE_LIMIT_MAX,
+  timeWindow: env.RATE_LIMIT_WINDOW_MS
 });
 
 // Add Prisma to Fastify context
 server.decorate('prisma', prisma);
+
+server.addHook('onClose', async () => {
+  await prisma.$disconnect();
+});
 
 // Register routes
 server.register(sessionRoutes, { prefix: '/api/session' });
@@ -35,6 +51,8 @@ server.register(screenerRoutes, { prefix: '/api/screener' });
 server.register(signalsRoutes, { prefix: '/api/signals' });
 server.register(tradePlansRoutes, { prefix: '/api/tradeplans' });
 server.register(executeRoutes, { prefix: '/api/execute' });
+server.register(ordersRoutes, { prefix: '/api/orders' });
+server.register(marketRoutes, { prefix: '/api/market' });
 
 // Health check
 server.get('/health', async () => {
@@ -43,7 +61,7 @@ server.get('/health', async () => {
 
 const start = async () => {
   try {
-    const port = parseInt(process.env.PORT || '3001');
+    const port = env.PORT;
     await server.listen({ port, host: '0.0.0.0' });
     server.log.info(`API server running on port ${port}`);
   } catch (err) {
