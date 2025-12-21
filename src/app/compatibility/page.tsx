@@ -67,20 +67,20 @@ function CompatibilityHeader() {
 
           <nav className="hidden items-center gap-6 md:flex" aria-label="Navigazione compatibility">
             <Link
-              href="#rischi"
+              href="#problema"
               className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
-              Rischi
+              Problema
             </Link>
             <Link
-              href="#costi"
+              href="#disservizi"
               className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
-              Costi Nascosti
+              Disservizi
             </Link>
             <Link
               href="#verifica"
-              className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="text-sm font-semibold text-slate-100 transition-all duration-200 hover:text-white hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               Verifica
             </Link>
@@ -219,6 +219,143 @@ export default function CompatibilityPage() {
             </div>
           </div>
         </section>
+
+        {/* Neurologia dei disservizi - Sezione cruciale */}
+        <section id="disservizi" className="py-16 bg-gradient-to-br from-slate-900 to-slate-950">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Perché i reclami non bastano
+              </h2>
+              <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+                I problemi emergono quando è troppo tardi per cambiare
+              </p>
+            </div>
+            
+            <div className="space-y-8">
+              {/* Pattern dei reclami */}
+              <div className="card-premium p-8">
+                <h3 className="text-xl font-semibold text-red-400 mb-6 text-center">
+                  Pattern ricorrenti nei reclami bancari
+                </h3>
+                
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-red-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Commissioni non dichiarate"</p>
+                        <p className="text-sm text-slate-300">Costi che scattano solo in scenari specifici non evidenziati in fase di scelta</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-red-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Limiti operativi nascosti"</p>
+                        <p className="text-sm text-slate-300">Restrizioni che emergono solo quando servono davvero</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-red-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Funzionalità non disponibili"</p>
+                        <p className="text-sm text-slate-300">Servizi promessi ma non attivi per il tuo profilo specifico</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Problemi all'estero"</p>
+                        <p className="text-sm text-slate-300">Blocchi e commissioni extra scoperte durante i viaggi</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Cambio situazione"</p>
+                        <p className="text-sm text-slate-300">Incompatibilità che emergono con nuove esigenze lavorative</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-white">"Emergenze finanziarie"</p>
+                        <p className="text-sm text-slate-300">Limiti e blocchi quando hai più bisogno di liquidità</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Il problema sistemico */}
+              <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
+                <div className="text-center space-y-6">
+                  <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
+                    <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-white">Il problema sistemico</h3>
+                  
+                  <div className="max-w-2xl mx-auto space-y-4 text-slate-300">
+                    <p>
+                      <strong>I reclami arrivano sempre dopo</strong> che hai già scelto, 
+                      attivato il prodotto e scoperto l'incompatibilità.
+                    </p>
+                    
+                    <p>
+                      A quel punto cambiare costa tempo, denaro e spesso 
+                      <strong>non risolve il danno già subito</strong>.
+                    </p>
+                    
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                      <p className="text-red-300 font-medium">
+                        La verifica di compatibilità previene questi problemi 
+                        <strong>prima</strong> che si verifichino.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Dati sui reclami */}
+              <div className="grid gap-6 md:grid-cols-3 text-center">
+                <div className="card-premium p-6">
+                  <div className="text-2xl font-bold text-red-400 mb-2">73%</div>
+                  <p className="text-sm text-slate-300">
+                    Reclami per <strong>costi non dichiarati</strong> 
+                    in fase di scelta
+                  </p>
+                </div>
+                
+                <div className="card-premium p-6">
+                  <div className="text-2xl font-bold text-orange-400 mb-2">68%</div>
+                  <p className="text-sm text-slate-300">
+                    Problemi emergono <strong>all'estero</strong> 
+                    o in situazioni di emergenza
+                  </p>
+                </div>
+                
+                <div className="card-premium p-6">
+                  <div className="text-2xl font-bold text-yellow-400 mb-2">45%</div>
+                  <p className="text-sm text-slate-300">
+                    Clienti <strong>cambiano prodotto</strong> 
+                    entro 12 mesi
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="come-funziona" className="border-b border-slate-800/60 bg-gradient-to-br from-slate-950 to-slate-900">
           <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="text-center space-y-8">
@@ -361,7 +498,7 @@ export default function CompatibilityPage() {
               </div>
               
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Link href="#procedi" className="btn-primary bg-red-600 hover:bg-red-700">
+                <Link href="#procedi" className="btn-primary bg-sky-600 hover:bg-sky-700">
                   Avvia verifica gratuita
                 </Link>
                 <button onClick={() => alert('Popup Metodo - Coming Soon')} className="btn-secondary">
@@ -435,7 +572,7 @@ export default function CompatibilityPage() {
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-sm border-t border-slate-800/60 p-4 sm:hidden transform transition-transform duration-300">
         <Link 
           href="#verifica" 
-          className="btn-primary w-full text-center group relative overflow-hidden bg-red-600 hover:bg-red-700"
+          className="btn-primary w-full text-center group relative overflow-hidden bg-sky-600 hover:bg-sky-700"
           onClick={() => {
             // Haptic feedback per iOS
             if ('vibrate' in navigator) {
@@ -444,7 +581,7 @@ export default function CompatibilityPage() {
           }}
         >
           <span className="relative z-10">Verifica compatibilità ora</span>
-          <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+          <div className="absolute inset-0 bg-gradient-to-r from-sky-700 to-sky-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
         </Link>
       </div>
       
@@ -460,7 +597,7 @@ export default function CompatibilityPage() {
             <h3 className="text-xl font-bold text-white">Aspetta!</h3>
             <p className="text-slate-300">Non rischiare di scegliere il prodotto finanziario sbagliato. La nostra verifica è gratuita e richiede solo 3 minuti.</p>
             <div className="flex gap-3">
-              <button className="btn-primary flex-1 bg-red-600 hover:bg-red-700" onClick={() => {
+              <button className="btn-primary flex-1 bg-sky-600 hover:bg-sky-700" onClick={() => {
                 document.getElementById('exit-intent-popup')?.classList.add('hidden')
                 document.getElementById('verifica')?.scrollIntoView({ behavior: 'smooth' })
               }}>Verifica gratuita</button>
