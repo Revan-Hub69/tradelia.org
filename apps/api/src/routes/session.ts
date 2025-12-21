@@ -13,7 +13,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       });
       
       if (existingSession) {
-        return reply.code(400).send({ 
+        return reply.code(409).send({ 
           error: 'A session is already running. Stop it first.' 
         });
       }

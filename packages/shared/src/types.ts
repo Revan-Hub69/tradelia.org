@@ -52,8 +52,8 @@ export const MetricsSchema = z.object({
 
 // TradePlan v1.0 - Contratto immutabile
 export const TradePlanSchema = z.object({
-  plan_id: z.string().uuid(),
-  session_id: z.string().uuid(),
+  plan_id: z.string().cuid(),
+  session_id: z.string().cuid(),
   env: Environment,
   mode: TradeMode,
   screener_profile: ScreenerProfile,
