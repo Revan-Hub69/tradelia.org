@@ -19,6 +19,9 @@ export type ScreenerSnapshot = {
   watchlistFinal: ScreenerSymbol[];
 };
 
+// Use an explicit type guard so TS correctly narrows arrays from (T | null)[] to T[].
+const isScreenerSymbol = (x: ScreenerSymbol | null): x is ScreenerSymbol => x !== null;
+
 export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<ScreenerSnapshot> => {
   const binance = new BinanceProvider();
 
@@ -41,8 +44,7 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
   const dayBySymbol = new Map(dayTickers.map((ticker: any) => [ticker.symbol, ticker]));
   const premiumBySymbol = new Map(premiumIndex.map((item: any) => [item.symbol, item]));
 
-  // Important: keep this array strongly typed so TS doesn't infer `any` through upstream provider types.
-  const metrics: Array<ScreenerSymbol | null> = tradableSymbols
+  const metrics: ScreenerSymbol[] = tradableSymbols
     .map((symbol: string): ScreenerSymbol | null => {
       const book = bookBySymbol.get(symbol);
       const day = dayBySymbol.get(symbol);
@@ -57,6 +59,7 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
       const bidQty = parseFloat(book.bidQty);
       const askQty = parseFloat(book.askQty);
       const mid = (bid + ask) / 2;
+
       const spreadPct = mid > 0 ? (ask - bid) / mid : 1;
       const depth = bidQty + askQty;
       const volume24h = parseFloat(day.quoteVolume || day.volume);
@@ -70,7 +73,7 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
         fundingRate
       };
     })
-    .filter((item): item is ScreenerSymbol => item !== null);
+    .filter(isScreenerSymbol);
 
   const sortedByVolume = [...metrics].sort((a, b) => b.volume24h - a.volume24h);
   const totalScreened = sortedByVolume.length;
@@ -81,6 +84,7 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
   const depthValues = topK.map((item) => item.depth).sort((a, b) => a - b);
   const depthIndex = Math.floor(depthValues.length * (profile === 'A' ? 0.4 : 0.6));
   const depthMin = depthValues[depthIndex] ?? 0;
+
   const spreadMax = profile === 'A' ? 0.0012 : 0.001;
   const fundingAbsMin = profile === 'A' ? 0.00015 : 0.00025;
 
