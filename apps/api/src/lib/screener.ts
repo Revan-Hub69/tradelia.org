@@ -41,8 +41,9 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
   const dayBySymbol = new Map(dayTickers.map((ticker: any) => [ticker.symbol, ticker]));
   const premiumBySymbol = new Map(premiumIndex.map((item: any) => [item.symbol, item]));
 
-  const metrics = tradableSymbols
-    .map((symbol: string) => {
+  // Important: keep this array strongly typed so TS doesn't infer `any` through upstream provider types.
+  const metrics: Array<ScreenerSymbol | null> = tradableSymbols
+    .map((symbol: string): ScreenerSymbol | null => {
       const book = bookBySymbol.get(symbol);
       const day = dayBySymbol.get(symbol);
       const premium = premiumBySymbol.get(symbol);
@@ -69,7 +70,7 @@ export const buildScreenerSnapshot = async (profile: ScreenerProfile): Promise<S
         fundingRate
       };
     })
-    .filter((item): item is ScreenerSymbol => Boolean(item));
+    .filter((item): item is ScreenerSymbol => item !== null);
 
   const sortedByVolume = [...metrics].sort((a, b) => b.volume24h - a.volume24h);
   const totalScreened = sortedByVolume.length;
