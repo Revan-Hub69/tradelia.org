@@ -25,14 +25,15 @@ export class BinanceProvider {
   private apiSecret: string;
   private baseURL: string;
 
-  constructor() {
-    this.apiKey = process.env.BINANCE_API_KEY || '';
-    this.apiSecret = process.env.BINANCE_API_SECRET || '';
+  constructor(options?: { apiKey?: string; apiSecret?: string; baseURL?: string }) {
+    this.apiKey = options?.apiKey ?? process.env.BINANCE_API_KEY ?? '';
+    this.apiSecret = options?.apiSecret ?? process.env.BINANCE_API_SECRET ?? '';
 
     this.baseURL =
-      process.env.BINANCE_ENV === 'live'
+      options?.baseURL ??
+      (process.env.BINANCE_ENV === 'live'
         ? 'https://fapi.binance.com'
-        : 'https://testnet.binancefuture.com';
+        : 'https://testnet.binancefuture.com');
 
     this.client = axios.create({
       baseURL: this.baseURL,
@@ -71,15 +72,59 @@ export class BinanceProvider {
     const finalQuery = `${queryString}&signature=${signature}`;
 
     try {
-      return await this.client.request({
+      const response = await this.client.request({
         method,
         url: `${endpoint}?${finalQuery}`,
         headers: {
           'X-MBX-APIKEY': this.apiKey
         }
       });
+      this.enforceRateLimits(response.headers);
+      return response;
     } catch (err) {
       throw new Error(extractBinanceErrorMessage(err));
+    }
+  }
+
+  private enforceRateLimits(headers: Record<string, string | string[] | undefined>) {
+    const weightBudget = Number(process.env.BINANCE_IP_WEIGHT_BUDGET_1M ?? 0);
+    const orderBudget1m = Number(process.env.BINANCE_ORDER_BUDGET_1M ?? 0);
+    const orderBudget10s = Number(process.env.BINANCE_ORDER_BUDGET_10S ?? 0);
+    const softThreshold = Number(process.env.BINANCE_RL_SOFT_THRESHOLD ?? 0);
+    const hardThreshold = Number(process.env.BINANCE_RL_HARD_THRESHOLD ?? 0);
+
+    if (!weightBudget && !orderBudget1m && !orderBudget10s) {
+      return;
+    }
+
+    const usedWeight = Number(headers['x-mbx-used-weight-1m'] ?? 0);
+    const orderCount1m = Number(headers['x-mbx-order-count-1m'] ?? 0);
+    const orderCount10s = Number(headers['x-mbx-order-count-10s'] ?? 0);
+
+    const weightHard = weightBudget && hardThreshold ? weightBudget * hardThreshold : 0;
+    const orderHard1m = orderBudget1m && hardThreshold ? orderBudget1m * hardThreshold : 0;
+    const orderHard10s = orderBudget10s && hardThreshold ? orderBudget10s * hardThreshold : 0;
+
+    if (weightHard && usedWeight >= weightHard) {
+      throw new Error('BINANCE_RATE_LIMIT: IP weight hard threshold exceeded');
+    }
+    if (orderHard1m && orderCount1m >= orderHard1m) {
+      throw new Error('BINANCE_RATE_LIMIT: order count 1m hard threshold exceeded');
+    }
+    if (orderHard10s && orderCount10s >= orderHard10s) {
+      throw new Error('BINANCE_RATE_LIMIT: order count 10s hard threshold exceeded');
+    }
+
+    const weightSoft = weightBudget && softThreshold ? weightBudget * softThreshold : 0;
+    const orderSoft1m = orderBudget1m && softThreshold ? orderBudget1m * softThreshold : 0;
+    const orderSoft10s = orderBudget10s && softThreshold ? orderBudget10s * softThreshold : 0;
+
+    if (
+      (weightSoft && usedWeight >= weightSoft) ||
+      (orderSoft1m && orderCount1m >= orderSoft1m) ||
+      (orderSoft10s && orderCount10s >= orderSoft10s)
+    ) {
+      throw new Error('BINANCE_RATE_LIMIT: soft threshold exceeded');
     }
   }
 
@@ -120,6 +165,14 @@ export class BinanceProvider {
       ...(clientOrderId ? { newClientOrderId: clientOrderId } : {})
     });
 
+    return response.data;
+  }
+
+  async getOrderBookDepth(symbol: string, limit = 20): Promise<any> {
+    const response = await this.client.get('/fapi/v1/depth', {
+      params: { symbol, limit }
+    });
+    this.enforceRateLimits(response.headers);
     return response.data;
   }
 }
