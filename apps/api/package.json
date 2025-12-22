@@ -1,33 +1,14 @@
 {
   "name": "@tradelia/api",
-  "version": "1.0.0",
-  "main": "dist/index.js",
+  "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@tradelia/shared": "*",
-    "@prisma/client": "^5.0.0",
-    "@supabase/supabase-js": "^2.49.1",
-    "fastify": "^4.24.0",
-    "@fastify/cors": "^8.4.0",
-    "@fastify/helmet": "^11.1.0",
-    "@fastify/rate-limit": "^9.0.0",
-    "zod": "^3.22.0",
-    "pino": "^8.16.0",
-    "pino-pretty": "^10.2.0",
-    "dotenv": "^16.3.0",
-    "axios": "^1.6.0",
-    "ws": "^8.14.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/ws": "^8.5.0",
-    "typescript": "^5.0.0",
-    "tsx": "^4.0.0",
-    "prisma": "^5.0.0"
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prisma:generate": "prisma generate --schema=../../prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma",
+    "postinstall": "pnpm run prisma:generate"
   }
 }
