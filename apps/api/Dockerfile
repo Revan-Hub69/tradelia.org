@@ -18,6 +18,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 
 # ---- Build
 FROM deps AS build
+COPY --from=deps /app/node_modules ./node_modules
 COPY apps/api ./apps/api
 RUN pnpm -C apps/api run build
 
