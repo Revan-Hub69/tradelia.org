@@ -21,6 +21,9 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.js
 COPY apps/api/package.json apps/api/package.json
 COPY packages/shared/package.json packages/shared/package.json
 
+# ✅ AGGIUNGI QUESTO (prima di pnpm install)
+COPY prisma prisma
+
 # Install (workspace)
 RUN pnpm install --frozen-lockfile
 
