@@ -1,36 +1,34 @@
-FROM node:20-bookworm-slim
-
+# ---- Base
+FROM node:20-bookworm-slim AS base
 WORKDIR /app
 
-# Prisma (and some native deps) require OpenSSL.
-RUN apt-get update \
-  && apt-get install -y openssl ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+# OpenSSL (Prisma spesso lo richiede in runtime/build)
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-# Copy package files
-COPY package*.json ./
-COPY turbo.json ./
-COPY packages/shared/package.json ./packages/shared/
-COPY apps/api/package.json ./apps/api/
-COPY prisma/schema.prisma ./prisma/
+# Enable Corepack (pnpm)
+RUN corepack enable
 
-# Install dependencies
-RUN npm install
-
-# Copy source code
-COPY packages/shared ./packages/shared
-COPY apps/api ./apps/api
+# ---- Dependencies
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json ./
+COPY apps/api/package.json apps/api/package.json
+COPY packages ./packages
 COPY prisma ./prisma
+RUN pnpm install --frozen-lockfile
 
-# Build shared package
-RUN npm run build --workspace=@tradelia/shared
+# ---- Build
+FROM deps AS build
+COPY apps/api ./apps/api
+RUN pnpm -C apps/api run build
 
-# Generate Prisma client
-RUN npx prisma generate
+# ---- Runtime
+FROM base AS runner
+ENV NODE_ENV=production
+WORKDIR /app
 
-# Build API
-RUN npm run build --workspace=@tradelia/api
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma ./prisma
+COPY --from=build /app/apps/api/dist ./dist
 
-EXPOSE 3001
-
-CMD ["npm", "run", "start", "--workspace=@tradelia/api"]
+EXPOSE 4000
+CMD ["node", "dist/index.js"]
