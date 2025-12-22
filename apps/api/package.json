@@ -1,14 +1,32 @@
 {
   "name": "@tradelia/api",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prisma:generate": "prisma generate --schema=../../prisma/schema.prisma",
     "prisma:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma",
     "postinstall": "pnpm run prisma:generate"
+  },
+  "dependencies": {
+    "@fastify/cors": "11.2.0",
+    "@fastify/helmet": "13.0.2",
+    "@fastify/rate-limit": "10.3.0",
+    "@prisma/client": "7.2.0",
+    "@supabase/auth-helpers-nextjs": "0.15.0",
+    "@supabase/supabase-js": "2.89.0",
+    "dotenv": "17.2.3",
+    "fastify": "5.6.2",
+    "zod": "4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
   }
 }
