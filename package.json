@@ -1,28 +1,22 @@
 {
-  "name": "tradelia-futures-engine",
-  "version": "1.0.0",
-  "description": "Tradelia Futures Engine - MAX Sustainable v1.0",
+  "name": "tradelia-monorepo",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=20.10.0 <23"
+  },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "start": "turbo run start",
-    "lint": "turbo run lint",
-    "type-check": "turbo run type-check",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "clean": "turbo clean && rimraf node_modules .turbo"
   },
   "devDependencies": {
-    "turbo": "^1.10.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
-  },
-  "engines": {
-    "node": ">=20.0.0"
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.1.3"
   }
 }
