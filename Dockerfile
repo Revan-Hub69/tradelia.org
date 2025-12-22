@@ -14,8 +14,8 @@ COPY packages/shared/package.json ./packages/shared/
 COPY apps/api/package.json ./apps/api/
 COPY prisma/schema.prisma ./prisma/
 
-# Install dependencies
-RUN npm install
+# Install dependencies (including devDependencies for build)
+RUN npm install --include=dev
 
 # Copy source code
 COPY packages/shared ./packages/shared
