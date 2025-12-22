@@ -1,6 +1,11 @@
-FROM node:18-alpine
+FROM node:20-bookworm-slim
 
 WORKDIR /app
+
+# Prisma (and some native deps) require OpenSSL.
+RUN apt-get update \
+  && apt-get install -y openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 COPY turbo.json ./
