@@ -36,7 +36,9 @@ export async function collectOrderbookSnapshots(
 
   for (const symbol of symbols) {
     try {
+      const start = Date.now();
       const depth = (await binance.getOrderBookDepth(symbol, 20)) as OrderbookDepth;
+      const latencyMs = Date.now() - start;
 
       const bestBid = depth.bids?.[0] ? Number(depth.bids[0][0]) : 0;
       const bestAsk = depth.asks?.[0] ? Number(depth.asks[0][0]) : 0;
@@ -58,9 +60,9 @@ export async function collectOrderbookSnapshots(
           }
         },
         quality: {
-          latency_ms: 0,
+          latency_ms: latencyMs,
           missing: [],
-          sync_ok: true,
+          sync_ok: Boolean(depth.bids?.length && depth.asks?.length),
           lob_ok: Boolean(depth.bids?.length && depth.asks?.length)
         },
         source_meta: {

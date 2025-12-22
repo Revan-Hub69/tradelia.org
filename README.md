@@ -35,10 +35,11 @@ PORT=3001
 
 ## 🔐 Access
 
-**Login Credentials:**
-- Email: `amministrazione@tradelia.org`
-- Password: `AmoreMioDeb69!`
-- OTP: `123456`
+**Credentials & Secrets:** Secrets (API keys, passwords, OTPs) MUST NOT be stored in the repository. Use the organization's secret manager (for example, Vault or Supabase Vault) or environment variables to provision credentials.
+
+If you discover secrets in the repository, remove them immediately, rotate the affected credentials, and notify the security/contact team.
+
+> NOTE: A secret-scanning workflow and security guidance have been added to this repo; see `SECURITY.md` for rotation steps and contacts.
 
 ## 🏗️ Architecture
 

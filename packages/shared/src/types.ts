@@ -107,6 +107,19 @@ export const SignalCandidateSchema = z.object({
   funding_mode_pre: FundingMode
 });
 
+// FeatureSnapshot schema (persisted by collectors)
+export const FeatureSnapshotSchema = z.object({
+  snapshot_id: z.string().uuid(),
+  exchange: z.string().default('binance'),
+  venue: z.string().default('futures_usdt'),
+  symbol: z.string(),
+  ts: z.string(), // ISO timestamp
+  features: z.record(z.any()),
+  quality: z.record(z.any()),
+  source_meta: z.record(z.any()).optional().default({}),
+  created_at: z.string().optional()
+});
+
 // Export types
 export type TradePlan = z.infer<typeof TradePlanSchema>;
 export type SessionConfig = z.infer<typeof SessionSchema>;
@@ -114,6 +127,7 @@ export type Kline = z.infer<typeof KlineSchema>;
 export type Depth = z.infer<typeof DepthSchema>;
 export type FundingRate = z.infer<typeof FundingRateSchema>;
 export type SignalCandidate = z.infer<typeof SignalCandidateSchema>;
+export type FeatureSnapshot = z.infer<typeof FeatureSnapshotSchema>;
 
 // Constants
 export const MODE_CONFIGS = {

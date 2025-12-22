@@ -66,7 +66,7 @@ async function loadSnapshot(
   };
 }
 
-async function emitSnapshot(
+export async function emitSnapshot(
   supabase: SupabaseClient,
   logger: pino.Logger,
   symbol: string,
@@ -76,6 +76,10 @@ async function emitSnapshot(
   const askLevels = toLevels(state.asks).slice(0, 5);
   const bestBid = bidLevels[0] ? Number(bidLevels[0][0]) : 0;
   const bestAsk = askLevels[0] ? Number(askLevels[0][0]) : 0;
+
+  // compute latency_ms using last WS event time if present
+  const lastWs = (state as any)['lastWsEventTs'] ?? Date.now();
+  const latencyMs = Math.max(0, Date.now() - lastWs);
 
   const payload = {
     exchange: 'binance',
@@ -90,9 +94,9 @@ async function emitSnapshot(
       }
     },
     quality: {
-      latency_ms: 0,
-      missing: [],
-      sync_ok: true,
+      latency_ms: latencyMs,
+      missing: (state as any)['lastMissing'] ? [ (state as any)['lastMissing'] ] : [],
+      sync_ok: Boolean((state as any)['syncOk'] ?? (Boolean(bestBid && bestAsk))),
       lob_ok: Boolean(bestBid && bestAsk)
     },
     source_meta: {
@@ -134,10 +138,28 @@ export async function startOrderbookStream(
       const state = states.get(symbol);
       if (!state) return;
 
+      // record last ws event time for latency calculation
+      state['lastWsEventTs'] = data.E ?? Date.now();
+
+      // ignore obsolete updates
       if (data.u <= state.lastUpdateId) return;
+
+      // missing diffs detected: resync required
       if (data.U > state.lastUpdateId + 1) {
+        // mark sync problem and save missing range
+        state['lastMissing'] = { from: state.lastUpdateId + 1, to: data.U - 1 };
+        state['syncOk'] = false;
+        logger.warn({ symbol, missingFrom: state['lastMissing'].from, missingTo: state['lastMissing'].to }, 'Missing depth diffs detected — scheduling resync');
+
         loadSnapshot(binance, symbol)
-          .then((fresh) => states.set(symbol, fresh))
+          .then((fresh) => {
+            states.set(symbol, fresh);
+            // when resynced, clear missing and mark sync ok
+            const s = states.get(symbol)!;
+            s['syncOk'] = Boolean(s.bids.size && s.asks.size);
+            s['lastMissing'] = null;
+            logger.info({ symbol }, 'Resynced orderbook snapshot after missing diffs');
+          })
           .catch((err: any) =>
             logger.error({ symbol, err: String(err?.message ?? err) }, 'Resync failed')
           );
@@ -146,6 +168,7 @@ export async function startOrderbookStream(
 
       applyUpdate(state, data.b, data.a);
       state.lastUpdateId = data.u;
+      state['syncOk'] = true;
     } catch (err: any) {
       logger.error({ err: String(err?.message ?? err) }, 'WS parse failed');
     }

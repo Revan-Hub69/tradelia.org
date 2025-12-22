@@ -17,6 +17,7 @@ import { executeRoutes } from './routes/execute';
 import { ordersRoutes } from './routes/orders';
 import { marketRoutes } from './routes/market';
 import { v1Routes } from './routes/v1';
+import { featureSnapshotsRoutes } from './routes/featureSnapshots';
 import { env } from './config/env';
 
 const prisma = new PrismaClient();
@@ -59,8 +60,7 @@ server.register(signalsRoutes, { prefix: '/api/signals' });
 server.register(tradePlansRoutes, { prefix: '/api/tradeplans' });
 server.register(executeRoutes, { prefix: '/api/execute' });
 server.register(ordersRoutes, { prefix: '/api/orders' });
-server.register(marketRoutes, { prefix: '/api/market' });
-server.register(v1Routes, { prefix: '/v1' });
+server.register(marketRoutes, { prefix: '/api/market' });server.register(featureSnapshotsRoutes, { prefix: '/api/features' });server.register(v1Routes, { prefix: '/v1' });
 
 // Health check
 server.get('/health', async () => {

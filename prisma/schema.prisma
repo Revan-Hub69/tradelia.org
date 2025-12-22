@@ -116,3 +116,18 @@ model MarketData {
   @@index([symbol, type, timestamp])
   @@map("market_data")
 }
+
+model FeatureSnapshot {
+  snapshotId  String   @id @default(uuid()) @map("snapshot_id")
+  exchange    String   @default("binance")
+  venue       String   @default("futures_usdt")
+  symbol      String
+  ts          DateTime
+  features    Json
+  quality     Json
+  sourceMeta  Json     @default("{}") @map("source_meta")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([symbol, ts])
+  @@map("feature_snapshots")
+}
