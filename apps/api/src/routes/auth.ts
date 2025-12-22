@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify';
+import { FastifyPluginAsync, FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../config/env';
@@ -21,7 +21,7 @@ const RegisterSchema = z.object({
   display_name: z.string().optional()
 });
 
-export const authRoutes: FastifyPluginAsync = async (fastify) => {
+export const authRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
   fastify.post('/login', async (request, reply) => {
     const payload = LoginSchema.parse(request.body);
 
@@ -42,8 +42,8 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
     return reply.code(200).send({
       token: data.session.access_token,
       user: {
-        id: data.user.id,
-        email: data.user.email
+        id: data.user?.id,
+        email: data.user?.email
       }
     });
   });
@@ -75,8 +75,8 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
     return reply.code(201).send({
       token: data.session.access_token,
       user: {
-        id: data.user.id,
-        email: data.user.email
+        id: data.user?.id,
+        email: data.user?.email
       }
     });
   });
