@@ -4,7 +4,11 @@
     "outDir": "dist",
     "rootDir": "src",
     "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@prisma/client": ["../../node_modules/.pnpm/@prisma+client@7.2.0_prisma@7.2.0_@types+react@19.2.7_react-dom@19.2.3_react@19.2.3__react@19_bzt7asp4azsbbc2xswsn3upm6u/node_modules/@prisma/client"]
+    },
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
