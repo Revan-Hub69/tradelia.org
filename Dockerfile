@@ -1,9 +1,12 @@
-FROM node:18-alpine
+FROM node:18-bullseye-slim
+# Bullseye provides libssl1.1, required by Prisma 5.x engines.
 
 WORKDIR /app
 
-# Prisma (and some native deps) may require OpenSSL presence on Alpine.
-RUN apk add --no-cache openssl libc6-compat
+# Prisma (and some native deps) require OpenSSL.
+RUN apt-get update \
+  && apt-get install -y openssl libssl1.1 ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
