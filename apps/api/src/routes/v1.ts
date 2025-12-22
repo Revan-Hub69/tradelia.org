@@ -36,7 +36,7 @@ const BuildPlanSchema = z.object({
 
 const QueueJobSchema = z.object({
   type: z.enum(['EXECUTE_PLAN', 'MONITOR_POSITION', 'UPDATE_SLTP']),
-  payload: z.record(z.unknown()).optional().default({})
+  payload: z.record(z.string(), z.unknown()).optional().default({})
 });
 
 const QueuePlanSchema = z.object({
@@ -45,7 +45,7 @@ const QueuePlanSchema = z.object({
 
 const UpdateSltpSchema = z.object({
   rule: z.string(),
-  params: z.record(z.unknown()).optional().default({})
+  params: z.record(z.string(), z.unknown()).optional().default({})
 });
 
 const UniverseQuerySchema = z.object({
