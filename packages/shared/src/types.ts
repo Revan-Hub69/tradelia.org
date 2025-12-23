@@ -103,7 +103,7 @@ export const SignalCandidateSchema = z.object({
   symbol: z.string(),
   side: TradeSide,
   timestamp: z.number(),
-  features: z.record(z.number()),
+  features: z.record(z.string(), z.number()),
   funding_mode_pre: FundingMode
 });
 
@@ -114,9 +114,9 @@ export const FeatureSnapshotSchema = z.object({
   venue: z.string().default('futures_usdt'),
   symbol: z.string(),
   ts: z.string(), // ISO timestamp
-  features: z.record(z.any()),
-  quality: z.record(z.any()),
-  source_meta: z.record(z.any()).optional().default({}),
+  features: z.record(z.string(), z.any()),
+  quality: z.record(z.string(), z.any()),
+  source_meta: z.record(z.string(), z.any()).optional().default({}),
   created_at: z.string().optional()
 });
 
