@@ -61,7 +61,7 @@ const envSchema = z.object({
 
   // Fastify/Node
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.coerce.number().int().positive().default(3001),
+  PORT: z.coerce.number().int().positive().default(3000),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   TRUST_PROXY: z.coerce.boolean().default(false),
 
