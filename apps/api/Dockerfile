@@ -44,6 +44,9 @@ COPY --from=deps /repo/tsconfig.base.json /repo/tsconfig.base.json
 COPY apps/api apps/api
 COPY packages/shared packages/shared
 
+# ✅ RE-LINK workspace node_modules (ricrea i symlink cancellati dal COPY)
+RUN pnpm install --frozen-lockfile
+
 # build shared + api (o turbo)
 RUN pnpm -C packages/shared run build
 RUN pnpm -C apps/api run build
