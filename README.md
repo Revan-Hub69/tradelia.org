@@ -23,14 +23,16 @@ Push to `main` branch triggers automatic deployment:
 
 3. **Environment Variables (Railway):**
 ```
+# Required
 DATABASE_URL=postgresql://...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+EXCHANGE_ENV=testnet
+TRACK_SYMBOLS=BTCUSDT,ETHUSDT
+
+# Optional (user-provided via frontend)
 BINANCE_API_KEY=your_api_key_here
 BINANCE_API_SECRET=your_api_secret_here
-BINANCE_ENV=testnet
-FEATURE_WS_MARKET=true
-MICRO_MODE=ws_mixed
-EXECUTION_MODE=confirm
-PORT=3001
 ```
 
 ## 🔐 Access
