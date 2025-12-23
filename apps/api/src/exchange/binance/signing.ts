@@ -1,12 +1,11 @@
 import crypto from 'crypto'
-import { env } from '../../config/env'
 
 /**
  * Create HMAC SHA256 signature for Binance API
  */
-export function createSignature(queryString: string): string {
+export function createSignature(queryString: string, apiSecret: string): string {
   return crypto
-    .createHmac('sha256', env.BINANCE_API_SECRET)
+    .createHmac('sha256', apiSecret)
     .update(queryString)
     .digest('hex')
 }
@@ -14,7 +13,12 @@ export function createSignature(queryString: string): string {
 /**
  * Build signed request URL with timestamp and signature
  */
-export function buildSignedUrl(baseUrl: string, endpoint: string, params: Record<string, any>): string {
+export function buildSignedUrl(
+  baseUrl: string,
+  endpoint: string,
+  params: Record<string, any>,
+  apiSecret: string
+): string {
   const timestamp = Date.now()
   const recvWindow = 5000
 
@@ -26,7 +30,7 @@ export function buildSignedUrl(baseUrl: string, endpoint: string, params: Record
   })
 
   const queryString = queryParams.toString()
-  const signature = createSignature(queryString)
+  const signature = createSignature(queryString, apiSecret)
 
   return `${baseUrl}${endpoint}?${queryString}&signature=${signature}`
 }
@@ -89,9 +93,9 @@ export function buildQueryString(params: Record<string, any>): string {
 /**
  * Add required headers for signed requests
  */
-export function getSignedHeaders(): Record<string, string> {
+export function getSignedHeaders(apiKey: string): Record<string, string> {
   return {
-    'X-MBX-APIKEY': env.BINANCE_API_KEY,
+    'X-MBX-APIKEY': apiKey,
     'Content-Type': 'application/json',
   }
 }

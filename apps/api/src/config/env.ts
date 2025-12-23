@@ -1,11 +1,26 @@
 import { z } from 'zod'
 
+// Safe environment logging (without exposing secrets)
+console.log('[env] EXCHANGE_ENV=', process.env.EXCHANGE_ENV)
+console.log('[env] TRACK_SYMBOLS=', process.env.TRACK_SYMBOLS)
+console.log('[env] hasKey=', Boolean(process.env.BINANCE_API_KEY))
+console.log('[env] hasSecret=', Boolean(process.env.BINANCE_API_SECRET))
+console.log('[env] hasDb=', Boolean(process.env.DATABASE_URL))
+console.log('[env] hasSupabaseUrl=', Boolean(process.env.SUPABASE_URL))
+console.log('[env] hasSupabaseKey=', Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY))
+
 // Environment schema validation
 const envSchema = z.object({
   // Required
-  EXCHANGE_ENV: z.enum(['testnet', 'live']),
-  BINANCE_API_KEY: z.string().min(1),
-  BINANCE_API_SECRET: z.string().min(1),
+  EXCHANGE_ENV: z.preprocess(
+    (v) => (typeof v === 'string' ? v.toLowerCase() : v),
+    z.enum(['testnet', 'live'])
+  ),
+
+  // Optional - will be provided by user via frontend (stored in DB)
+  BINANCE_API_KEY: z.string().optional(),
+  BINANCE_API_SECRET: z.string().optional(),
+
   TRACK_SYMBOLS: z.string().min(1),
   DATABASE_URL: z.string().url(),
 
