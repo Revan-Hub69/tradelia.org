@@ -53,17 +53,17 @@ export const marketRoutes: FastifyPluginAsync = async (fastify) => {
       const { symbol, limit } = MicrostructureQuerySchema.parse(request.query);
       const binance = new BinanceProvider();
       const depth = await binance.getDepth(symbol, limit);
-      const bids = depth.bids.map(([price, qty]) => ({
+      const bids = depth.bids.map(([price, qty]: [string, string]) => ({
         price: parseFloat(price),
         qty: parseFloat(qty)
       }));
-      const asks = depth.asks.map(([price, qty]) => ({
+      const asks = depth.asks.map(([price, qty]: [string, string]) => ({
         price: parseFloat(price),
         qty: parseFloat(qty)
       }));
 
-      const bidSize = bids.reduce((total, level) => total + level.qty, 0);
-      const askSize = asks.reduce((total, level) => total + level.qty, 0);
+      const bidSize = bids.reduce((total: number, level) => total + level.qty, 0);
+      const askSize = asks.reduce((total: number, level) => total + level.qty, 0);
       const imbalance = bidSize + askSize > 0 ? (bidSize - askSize) / (bidSize + askSize) : 0;
       const bestBid = bids[0]?.price ?? 0;
       const bestAsk = asks[0]?.price ?? 0;
