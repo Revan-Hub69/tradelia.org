@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/
 ENV NODE_ENV=production
 
 # Copy everything from build (including generated Prisma client in node_modules)
-COPY --from=build / /
+COPY --from=build /repo /app
 
 # Railway: espone PORT
 EXPOSE 3000
