@@ -24,8 +24,8 @@ Push to `main` branch triggers automatic deployment:
 3. **Environment Variables (Railway):**
 ```
 DATABASE_URL=postgresql://...
-BINANCE_API_KEY=your_key
-BINANCE_API_SECRET=your_secret
+BINANCE_API_KEY=your_api_key_here
+BINANCE_API_SECRET=your_api_secret_here
 BINANCE_ENV=testnet
 FEATURE_WS_MARKET=true
 MICRO_MODE=ws_mixed
