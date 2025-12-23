@@ -27,9 +27,13 @@ COPY prisma prisma
 # Install (workspace)
 RUN pnpm install --frozen-lockfile
 
-# Build shared package here so dist is available for api build
+# Copia sorgenti workspace (necessari per link + build)
 COPY packages/shared packages/shared
-RUN pnpm -C packages/shared run build
+COPY apps/api apps/api
+
+# Build shared + prisma generate (workspace-aware)
+RUN pnpm --filter @tradelia/shared run build
+RUN pnpm --filter @tradelia/api run prisma:generate
 
 # ---- Build
 FROM base AS build
@@ -48,8 +52,8 @@ COPY --from=deps /repo/tsconfig.base.json /repo/tsconfig.base.json
 COPY apps/api apps/api
 COPY --from=deps /repo/packages/shared /repo/packages/shared
 
-# build api (shared already built)
-RUN pnpm -C apps/api run build
+# Build API (workspace-aware) ✅ (NO -C)
+RUN pnpm --filter @tradelia/api... run build
 
 # ---- Runtime
 FROM base AS runner
