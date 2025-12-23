@@ -27,6 +27,10 @@ COPY prisma prisma
 # Install (workspace)
 RUN pnpm install --frozen-lockfile
 
+# Build shared package here so dist is available for api build
+COPY packages/shared packages/shared
+RUN pnpm -C packages/shared run build
+
 # ---- Build
 FROM base AS build
 WORKDIR /repo
@@ -42,10 +46,9 @@ COPY --from=deps /repo/tsconfig.base.json /repo/tsconfig.base.json
 
 # ora copia il sorgente vero
 COPY apps/api apps/api
-COPY packages/shared packages/shared
+COPY --from=deps /repo/packages/shared /repo/packages/shared
 
-# build shared + api (o turbo)
-RUN pnpm -C packages/shared run build
+# build api (shared already built)
 RUN pnpm -C apps/api run build
 
 # ---- Runtime
