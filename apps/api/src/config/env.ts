@@ -9,6 +9,10 @@ const envSchema = z.object({
   TRACK_SYMBOLS: z.string().min(1),
   DATABASE_URL: z.string().url(),
 
+  // Supabase (for auth and database)
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+
   // Optional with defaults
   POSITION_MODE: z.enum(['oneway', 'hedge']).default('oneway'),
   ENABLE_INCOME_TRACKING: z.coerce.boolean().default(false),
