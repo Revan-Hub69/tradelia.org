@@ -45,10 +45,13 @@ export class RiskEngine {
     maxPositions?: number
     dailyLossLimitPct?: number
   }): Promise<void> {
-    await this.prisma.riskState.update({
-      where: { env: env.EXCHANGE_ENV },
-      data: updates,
-    })
+    const riskState = await this.getRiskState()
+    if (riskState) {
+      await this.prisma.riskState.update({
+        where: { id: riskState.id },
+        data: updates,
+      })
+    }
   }
 
   /**

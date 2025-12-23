@@ -133,7 +133,7 @@ export class ReconcileService {
     try {
       // 1. Get exchange positions
       const exchangePositions = await this.binanceClient.getPositionRisk(apiKey, apiSecret)
-      const symbolPositions = exchangePositions.filter(p => p.symbol === symbol)
+      const symbolPositions = exchangePositions.filter((p: any) => p.symbol === symbol)
 
       // 2. Get exchange orders
       const exchangeOrders = await this.binanceClient.getOpenOrders(symbol, apiKey, apiSecret)
@@ -347,6 +347,7 @@ export class ReconcileService {
       // Record the emergency SL
       await this.prisma.orderRecord.create({
         data: {
+          env: env.EXCHANGE_ENV,
           clientOrderId: `TRD|${env.EXCHANGE_ENV}|${symbol}|${planId}|EMERGENCY_SL|${seq}`,
           symbol,
           planId,

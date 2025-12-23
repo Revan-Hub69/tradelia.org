@@ -136,7 +136,7 @@ model FeatureSnapshot {
 // OMS + Risk Engine Models
 model RiskState {
   id                    Int      @id @default(1)
-  env                   String
+  env                   String   @unique
   tradingEnabled        Boolean  @default(false)
   killActive            Boolean  @default(false)
   killReason            String?

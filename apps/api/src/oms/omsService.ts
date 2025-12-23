@@ -175,6 +175,7 @@ export class OMSService {
       // Record in database
       const orderRecord = await this.prisma.orderRecord.create({
         data: {
+          env: env.EXCHANGE_ENV,
           clientOrderId,
           symbol,
           planId: this.parseClientOrderId(clientOrderId)?.planId || '',
@@ -199,6 +200,7 @@ export class OMSService {
       // Record failed order
       await this.prisma.orderRecord.create({
         data: {
+          env: env.EXCHANGE_ENV,
           clientOrderId,
           symbol,
           planId: this.parseClientOrderId(clientOrderId)?.planId || '',
@@ -285,6 +287,7 @@ export class OMSService {
     // Record flatten order
     await this.prisma.orderRecord.create({
       data: {
+        env: env.EXCHANGE_ENV,
         clientOrderId: `FLAT-${Date.now()}-${symbol}`,
         symbol,
         planId: 'EMERGENCY',
