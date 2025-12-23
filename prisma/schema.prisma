@@ -229,3 +229,62 @@ model TrackedSymbol {
   @@unique([env, symbol])
   @@map("tracked_symbols")
 }
+
+// Screener models
+model ScreenerRun {
+  id          String   @id @default(cuid())
+  ts          DateTime @default(now())
+  env         String
+  topK        Json     // array of {symbol, score, rank}
+  summary     Json     // {totalCandidates, vetted, topKCount, wsHealth}
+  wsHealth    Json     // {lagMs, gapMs, degraded: boolean}
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("screener_runs")
+}
+
+model SymbolScore {
+  id          String   @id @default(cuid())
+  ts          DateTime @default(now())
+  env         String
+  symbol      String
+  lqs         Float    // Liquidity Quality Score (0-100)
+  vos         Float    // Volatility Opportunity Score (0-100)
+  dfs         Float    // Derivatives Flow Score (0-100)
+  mes         Float    // Microstructure Edge Score (0-100)
+  mtfGate     String   // PASS|REVIEW|FAIL
+  totalScore  Float    // weighted total (0-100)
+  vetoed      Boolean  @default(false)
+  reasons     Json     // array of reason codes
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([env, symbol, ts])
+  @@map("symbol_scores")
+}
+
+model ScreenerConfig {
+  id                    Int      @id @default(1)
+  env                   String   @unique
+  screenerEnabled       Boolean  @default(true)
+  topK                  Int      @default(20)
+  refreshSec            Int      @default(60)
+  maxSymbolsTracked     Int      @default(60)
+  universeMode          String   @default("auto") // auto|static
+  staticSymbols         String?  // comma-separated if mode=static
+  marketDataEnv         String   @default("live")
+  mtfTfList             String   @default("1m,5m,15m")
+  minDailyQuoteVolUsd   Float    @default(50000000)
+  maxSpreadBps          Float    @default(12)
+  minDepthUsdTopN       Float    @default(200000)
+  orderbookLevels       Int      @default(50)
+  wsLagWarnMs           Int      @default(800)
+  wsLagFailMs           Int      @default(1500)
+  bookGapFailMs         Int      @default(2000)
+  thresholds            Json     @default("{}") // additional scoring thresholds
+  updatedAt             DateTime @updatedAt
+  createdAt             DateTime @default(now())
+
+  @@map("screener_configs")
+}

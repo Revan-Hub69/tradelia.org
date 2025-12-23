@@ -7,7 +7,7 @@ import { averageTrueRange } from '../lib/indicators';
 import { getSymbolFilters, roundToStep } from '../lib/exchange';
 import { MODE_CONFIGS } from '@tradelia/shared';
 
-const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+const supabase = createClient(env.SUPABASE_URL || '', env.SUPABASE_SERVICE_ROLE_KEY || '', {
   auth: {
     autoRefreshToken: false,
     persistSession: false
