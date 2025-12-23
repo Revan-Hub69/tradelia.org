@@ -7,7 +7,14 @@ import { KillSwitch } from '../kill/killSwitch'
 import { ReconcileService } from '../reconcile/reconcileService'
 import { BinanceRestClient } from '../exchange/binance/restClient'
 import { BinanceFuturesClient } from '../exchange/binance/binanceFutures'
+import { ScreenerService } from '../screener/screenerService'
+import { TradingEngine } from '../strategy/tradingEngine'
+import { PaperTradingOMS } from '../strategy/paperTradingOMS'
+import { TradingAnalytics } from '../strategy/tradingAnalytics'
+import { HealthCheckService } from '../config/healthCheck'
 import { OrderIntentSchema, FlattenRequestSchema } from '../oms/types'
+import { ScreenerConfigSchema, UniverseApplySchema } from '../screener/types'
+import { StrategyConfigSchema } from '../strategy/types'
 
 export class EngineServer {
   private prisma: PrismaClient | null
@@ -15,6 +22,11 @@ export class EngineServer {
   private riskEngine: RiskEngine | null
   private killSwitch: KillSwitch | null
   private reconcileService: ReconcileService | null
+  private screenerService: ScreenerService | null
+  private tradingEngine: TradingEngine | null
+  private paperTradingOMS: PaperTradingOMS | null
+  private tradingAnalytics: TradingAnalytics | null
+  private healthCheckService: HealthCheckService | null
   private binanceClient: BinanceFuturesClient
 
   constructor(prisma: PrismaClient | null) {
@@ -35,12 +47,29 @@ export class EngineServer {
         this.killSwitch,
         binanceRestClient
       )
+      this.screenerService = new ScreenerService(prisma)
+      this.tradingEngine = new TradingEngine(prisma, this.oms, this.riskEngine, this.screenerService)
+      this.paperTradingOMS = new PaperTradingOMS(this.oms)
+      this.tradingAnalytics = new TradingAnalytics(prisma)
+      this.healthCheckService = new HealthCheckService(
+        prisma,
+        this.oms,
+        this.riskEngine,
+        this.screenerService,
+        this.tradingEngine,
+        this.screenerService ? (this.screenerService as any).marketDataService : null
+      )
     } else {
       // Database-less mode - create stub implementations
       this.oms = null as any
       this.riskEngine = null
       this.killSwitch = null
       this.reconcileService = null
+      this.screenerService = null
+      this.tradingEngine = null
+      this.paperTradingOMS = null
+      this.tradingAnalytics = null
+      this.healthCheckService = null
     }
   }
 
@@ -81,7 +110,46 @@ export class EngineServer {
 
     // Only register database-dependent routes if we have a database
     if (this.prisma) {
-      // Additional routes that require database
+      // Screener routes
+      app.get('/screener/snapshot', this.getScreenerSnapshot.bind(this))
+      app.post('/screener/run-once', this.runScreenerOnce.bind(this))
+      app.post('/screener/config', this.updateScreenerConfig.bind(this))
+      app.get('/screener/config', this.getScreenerConfig.bind(this))
+      app.post('/universe/apply', this.applyUniverse.bind(this))
+      app.get('/universe/tracked', this.getTrackedSymbols.bind(this))
+
+      // Strategy routes
+      app.post('/strategy/start', this.startStrategy.bind(this))
+      app.post('/strategy/stop', this.stopStrategy.bind(this))
+      app.get('/strategy/status', this.getStrategyStatus.bind(this))
+      app.post('/strategy/config', this.updateStrategyConfig.bind(this))
+      app.get('/strategy/config', this.getStrategyConfig.bind(this))
+      app.post('/strategy/manual-entry', this.manualStrategyEntry.bind(this))
+      app.post('/strategy/manual-exit', this.manualStrategyExit.bind(this))
+      app.get('/strategy/signals', this.getStrategySignals.bind(this))
+
+      // Paper trading routes
+      app.post('/paper/enable', this.enablePaperTrading.bind(this))
+      app.post('/paper/disable', this.disablePaperTrading.bind(this))
+      app.post('/paper/reset', this.resetPaperTrading.bind(this))
+      app.get('/paper/stats', this.getPaperTradingStats.bind(this))
+      app.post('/paper/submit-intent', this.submitPaperOrder.bind(this))
+      app.post('/paper/flatten', this.flattenPaperPosition.bind(this))
+      app.get('/paper/positions', this.getPaperPositions.bind(this))
+
+      // Analytics routes
+      app.get('/analytics/performance', this.getPerformanceMetrics.bind(this))
+      app.get('/analytics/daily', this.getDailyStats.bind(this))
+      app.get('/analytics/setup', this.getSetupPerformance.bind(this))
+      app.get('/analytics/regime', this.getRegimePerformance.bind(this))
+      app.get('/analytics/risk', this.getRiskMetrics.bind(this))
+      app.post('/analytics/record-trade', this.recordTrade.bind(this))
+      app.get('/analytics/export-csv', this.exportTradesCSV.bind(this))
+
+      // Health check routes
+      app.get('/health', this.getHealthStatus.bind(this))
+      app.get('/health/live', this.getHealthLive.bind(this))
+      app.get('/health/ready', this.getHealthReady.bind(this))
     }
   }
 
@@ -553,6 +621,880 @@ export class EngineServer {
     } catch (error) {
       reply.code(500).send({
         success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get screener snapshot
+   */
+  private async getScreenerSnapshot(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      const snapshot = await this.screenerService.getSnapshot()
+
+      reply.send({
+        success: true,
+        snapshot,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Run screener once
+   */
+  private async runScreenerOnce(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      const snapshot = await this.screenerService.runOnce()
+
+      reply.send({
+        success: true,
+        snapshot,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Update screener configuration
+   */
+  private async updateScreenerConfig(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      // Validate request
+      const updates = ScreenerConfigSchema.parse(request.body)
+      await this.screenerService.updateConfig(updates)
+
+      reply.send({
+        success: true,
+        message: 'Screener config updated',
+        updates,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get screener configuration
+   */
+  private async getScreenerConfig(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      const config = await this.screenerService.getConfig()
+
+      reply.send({
+        success: true,
+        config,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Apply universe (update TrackedSymbol with top K)
+   */
+  private async applyUniverse(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      // Validate request
+      const params = UniverseApplySchema.parse(request.body)
+      const result = await this.screenerService.applyUniverse(params.disableOthers)
+
+      reply.send({
+        success: true,
+        message: 'Universe applied successfully',
+        result,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get tracked symbols
+   */
+  private async getTrackedSymbols(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.screenerService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Screener not available in database-less mode',
+        })
+        return
+      }
+
+      const symbols = await this.screenerService.getTrackedSymbols()
+
+      reply.send({
+        success: true,
+        symbols,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Start autonomous trading strategy
+   */
+  private async startStrategy(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      await this.tradingEngine.start()
+
+      reply.send({
+        success: true,
+        message: 'Autonomous trading strategy started',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Stop autonomous trading strategy
+   */
+  private async stopStrategy(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      await this.tradingEngine.stop()
+
+      reply.send({
+        success: true,
+        message: 'Autonomous trading strategy stopped',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get strategy status
+   */
+  private async getStrategyStatus(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      const status = this.tradingEngine.getStatus()
+
+      reply.send({
+        success: true,
+        status,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Update strategy configuration
+   */
+  private async updateStrategyConfig(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      // Validate request
+      const updates = StrategyConfigSchema.parse(request.body)
+      this.tradingEngine.updateConfig(updates)
+
+      reply.send({
+        success: true,
+        message: 'Strategy config updated',
+        updates,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get strategy configuration
+   */
+  private async getStrategyConfig(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      const config = this.tradingEngine.getConfig()
+
+      reply.send({
+        success: true,
+        config,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Manual strategy entry
+   */
+  private async manualStrategyEntry(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      const { symbol, side, quantity, slPrice, tpPrice } = request.body
+
+      const success = await this.tradingEngine.manualEntry(
+        symbol,
+        side,
+        quantity,
+        slPrice,
+        tpPrice
+      )
+
+      reply.send({
+        success,
+        message: success ? 'Manual entry executed' : 'Manual entry failed',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Manual strategy exit
+   */
+  private async manualStrategyExit(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      const { symbol, side, reason } = request.body
+
+      const success = await this.tradingEngine.manualExit(symbol, side, reason)
+
+      reply.send({
+        success,
+        message: success ? 'Manual exit executed' : 'Manual exit failed',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get strategy signals
+   */
+  private async getStrategySignals(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading engine not available in database-less mode',
+        })
+        return
+      }
+
+      const signals = this.tradingEngine.getPendingSignals()
+
+      reply.send({
+        success: true,
+        signals,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Enable paper trading mode
+   */
+  private async enablePaperTrading(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      this.paperTradingOMS.enable()
+
+      reply.send({
+        success: true,
+        message: 'Paper trading enabled',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Disable paper trading mode
+   */
+  private async disablePaperTrading(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      this.paperTradingOMS.disable()
+
+      reply.send({
+        success: true,
+        message: 'Paper trading disabled',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Reset paper trading state
+   */
+  private async resetPaperTrading(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      this.paperTradingOMS.reset()
+
+      reply.send({
+        success: true,
+        message: 'Paper trading state reset',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get paper trading statistics
+   */
+  private async getPaperTradingStats(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      const stats = this.paperTradingOMS.getStats()
+
+      reply.send({
+        success: true,
+        stats,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Submit paper trading order
+   */
+  private async submitPaperOrder(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      const rawIntent = request.body
+
+      // Convert BUY/SELL to LONG/SHORT for paper trading
+      const intent = {
+        ...rawIntent,
+        side: rawIntent.side === 'BUY' ? 'LONG' : rawIntent.side === 'SELL' ? 'SHORT' : rawIntent.side
+      }
+
+      // Update price for paper trading simulation
+      const currentPrice = parseFloat(request.body.currentPrice || '50000')
+      this.paperTradingOMS.updatePrice(intent.symbol, currentPrice)
+
+      const result = await this.paperTradingOMS.submitIntent(intent)
+
+      reply.send({
+        success: result.success,
+        result: result.result,
+        error: result.error,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Flatten paper trading position
+   */
+  private async flattenPaperPosition(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      const { symbol, positionSide } = request.body || {}
+
+      const result = await this.paperTradingOMS.flattenPosition(symbol, positionSide)
+
+      reply.send(result)
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get paper trading positions
+   */
+  private async getPaperPositions(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.paperTradingOMS) {
+        reply.code(400).send({
+          success: false,
+          error: 'Paper trading not available',
+        })
+        return
+      }
+
+      const positions = await this.paperTradingOMS.getPositions()
+
+      reply.send({
+        success: true,
+        positions,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get performance metrics
+   */
+  private async getPerformanceMetrics(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const { startDate, endDate, symbol } = request.query as any
+
+      const metrics = await this.tradingAnalytics.getPerformanceMetrics(
+        startDate ? new Date(startDate) : undefined,
+        endDate ? new Date(endDate) : undefined,
+        symbol
+      )
+
+      reply.send({
+        success: true,
+        metrics,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get daily statistics
+   */
+  private async getDailyStats(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const { startDate, endDate } = request.query as any
+
+      const stats = await this.tradingAnalytics.getDailyStats(
+        startDate ? new Date(startDate) : undefined,
+        endDate ? new Date(endDate) : undefined
+      )
+
+      reply.send({
+        success: true,
+        stats,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get setup performance
+   */
+  private async getSetupPerformance(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const performance = await this.tradingAnalytics.getSetupPerformance()
+
+      reply.send({
+        success: true,
+        performance,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get regime performance
+   */
+  private async getRegimePerformance(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const performance = await this.tradingAnalytics.getRegimePerformance()
+
+      reply.send({
+        success: true,
+        performance,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Get risk metrics
+   */
+  private async getRiskMetrics(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const metrics = await this.tradingAnalytics.getRiskMetrics()
+
+      reply.send({
+        success: true,
+        metrics,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Record trade manually
+   */
+  private async recordTrade(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const trade = request.body
+      await this.tradingAnalytics.recordTrade(trade)
+
+      reply.send({
+        success: true,
+        message: 'Trade recorded',
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Export trades to CSV
+   */
+  private async exportTradesCSV(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.tradingAnalytics) {
+        reply.code(400).send({
+          success: false,
+          error: 'Trading analytics not available',
+        })
+        return
+      }
+
+      const { startDate, endDate } = request.query as any
+
+      const csv = await this.tradingAnalytics.exportTradesToCSV(
+        startDate ? new Date(startDate) : undefined,
+        endDate ? new Date(endDate) : undefined
+      )
+
+      reply.header('Content-Type', 'text/csv')
+      reply.header('Content-Disposition', 'attachment; filename=trades.csv')
+      reply.send(csv)
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Comprehensive health check
+   */
+  private async getHealthStatus(request: any, reply: any): Promise<any> {
+    try {
+      if (!this.healthCheckService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Health check service not available',
+        })
+        return
+      }
+
+      const health = await this.healthCheckService.getHealthStatus()
+
+      const statusCode = health.status === 'healthy' ? 200 :
+                        health.status === 'degraded' ? 200 : 503
+
+      reply.code(statusCode).send({
+        success: health.status !== 'unhealthy',
+        health,
+      })
+    } catch (error) {
+      reply.code(503).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Liveness probe - indicates if the app is running
+   */
+  private async getHealthLive(request: any, reply: any): Promise<any> {
+    // Simple liveness check - if we can respond, we're alive
+    reply.send({
+      status: 'alive',
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  /**
+   * Readiness probe - indicates if the app is ready to serve traffic
+   */
+  private async getHealthReady(request: any, reply: any): Promise<any> {
+    try {
+      // Check if critical services are available
+      const criticalServices = [
+        this.prisma ? 'database' : null,
+        this.riskEngine ? 'risk' : null,
+        this.oms ? 'oms' : null
+      ].filter(Boolean)
+
+      const isReady = criticalServices.length >= 2 // At least database + one service
+
+      const statusCode = isReady ? 200 : 503
+
+      reply.code(statusCode).send({
+        status: isReady ? 'ready' : 'not_ready',
+        timestamp: new Date().toISOString(),
+        services: criticalServices,
+      })
+    } catch (error) {
+      reply.code(503).send({
+        status: 'error',
+        timestamp: new Date().toISOString(),
         error: (error as Error).message,
       })
     }

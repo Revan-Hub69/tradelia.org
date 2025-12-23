@@ -42,6 +42,23 @@ const envSchema = z.object({
   BINANCE_RETRY_BASE_MS: z.coerce.number().int().positive().default(250),
   EMERGENCY_SL_BPS: z.coerce.number().int().positive().default(80),
 
+  // Screener (PROMPT-2)
+  SCREENER_ENABLED: z.coerce.boolean().default(true),
+  SCREENER_TOP_K: z.coerce.number().int().positive().default(20),
+  SCREENER_REFRESH_SEC: z.coerce.number().int().positive().default(60),
+  MAX_SYMBOLS_TRACKED: z.coerce.number().int().positive().default(60),
+  SCREEN_UNIVERSE_MODE: z.enum(['auto', 'static']).default('auto'),
+  STATIC_SYMBOLS: z.string().default('BTCUSDT,ETHUSDT'),
+  MARKET_DATA_ENV: z.enum(['live', 'testnet']).default('live'),
+  MTF_TF_LIST: z.string().default('1m,5m,15m'),
+  MIN_DAILY_QUOTE_VOL_USD: z.coerce.number().positive().default(50000000),
+  MAX_SPREAD_BPS: z.coerce.number().positive().default(12),
+  MIN_DEPTH_USD_TOPN: z.coerce.number().positive().default(200000),
+  ORDERBOOK_LEVELS: z.coerce.number().int().positive().default(50),
+  WS_LAG_WARN_MS: z.coerce.number().int().positive().default(800),
+  WS_LAG_FAIL_MS: z.coerce.number().int().positive().default(1500),
+  BOOK_GAP_FAIL_MS: z.coerce.number().int().positive().default(2000),
+
   // Fastify/Node
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().positive().default(3001),
