@@ -23,7 +23,7 @@ import { featureSnapshotsRoutes } from './routes/featureSnapshots';
 import { authRoutes } from './routes/auth';
 import { env } from './config/env';
 
-console.log('DATABASE_URL:', env.DATABASE_URL);
+console.log('Initializing database connection...');
 
 let prisma: PrismaClient;
 
@@ -37,9 +37,11 @@ try {
 
   // Instantiate Prisma Client with the adapter
   prisma = new PrismaClient({ adapter });
+
+  console.log('Database connection initialized successfully');
 } catch (error) {
   console.error('Failed to initialize Prisma Client:', error);
-  console.error('DATABASE_URL value:', process.env.DATABASE_URL);
+  console.error('Please check your DATABASE_URL configuration');
   throw error;
 }
 
