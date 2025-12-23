@@ -157,7 +157,7 @@ export class ReconcileService {
       })
 
       for (const dbOrder of dbOrders) {
-        const exchangeOrder = exchangeOrders.find(eo => eo.clientOrderId === dbOrder.clientOrderId)
+        const exchangeOrder = exchangeOrders.find((eo: { clientOrderId: string }) => eo.clientOrderId === dbOrder.clientOrderId)
         if (!exchangeOrder) {
           // Order exists in DB but not on exchange - mark as canceled
           await this.prisma.orderRecord.update({
