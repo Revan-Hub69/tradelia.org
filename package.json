@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Tradelia Futures Engine - MAX Sustainable v1.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
