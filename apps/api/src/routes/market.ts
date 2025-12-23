@@ -62,8 +62,8 @@ export const marketRoutes: FastifyPluginAsync = async (fastify) => {
         qty: parseFloat(qty)
       }));
 
-      const bidSize = bids.reduce((total: number, level) => total + level.qty, 0);
-      const askSize = asks.reduce((total: number, level) => total + level.qty, 0);
+      const bidSize = bids.reduce((total: number, level: { price: number; qty: number }) => total + level.qty, 0);
+      const askSize = asks.reduce((total: number, level: { price: number; qty: number }) => total + level.qty, 0);
       const imbalance = bidSize + askSize > 0 ? (bidSize - askSize) / (bidSize + askSize) : 0;
       const bestBid = bids[0]?.price ?? 0;
       const bestAsk = asks[0]?.price ?? 0;
