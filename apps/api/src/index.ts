@@ -8,6 +8,8 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
 import { sessionRoutes } from './routes/session';
 import { screenerRoutes } from './routes/screener';
@@ -26,7 +28,15 @@ console.log('DATABASE_URL:', env.DATABASE_URL);
 let prisma: PrismaClient;
 
 try {
-  prisma = new PrismaClient();
+  // Create a connection pool
+  const connectionString = env.DATABASE_URL;
+  const pool = new Pool({ connectionString });
+
+  // Create the PrismaPg adapter
+  const adapter = new PrismaPg(pool);
+
+  // Instantiate Prisma Client with the adapter
+  prisma = new PrismaClient({ adapter });
 } catch (error) {
   console.error('Failed to initialize Prisma Client:', error);
   console.error('DATABASE_URL value:', process.env.DATABASE_URL);
