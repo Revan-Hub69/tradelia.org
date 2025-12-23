@@ -1,101 +1,47 @@
-import { supabase } from '../supabase/client';
+import { supabase } from '@/lib/supabase/client'
 
-export const getUserProfile = async (userId: string) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', userId)
-    .single();
+export interface TradePlan {
+  plan_id: string
+  symbol: string
+  mode: string
+  side: string
+  state: string
+  created_at: string
+}
 
-  if (error) {
-    throw new Error(error.message);
-  }
+export interface Execution {
+  exec_id: string
+  symbol: string
+  state: string
+  created_at: string
+}
 
-  return data;
-};
-
-export const updateUserProfile = async (userId: string, profileData: any) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(profileData)
-    .eq('user_id', userId)
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
-export const getExchangeConnections = async (userId: string) => {
-  const { data, error } = await supabase
-    .from('exchange_connections')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
-export const createExchangeConnection = async (userId: string, connectionData: any) => {
-  const { data, error } = await supabase
-    .from('exchange_connections')
-    .insert({
-      ...connectionData,
-      user_id: userId
-    })
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
-export const deleteExchangeConnection = async (userId: string, connectionId: string) => {
-  const { error } = await supabase
-    .from('exchange_connections')
-    .delete()
-    .eq('id', connectionId)
-    .eq('user_id', userId);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const getTradePlans = async (userId: string) => {
+export async function getTradePlans(userId: string): Promise<TradePlan[]> {
   const { data, error } = await supabase
     .from('trade_plans')
-    .select('*')
+    .select('plan_id, symbol, mode, side, state, created_at')
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
 
   if (error) {
-    throw new Error(error.message);
+    console.error('Error fetching trade plans:', error)
+    return []
   }
 
-  return data;
-};
+  return data || []
+}
 
-export const getExecutions = async (userId: string) => {
+export async function getExecutions(userId: string): Promise<Execution[]> {
   const { data, error } = await supabase
     .from('executions')
-    .select('*')
+    .select('exec_id, symbol, state, created_at')
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
 
   if (error) {
-    throw new Error(error.message);
+    console.error('Error fetching executions:', error)
+    return []
   }
 
-  return data;
-};
+  return data || []
+}
