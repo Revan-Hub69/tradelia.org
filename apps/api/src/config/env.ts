@@ -15,18 +15,18 @@ const envSchema = z.object({
   EXCHANGE_ENV: z.preprocess(
     (v) => (typeof v === 'string' ? v.toLowerCase() : v),
     z.enum(['testnet', 'live'])
-  ),
+  ).default('testnet'),
 
   // Optional - will be provided by user via frontend (stored in DB)
   BINANCE_API_KEY: z.string().optional(),
   BINANCE_API_SECRET: z.string().optional(),
 
-  TRACK_SYMBOLS: z.string().min(1),
-  DATABASE_URL: z.string().url(),
+  TRACK_SYMBOLS: z.string().min(1).default('BTCUSDT,ETHUSDT'),
+  DATABASE_URL: z.string().url().optional(),
 
   // Supabase (for auth and database)
-  SUPABASE_URL: z.string().url(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 
   // Optional with defaults
   POSITION_MODE: z.enum(['oneway', 'hedge']).default('oneway'),

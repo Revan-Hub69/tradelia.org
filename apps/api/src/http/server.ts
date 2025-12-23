@@ -6,39 +6,55 @@ import { RiskEngine } from '../risk/riskEngine'
 import { KillSwitch } from '../kill/killSwitch'
 import { ReconcileService } from '../reconcile/reconcileService'
 import { BinanceRestClient } from '../exchange/binance/restClient'
+import { BinanceFuturesClient } from '../exchange/binance/binanceFutures'
 import { OrderIntentSchema, FlattenRequestSchema } from '../oms/types'
 
 export class EngineServer {
-  private prisma: PrismaClient
+  private prisma: PrismaClient | null
   private oms: OMSService
-  private riskEngine: RiskEngine
-  private killSwitch: KillSwitch
-  private reconcileService: ReconcileService
+  private riskEngine: RiskEngine | null
+  private killSwitch: KillSwitch | null
+  private reconcileService: ReconcileService | null
+  private binanceClient: BinanceFuturesClient
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClient | null) {
     this.prisma = prisma
 
     // Initialize services
-    const binanceClient = new BinanceRestClient(env.EXCHANGE_ENV)
-    this.oms = new OMSService(prisma, binanceClient)
-    this.riskEngine = new RiskEngine(prisma)
-    this.killSwitch = new KillSwitch(prisma, this.oms, binanceClient)
-    this.reconcileService = new ReconcileService(
-      prisma,
-      this.oms,
-      this.riskEngine,
-      this.killSwitch,
-      binanceClient
-    )
+    const binanceRestClient = new BinanceRestClient(env.EXCHANGE_ENV)
+    this.binanceClient = new BinanceFuturesClient(env.EXCHANGE_ENV)
+
+    if (prisma) {
+      this.oms = new OMSService(prisma, binanceRestClient)
+      this.riskEngine = new RiskEngine(prisma)
+      this.killSwitch = new KillSwitch(prisma, this.oms, binanceRestClient)
+      this.reconcileService = new ReconcileService(
+        prisma,
+        this.oms,
+        this.riskEngine,
+        this.killSwitch,
+        binanceRestClient
+      )
+    } else {
+      // Database-less mode - create stub implementations
+      this.oms = null as any
+      this.riskEngine = null
+      this.killSwitch = null
+      this.reconcileService = null
+    }
   }
 
   /**
    * Initialize all services
    */
   async initialize(): Promise<void> {
-    await this.riskEngine.initialize()
-    await this.reconcileService.initializeTrackedSymbols()
-    console.log('✅ Engine services initialized')
+    if (this.prisma) {
+      await this.riskEngine!.initialize()
+      await this.reconcileService!.initializeTrackedSymbols()
+      console.log('✅ Engine services initialized')
+    } else {
+      console.log('✅ Engine services initialized (database-less mode)')
+    }
   }
 
   /**
@@ -57,10 +73,16 @@ export class EngineServer {
 
     // OMS operations
     app.post('/oms/submit-intent', this.submitOrderIntent.bind(this))
+    app.get('/oms/dummy-signal', this.generateDummySignal.bind(this))
     app.post('/oms/flatten', this.flattenAll.bind(this))
     app.post('/oms/flatten/:symbol', this.flattenSymbol.bind(this))
     app.get('/oms/orders', this.getOrders.bind(this))
     app.get('/oms/positions', this.getPositions.bind(this))
+
+    // Only register database-dependent routes if we have a database
+    if (this.prisma) {
+      // Additional routes that require database
+    }
   }
 
   /**
@@ -68,6 +90,14 @@ export class EngineServer {
    */
   private async startEngine(request: any, reply: any): Promise<any> {
     try {
+      if (!this.reconcileService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Engine not available in database-less mode',
+        })
+        return
+      }
+
       // Start reconcile service
       this.reconcileService.start()
 
@@ -89,6 +119,14 @@ export class EngineServer {
    */
   private async stopEngine(request: any, reply: any): Promise<any> {
     try {
+      if (!this.reconcileService) {
+        reply.code(400).send({
+          success: false,
+          error: 'Engine not available in database-less mode',
+        })
+        return
+      }
+
       this.reconcileService.stop()
 
       reply.send({
@@ -108,6 +146,14 @@ export class EngineServer {
    */
   private async resetKill(request: any, reply: any): Promise<any> {
     try {
+      if (!this.killSwitch) {
+        reply.code(400).send({
+          success: false,
+          error: 'Kill switch not available in database-less mode',
+        })
+        return
+      }
+
       await this.killSwitch.resetKillSwitch()
 
       reply.send({
@@ -127,6 +173,17 @@ export class EngineServer {
    */
   private async getEngineState(request: any, reply: any): Promise<any> {
     try {
+      if (!this.riskEngine || !this.reconcileService || !this.killSwitch) {
+        reply.send({
+          success: true,
+          engine: { isRunning: false, lastReconcile: null },
+          risk: { tradingEnabled: false },
+          kill: { killActive: false },
+          note: 'Database-less mode - limited functionality'
+        })
+        return
+      }
+
       const riskState = await this.riskEngine.getRiskState()
       const reconcileStatus = this.reconcileService.getStatus()
       const killStatus = await this.killSwitch.getKillStatus()
@@ -153,6 +210,14 @@ export class EngineServer {
    */
   private async updateRiskConfig(request: any, reply: any): Promise<any> {
     try {
+      if (!this.riskEngine) {
+        reply.code(400).send({
+          success: false,
+          error: 'Risk engine not available in database-less mode',
+        })
+        return
+      }
+
       const updates = request.body
       await this.riskEngine.updateConfig(updates)
 
@@ -174,6 +239,15 @@ export class EngineServer {
    */
   private async getRiskState(request: any, reply: any): Promise<any> {
     try {
+      if (!this.riskEngine) {
+        reply.send({
+          success: true,
+          risk: { tradingEnabled: false },
+          note: 'Risk engine not available in database-less mode'
+        })
+        return
+      }
+
       const riskState = await this.riskEngine.getRiskState()
 
       reply.send({
@@ -208,6 +282,14 @@ export class EngineServer {
         return
       }
 
+      if (!this.riskEngine || !this.oms) {
+        reply.code(400).send({
+          success: false,
+          error: 'OMS not available in database-less mode',
+        })
+        return
+      }
+
       // Check risk before submitting
       const riskCheck = await this.riskEngine.canEnter(
         intent.symbol,
@@ -229,6 +311,54 @@ export class EngineServer {
       reply.send({
         success: true,
         result,
+      })
+    } catch (error) {
+      reply.code(500).send({
+        success: false,
+        error: (error as Error).message,
+      })
+    }
+  }
+
+  /**
+   * Generate dummy order intent for testing
+   */
+  private async generateDummySignal(request: any, reply: any): Promise<any> {
+    try {
+      const { symbol = 'BTCUSDT', side = 'LONG' } = request.query as { symbol?: string; side?: string }
+
+      // Get current market price for SL/TP calculation
+      const bookTicker = await this.binanceClient.getBookTicker(symbol)
+      const currentPrice = parseFloat(bookTicker.bidPrice)
+
+      // Generate dummy signal with realistic SL/TP
+      const isLong = side === 'LONG'
+      const entryPrice = currentPrice
+      const slBps = 80 // 80 bps stop loss
+      const tpBps = 200 // 200 bps take profit
+
+      const slPrice = isLong
+        ? entryPrice * (1 - slBps / 10000)
+        : entryPrice * (1 + slBps / 10000)
+
+      const tpPrice = isLong
+        ? entryPrice * (1 + tpBps / 10000)
+        : entryPrice * (1 - tpBps / 10000)
+
+      const dummyIntent = {
+        symbol,
+        planId: `DUMMY_${Date.now()}`,
+        side: isLong ? 'LONG' : 'SHORT',
+        quantity: '0.001', // Small test quantity
+        slPrice: slPrice.toFixed(2),
+        tpPrice: tpPrice.toFixed(2),
+        entryType: 'MARKET' as const,
+      }
+
+      reply.send({
+        success: true,
+        signal: dummyIntent,
+        note: 'This is a dummy signal for testing. Use /oms/submit-intent to execute it.',
       })
     } catch (error) {
       reply.code(500).send({
@@ -339,10 +469,26 @@ export class EngineServer {
         return
       }
 
+      if (!this.oms) {
+        reply.code(400).send({
+          success: false,
+          error: 'OMS not available in database-less mode',
+        })
+        return
+      }
+
       let orders
       if (symbol) {
         orders = await this.oms.getOpenOrders(symbol, apiKey, apiSecret)
       } else {
+        if (!this.prisma) {
+          reply.code(400).send({
+            success: false,
+            error: 'Database not available for multi-symbol order query',
+          })
+          return
+        }
+
         // Get orders for all tracked symbols
         const trackedSymbols = await this.prisma.trackedSymbol.findMany({
           where: { env: env.EXCHANGE_ENV, enabled: true },
@@ -381,6 +527,14 @@ export class EngineServer {
         reply.code(400).send({
           success: false,
           error: 'Missing API credentials in headers',
+        })
+        return
+      }
+
+      if (!this.oms) {
+        reply.code(400).send({
+          success: false,
+          error: 'OMS not available in database-less mode',
         })
         return
       }

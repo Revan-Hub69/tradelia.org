@@ -33,17 +33,24 @@ export class BinanceRestClient {
       try {
         let url: string
         let headers: Record<string, string>
+        let body: string | undefined
 
         if (apiKey && apiSecret) {
-          // Signed request
+          // Signed request - params in query string with signature
           url = buildSignedUrl(this.baseUrl, endpoint, params, apiSecret)
           headers = getSignedHeaders(apiKey)
         } else {
           // Public request
-          const queryString = Object.keys(params).length > 0
-            ? `?${new URLSearchParams(params)}`
-            : ''
-          url = `${this.baseUrl}${endpoint}${queryString}`
+          if (method === 'GET') {
+            const queryString = Object.keys(params).length > 0
+              ? `?${new URLSearchParams(params as any)}`
+              : ''
+            url = `${this.baseUrl}${endpoint}${queryString}`
+          } else {
+            // POST/PUT/DELETE public requests - params in body
+            url = `${this.baseUrl}${endpoint}`
+            body = JSON.stringify(params)
+          }
           headers = getPublicHeaders()
         }
 
@@ -54,6 +61,7 @@ export class BinanceRestClient {
         const response = await fetch(url, {
           method,
           headers,
+          body,
           signal: controller.signal,
         })
 
