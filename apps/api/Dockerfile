@@ -1,5 +1,16 @@
-# ---- Base
-FROM node:20-bookworm-slim AS base
+# ---- Base Deps
+FROM node:20-bookworm-slim AS base-deps
+WORKDIR /repo
+
+# OpenSSL (Prisma spesso lo richiede in runtime/build)
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# Enable Corepack (pnpm)
+RUN corepack enable
+RUN corepack prepare pnpm@9.12.3 --activate
+
+# ---- Base Runner
+FROM node:20-bookworm-slim AS base-runner
 WORKDIR /app
 
 # OpenSSL (Prisma spesso lo richiede in runtime/build)
@@ -9,10 +20,7 @@ RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/
 RUN corepack enable
 
 # ---- Dependencies
-FROM base AS deps
-WORKDIR /repo
-
-RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+FROM base-deps AS deps
 
 # Copia manifest workspace + lock
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.json ./
@@ -36,9 +44,7 @@ RUN pnpm --filter @tradelia/shared run build
 RUN pnpm --filter @tradelia/api run prisma:generate
 
 # ---- Build
-FROM base AS build
-WORKDIR /repo
-RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+FROM base-deps AS build
 
 # porta dentro node_modules e store
 COPY --from=deps /repo/node_modules /repo/node_modules
@@ -56,7 +62,7 @@ COPY --from=deps /repo/packages/shared /repo/packages/shared
 RUN pnpm --filter @tradelia/api... run build
 
 # ---- Runtime
-FROM base AS runner
+FROM base-runner AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
