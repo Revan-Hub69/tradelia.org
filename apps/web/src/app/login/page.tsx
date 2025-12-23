@@ -6,37 +6,40 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { createClient } from '@supabase/supabase-js'
 
 interface LoginForm {
   email: string
   password: string
-  otp: string
 }
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  )
+
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>()
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
-    
+
     try {
-      // Hardcoded credentials check
-      if (
-        data.email === 'amministrazione@tradelia.org' && 
-        data.password === 'AmoreMioDeb69!' &&
-        data.otp === '123456' // In production, this would be validated against a TOTP service
-      ) {
-        // Set session/token in localStorage or cookies
-        localStorage.setItem('tradelia_auth', 'authenticated')
-        toast.success('Login successful!')
-        router.push('/dashboard')
-      } else {
-        toast.error('Invalid credentials or OTP code')
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password
+      })
+
+      if (error) {
+        toast.error(error.message)
+        return
       }
+
+      toast.success('Login successful!')
+      router.push('/dashboard')
     } catch (error) {
       toast.error('Login failed. Please try again.')
     } finally {
@@ -58,7 +61,7 @@ export default function LoginPage() {
             Private access required for AI trading tools
           </p>
         </div>
-        
+
         <div className="bg-white/10 backdrop-blur-lg rounded-lg p-8 shadow-xl">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -67,7 +70,7 @@ export default function LoginPage() {
               </label>
               <div className="mt-1">
                 <input
-                  {...register('email', { 
+                  {...register('email', {
                     required: 'Email is required',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -91,7 +94,7 @@ export default function LoginPage() {
               </label>
               <div className="mt-1 relative">
                 <input
-                  {...register('password', { 
+                  {...register('password', {
                     required: 'Password is required',
                     minLength: {
                       value: 8,
@@ -121,30 +124,6 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="otp" className="block text-sm font-medium text-white">
-                OTP Code (Required)
-              </label>
-              <div className="mt-1">
-                <input
-                  {...register('otp', { 
-                    required: 'OTP code is required',
-                    pattern: {
-                      value: /^\d{6}$/,
-                      message: 'OTP must be 6 digits'
-                    }
-                  })}
-                  type="text"
-                  maxLength={6}
-                  className="input-field bg-white/20 text-white placeholder-gray-300 border-white/30"
-                  placeholder="Enter 6-digit OTP"
-                />
-                {errors.otp && (
-                  <p className="mt-1 text-sm text-red-400">{errors.otp.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div>
               <button
                 type="submit"
                 disabled={isLoading}
@@ -154,14 +133,14 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-400">
               For demo purposes, use OTP: 123456
             </p>
           </div>
         </div>
-        
+
         <div className="text-center">
           <Link href="/" className="text-sm text-blue-400 hover:text-blue-300">
             ← Back to Homepage

@@ -1,0 +1,8 @@
+{
+  "name": "@tradelia/prisma",
+  "private": true,
+  "scripts": {
+    "generate": "prisma generate --schema=./schema.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema=./schema.prisma"
+  }
+}

@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { 
-  ChartBarIcon, 
-  CpuChipIcon, 
-  PlayIcon, 
+import {
+  ChartBarIcon,
+  CpuChipIcon,
+  PlayIcon,
   StopIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline'
+import { createClient } from '@supabase/supabase-js'
 
 interface SessionState {
   session_id?: string
@@ -25,18 +26,26 @@ export default function DashboardPage() {
   const [sessionState, setSessionState] = useState<SessionState>({})
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  )
 
   useEffect(() => {
     // Check authentication
-    const auth = localStorage.getItem('tradelia_auth')
-    if (!auth) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/login')
+        return
+      }
+
+      // Load session state
+      loadSessionState()
     }
 
-    // Load session state
-    loadSessionState()
-  }, [router])
+    checkAuth()
+  }, [router, supabase])
 
   const loadSessionState = async () => {
     try {
@@ -79,8 +88,8 @@ export default function DashboardPage() {
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem('tradelia_auth')
+  const logout = async () => {
+    await supabase.auth.signOut()
     router.push('/')
   }
 
@@ -102,8 +111,8 @@ export default function DashboardPage() {
               <h1 className="text-xl font-bold text-white">Tradelia Futures Engine</h1>
               {sessionState.badge && (
                 <span className={`ml-3 px-2 py-1 text-xs font-medium rounded ${
-                  sessionState.badge === 'LIVE' 
-                    ? 'bg-red-100 text-red-800' 
+                  sessionState.badge === 'LIVE'
+                    ? 'bg-red-100 text-red-800'
                     : 'bg-green-100 text-green-800'
                 }`}>
                   {sessionState.badge}
@@ -128,10 +137,9 @@ export default function DashboardPage() {
             <div>
               <h2 className="text-lg font-medium text-white">Trading Session</h2>
               <p className="text-sm text-gray-400">
-                {sessionState.status === 'RUNNING' 
+                {sessionState.status === 'RUNNING'
                   ? `Running: ${sessionState.mode} | Profile ${sessionState.screener_profile} | ${sessionState.execution_mode}`
-                  : 'No active session'
-                }
+                  : 'No active session'}
               </p>
             </div>
             <div className="flex space-x-3">
@@ -213,7 +221,7 @@ export default function DashboardPage() {
           <div className="mt-8 bg-blue-900/50 border border-blue-700 rounded-lg p-6">
             <h3 className="text-lg font-medium text-blue-200">Getting Started</h3>
             <p className="mt-2 text-blue-300">
-              Start a trading session to begin using the AI-powered futures trading engine. 
+              Start a trading session to begin using the AI-powered futures trading engine.
               The system will automatically screen markets, generate signals, and create executable trade plans.
             </p>
             <div className="mt-4">

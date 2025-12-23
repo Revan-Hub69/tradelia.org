@@ -52,8 +52,8 @@ export const MetricsSchema = z.object({
 
 // TradePlan v1.0 - Contratto immutabile
 export const TradePlanSchema = z.object({
-  plan_id: z.string().uuid(),
-  session_id: z.string().uuid(),
+  plan_id: z.string().cuid(),
+  session_id: z.string().cuid(),
   env: Environment,
   mode: TradeMode,
   screener_profile: ScreenerProfile,
@@ -103,8 +103,21 @@ export const SignalCandidateSchema = z.object({
   symbol: z.string(),
   side: TradeSide,
   timestamp: z.number(),
-  features: z.record(z.number()),
+  features: z.record(z.string(), z.number()),
   funding_mode_pre: FundingMode
+});
+
+// FeatureSnapshot schema (persisted by collectors)
+export const FeatureSnapshotSchema = z.object({
+  snapshot_id: z.string().uuid(),
+  exchange: z.string().default('binance'),
+  venue: z.string().default('futures_usdt'),
+  symbol: z.string(),
+  ts: z.string(), // ISO timestamp
+  features: z.record(z.string(), z.any()),
+  quality: z.record(z.string(), z.any()),
+  source_meta: z.record(z.string(), z.any()).optional().default({}),
+  created_at: z.string().optional()
 });
 
 // Export types
@@ -114,6 +127,7 @@ export type Kline = z.infer<typeof KlineSchema>;
 export type Depth = z.infer<typeof DepthSchema>;
 export type FundingRate = z.infer<typeof FundingRateSchema>;
 export type SignalCandidate = z.infer<typeof SignalCandidateSchema>;
+export type FeatureSnapshot = z.infer<typeof FeatureSnapshotSchema>;
 
 // Constants
 export const MODE_CONFIGS = {

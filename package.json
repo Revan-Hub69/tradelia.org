@@ -1,24 +1,41 @@
 {
-  "name": "tradelia-futures-engine",
-  "version": "1.0.0",
-  "description": "Tradelia Futures Engine - MAX Sustainable v1.0",
+  "name": "tradelia-monorepo",
   "private": true,
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=20.10.0 <23"
+  },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "start": "turbo run start",
-    "lint": "turbo run lint",
-    "type-check": "turbo run type-check",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "clean": "turbo clean && rimraf node_modules .turbo"
   },
   "devDependencies": {
-    "turbo": "^1.10.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "prettier": "^3.3.3",
+    "prisma": "^7.2.0",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.1.3",
+    "typescript": "^5.6.3"
   },
-  "engines": {
-    "node": ">=18.0.0"
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^10.3.0",
+    "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^7.2.0",
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.6.2",
+    "react-hook-form": "^7.69.0",
+    "react-hot-toast": "^2.6.0",
+    "zod": "^4.2.1"
   }
 }
