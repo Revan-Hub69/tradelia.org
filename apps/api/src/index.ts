@@ -21,7 +21,17 @@ import { featureSnapshotsRoutes } from './routes/featureSnapshots';
 import { authRoutes } from './routes/auth';
 import { env } from './config/env';
 
-const prisma = new PrismaClient();
+console.log('DATABASE_URL:', env.DATABASE_URL);
+
+let prisma: PrismaClient;
+
+try {
+  prisma = new PrismaClient();
+} catch (error) {
+  console.error('Failed to initialize Prisma Client:', error);
+  console.error('DATABASE_URL value:', process.env.DATABASE_URL);
+  throw error;
+}
 
 const server = Fastify({
   logger: {
