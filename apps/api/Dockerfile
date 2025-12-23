@@ -40,8 +40,8 @@ COPY packages/shared packages/shared
 COPY apps/api apps/api
 
 # Build shared + prisma generate (workspace-aware)
-RUN pnpm --filter @tradelia/shared run build
-RUN pnpm --filter @tradelia/api run prisma:generate
+RUN pnpm --filter ./packages/shared run build
+RUN pnpm --filter ./apps/api run prisma:generate
 
 # ---- Build
 FROM base-deps AS build
@@ -50,7 +50,7 @@ FROM base-deps AS build
 COPY --from=deps / /
 
 # Build API (workspace-aware) ✅ (NO -C)
-RUN pnpm --filter @tradelia/api... run build
+RUN pnpm --filter ./apps/api... run build
 
 # ---- Runtime
 FROM base-runner AS runner
