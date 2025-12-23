@@ -22,9 +22,6 @@ RUN pnpm --filter @tradelia/shared run build
 RUN pnpm --filter @tradelia/api run prisma:generate
 RUN pnpm --filter @tradelia/api run build
 
-# Crea una cartella deploy "standalone" per l'API (solo deps necessarie)
-RUN pnpm --filter @tradelia/api --prod deploy /out
-
 # ---------- Runtime ----------
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app
@@ -32,9 +29,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 
-# Copio output deploy
-COPY --from=build /out ./
+# Copy everything from build (including generated Prisma client in node_modules)
+COPY --from=build / /
 
 # Railway: espone PORT
 EXPOSE 3000
-CMD ["node", "dist/index.js"]
+CMD ["node", "apps/api/dist/index.js"]
