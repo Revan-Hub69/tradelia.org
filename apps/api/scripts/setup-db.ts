@@ -57,7 +57,7 @@ async function main() {
       console.log('✅ Database tables verified')
     } catch (error) {
       console.error('❌ Database tables missing. Migration may have failed.')
-      console.error('Error:', error.message)
+      console.error('Error:', (error as Error).message)
       process.exit(1)
     } finally {
       await prisma.$disconnect()

@@ -91,9 +91,21 @@ interface WebSocketProviderProps {
   children: ReactNode
 }
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3002'
+// Production-safe WebSocket URL detection
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL ||
+  (typeof window !== "undefined"
+    ? `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`
+    : "");
+
+// Anti-localhost guard for production
+if (WS_URL && WS_URL.includes('localhost')) {
+  console.warn('🚨 WebSocket URL contains localhost - this will fail in production!');
+  console.warn('Set NEXT_PUBLIC_WS_URL environment variable for production deployment');
+}
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
+  // WebSocket disabled in production (serverless limitation)
+  const WS_ENABLED = process.env.NEXT_PUBLIC_WS_ENABLED !== 'false'
   const { user } = useTrading()
 
   // WebSocket state
@@ -256,21 +268,74 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     }
   }, [ws])
 
-  // Auto-connect when user logs in
-  useEffect(() => {
-    if (user && !isConnected) {
-      connect()
-    } else if (!user && isConnected) {
-      disconnect()
+  // HTTP Polling fallback when WebSocket is disabled
+  const startPolling = useCallback(() => {
+    console.log('📡 Starting HTTP polling for market data (WebSocket disabled)')
+
+    const pollScreener = async () => {
+      try {
+        const response = await fetch('/api/market/snapshot')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.success && data.snapshot?.symbols) {
+            const screenerData: ScreenerData[] = data.snapshot.symbols.map((item: any, index: number) => ({
+              symbol: item.symbol,
+              score: item.score || 0,
+              lqs: item.liquidity || 0,
+              vos: item.volatility || 0,
+              dfs: 0, // Not available in basic snapshot
+              mes: 0, // Not available in basic snapshot
+              mtfGate: 'PASS' as const,
+              imbalance: 0,
+              volume24h: item.volume || 0,
+              price: item.price || 0,
+              change24h: item.change24h || 0,
+              rank: index + 1,
+              oi: 0,
+              pressure: 0,
+              support: 0,
+              resistance: 0,
+              slippage: 0,
+              accumulationZone: 'NEUTRAL' as const
+            }))
+            setScreenerData(screenerData)
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error polling screener data:', error)
+      }
     }
-  }, [user, isConnected, connect, disconnect])
+
+    // Poll immediately and then every 5 seconds
+    pollScreener()
+    const interval = setInterval(pollScreener, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Auto-connect when user logs in (only if WebSocket enabled)
+  useEffect(() => {
+    if (WS_ENABLED) {
+      if (user && !isConnected) {
+        connect()
+      } else if (!user && isConnected) {
+        disconnect()
+      }
+    } else {
+      // Start HTTP polling instead
+      const cleanup = startPolling()
+      return cleanup
+    }
+  }, [user, isConnected, connect, disconnect, WS_ENABLED, startPolling])
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      disconnect()
+      if (WS_ENABLED) {
+        disconnect()
+      }
     }
-  }, [disconnect])
+  }, [disconnect, WS_ENABLED])
 
   const value: WebSocketContextType = {
     // State
