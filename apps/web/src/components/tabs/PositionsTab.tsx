@@ -11,27 +11,9 @@ import {
 export const PositionsTab: React.FC = () => {
   const { exchangeConnections } = useTrading()
 
-  // Mock positions data for demo
-  const mockPositions = [
-    {
-      symbol: 'BTCUSDT',
-      side: 'LONG',
-      size: 0.002,
-      entryPrice: 45000,
-      currentPrice: 45200,
-      pnl: 40,
-      pnlPercent: 0.44
-    },
-    {
-      symbol: 'ETHUSDT',
-      side: 'SHORT',
-      size: 0.05,
-      entryPrice: 2800,
-      currentPrice: 2750,
-      pnl: 25,
-      pnlPercent: 0.89
-    }
-  ]
+  // TODO: Fetch real positions from API
+  // For now, empty array - will be populated when positions API is implemented
+  const positions: any[] = []
 
   return (
     <div className="space-y-6">
@@ -106,9 +88,9 @@ export const PositionsTab: React.FC = () => {
             Current Positions
           </h3>
 
-          {mockPositions.length > 0 ? (
+          {positions.length > 0 ? (
             <div className="space-y-4">
-              {mockPositions.map((position) => (
+              {positions.map((position: any) => (
                 <div key={position.symbol} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -177,7 +159,7 @@ export const PositionsTab: React.FC = () => {
                     Total Positions
                   </dt>
                   <dd className="text-lg font-medium text-gray-900">
-                    {mockPositions.length}
+                    {positions.length}
                   </dd>
                 </dl>
               </div>
@@ -197,7 +179,7 @@ export const PositionsTab: React.FC = () => {
                     Total P&L
                   </dt>
                   <dd className="text-lg font-medium text-green-900">
-                    ${mockPositions.reduce((sum, p) => sum + p.pnl, 0).toFixed(2)}
+                    ${positions.reduce((sum: number, p: any) => sum + (p.pnl || 0), 0).toFixed(2)}
                   </dd>
                 </dl>
               </div>
