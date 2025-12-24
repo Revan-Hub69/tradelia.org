@@ -43,8 +43,17 @@ export class EngineServer {
     // Initialize WebSocket server
     await this.initializeWebSocket()
 
-    // Start mock data generators for development
-    this.startMockDataGenerators()
+    // Start mock data generators conditionally
+    const enableMock =
+      process.env.ENABLE_MOCK_DATA === 'true' ||
+      process.env.NODE_ENV !== 'production'
+
+    if (enableMock) {
+      console.log('🧪 Mock data generators ENABLED')
+      this.startMockDataGenerators()
+    } else {
+      console.log('✅ Mock data generators DISABLED (production)')
+    }
 
     // Initialize autonomous trading engine (PROMPT-3)
     await this.initializeTradingEngine()
