@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
-import { createClient } from '@supabase/supabase-js'
+import { useTrading } from '../../lib/contexts/TradingContext'
 
 interface LoginForm {
   email: string
@@ -15,36 +15,44 @@ interface LoginForm {
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const { signIn, user, loading } = useTrading()
   const router = useRouter()
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  )
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>()
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard')
+    }
+  }, [user, loading, router])
+
   const onSubmit = async (data: LoginForm) => {
-    setIsLoading(true)
+    const { error } = await signIn(data.email, data.password)
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password
-      })
-
-      if (error) {
-        toast.error(error.message)
-        return
-      }
-
+    if (error) {
+      toast.error(error?.message || 'Login failed')
+    } else {
       toast.success('Login successful!')
       router.push('/dashboard')
-    } catch (error) {
-      toast.error('Login failed. Please try again.')
-    } finally {
-      setIsLoading(false)
     }
+  }
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-white">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render if already authenticated
+  if (user) {
+    return null
   }
 
   return (
@@ -126,10 +134,10 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className="w-full btn-primary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Authenticating...' : 'Access Platform'}
+                {loading ? 'Authenticating...' : 'Access Platform'}
               </button>
             </div>
           </form>
