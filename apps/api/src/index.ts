@@ -135,18 +135,6 @@ if (prisma) {
 // Register OMS Engine routes
 engineServer.registerRoutes(server);
 
-// Health check
-server.get('/health', async () => {
-  return {
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    services: {
-      database: 'connected',
-      oms: 'initialized'
-    }
-  };
-});
-
 const start = async () => {
   try {
     // Initialize engine services
