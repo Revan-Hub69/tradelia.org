@@ -52,7 +52,11 @@ const envSchema = z.object({
   MAX_SYMBOLS_TRACKED: z.coerce.number().int().positive().default(60),
   SCREEN_UNIVERSE_MODE: z.enum(['auto', 'static']).default('auto'),
   STATIC_SYMBOLS: z.string().default('BTCUSDT,ETHUSDT'),
-  MARKET_DATA_ENV: z.enum(['live', 'testnet']).default('live'),
+  MARKET_DATA_ENV: z.enum(['live', 'testnet']).default('testnet'),
+
+  // Custom URLs (override defaults)
+  BINANCE_REST_URL: z.string().url().optional(),
+  BINANCE_WS_URL: z.string().url().optional(),
   MTF_TF_LIST: z.string().default('1m,5m,15m'),
   MIN_DAILY_QUOTE_VOL_USD: z.coerce.number().positive().default(50000000),
   MAX_SPREAD_BPS: z.coerce.number().positive().default(12),
@@ -93,15 +97,15 @@ if (!envParse.success) {
 
 export const env = envParse.data
 
-// Derived constants
+// Derived constants - support custom URLs
 export const BINANCE_BASE_URLS = {
   live: {
-    rest: 'https://fapi.binance.com',
-    ws: 'wss://fstream.binance.com',
+    rest: env.BINANCE_REST_URL || 'https://fapi.binance.com',
+    ws: env.BINANCE_WS_URL || 'wss://fstream.binance.com',
   },
   testnet: {
-    rest: 'https://testnet.binancefuture.com',
-    ws: 'wss://stream.binancefuture.com',
+    rest: env.BINANCE_REST_URL || 'https://testnet.binancefuture.com',
+    ws: env.BINANCE_WS_URL || 'wss://stream.binancefuture.com',
   },
 } as const
 

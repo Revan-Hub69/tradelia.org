@@ -63,6 +63,15 @@ export class EngineServer {
     }
 
     try {
+      // Check trading prerequisites (fail-fast approach)
+      const tradingEnabled = await this.checkTradingPrerequisites()
+
+      if (!tradingEnabled) {
+        console.log('⚠️ Trading engine disabled - missing API keys or TRADING_ENABLED=false')
+        console.log('🔍 Running in READ-ONLY mode (market data only)')
+        return
+      }
+
       // Import static to avoid circular dependencies issues
       const { TradingEngine } = await import('../strategy/tradingEngine')
       const { OMSService } = await import('../oms/omsService')
@@ -104,6 +113,47 @@ export class EngineServer {
     } catch (error) {
       console.error('❌ Failed to initialize trading engine:', error)
       // Don't fail the entire server for trading engine issues
+    }
+  }
+
+  /**
+   * Check if trading prerequisites are met (fail-fast approach)
+   */
+  private async checkTradingPrerequisites(): Promise<boolean> {
+    try {
+      // Check environment variable
+      if (!env.TRADING_ENABLED) {
+        console.log('TRADING_ENABLED=false in environment')
+        return false
+      }
+
+      // Check API keys
+      const hasApiKey = env.BINANCE_API_KEY && env.BINANCE_API_KEY.length > 10
+      const hasApiSecret = env.BINANCE_API_SECRET && env.BINANCE_API_SECRET.length > 10
+
+      if (!hasApiKey || !hasApiSecret) {
+        console.log('Missing or invalid Binance API credentials')
+        return false
+      }
+
+      // Check database tables exist (quick query)
+      try {
+        await this.prisma!.orderRecord.findFirst({ take: 1 })
+        await this.prisma!.screenerRun.findFirst({ take: 1 })
+      } catch (dbError: any) {
+        if (dbError.code === 'P2021') {
+          console.log('Database tables missing - run migrations first')
+          return false
+        }
+        throw dbError
+      }
+
+      console.log('✅ Trading prerequisites met')
+      return true
+
+    } catch (error) {
+      console.error('Error checking trading prerequisites:', error)
+      return false
     }
   }
 

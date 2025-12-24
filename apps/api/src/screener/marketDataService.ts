@@ -107,7 +107,19 @@ export class MarketDataService {
     try {
       const url = `${this.baseUrl}/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
       const response = await fetch(url)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`HTTP ${response.status}: ${errorText}`)
+      }
+
       const data = await response.json()
+
+      // Validate response structure before mapping
+      if (!Array.isArray(data)) {
+        console.error(`Klines response not array for ${symbol} ${interval}. Got:`, JSON.stringify(data).slice(0, 800))
+        throw new Error(`Invalid klines response: expected array, got ${typeof data}`)
+      }
 
       return data.map((kline: any[]) => ({
         timestamp: kline[0],

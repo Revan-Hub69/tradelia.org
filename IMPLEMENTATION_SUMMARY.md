@@ -197,27 +197,47 @@ futures   - Futures data (2s updates)
 
 ---
 
-## 🚫 KNOWN LIMITATIONS
+## ✅ RESOLVED CRITICAL ISSUES (December 24, 2025)
 
-### **Production Operations (Missing):**
+### **Fixed Production Runtime Errors:**
+- ✅ **data.map is not a function** - Added array validation in MarketDataService.getKlines()
+- ✅ **HTTP 401: API-key format invalid** - Implemented fail-fast prerequisites check
+- ✅ **Prisma P2021 table missing** - Added database table existence validation
+- ✅ **Engine startup too early** - Added read-only mode for missing credentials/tables
+
+### **Implemented Production-Ready Features:**
+- ✅ **Fail-Fast Initialization** - Trading engine only starts with valid prerequisites
+- ✅ **Read-Only Mode** - System runs without trading when credentials missing
+- ✅ **Error Logging** - Detailed error messages for debugging
+- ✅ **Health Checks** - Comprehensive system status monitoring
+
+### **Production Readiness Assessment:**
+- ✅ **Error Handling** - Robust error handling with detailed logging
+- ✅ **Configuration Management** - Environment-based configuration
+- ✅ **Database Resilience** - Table existence checks before operations
+- ✅ **API Validation** - Proper response structure validation
+
+## 🚫 REMAINING LIMITATIONS
+
+### **Production Operations (Still Missing):**
 - ❌ **Unit Tests** - No automated test suite
 - ❌ **Integration Tests** - No end-to-end testing
 - ❌ **Load Testing** - No performance validation
 - ❌ **Security Audit** - No penetration testing
 
-### **Infrastructure (Missing):**
+### **Infrastructure (Still Missing):**
 - ❌ **CI/CD Pipeline** - No automated deployment
 - ❌ **Monitoring** - No Prometheus/Grafana
 - ❌ **Logging** - No centralized logging
 - ❌ **Docker Production** - Development containers only
 
-### **Business Features (Missing):**
+### **Business Features (Still Missing):**
 - ❌ **Billing System** - No payment processing
 - ❌ **Admin Dashboard** - Basic UI only
 - ❌ **Multi-tenancy** - Single-user system
 - ❌ **Compliance** - No GDPR/financial regulations
 
-### **Documentation (Missing):**
+### **Documentation (Still Missing):**
 - ❌ **API Documentation** - No OpenAPI/Swagger
 - ❌ **Deployment Guide** - No production setup guide
 - ❌ **Architecture Docs** - Code comments only
