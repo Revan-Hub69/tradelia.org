@@ -2,6 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import { TradingProvider } from '../lib/contexts/TradingContext'
+import { WebSocketProvider } from '../lib/contexts/WebSocketContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TradingProvider>
-          {children}
+          <WebSocketProvider>
+            {children}
+          </WebSocketProvider>
         </TradingProvider>
         <Toaster position="top-right" />
       </body>

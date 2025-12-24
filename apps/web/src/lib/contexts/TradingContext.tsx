@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
 import { auth, db } from '../supabase/client'
+import { useWebSocket } from './WebSocketContext'
 
 // Types
 export interface RuntimeStatus {
