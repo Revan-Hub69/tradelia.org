@@ -135,12 +135,17 @@ engineServer.registerRoutes(server);
 
 const start = async () => {
   try {
-    // Initialize engine services
+    // Initialize engine services (WebSocket will be started after server starts)
     await engineServer.initialize();
 
     const port = env.PORT;
     await server.listen({ port, host: '0.0.0.0' });
+
+    // Start WebSocket server attached to the HTTP server
+    engineServer.startWebSocketServer(server.server);
+
     server.log.info(`🚀 OMS API server running on port ${port}`);
+    server.log.info(`🌐 WebSocket server attached on path /ws`);
     server.log.info(`📊 Environment: ${env.EXCHANGE_ENV}`);
     server.log.info(`🔄 Position Mode: ${env.POSITION_MODE}`);
   } catch (err) {

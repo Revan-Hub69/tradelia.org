@@ -161,10 +161,22 @@ export class EngineServer {
    * Initialize WebSocket server
    */
   private async initializeWebSocket(): Promise<void> {
-    this.wss = new WebSocket.Server({ port: 3002 })
+    // Will be called after Fastify server is ready
+    console.log('🌐 WebSocket server initialization deferred until server starts')
+  }
+
+  /**
+   * Start WebSocket server attached to Fastify HTTP server
+   */
+  startWebSocketServer(fastifyServer: any): void {
+    // Attach WebSocket to the same HTTP server as Fastify (same port)
+    this.wss = new WebSocket.Server({
+      server: fastifyServer,
+      path: '/ws',
+    })
 
     this.wss.on('connection', (ws: WebSocket) => {
-      console.log('🔌 New WebSocket connection')
+      console.log('🔗 WebSocket client connected')
       this.clients.set(ws, { ws, subscriptions: new Set() })
 
       ws.on('message', (data: Buffer) => {
@@ -178,12 +190,12 @@ export class EngineServer {
       })
 
       ws.on('close', () => {
-        console.log('🔌 WebSocket connection closed')
+        console.log('🔌 WebSocket client disconnected')
         this.clients.delete(ws)
       })
 
       ws.on('error', (error) => {
-        console.error('❌ WebSocket error:', error)
+        console.error('❌ WebSocket client error:', error)
         this.clients.delete(ws)
       })
 
@@ -194,7 +206,7 @@ export class EngineServer {
     // Start heartbeat
     this.startHeartbeat()
 
-    console.log('🌐 WebSocket server started on port 3002')
+    console.log('🌐 WebSocket server attached on path /ws')
   }
 
   /**

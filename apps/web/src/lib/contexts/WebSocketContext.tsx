@@ -91,13 +91,10 @@ interface WebSocketProviderProps {
   children: ReactNode
 }
 
-// Production-safe WebSocket URL detection
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL ||
-  (typeof window !== "undefined"
-    ? `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`
-    : "");
+// Production-safe WebSocket URL detection - NO fallback to avoid localhost issues
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || ""
 
-// Anti-localhost guard for production
+// Anti-localhost guard for production (only warn if URL is set but contains localhost)
 if (WS_URL && WS_URL.includes('localhost')) {
   console.warn('🚨 WebSocket URL contains localhost - this will fail in production!');
   console.warn('Set NEXT_PUBLIC_WS_URL environment variable for production deployment');
@@ -122,6 +119,13 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
   // Connection management
   const connect = useCallback(() => {
     if (ws?.readyState === WebSocket.OPEN) return
+
+    // Check if WebSocket URL is configured
+    if (!WS_URL) {
+      console.warn('⚠️ NEXT_PUBLIC_WS_URL non impostata: WebSocket disabilitato in produzione.')
+      setConnectionStatus('disconnected')
+      return
+    }
 
     setConnectionStatus('connecting')
 
@@ -313,29 +317,29 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     return () => clearInterval(interval)
   }, [])
 
-  // Auto-connect when user logs in (only if WebSocket enabled)
+  // Auto-connect when user logs in (only if WebSocket enabled and URL configured)
   useEffect(() => {
-    if (WS_ENABLED) {
+    if (WS_ENABLED && WS_URL) {
       if (user && !isConnected) {
         connect()
       } else if (!user && isConnected) {
         disconnect()
       }
     } else {
-      // Start HTTP polling instead
+      // Start HTTP polling instead (WebSocket disabled or not configured)
       const cleanup = startPolling()
       return cleanup
     }
-  }, [user, isConnected, connect, disconnect, WS_ENABLED, startPolling])
+  }, [user, isConnected, connect, disconnect, WS_ENABLED, WS_URL, startPolling])
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (WS_ENABLED) {
+      if (WS_ENABLED && WS_URL) {
         disconnect()
       }
     }
-  }, [disconnect, WS_ENABLED])
+  }, [disconnect, WS_ENABLED, WS_URL])
 
   const value: WebSocketContextType = {
     // State
