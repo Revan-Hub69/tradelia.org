@@ -27,6 +27,7 @@ import { Pool } from 'pg';
 
 import { EngineServer } from './http/server';
 import { env } from './config/env';
+import { authPlugin } from './plugins/auth';
 
 console.log('Initializing database connection...');
 
@@ -89,22 +90,16 @@ server.register(swagger, {
     ],
     components: {
       securitySchemes: {
-        apiKey: {
-          type: 'apiKey',
-          name: 'x-binance-api-key',
-          in: 'header'
-        },
-        apiSecret: {
-          type: 'apiKey',
-          name: 'x-binance-api-secret',
-          in: 'header'
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
         }
       }
     },
     security: [
       {
-        apiKey: [],
-        apiSecret: []
+        bearerAuth: []
       }
     ]
   }
@@ -119,6 +114,9 @@ server.register(swaggerUi, {
   staticCSP: true,
   transformStaticCSP: (header) => header
 });
+
+// Register auth plugin
+server.register(authPlugin);
 
 // Initialize OMS Engine Server
 const engineServer = new EngineServer(prisma);

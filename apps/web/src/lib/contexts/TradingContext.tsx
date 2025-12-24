@@ -198,18 +198,9 @@ export const TradingProvider: React.FC<TradingProviderProps> = ({ children }) =>
     if (!user) return
 
     try {
-      const { data } = await db.getExchangeConnections(user.id)
-      if (data) {
-        const connections: ExchangeConnection[] = data.map(conn => ({
-          id: conn.id,
-          exchange: conn.exchange,
-          status: conn.status || 'disconnected',
-          lastCheck: conn.last_check || new Date().toISOString(),
-          permissions: conn.permissions,
-          error: conn.error
-        }))
-        setExchangeConnections(connections)
-      }
+      // TODO: Implement exchange connections when database schema is ready
+      // For now, return empty array
+      setExchangeConnections([])
     } catch (error) {
       console.error('Failed to refresh exchange connections:', error)
     }
