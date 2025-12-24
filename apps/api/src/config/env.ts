@@ -71,6 +71,9 @@ const envSchema = z.object({
   // Rate limiting
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60000), // 1 minute
+
+  // Email service (Brevo)
+  BREVO_API_KEY: z.string().min(1).optional(),
 })
 
 // Parse and validate environment variables
