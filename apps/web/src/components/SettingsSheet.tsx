@@ -6,10 +6,10 @@ interface SettingsSheetProps {
   open: boolean
   onClose: () => void
   theme: 'dark' | 'light'
-  textScale: 'normal' | 'large'
+  textScale: 'small' | 'normal' | 'large'
   animations: 'on' | 'reduce'
   onThemeChange: (t: 'dark' | 'light') => void
-  onTextScaleChange: (s: 'normal' | 'large') => void
+  onTextScaleChange: (s: 'small' | 'normal' | 'large') => void
   onAnimationsChange: (a: 'on' | 'reduce') => void
   strings: {
     title: string
@@ -21,6 +21,7 @@ interface SettingsSheetProps {
     animationsOn: string
     animationsReduce: string
     textSizeLabel: string
+    textSmall: string
     textNormal: string
     textLarge: string
     accessLabel: string
@@ -102,16 +103,16 @@ export function SettingsSheet({
 
           <div className="space-y-2">
             <p className="text-sm font-semibold text-[var(--ink)]">{strings.textSizeLabel}</p>
-            <div className="flex gap-2">
-              {(['normal', 'large'] as const).map(size => (
+            <div className="grid grid-cols-3 gap-2">
+              {(['small', 'normal', 'large'] as const).map(size => (
                 <button
                   key={size}
                   onClick={() => onTextScaleChange(size)}
-                  className={`flex-1 px-3 py-2 rounded-lg border ${
+                  className={`px-3 py-2 rounded-lg border ${
                     textScale === size ? 'border-[var(--accent)] text-[var(--ink)]' : 'border-[var(--br)] text-[var(--muted)]'
                   }`}
                 >
-                  {size === 'normal' ? strings.textNormal : strings.textLarge}
+                  {size === 'small' ? strings.textSmall : size === 'normal' ? strings.textNormal : strings.textLarge}
                 </button>
               ))}
             </div>

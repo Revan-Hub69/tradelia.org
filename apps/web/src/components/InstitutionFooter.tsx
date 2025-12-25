@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { TradeliaLogo } from './icons/TradeliaLogo'
 
 interface FooterLink {
   label: string
@@ -22,9 +23,10 @@ export function InstitutionFooter({ links, disclaimer }: InstitutionFooterProps)
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand section */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-[var(--ink)] mb-4">
-              Tradelia
-            </h3>
+            <div className="flex items-center gap-3 mb-4">
+              <TradeliaLogo size={28} className="text-[var(--ink)]" />
+              <h3 className="text-lg font-semibold text-[var(--ink)]">Tradelia</h3>
+            </div>
             <p className="text-[var(--muted)] leading-relaxed mb-4 max-w-md">
               Progetto educativo indipendente per comprendere il rischio nel mondo delle criptovalute.
             </p>
@@ -43,8 +45,11 @@ export function InstitutionFooter({ links, disclaimer }: InstitutionFooterProps)
                   <li key={index}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+                      className="footer-link text-sm"
                     >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                       {link.label}
                     </Link>
                   </li>
@@ -61,8 +66,11 @@ export function InstitutionFooter({ links, disclaimer }: InstitutionFooterProps)
                   <li key={index}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+                      className="footer-link text-sm"
                     >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                       {link.label}
                     </Link>
                   </li>

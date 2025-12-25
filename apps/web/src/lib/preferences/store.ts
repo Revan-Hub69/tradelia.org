@@ -24,7 +24,12 @@ function normalizeRemotePreferences(payload: PreferenceSelection | null): Prefer
   if (!payload) return null
 
   const theme: PreferenceTheme = payload.theme === 'light' ? 'light' : 'dark'
-  const textScale: PreferenceTextScale = payload.text_scale === 'large' ? 'large' : 'normal'
+  const textScale: PreferenceTextScale =
+    payload.text_scale === 'large'
+      ? 'large'
+      : payload.text_scale === 'small'
+        ? 'small'
+        : 'normal'
   const animations: PreferenceAnimations = payload.animations === 'reduce' ? 'reduce' : 'on'
 
   return { theme, textScale, animations }

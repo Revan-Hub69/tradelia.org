@@ -42,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="it">
       <head>
         {/* PWA Meta Tags */}
         <meta name="theme-color" content="#0f172a" />
@@ -63,6 +63,20 @@ export default function RootLayout({
 
         {/* Canonical URL */}
         <link rel="canonical" href="https://tradelia.ai" />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Tradelia',
+              url: 'https://tradelia.ai',
+              logo: 'https://tradelia.ai/favicon.svg',
+              description: 'Educazione al rischio crypto con microlearning operativo e design cognitivo.',
+            }),
+          }}
+        />
       </head>
       <body className={inter.className} data-theme="dark">
         <TradingProvider>

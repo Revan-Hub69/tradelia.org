@@ -53,6 +53,7 @@ type SettingsStrings = {
   animationsOn: string
   animationsReduce: string
   textSizeLabel: string
+  textSmall: string
   textNormal: string
   textLarge: string
   accessLabel: string
@@ -64,6 +65,16 @@ type SettingsStrings = {
 type HeaderStrings = {
   animationsShort: string
   themeLabel: string
+  menuLabel: string
+  closeMenuLabel: string
+  settingsLabel: string
+  languageLabel: string
+  textScaleLabel: string
+  animationsLabel: string
+  tagline?: string
+  textSmallLabel?: string
+  textNormalLabel?: string
+  textLargeLabel?: string
 }
 
 type LearningPillar = {
@@ -116,6 +127,7 @@ type Translation = {
   tickerError: string
   settingsStrings: SettingsStrings
   headerStrings: HeaderStrings
+  headerNav: { href: string; label: string }[]
   settingsTriggerLabel: string
   methodologyClose: string
 }
@@ -123,7 +135,7 @@ type Translation = {
 export default function HomePage() {
   const [currentLang, setCurrentLang] = useState<Language>('it')
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-  const [textScale, setTextScale] = useState<'normal' | 'large'>('normal')
+  const [textScale, setTextScale] = useState<'small' | 'normal' | 'large'>('normal')
   const [animations, setAnimations] = useState<'on' | 'reduce'>('on')
   const [prefsReady, setPrefsReady] = useState(false)
   const [methodologyOpen, setMethodologyOpen] = useState(false)
@@ -222,6 +234,7 @@ export default function HomePage() {
         animationsOn: 'Attive',
         animationsReduce: 'Ridotte',
         textSizeLabel: 'Dimensione testo',
+        textSmall: 'Compatta',
         textNormal: 'Normale',
         textLarge: 'Grande',
         accessLabel: 'Accesso',
@@ -232,7 +245,21 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Cambia tema',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Chiudi',
+        settingsLabel: 'Impostazioni',
+        languageLabel: 'Lingua',
+        textScaleLabel: 'Dimensione testo',
+        animationsLabel: 'Animazioni',
+        textSmallLabel: 'Compatta',
+        textNormalLabel: 'Normale',
+        textLargeLabel: 'Ampia',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Percorsi' },
+        { href: '#metodo', label: 'Metodo' },
+        { href: '#note', label: 'Note' },
+      ],
       settingsTriggerLabel: 'Apri impostazioni',
       methodologyClose: 'Chiudi',
     },
@@ -326,6 +353,7 @@ export default function HomePage() {
         animationsOn: 'On',
         animationsReduce: 'Reduced',
         textSizeLabel: 'Text size',
+        textSmall: 'Compact',
         textNormal: 'Normal',
         textLarge: 'Large',
         accessLabel: 'Access',
@@ -336,7 +364,21 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Toggle theme',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Close',
+        settingsLabel: 'Settings',
+        languageLabel: 'Language',
+        textScaleLabel: 'Text size',
+        animationsLabel: 'Animations',
+        textSmallLabel: 'Compact',
+        textNormalLabel: 'Normal',
+        textLargeLabel: 'Large',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Paths' },
+        { href: '#metodo', label: 'Method' },
+        { href: '#note', label: 'Notes' },
+      ],
       settingsTriggerLabel: 'Open settings',
       methodologyClose: 'Close',
     },
@@ -430,6 +472,7 @@ export default function HomePage() {
         animationsOn: 'Activas',
         animationsReduce: 'Reducidas',
         textSizeLabel: 'Tamaño de texto',
+        textSmall: 'Compacto',
         textNormal: 'Normal',
         textLarge: 'Grande',
         accessLabel: 'Acceso',
@@ -440,7 +483,21 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Cambiar tema',
+        menuLabel: 'Menú',
+        closeMenuLabel: 'Cerrar',
+        settingsLabel: 'Ajustes',
+        languageLabel: 'Idioma',
+        textScaleLabel: 'Tamaño de texto',
+        animationsLabel: 'Animaciones',
+        textSmallLabel: 'Compacto',
+        textNormalLabel: 'Normal',
+        textLargeLabel: 'Grande',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Recorridos' },
+        { href: '#metodo', label: 'Método' },
+        { href: '#note', label: 'Notas' },
+      ],
       settingsTriggerLabel: 'Abrir configuración',
       methodologyClose: 'Cerrar',
     },
@@ -534,6 +591,7 @@ export default function HomePage() {
         animationsOn: 'Actives',
         animationsReduce: 'Réduites',
         textSizeLabel: 'Taille du texte',
+        textSmall: 'Compacte',
         textNormal: 'Normal',
         textLarge: 'Grand',
         accessLabel: 'Accès',
@@ -544,7 +602,21 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Changer de thème',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Fermer',
+        settingsLabel: 'Paramètres',
+        languageLabel: 'Langue',
+        textScaleLabel: 'Taille du texte',
+        animationsLabel: 'Animations',
+        textSmallLabel: 'Compacte',
+        textNormalLabel: 'Normal',
+        textLargeLabel: 'Grand',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Parcours' },
+        { href: '#metodo', label: 'Méthode' },
+        { href: '#note', label: 'Notes' },
+      ],
       settingsTriggerLabel: 'Ouvrir les paramètres',
       methodologyClose: 'Fermer',
     },
@@ -638,6 +710,7 @@ export default function HomePage() {
         animationsOn: 'An',
         animationsReduce: 'Reduziert',
         textSizeLabel: 'Textgröße',
+        textSmall: 'Kompakt',
         textNormal: 'Normal',
         textLarge: 'Groß',
         accessLabel: 'Zugang',
@@ -648,7 +721,21 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Thema wechseln',
+        menuLabel: 'Menü',
+        closeMenuLabel: 'Schließen',
+        settingsLabel: 'Einstellungen',
+        languageLabel: 'Sprache',
+        textScaleLabel: 'Textgröße',
+        animationsLabel: 'Animationen',
+        textSmallLabel: 'Kompakt',
+        textNormalLabel: 'Normal',
+        textLargeLabel: 'Groß',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Pfade' },
+        { href: '#metodo', label: 'Methode' },
+        { href: '#note', label: 'Notizen' },
+      ],
       settingsTriggerLabel: 'Einstellungen öffnen',
       methodologyClose: 'Schließen',
     },
@@ -676,7 +763,8 @@ export default function HomePage() {
     if (!prefsReady) return
     document.documentElement.dataset.theme = theme
     const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    document.documentElement.style.setProperty('--font-scale', textScale === 'large' ? '1.08' : '1')
+    const fontScale = textScale === 'large' ? '1.08' : textScale === 'small' ? '0.94' : '1'
+    document.documentElement.style.setProperty('--font-scale', fontScale)
     document.documentElement.dataset.motion = animations
 
     savePreferences({ theme, textScale, animations }, user?.id)
@@ -692,7 +780,7 @@ export default function HomePage() {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
   }
 
-  const handleTextScaleChange = (scale: 'normal' | 'large') => {
+  const handleTextScaleChange = (scale: 'small' | 'normal' | 'large') => {
     setTextScale(scale)
   }
 
@@ -735,21 +823,40 @@ export default function HomePage() {
         onOpenSettings={() => setSettingsOpen(true)}
         onChangeLang={handleLangChange}
         strings={t.headerStrings}
+        navItems={t.headerNav}
       />
 
-      <MarketTicker errorLabel={t.tickerError} />
+      <MarketTicker errorLabel={t.tickerError} reduceMotion={animations === 'reduce'} />
 
       {/* Main Content */}
       <main>
         {/* 1. Editorial Hero */}
         <EditorialHero
+          id="percorso"
           title={t.heroTitle}
           kicker={t.heroKicker}
           lede={t.heroLede}
           badges={t.heroBadges}
           primaryCta={{ label: t.heroPrimaryCta, href: '/method' }}
-          secondaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
+          tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
         />
+
+        {/* Danger highlights */}
+        <section className="bg-[var(--bg-2)] py-6">
+          <div className="mx-auto max-w-6xl px-6 lg:px-8 grid gap-4 md:grid-cols-3">
+            {[
+              { title: 'Liquidazioni 24h (demo)', value: '$120M', source: 'Fonte: futures public feed (placeholder)' },
+              { title: 'Drawdown medio top 10 (demo)', value: '-18%', source: 'Fonte: risk lab (placeholder)' },
+              { title: 'Volatilità annualizzata (demo)', value: '72%', source: 'Fonte: market stats (placeholder)' },
+            ].map((item, idx) => (
+              <div key={idx} className="glass-panel p-4 border border-[var(--br)]/70">
+                <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{item.title}</p>
+                <p className="text-xl font-semibold text-[var(--ink)]">{item.value}</p>
+                <p className="text-[var(--muted)] text-xs">{item.source}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* 2. Context Section */}
         <section className="py-16">
@@ -840,8 +947,8 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="glass-panel p-6 space-y-6">
-                <div className="flex items-start gap-3">
-                  <div className="pill-strong">{t.cognitiveCard.badge}</div>
+                <div className="space-y-2">
+                  <span className="pill-strong inline-flex">{t.cognitiveCard.badge}</span>
                   <p className="text-[var(--muted)] leading-relaxed">
                     {t.cognitiveCard.body}
                   </p>
@@ -866,13 +973,15 @@ export default function HomePage() {
         </section>
 
         {/* 6. Method Declaration */}
-        <MethodNote
-          summary={t.methodNote}
-          href="/method"
-        />
+        <section id="metodo">
+          <MethodNote
+            summary={t.methodNote}
+            href="/method"
+          />
+        </section>
 
         {/* 6b. Microlearning modules */}
-        <section className="py-16 bg-[var(--bg-2)]">
+        <section className="py-16 bg-[var(--bg-2)]" id="note">
           <div className="mx-auto max-w-6xl px-6 lg:px-8 space-y-6">
             <div className="flex flex-col gap-3 text-left">
               <span className="section-kicker">{t.microKicker}</span>
@@ -906,10 +1015,13 @@ export default function HomePage() {
               Scopri come la homepage è stata progettata: principi cognitivi, microlearning, sicurezza e privacy.
             </p>
             <button
-              className="btn-ghost px-5 py-3 inline-flex items-center justify-center"
+              className="btn-ghost px-5 py-3 inline-flex items-center justify-center gap-2"
               onClick={() => setMethodologyOpen(true)}
             >
               Note metodologiche e riferimenti
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </button>
           </div>
         </section>
