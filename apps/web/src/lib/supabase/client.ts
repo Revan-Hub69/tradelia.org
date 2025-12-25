@@ -22,6 +22,13 @@ function getSupabaseClient() {
 
 export const supabase = getSupabaseClient()
 
+type UserPreferencesRow = {
+  user_id: string
+  theme: string | null
+  text_scale: string | null
+  animations: string | null
+}
+
 // Auth helpers
 export const auth = {
   // Sign up with email/password
@@ -87,6 +94,28 @@ export const db = {
       .eq('id', userId)
       .single()
     return { data, error }
+  },
+
+  getPreferences: async (userId: string) => {
+    const { data, error } = await supabase
+      .from('user_preferences')
+      .select('theme, text_scale, animations')
+      .eq('user_id', userId)
+      .single()
+
+    return { data: (data as UserPreferencesRow | null) ?? null, error }
+  },
+
+  savePreferences: async (userId: string, payload: { theme: string; text_scale: string; animations: string }) => {
+    const { data, error } = await supabase
+      .from('user_preferences')
+      .upsert(
+        { user_id: userId, ...payload },
+        { onConflict: 'user_id' }
+      )
+      .select('theme, text_scale, animations')
+      .single()
+    return { data: (data as UserPreferencesRow | null) ?? null, error }
   },
 
 
