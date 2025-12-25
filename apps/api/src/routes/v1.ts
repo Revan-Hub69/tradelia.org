@@ -712,17 +712,6 @@ export const v1Routes: FastifyPluginAsync = async (fastify) => {
 
 // Base endpoints that frontend expects (non-authenticated)
 export const baseRoutes: FastifyPluginAsync = async (fastify) => {
-  // Health check endpoint
-  fastify.get('/health', async (request, reply) => {
-    apiLogger.info('Health check requested')
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      version: '1.0.0',
-      uptime: process.uptime()
-    };
-  });
-
   // Market snapshot endpoint (public data)
   fastify.get('/market/snapshot', async (request, reply) => {
     try {

@@ -8,6 +8,7 @@ console.log('[env] hasSecret=', Boolean(process.env.BINANCE_API_SECRET))
 console.log('[env] hasDb=', Boolean(process.env.DATABASE_URL))
 console.log('[env] hasSupabaseUrl=', Boolean(process.env.SUPABASE_URL))
 console.log('[env] hasSupabaseKey=', Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY))
+console.log('[env] mockData=', Boolean(process.env.ENABLE_MOCK_DATA))
 
 // Environment schema validation
 const envSchema = z.object({
@@ -84,6 +85,9 @@ const envSchema = z.object({
 
   // JWT verification
   VERIFY_JWT_STRICT: z.coerce.boolean().default(true),
+
+  // Mock data (should remain false in production)
+  ENABLE_MOCK_DATA: z.coerce.boolean().default(false),
 })
 
 // Parse and validate environment variables
