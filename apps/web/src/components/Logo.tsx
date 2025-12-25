@@ -14,166 +14,36 @@ export const Logo: React.FC<LogoProps> = ({
   className = ''
 }) => {
   const sizeClasses = {
-    sm: 'h-6 w-6',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12',
-    xl: 'h-16 w-16'
+    sm: 'h-5 w-5',
+    md: 'h-6 w-6',
+    lg: 'h-8 w-8',
+    xl: 'h-10 w-10'
   }
 
   const textSizeClasses = {
-    sm: 'text-lg',
-    md: 'text-xl',
-    lg: 'text-2xl',
-    xl: 'text-3xl'
+    sm: 'text-base',
+    md: 'text-lg',
+    lg: 'text-xl',
+    xl: 'text-2xl'
   }
 
   if (variant === 'icon') {
     return (
-      <svg
-        className={`${sizeClasses[size]} ${className}`}
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="Tradelia Logo"
-      >
-        {/* Outer circle representing market cycle */}
-        <circle
-          cx="16"
-          cy="16"
-          r="14"
-          stroke="currentColor"
-          strokeWidth="2"
-          fill="none"
-        />
-
-        {/* Inner geometric pattern representing analysis */}
-        <path
-          d="M8 16L12 12L16 14L20 10L24 16L20 20L16 18L12 20Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-
-        {/* Central dot representing precision */}
-        <circle
-          cx="16"
-          cy="16"
-          r="2"
-          fill="currentColor"
-        />
-
-        {/* Risk assessment indicators */}
-        <rect
-          x="6"
-          y="6"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="24"
-          y="6"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="6"
-          y="24"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="24"
-          y="24"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-      </svg>
+      <div className={`${sizeClasses[size]} ${className} bg-blue-600 rounded flex items-center justify-center`}>
+        <span className="text-white font-bold text-xs leading-none">T</span>
+      </div>
     )
   }
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      {/* Icon */}
-      <svg
-        className={sizeClasses[size]}
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="Tradelia Logo"
-      >
-        {/* Outer circle representing market cycle */}
-        <circle
-          cx="16"
-          cy="16"
-          r="14"
-          stroke="currentColor"
-          strokeWidth="2"
-          fill="none"
-        />
+    <div className={`flex items-center gap-2 ${className}`}>
+      {/* Simple icon */}
+      <div className={`${sizeClasses[size]} bg-blue-600 rounded flex items-center justify-center`}>
+        <span className="text-white font-bold text-xs leading-none">T</span>
+      </div>
 
-        {/* Inner geometric pattern representing analysis */}
-        <path
-          d="M8 16L12 12L16 14L20 10L24 16L20 20L16 18L12 20Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-
-        {/* Central dot representing precision */}
-        <circle
-          cx="16"
-          cy="16"
-          r="2"
-          fill="currentColor"
-        />
-
-        {/* Risk assessment indicators */}
-        <rect
-          x="6"
-          y="6"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="24"
-          y="6"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="6"
-          y="24"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-        <rect
-          x="24"
-          y="24"
-          width="2"
-          height="2"
-          fill="currentColor"
-          opacity="0.8"
-        />
-      </svg>
-
-      {/* Text */}
-      <span className={`font-bold text-white tracking-tight ${textSizeClasses[size]}`}>
+      {/* Clean text */}
+      <span className={`font-semibold text-gray-900 ${textSizeClasses[size]}`}>
         Tradelia
       </span>
     </div>
