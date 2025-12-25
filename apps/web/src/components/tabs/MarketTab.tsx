@@ -95,69 +95,69 @@ export const MarketTab: React.FC = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Rank
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Symbol
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Score
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden lg:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       LQS
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden lg:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       VOS
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden xl:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       DFS
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden xl:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       MES
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      MTF Gate
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Gate
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Imbalance
+                    <th className="hidden md:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Imbal.
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden md:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       OI
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Pressure
+                    <th className="hidden lg:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Press.
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden xl:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Support
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Resistance
+                    <th className="hidden xl:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Resist.
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Slippage
+                    <th className="hidden lg:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Slip.
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden md:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Zone
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Price
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      24h Change
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      24h Δ
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {screenerData.slice(0, 20).map((item, index) => (
                     <tr key={item.symbol} className="hover:bg-gray-50">
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         #{item.rank}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {item.symbol}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           item.score >= 80 ? 'bg-green-100 text-green-800' :
                           item.score >= 60 ? 'bg-yellow-100 text-yellow-800' :
@@ -166,24 +166,24 @@ export const MarketTab: React.FC = () => {
                           {item.score.toFixed(1)}
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden lg:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.lqs.toFixed(1)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden lg:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.vos.toFixed(1)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden xl:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.dfs.toFixed(1)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden xl:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.mes.toFixed(1)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getMtfGateColor(item.mtfGate)}`}>
                           {item.mtfGate}
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden md:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span className={`${
                           Math.abs(item.imbalance) > 0.05 ? 'text-red-600 font-medium' :
                           Math.abs(item.imbalance) > 0.02 ? 'text-yellow-600' :
@@ -192,10 +192,10 @@ export const MarketTab: React.FC = () => {
                           {(item.imbalance * 100).toFixed(2)}%
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden md:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {(item.oi / 1000).toFixed(0)}K
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden lg:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span className={`${
                           item.pressure > 0.5 ? 'text-green-600' :
                           item.pressure < -0.5 ? 'text-red-600' :
@@ -204,16 +204,16 @@ export const MarketTab: React.FC = () => {
                           {item.pressure > 0 ? '+' : ''}{(item.pressure * 100).toFixed(1)}%
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-green-600">
+                      <td className="hidden xl:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-green-600">
                         ${item.support.toLocaleString()}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-red-600">
+                      <td className="hidden xl:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-red-600">
                         ${item.resistance.toLocaleString()}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="hidden lg:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.slippage.toFixed(2)}%
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm">
+                      <td className="hidden md:table-cell px-2 sm:px-4 py-4 whitespace-nowrap text-sm">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           item.accumulationZone === 'ACCUMULATION' ? 'bg-green-100 text-green-800' :
                           item.accumulationZone === 'DISTRIBUTION' ? 'bg-red-100 text-red-800' :
@@ -222,10 +222,10 @@ export const MarketTab: React.FC = () => {
                           {item.accumulationZone}
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         ${item.price.toLocaleString()}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-sm">
                         <span className={`${
                           item.change24h >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
