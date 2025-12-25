@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 type PreferenceTheme = 'dark' | 'light'
-type PreferenceTextScale = 'normal' | 'large'
+type PreferenceTextScale = 'small' | 'normal' | 'large'
 type PreferenceAnimations = 'on' | 'reduce'
 
 type PreferenceRow = {
