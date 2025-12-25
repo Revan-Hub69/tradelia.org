@@ -129,7 +129,7 @@ export default function HomePage() {
   const [methodologyOpen, setMethodologyOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { user } = useTrading()
-  const handleLangChange = (lang: Language) => setCurrentLang(lang)
+  const handleLangChange = (lang: string) => setCurrentLang(lang as Language)
 
   const copy: Record<Language, Translation> = {
     it: {

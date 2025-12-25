@@ -79,14 +79,14 @@ export class BinanceProvider {
           'X-MBX-APIKEY': this.apiKey
         }
       });
-      this.enforceRateLimits(response.headers);
+      this.enforceRateLimits(response.headers as Record<string, string | string[] | null | undefined>);
       return response;
     } catch (err) {
       throw new Error(extractBinanceErrorMessage(err));
     }
   }
 
-  private enforceRateLimits(headers: Record<string, string | string[] | undefined>) {
+  private enforceRateLimits(headers: Record<string, string | string[] | null | undefined>) {
     const weightBudget = Number(process.env.BINANCE_IP_WEIGHT_BUDGET_1M ?? 0);
     const orderBudget1m = Number(process.env.BINANCE_ORDER_BUDGET_1M ?? 0);
     const orderBudget10s = Number(process.env.BINANCE_ORDER_BUDGET_10S ?? 0);
@@ -172,7 +172,7 @@ export class BinanceProvider {
     const response = await this.client.get('/fapi/v1/depth', {
       params: { symbol, limit }
     });
-    this.enforceRateLimits(response.headers);
+    this.enforceRateLimits(response.headers as Record<string, string | string[] | null | undefined>);
     return response.data;
   }
 }

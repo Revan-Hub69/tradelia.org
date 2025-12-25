@@ -28,7 +28,7 @@ export async function getTradePlans(userId: string): Promise<TradePlan[]> {
     return []
   }
 
-  return data || []
+  return (data as TradePlan[]) || []
 }
 
 export async function getExecutions(userId: string): Promise<Execution[]> {
@@ -43,5 +43,5 @@ export async function getExecutions(userId: string): Promise<Execution[]> {
     return []
   }
 
-  return data || []
+  return (data as Execution[]) || []
 }

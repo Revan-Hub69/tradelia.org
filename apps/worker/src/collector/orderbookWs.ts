@@ -18,6 +18,9 @@ type OrderbookState = {
   lastUpdateId: number;
   bids: Map<string, string>;
   asks: Map<string, string>;
+  lastWsEventTs?: number;
+  lastMissing?: { from: number; to: number } | null;
+  syncOk?: boolean;
 };
 
 const sumQty = (levels: [string, string][]) =>
@@ -57,8 +60,8 @@ async function loadSnapshot(
   symbol: string
 ): Promise<OrderbookState> {
   const snapshot = await binance.getOrderBookDepth(symbol, 100);
-  const bids = new Map(snapshot.bids);
-  const asks = new Map(snapshot.asks);
+  const bids = new Map<string, string>(snapshot.bids as [string, string][]);
+  const asks = new Map<string, string>(snapshot.asks as [string, string][]);
   return {
     lastUpdateId: snapshot.lastUpdateId ?? 0,
     bids,
