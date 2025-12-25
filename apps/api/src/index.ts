@@ -28,6 +28,7 @@ import { Pool } from 'pg';
 import { EngineServer } from './http/server';
 import { env } from './config/env';
 import { authPlugin } from './plugins/auth';
+import { baseRoutes } from './routes/v1';
 
 console.log('Initializing database connection...');
 
@@ -118,6 +119,9 @@ server.register(swaggerUi, {
 // Register auth plugin
 server.register(authPlugin);
 
+// Register base routes (public endpoints that frontend expects)
+server.register(baseRoutes);
+
 // Initialize OMS Engine Server
 const engineServer = new EngineServer(prisma);
 
@@ -130,7 +134,7 @@ if (prisma) {
   });
 }
 
-// Register OMS Engine routes
+// Register OMS Engine routes (these may override base routes if they conflict)
 engineServer.registerRoutes(server);
 
 const start = async () => {

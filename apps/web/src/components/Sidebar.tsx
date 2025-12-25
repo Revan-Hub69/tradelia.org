@@ -7,6 +7,7 @@ import {
   ChartBarIcon,
   BoltIcon,
   BanknotesIcon,
+  PlayIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline'
@@ -29,6 +30,11 @@ export const Sidebar: React.FC = () => {
       id: 'positions' as const,
       label: 'Positions',
       icon: BanknotesIcon,
+    },
+    {
+      id: 'jobs' as const,
+      label: 'Jobs',
+      icon: PlayIcon,
     },
   ]
 

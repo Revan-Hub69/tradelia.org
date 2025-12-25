@@ -3,9 +3,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
 import { auth, db } from '../supabase/client'
-import { useWebSocket } from './WebSocketContext'
-
-// Types
 export interface RuntimeStatus {
   exchangeEnv: 'testnet' | 'live'
   tradingEnabled: boolean
@@ -59,7 +56,7 @@ export interface TradingContextType {
   exchangeConnections: ExchangeConnection[]
 
   // UI state
-  currentTab: 'market' | 'signals' | 'positions'
+  currentTab: 'market' | 'signals' | 'positions' | 'jobs'
   sidebarOpen: boolean
 
   // Actions
@@ -75,7 +72,7 @@ export interface TradingContextType {
   refreshExchangeConnections: () => Promise<void>
 
   // UI actions
-  setCurrentTab: (tab: 'market' | 'signals' | 'positions') => void
+  setCurrentTab: (tab: 'market' | 'signals' | 'positions' | 'jobs') => void
   toggleSidebar: () => void
 }
 
@@ -105,7 +102,7 @@ export const TradingProvider: React.FC<TradingProviderProps> = ({ children }) =>
   const [exchangeConnections, setExchangeConnections] = useState<ExchangeConnection[]>([])
 
   // UI state
-  const [currentTab, setCurrentTab] = useState<'market' | 'signals' | 'positions'>('market')
+  const [currentTab, setCurrentTab] = useState<'market' | 'signals' | 'positions' | 'jobs'>('market')
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // Initialize auth state

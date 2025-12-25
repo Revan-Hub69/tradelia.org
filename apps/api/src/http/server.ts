@@ -512,6 +512,12 @@ export class EngineServer {
     app.get('/market/snapshot', this.getMarketSnapshot.bind(this))
     app.get('/signals/active', this.getActiveSignals.bind(this))
     app.post('/exchange/connect', this.connectExchange.bind(this))
+
+    // Exchange connections management routes
+    app.register(async (exchangeApp) => {
+      const { exchangeConnectionsRoutes } = await import('../routes/exchangeConnections')
+      await exchangeApp.register(exchangeConnectionsRoutes)
+    })
   }
 
   /**

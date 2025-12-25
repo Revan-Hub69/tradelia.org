@@ -3,9 +3,12 @@ import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../config/env';
 import { BinanceProvider } from '../providers/binance';
+import { BinanceRestClient } from '../exchange/binance/restClient';
 import { averageTrueRange } from '../lib/indicators';
 import { getSymbolFilters, roundToStep } from '../lib/exchange';
 import { MODE_CONFIGS } from '@tradelia/shared';
+import { getCircuitBreakerStatus } from '../lib/circuitBreaker';
+import { apiLogger } from '../lib/logger';
 
 const supabase = createClient(env.SUPABASE_URL || '', env.SUPABASE_SERVICE_ROLE_KEY || '', {
   auth: {
@@ -546,5 +549,272 @@ export const v1Routes: FastifyPluginAsync = async (fastify) => {
     }
 
     return { jobs: data ?? [] };
+  });
+
+  // Circuit breaker status endpoint for monitoring
+  fastify.get('/health/circuit-breakers', async (request, reply) => {
+    apiLogger.info('Circuit breaker status requested')
+    return { circuitBreakers: getCircuitBreakerStatus() };
+  });
+
+  // Exchange connections endpoints
+  fastify.get('/exchange-connections', async (request, reply) => {
+    const auth = await requireUserId(request.headers.authorization);
+    if ('error' in auth) {
+      return reply.code(401).send({ error: auth.error });
+    }
+
+    const { data, error } = await supabase
+      .from('exchange_connections')
+      .select('*')
+      .eq('user_id', auth.userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      apiLogger.error({ msg: 'Error fetching exchange connections', error })
+      return reply.code(500).send({ error: 'Failed to load connections' });
+    }
+
+    return { connections: data ?? [] };
+  });
+
+  fastify.post('/exchange-connections', async (request, reply) => {
+    const auth = await requireUserId(request.headers.authorization);
+    if ('error' in auth) {
+      return reply.code(401).send({ error: auth.error });
+    }
+
+    const payload = CreateConnectionSchema.parse(request.body);
+    const secretPayload = JSON.stringify({
+      apiKey: payload.api_key,
+      apiSecret: payload.api_secret
+    });
+
+    const { data: vaultRow, error: vaultError } = await supabase
+      .from('vault.secrets')
+      .insert({
+        name: `binance-${auth.userId}-${payload.label}`,
+        secret: secretPayload
+      })
+      .select('id')
+      .single();
+
+    if (vaultError || !vaultRow) {
+      apiLogger.error({ msg: 'Error storing vault secret', error: vaultError })
+      return reply.code(500).send({ error: 'Failed to store Vault secret' });
+    }
+
+    const apiKeyHint = `***${payload.api_key.slice(-4)}`;
+    const { data, error } = await supabase
+      .from('exchange_connections')
+      .insert({
+        user_id: auth.userId,
+        exchange: payload.exchange,
+        venue: payload.venue,
+        label: payload.label,
+        api_key_public_hint: apiKeyHint,
+        is_testnet: payload.is_testnet,
+        is_enabled: payload.is_enabled,
+        vault_secret_id: vaultRow.id
+      })
+      .select()
+      .single();
+
+    if (error) {
+      apiLogger.error({ msg: 'Error creating exchange connection', error })
+      return reply.code(500).send({ error: 'Failed to create connection' });
+    }
+
+    return reply.code(201).send({ connection: data });
+  });
+
+  fastify.delete('/exchange-connections/:id', async (request, reply) => {
+    const auth = await requireUserId(request.headers.authorization);
+    if ('error' in auth) {
+      return reply.code(401).send({ error: auth.error });
+    }
+
+    const params = z.object({ id: z.string().uuid() }).parse(request.params);
+    const { error } = await supabase
+      .from('exchange_connections')
+      .delete()
+      .eq('id', params.id)
+      .eq('user_id', auth.userId);
+
+    if (error) {
+      apiLogger.error({ msg: 'Error deleting exchange connection', error })
+      return reply.code(500).send({ error: 'Failed to delete connection' });
+    }
+
+    return reply.code(204).send();
+  });
+
+  fastify.post('/exchange-connections/:id/test', async (request, reply) => {
+    const auth = await requireUserId(request.headers.authorization);
+    if ('error' in auth) {
+      return reply.code(401).send({ error: auth.error });
+    }
+
+    const params = z.object({ id: z.string().uuid() }).parse(request.params);
+
+    try {
+      // Get connection details
+      const { data: connection, error: connError } = await supabase
+        .from('exchange_connections')
+        .select('*')
+        .eq('id', params.id)
+        .eq('user_id', auth.userId)
+        .single();
+
+      if (connError || !connection) {
+        return reply.code(404).send({ error: 'Connection not found' });
+      }
+
+      // Get API credentials from vault
+      const { data: vaultSecret, error: vaultError } = await supabase
+        .from('vault.secrets')
+        .select('secret')
+        .eq('id', connection.vault_secret_id)
+        .single();
+
+      if (vaultError || !vaultSecret) {
+        return reply.code(500).send({ error: 'Failed to retrieve API credentials' });
+      }
+
+      const { apiKey, apiSecret } = JSON.parse(vaultSecret.secret);
+
+      // Test connection by getting account info
+      const binanceClient = new BinanceRestClient(env.EXCHANGE_ENV === 'live' ? 'live' : 'testnet');
+      await binanceClient.initialize();
+
+      const accountInfo = await binanceClient.getAccount(apiKey, apiSecret);
+
+      return {
+        success: true,
+        message: 'Connection test successful',
+        accountInfo: {
+          canTrade: accountInfo.canTrade,
+          canDeposit: accountInfo.canDeposit,
+          canWithdraw: accountInfo.canWithdraw,
+          totalWalletBalance: accountInfo.totalWalletBalance
+        }
+      };
+    } catch (error) {
+      apiLogger.error({ msg: 'Exchange connection test failed', error: error as Error })
+      return {
+        success: false,
+        message: (error as Error).message,
+        error: 'Connection test failed'
+      };
+    }
+  });
+};
+
+// Base endpoints that frontend expects (non-authenticated)
+export const baseRoutes: FastifyPluginAsync = async (fastify) => {
+  // Health check endpoint
+  fastify.get('/health', async (request, reply) => {
+    apiLogger.info('Health check requested')
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      version: '1.0.0',
+      uptime: process.uptime()
+    };
+  });
+
+  // Market snapshot endpoint (public data)
+  fastify.get('/market/snapshot', async (request, reply) => {
+    try {
+      apiLogger.info('Market snapshot requested')
+
+      // Get latest screener data from database
+      const { data: snapshots, error } = await supabase
+        .from('feature_snapshots')
+        .select('*')
+        .order('ts', { ascending: false })
+        .limit(100)
+
+      if (error) {
+        apiLogger.error({ msg: 'Error fetching market snapshot', error })
+        return reply.code(500).send({ error: 'Failed to fetch market data' })
+      }
+
+      // Transform data to match expected format
+      const symbols = snapshots?.map(snapshot => ({
+        symbol: snapshot.symbol,
+        score: snapshot.score || 0,
+        price: snapshot.price || 0,
+        volume: snapshot.volume_24h || 0,
+        change24h: snapshot.price_change_24h || 0,
+        liquidity: snapshot.liquidity_score || 0,
+        volatility: snapshot.volatility_score || 0,
+        // Add other fields as needed
+      })) || []
+
+      return {
+        success: true,
+        snapshot: {
+          timestamp: new Date().toISOString(),
+          symbols,
+          totalSymbols: symbols.length
+        }
+      }
+    } catch (error) {
+      apiLogger.error({ msg: 'Market snapshot error', error: error as Error })
+      return reply.code(500).send({ error: 'Internal server error' })
+    }
+  });
+
+  // Runtime status endpoint
+  fastify.get('/runtime', async (request, reply) => {
+    apiLogger.info('Runtime status requested')
+
+    // Get system status
+    const circuitBreakers = getCircuitBreakerStatus()
+    const dbStatus = 'connected' // Placeholder - could check actual DB connection
+
+    return {
+      status: 'running',
+      timestamp: new Date().toISOString(),
+      environment: env.EXCHANGE_ENV,
+      database: dbStatus,
+      circuitBreakers: {
+        restApi: circuitBreakers.restApi.state,
+        futuresApi: circuitBreakers.futuresApi.state,
+        websocket: circuitBreakers.websocket.state
+      },
+      uptime: process.uptime(),
+      memory: process.memoryUsage()
+    };
+  });
+
+  // Symbols endpoint
+  fastify.get('/symbols', async (request, reply) => {
+    try {
+      apiLogger.info('Symbols list requested')
+
+      // Get available trading symbols
+      const { data: symbols, error } = await supabase
+        .from('symbol_universe')
+        .select('symbol, base_asset, quote_asset, status')
+        .eq('status', 'TRADING')
+        .order('symbol')
+        .limit(1000)
+
+      if (error) {
+        apiLogger.error({ msg: 'Error fetching symbols', error })
+        return reply.code(500).send({ error: 'Failed to fetch symbols' })
+      }
+
+      return {
+        success: true,
+        symbols: symbols || [],
+        total: symbols?.length || 0
+      }
+    } catch (error) {
+      apiLogger.error({ msg: 'Symbols endpoint error', error: error as Error })
+      return reply.code(500).send({ error: 'Internal server error' })
+    }
   });
 };

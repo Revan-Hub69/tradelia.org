@@ -72,8 +72,8 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   TRUST_PROXY: z.coerce.boolean().default(false),
 
-  // CORS
-  CORS_ORIGIN: z.string().default('http://localhost:3000'),
+  // CORS - Support both localhost dev and Vercel production domains
+  CORS_ORIGIN: z.string().default('http://localhost:3000,https://*.vercel.app,https://tradelia.org'),
 
   // Rate limiting
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),

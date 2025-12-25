@@ -75,6 +75,14 @@ export interface WebSocketContextType extends WebSocketState {
   subscribeToFutures: (symbol: string) => void
   unsubscribeFromFutures: (symbol: string) => void
   refreshScreener: () => void
+
+  // DB Data Service methods
+  getDBStatus: () => {
+    isConnected: boolean
+    snapshots: number
+    lastPoll: number
+  }
+  getAllLatestSnapshots: () => Map<string, any>
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined)
@@ -92,7 +100,14 @@ interface WebSocketProviderProps {
 }
 
 // Production-safe WebSocket URL detection - NO fallback to avoid localhost issues
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || ""
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || (() => {
+  // Auto-detect WS URL from API URL in production
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  if (apiUrl) {
+    return apiUrl.replace(/^http/, 'ws') + '/ws'
+  }
+  return ""
+})()
 
 // Anti-localhost guard for production (only warn if URL is set but contains localhost)
 if (WS_URL && WS_URL.includes('localhost')) {
@@ -278,7 +293,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
     const pollScreener = async () => {
       try {
-        const response = await fetch('/api/market/snapshot')
+        // Use NEXT_PUBLIC_API_URL for external API calls instead of '/api/...'
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+        const response = await fetch(`${apiUrl}/market/snapshot`)
+
         if (response.ok) {
           const data = await response.json()
           if (data.success && data.snapshot?.symbols) {
@@ -341,6 +359,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     }
   }, [disconnect, WS_ENABLED, WS_URL])
 
+  // DB Data Service methods (placeholder for now - will be implemented via API)
+  const getDBStatus = useCallback(() => ({
+    isConnected: true, // Assume DB is always connected
+    snapshots: screenerData.length, // Use screener data count as proxy
+    lastPoll: Date.now()
+  }), [screenerData.length])
+
+  const getAllLatestSnapshots = useCallback(() => {
+    // Return empty map for now - will be implemented via API
+    return new Map<string, any>()
+  }, [])
+
   const value: WebSocketContextType = {
     // State
     orderBooks,
@@ -359,6 +389,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     subscribeToFutures,
     unsubscribeFromFutures,
     refreshScreener,
+
+    // DB Data Service methods
+    getDBStatus,
+    getAllLatestSnapshots,
   }
 
   return (

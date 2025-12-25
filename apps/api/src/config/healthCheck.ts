@@ -158,17 +158,15 @@ export class HealthCheckService {
    */
   private async checkWebSocket(): Promise<ServiceHealth> {
     try {
-      const wsStatus = this.dataService.getWSStatus()
+      const wsStatus = this.dataService.getDBStatus()
 
       return {
         status: wsStatus.isConnected ? 'up' : 'degraded',
         lastCheck: new Date(),
         details: {
           isConnected: wsStatus.isConnected,
-          subscriptions: wsStatus.subscriptions,
-          reconnectAttempts: wsStatus.reconnectAttempts,
-          orderBooks: wsStatus.orderBooks,
-          markPrices: wsStatus.markPrices
+          snapshots: wsStatus.snapshots,
+          lastPoll: wsStatus.lastPoll
         }
       }
     } catch (error) {

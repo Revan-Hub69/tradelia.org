@@ -6,8 +6,13 @@ import {
   ArrowRightOnRectangleIcon,
   Cog6ToothIcon,
   KeyIcon,
-  UserIcon
+  UserIcon,
+  CpuChipIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
+import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid'
 import { supabase } from '../../lib/supabase/client'
 
 interface UserProfile {
@@ -22,10 +27,35 @@ interface UserProfile {
   }
 }
 
+interface ExchangeConnection {
+  id: string
+  exchange: string
+  venue: string
+  label: string
+  apiKeyHint: string
+  isTestnet: boolean
+  isEnabled: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 export default function SettingsPage() {
   const [userProfile, setUserProfile] = useState<UserProfile>({})
+  const [exchangeConnections, setExchangeConnections] = useState<ExchangeConnection[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [isLoadingConnections, setIsLoadingConnections] = useState(false)
+  const [showAddConnection, setShowAddConnection] = useState(false)
+  const [newConnection, setNewConnection] = useState({
+    exchange: 'binance',
+    venue: 'futures_usdt',
+    label: '',
+    apiKey: '',
+    apiSecret: '',
+    isTestnet: true,
+    isEnabled: true
+  })
+  const [testingConnection, setTestingConnection] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -38,6 +68,8 @@ export default function SettingsPage() {
 
       // Load user profile
       loadUserProfile()
+      // Load exchange connections
+      loadExchangeConnections()
     }
 
     checkAuth()
@@ -80,6 +112,127 @@ export default function SettingsPage() {
       console.error('Failed to save user profile:', error)
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const loadExchangeConnections = async () => {
+    try {
+      setIsLoadingConnections(true)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) return
+
+      const response = await fetch(`${apiUrl}/exchange-connections`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setExchangeConnections(data.connections || [])
+      }
+    } catch (error) {
+      console.error('Failed to load exchange connections:', error)
+    } finally {
+      setIsLoadingConnections(false)
+    }
+  }
+
+  const createExchangeConnection = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) return
+
+      const response = await fetch(`${apiUrl}/exchange-connections`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newConnection)
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setExchangeConnections(prev => [...prev, data.connection])
+        setShowAddConnection(false)
+        setNewConnection({
+          exchange: 'binance',
+          venue: 'futures_usdt',
+          label: '',
+          apiKey: '',
+          apiSecret: '',
+          isTestnet: true,
+          isEnabled: true
+        })
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Failed to create exchange connection:', error)
+      alert('Failed to create exchange connection')
+    }
+  }
+
+  const testExchangeConnection = async (connectionId: string) => {
+    try {
+      setTestingConnection(connectionId)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) return
+
+      const response = await fetch(`${apiUrl}/exchange-connections/${connectionId}/test`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        alert('Connection test successful!')
+      } else {
+        alert(`Connection test failed: ${data.message}`)
+      }
+    } catch (error) {
+      console.error('Failed to test exchange connection:', error)
+      alert('Failed to test exchange connection')
+    } finally {
+      setTestingConnection(null)
+    }
+  }
+
+  const deleteExchangeConnection = async (connectionId: string) => {
+    if (!confirm('Are you sure you want to delete this exchange connection?')) return
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) return
+
+      const response = await fetch(`${apiUrl}/exchange-connections/${connectionId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      })
+
+      if (response.ok) {
+        setExchangeConnections(prev => prev.filter(conn => conn.id !== connectionId))
+      } else {
+        alert('Failed to delete exchange connection')
+      }
+    } catch (error) {
+      console.error('Failed to delete exchange connection:', error)
+      alert('Failed to delete exchange connection')
     }
   }
 
@@ -129,6 +282,13 @@ export default function SettingsPage() {
                 >
                   <UserIcon className="h-5 w-5 mr-3" />
                   Profile
+                </a>
+                <a
+                  href="#exchanges"
+                  className="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
+                >
+                  <CpuChipIcon className="h-5 w-5 mr-3" />
+                  Exchange Connections
                 </a>
                 <a
                   href="#risk"
@@ -303,6 +463,157 @@ export default function SettingsPage() {
                   </button>
                 </div>
               </form>
+            </div>
+
+            {/* Exchange Connections Section */}
+            <div className="bg-gray-800 rounded-lg p-6 mt-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-medium text-white" id="exchanges">Exchange Connections</h2>
+                <button
+                  onClick={() => setShowAddConnection(!showAddConnection)}
+                  className="btn-secondary text-sm"
+                >
+                  {showAddConnection ? 'Cancel' : 'Add Connection'}
+                </button>
+              </div>
+
+              {/* Add Connection Form */}
+              {showAddConnection && (
+                <form onSubmit={createExchangeConnection} className="mt-6 p-4 bg-gray-700 rounded-lg space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-white">Exchange</label>
+                      <select
+                        value={newConnection.exchange}
+                        onChange={(e) => setNewConnection({...newConnection, exchange: e.target.value})}
+                        className="mt-1 block w-full input-field bg-white/20 text-white border-white/30"
+                      >
+                        <option value="binance">Binance</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white">Label</label>
+                      <input
+                        type="text"
+                        value={newConnection.label}
+                        onChange={(e) => setNewConnection({...newConnection, label: e.target.value})}
+                        className="mt-1 block w-full input-field bg-white/20 text-white border-white/30"
+                        placeholder="e.g. main, backup"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white">API Key</label>
+                      <input
+                        type="password"
+                        value={newConnection.apiKey}
+                        onChange={(e) => setNewConnection({...newConnection, apiKey: e.target.value})}
+                        className="mt-1 block w-full input-field bg-white/20 text-white border-white/30"
+                        placeholder="Your API Key"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white">API Secret</label>
+                      <input
+                        type="password"
+                        value={newConnection.apiSecret}
+                        onChange={(e) => setNewConnection({...newConnection, apiSecret: e.target.value})}
+                        className="mt-1 block w-full input-field bg-white/20 text-white border-white/30"
+                        placeholder="Your API Secret"
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        id="isTestnet"
+                        type="checkbox"
+                        checked={newConnection.isTestnet}
+                        onChange={(e) => setNewConnection({...newConnection, isTestnet: e.target.checked})}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      />
+                      <label htmlFor="isTestnet" className="ml-2 block text-sm text-white">
+                        Testnet
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        id="isEnabled"
+                        type="checkbox"
+                        checked={newConnection.isEnabled}
+                        onChange={(e) => setNewConnection({...newConnection, isEnabled: e.target.checked})}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      />
+                      <label htmlFor="isEnabled" className="ml-2 block text-sm text-white">
+                        Enabled
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddConnection(false)}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn-primary">
+                      Create Connection
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Connections List */}
+              <div className="mt-6">
+                {isLoadingConnections ? (
+                  <div className="text-white">Loading connections...</div>
+                ) : exchangeConnections.length === 0 ? (
+                  <div className="text-gray-400 text-center py-8">
+                    No exchange connections configured yet.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {exchangeConnections.map((connection) => (
+                      <div key={connection.id} className="bg-gray-700 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <CpuChipIcon className="h-8 w-8 text-blue-400" />
+                            <div>
+                              <h3 className="text-white font-medium">
+                                {connection.exchange.toUpperCase()} - {connection.label}
+                              </h3>
+                              <p className="text-gray-400 text-sm">
+                                {connection.venue} • {connection.isTestnet ? 'Testnet' : 'Live'} • {connection.apiKeyHint}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {connection.isEnabled ? (
+                              <CheckCircleIconSolid className="h-5 w-5 text-green-400" />
+                            ) : (
+                              <XCircleIcon className="h-5 w-5 text-red-400" />
+                            )}
+                            <button
+                              onClick={() => testExchangeConnection(connection.id)}
+                              disabled={testingConnection === connection.id}
+                              className="btn-secondary text-xs px-3 py-1 disabled:opacity-50"
+                            >
+                              {testingConnection === connection.id ? 'Testing...' : 'Test'}
+                            </button>
+                            <button
+                              onClick={() => deleteExchangeConnection(connection.id)}
+                              className="text-red-400 hover:text-red-300 text-xs px-3 py-1"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-xs text-gray-500">
+                          Created: {new Date(connection.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

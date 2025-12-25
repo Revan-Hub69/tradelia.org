@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTrading } from '../../lib/contexts/TradingContext'
 import { useWebSocket } from '../../lib/contexts/WebSocketContext'
 import {
@@ -12,7 +12,10 @@ import {
   ArrowPathIcon,
   WifiIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  CpuChipIcon,
+  SignalIcon,
+  XCircleIcon
 } from '@heroicons/react/24/outline'
 
 export const MarketTab: React.FC = () => {
@@ -21,8 +24,49 @@ export const MarketTab: React.FC = () => {
     screenerData,
     isConnected,
     connectionStatus,
-    refreshScreener
+    refreshScreener,
+    getDBStatus,
+    getAllLatestSnapshots
   } = useWebSocket()
+
+  const [systemHealth, setSystemHealth] = useState({
+    dbConnected: false,
+    snapshotsCount: 0,
+    lastPoll: 0,
+    avgLatency: 0,
+    syncErrors: 0
+  })
+
+  // Update system health metrics
+  useEffect(() => {
+    const updateHealth = () => {
+      const dbStatus = getDBStatus()
+      const snapshots = getAllLatestSnapshots()
+
+      const latencies = Array.from(snapshots.values())
+        .map((s: any) => s.quality?.latency_ms || 0)
+        .filter((latency: number) => latency > 0)
+
+      const avgLatency = latencies.length > 0
+        ? latencies.reduce((sum: number, lat: number) => sum + lat, 0) / latencies.length
+        : 0
+
+      const syncErrors = Array.from(snapshots.values())
+        .filter((s: any) => !s.quality?.sync_ok).length
+
+      setSystemHealth({
+        dbConnected: dbStatus.isConnected,
+        snapshotsCount: dbStatus.snapshots,
+        lastPoll: dbStatus.lastPoll,
+        avgLatency,
+        syncErrors
+      })
+    }
+
+    updateHealth()
+    const interval = setInterval(updateHealth, 5000)
+    return () => clearInterval(interval)
+  }, [getDBStatus, getAllLatestSnapshots])
 
   // Auto-subscribe to screener on mount
   useEffect(() => {
@@ -378,6 +422,106 @@ export const MarketTab: React.FC = () => {
                     {screenerData.filter(s => s.accumulationZone === 'DISTRIBUTION').length}
                   </dd>
                 </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* System Health Dashboard */}
+      <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="px-4 py-5 sm:p-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+            System Health & Data Quality
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* DB Connection Status */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  {systemHealth.dbConnected ? (
+                    <CheckCircleIcon className="w-8 h-8 text-green-600" />
+                  ) : (
+                    <XCircleIcon className="w-8 h-8 text-red-600" />
+                  )}
+                </div>
+                <div className="ml-4">
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Database Connection
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold text-gray-900">
+                    {systemHealth.dbConnected ? 'Connected' : 'Disconnected'}
+                  </dd>
+                </div>
+              </div>
+            </div>
+
+            {/* Active Snapshots */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <CpuChipIcon className="w-8 h-8 text-blue-600" />
+                </div>
+                <div className="ml-4">
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Active Data Streams
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold text-gray-900">
+                    {systemHealth.snapshotsCount}
+                  </dd>
+                </div>
+              </div>
+            </div>
+
+            {/* Average Latency */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ClockIcon className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="ml-4">
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Avg Data Latency
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold text-gray-900">
+                    {systemHealth.avgLatency > 0 ? `${systemHealth.avgLatency.toFixed(0)}ms` : 'N/A'}
+                  </dd>
+                </div>
+              </div>
+            </div>
+
+            {/* Sync Errors */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  {systemHealth.syncErrors > 0 ? (
+                    <ExclamationTriangleIcon className="w-8 h-8 text-red-600" />
+                  ) : (
+                    <CheckCircleIcon className="w-8 h-8 text-green-600" />
+                  )}
+                </div>
+                <div className="ml-4">
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Sync Issues
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold text-gray-900">
+                    {systemHealth.syncErrors > 0 ? `${systemHealth.syncErrors} errors` : 'All good'}
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional system info */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600">
+              <div>
+                <span className="font-medium">Last Data Poll:</span>{' '}
+                {systemHealth.lastPoll > 0 ? new Date(systemHealth.lastPoll).toLocaleTimeString() : 'Never'}
+              </div>
+              <div>
+                <span className="font-medium">Data Source:</span> Supabase feature_snapshots (real-time polling)
               </div>
             </div>
           </div>

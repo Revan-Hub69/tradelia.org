@@ -1,6 +1,8 @@
 import { env } from '../../config/env'
 import { getBaseUrls, isRateLimitError, isRetryableError } from './constants'
 import { buildSignedUrl, getSignedHeaders, getPublicHeaders, TimeSync } from './signing'
+import { binanceCircuitBreakers, executeWithCircuitBreaker, ExponentialBackoff } from '../../lib/circuitBreaker'
+import { binanceLogger, ERROR_TYPES, logError } from '../../lib/logger'
 
 export class BinanceRestClient {
   private baseUrl: string

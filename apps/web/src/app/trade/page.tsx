@@ -7,10 +7,12 @@ import {
   ChartBarIcon,
   Cog6ToothIcon,
   PlayIcon,
-  StopIcon
+  StopIcon,
+  PlusIcon
 } from '@heroicons/react/24/outline'
 import { supabase } from '@/lib/supabase/client'
 import { getTradePlans, getExecutions } from '@/lib/db/repository'
+import { TradePlanBuilder, TradePlan as TradePlanType } from '@/components/TradePlanBuilder'
 
 interface TradePlan {
   plan_id: string
@@ -32,6 +34,7 @@ export default function TradePage() {
   const [tradePlans, setTradePlans] = useState<TradePlan[]>([])
   const [executions, setExecutions] = useState<Execution[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [showPlanBuilder, setShowPlanBuilder] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -68,6 +71,32 @@ export default function TradePage() {
     } catch (error) {
       console.error('Failed to load executions:', error)
     }
+  }
+
+  const handleCreatePlan = () => {
+    setShowPlanBuilder(true)
+  }
+
+  const handleSavePlan = async (plan: TradePlanType) => {
+    try {
+      // In a real implementation, this would save to the API
+      console.log('Saving trade plan:', plan)
+
+      // For now, just close the builder
+      setShowPlanBuilder(false)
+
+      // Reload plans to show the new one
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        loadTradePlans(session.user.id)
+      }
+    } catch (error) {
+      console.error('Failed to save trade plan:', error)
+    }
+  }
+
+  const handleCancelPlan = () => {
+    setShowPlanBuilder(false)
   }
 
   const logout = async () => {
@@ -112,8 +141,11 @@ export default function TradePage() {
                 <PlayIcon className="h-8 w-8 text-yellow-400" />
                 <h2 className="ml-3 text-lg font-medium text-white">Trade Plans</h2>
               </div>
-              <button className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
-                <PlayIcon className="h-4 w-4 mr-2" />
+              <button
+                onClick={handleCreatePlan}
+                className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+              >
+                <PlusIcon className="h-4 w-4 mr-2" />
                 Create Plan
               </button>
             </div>
@@ -190,6 +222,26 @@ export default function TradePage() {
           </div>
         </div>
       </main>
+
+      {/* Trade Plan Builder Modal */}
+      {showPlanBuilder && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div className="inline-block align-bottom bg-transparent rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+              <TradePlanBuilder
+                onSave={handleSavePlan}
+                onCancel={handleCancelPlan}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

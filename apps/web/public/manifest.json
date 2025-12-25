@@ -1,0 +1,50 @@
+{
+  "name": "Tradelia AI - Academic Cryptocurrency Education",
+  "short_name": "Tradelia AI",
+  "description": "Academic excellence in cryptocurrency education with AI-powered insights and proven methods",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "categories": ["education", "finance", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Long-term HODL",
+      "short_name": "HODL",
+      "description": "Explore long-term cryptocurrency holding strategies",
+      "url": "/hodl",
+      "icons": [{ "src": "/icons/hodl-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Swing Trading",
+      "short_name": "Swing",
+      "description": "Learn medium-term swing trading techniques",
+      "url": "/swing",
+      "icons": [{ "src": "/icons/swing-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "High-frequency Scalping",
+      "short_name": "Scalp",
+      "description": "Master high-frequency scalping strategies",
+      "url": "/scalp",
+      "icons": [{ "src": "/icons/scalp-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}
