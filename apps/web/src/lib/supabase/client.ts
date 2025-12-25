@@ -1,7 +1,51 @@
 import { createClient } from '@supabase/supabase-js'
 
+type PreferenceTheme = 'dark' | 'light'
+type PreferenceTextScale = 'normal' | 'large'
+type PreferenceAnimations = 'on' | 'reduce'
+
+type PreferenceRow = {
+  user_id: string
+  theme: PreferenceTheme | null
+  text_scale: PreferenceTextScale | null
+  animations: PreferenceAnimations | null
+}
+
+type PreferenceInsert = PreferenceRow
+type PreferenceUpdate = Partial<PreferenceRow>
+type PreferenceSelection = Pick<PreferenceRow, 'theme' | 'text_scale' | 'animations'>
+type PreferenceUpsertPayload = {
+  theme: PreferenceTheme
+  text_scale: PreferenceTextScale
+  animations: PreferenceAnimations
+}
+
+type AnyTable = {
+  Row: Record<string, unknown>
+  Insert: Record<string, unknown>
+  Update: Record<string, unknown>
+  Relationships: never[]
+}
+
+type Database = {
+  public: {
+    Tables: ({
+      user_preferences: {
+        Row: PreferenceRow
+        Insert: PreferenceInsert
+        Update: PreferenceUpdate
+        Relationships: never[]
+      }
+    } & Record<string, AnyTable>)
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
+  }
+}
+
 // Lazy initialization to avoid build-time errors
-let supabaseInstance: ReturnType<typeof createClient> | null = null
+let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
 
 function getSupabaseClient() {
   if (supabaseInstance) return supabaseInstance
@@ -9,7 +53,7 @@ function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
-  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+  supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
@@ -94,18 +138,17 @@ export const db = {
       .from('user_preferences')
       .select('theme, text_scale, animations')
       .eq('user_id', userId)
+      .returns<PreferenceSelection>()
       .single()
     return { data, error }
   },
 
-  savePreferences: async (userId: string, payload: { theme: string; text_scale: string; animations: string }) => {
+  savePreferences: async (userId: string, payload: PreferenceUpsertPayload) => {
     const { data, error } = await supabase
       .from('user_preferences')
-      .upsert(
-        { user_id: userId, ...payload },
-        { onConflict: 'user_id' }
-      )
+      .upsert({ user_id: userId, ...payload }, { onConflict: 'user_id' })
       .select('theme, text_scale, animations')
+      .returns<PreferenceSelection>()
       .single()
     return { data, error }
   },
@@ -144,3 +187,10 @@ export const db = {
 }
 
 export default supabase
+
+export type {
+  PreferenceAnimations,
+  PreferenceSelection,
+  PreferenceTextScale,
+  PreferenceTheme,
+}

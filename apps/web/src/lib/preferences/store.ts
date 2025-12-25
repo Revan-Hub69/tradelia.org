@@ -1,12 +1,34 @@
+import type {
+  PreferenceAnimations,
+  PreferenceSelection,
+  PreferenceTextScale,
+  PreferenceTheme,
+} from '../supabase/client'
+
 type PreferencePayload = {
-  theme: 'dark' | 'light'
-  textScale: 'normal' | 'large'
-  animations: 'on' | 'reduce'
+  theme: PreferenceTheme
+  textScale: PreferenceTextScale
+  animations: PreferenceAnimations
 }
 
 const DB_NAME = 'tradelia-preferences'
 const STORE_NAME = 'ui'
 const DB_VERSION = 1
+const defaultPreferences: PreferencePayload = {
+  theme: 'dark',
+  textScale: 'normal',
+  animations: 'on'
+}
+
+function normalizeRemotePreferences(payload: PreferenceSelection | null): PreferencePayload | null {
+  if (!payload) return null
+
+  const theme: PreferenceTheme = payload.theme === 'light' ? 'light' : 'dark'
+  const textScale: PreferenceTextScale = payload.text_scale === 'large' ? 'large' : 'normal'
+  const animations: PreferenceAnimations = payload.animations === 'reduce' ? 'reduce' : 'on'
+
+  return { theme, textScale, animations }
+}
 
 async function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -62,12 +84,8 @@ export async function loadPreferences(userId?: string) {
     const { db } = await import('../supabase/client')
     try {
       const { data, error } = await db.getPreferences(userId)
-      if (!error && data) {
-        remote = {
-          theme: (data.theme as PreferencePayload['theme']) || 'dark',
-          textScale: (data.text_scale as PreferencePayload['textScale']) || 'normal',
-          animations: (data.animations as PreferencePayload['animations']) || 'on',
-        }
+      if (!error) {
+        remote = normalizeRemotePreferences(data)
       }
     } catch (error) {
       console.warn('Remote preferences unavailable', error)
@@ -76,7 +94,7 @@ export async function loadPreferences(userId?: string) {
 
   const local = await readLocal()
 
-  return remote || local || { theme: 'dark', textScale: 'normal', animations: 'on' }
+  return remote || local || defaultPreferences
 }
 
 export async function savePreferences(value: PreferencePayload, userId?: string) {

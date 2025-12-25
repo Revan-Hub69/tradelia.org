@@ -33,6 +33,7 @@ pids/
 *.pid
 *.seed
 *.pid.lock
+apps/api/node-compile-cache/
 
 # Coverage directory used by tools like istanbul
 coverage/

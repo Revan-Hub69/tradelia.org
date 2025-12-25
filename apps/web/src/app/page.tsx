@@ -13,13 +13,115 @@ import { loadPreferences, savePreferences } from '../lib/preferences/store'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
 
+type Language = 'it' | 'en' | 'es' | 'fr' | 'de'
+
+type MicrolearningCard = {
+  title: string
+  body: string
+  pills: string[]
+}
+
+type MetricChip = {
+  value: string
+  label: string
+}
+
+type CognitiveCard = {
+  badge: string
+  body: string
+}
+
+type MethodologySection = {
+  title: string
+  body: string
+}
+
+type MethodologyDrawerStrings = {
+  kicker: string
+  title: string
+  referencesLabel: string
+  closeLabel: string
+}
+
+type SettingsStrings = {
+  title: string
+  closeLabel: string
+  themeLabel: string
+  darkLabel: string
+  lightLabel: string
+  animationsLabel: string
+  animationsOn: string
+  animationsReduce: string
+  textSizeLabel: string
+  textNormal: string
+  textLarge: string
+  accessLabel: string
+  loginLabel: string
+  signupLabel: string
+  accessNote: string
+}
+
+type HeaderStrings = {
+  animationsShort: string
+  themeLabel: string
+}
+
+type LearningPillar = {
+  title: string
+  body: string
+  metric: string
+  label: string
+}
+
+type MicroModule = {
+  title: string
+  detail: string
+  action: string
+}
+
 type Translation = {
+  heroTitle: string
+  heroKicker: string
+  heroPrimaryCta: string
+  heroSecondaryCta: string
+  heroLede: string[]
+  heroBadges: string[]
+  contextParagraphs: string[]
+  contextRiskLink: string
+  microlearningCard: MicrolearningCard
+  centralThesisTitle: string
+  centralThesisBody: string
+  metricChips: MetricChip[]
+  loadLabel: string
+  loadValue: string
+  metricNote: string
+  cognitiveCard: CognitiveCard
   riskLevels: RiskLevel[]
-  [key: string]: any
+  positioningTitle: string
+  positioningBody: string
+  positioningNote: string
+  positioningPills: string[]
+  learningPillars: LearningPillar[]
+  methodNote: string
+  methodologySections: MethodologySection[]
+  microKicker: string
+  microTitle: string
+  microIntro: string
+  microModules: MicroModule[]
+  methodologyTrigger: string
+  methodologyIntro: string
+  methodologyDrawer: MethodologyDrawerStrings
+  disclaimer: string
+  closing: string
+  tickerError: string
+  settingsStrings: SettingsStrings
+  headerStrings: HeaderStrings
+  settingsTriggerLabel: string
+  methodologyClose: string
 }
 
 export default function HomePage() {
-  const [currentLang, setCurrentLang] = useState('it')
+  const [currentLang, setCurrentLang] = useState<Language>('it')
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [textScale, setTextScale] = useState<'normal' | 'large'>('normal')
   const [animations, setAnimations] = useState<'on' | 'reduce'>('on')
@@ -28,7 +130,7 @@ export default function HomePage() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { user } = useTrading()
 
-  const copy: Record<string, Translation> = {
+  const copy: Record<Language, Translation> = {
     it: {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitivo · 2025',
