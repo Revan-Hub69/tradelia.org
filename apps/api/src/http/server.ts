@@ -568,25 +568,85 @@ export class EngineServer {
    */
   private async getMarketSnapshot(request: any, reply: any): Promise<any> {
     try {
-      // Return mock data for frontend development
-      reply.send({
+      if (!this.prisma) {
+        // Fallback mock data when no database
+        reply.send({
+          success: true,
+          snapshot: {
+            candidatesCount: 25,
+            topKCount: 5,
+            lastUpdate: new Date().toISOString(),
+            symbols: env.TRACK_SYMBOLS.split(',').slice(0, 5).map(symbol => ({
+              symbol,
+              score: Math.random() * 100,
+              liquidity: Math.random() * 1000000,
+              volatility: Math.random() * 10
+            }))
+          }
+        })
+        return
+      }
+
+      // Import ScreenerService dynamically to avoid circular dependencies
+      const { ScreenerService } = await import('../screener/screenerService')
+      const screenerService = new ScreenerService(this.prisma)
+
+      // Get latest screener snapshot
+      const snapshot = await screenerService.getSnapshot()
+
+      if (!snapshot) {
+        reply.send({
+          success: true,
+          snapshot: {
+            candidatesCount: 0,
+            topKCount: 0,
+            lastUpdate: new Date().toISOString(),
+            symbols: []
+          }
+        })
+        return
+      }
+
+      // Transform screener data for frontend
+      const symbols = snapshot.scores.map((score: any, index: number) => ({
+        symbol: score.symbol,
+        score: score.totalScore,
+        liquidity: score.lqs, // Map to what frontend expects
+        volatility: score.vos,
+        price: 0, // TODO: Get from market data
+        change24h: 0, // TODO: Get from market data
+        // Add rich data for frontend that expects it
+        lqs: score.lqs,
+        vos: score.vos,
+        dfs: score.dfs,
+        mes: score.mes,
+        mtfGate: score.mtfGate,
+        imbalance: 0, // TODO: Calculate from orderbook
+        oi: 0, // TODO: Get from market data
+        pressure: 0, // TODO: Calculate from orderbook
+        support: 0, // TODO: Calculate from klines
+        resistance: 0, // TODO: Calculate from klines
+        slippage: 0, // TODO: Calculate from orderbook
+        accumulationZone: 'NEUTRAL', // TODO: Calculate from microstructure
+        rank: index + 1
+      }))
+
+      const response = {
         success: true,
         snapshot: {
-          candidatesCount: 25,
-          topKCount: 5,
-          lastUpdate: new Date().toISOString(),
-          symbols: env.TRACK_SYMBOLS.split(',').slice(0, 5).map(symbol => ({
-            symbol,
-            score: Math.random() * 100,
-            liquidity: Math.random() * 1000000,
-            volatility: Math.random() * 10
-          }))
+          candidatesCount: snapshot.candidatesCount,
+          topKCount: snapshot.topKCount,
+          lastUpdate: snapshot.timestamp.toISOString(),
+          symbols: symbols.slice(0, 20)
         }
-      })
+      }
+
+      reply.send(response)
     } catch (error) {
+      console.error('Market snapshot error:', error)
       reply.code(500).send({
         success: false,
-        error: (error as Error).message
+        error: 'Failed to get market snapshot'
       })
     }
   }
