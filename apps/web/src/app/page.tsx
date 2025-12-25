@@ -64,6 +64,13 @@ type SettingsStrings = {
 type HeaderStrings = {
   animationsShort: string
   themeLabel: string
+  menuLabel: string
+  closeMenuLabel: string
+  settingsLabel: string
+  languageLabel: string
+  textScaleLabel: string
+  animationsLabel: string
+  tagline?: string
 }
 
 type LearningPillar = {
@@ -116,6 +123,7 @@ type Translation = {
   tickerError: string
   settingsStrings: SettingsStrings
   headerStrings: HeaderStrings
+  headerNav: { href: string; label: string }[]
   settingsTriggerLabel: string
   methodologyClose: string
 }
@@ -232,7 +240,19 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Cambia tema',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Chiudi',
+        settingsLabel: 'Impostazioni',
+        languageLabel: 'Lingua',
+        textScaleLabel: 'Dimensione testo',
+        animationsLabel: 'Animazioni',
+        tagline: 'Design cognitivo · 2025',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Percorsi' },
+        { href: '#metodo', label: 'Metodo' },
+        { href: '#note', label: 'Note' },
+      ],
       settingsTriggerLabel: 'Apri impostazioni',
       methodologyClose: 'Chiudi',
     },
@@ -336,7 +356,19 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Toggle theme',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Close',
+        settingsLabel: 'Settings',
+        languageLabel: 'Language',
+        textScaleLabel: 'Text size',
+        animationsLabel: 'Animations',
+        tagline: 'Cognitive design · 2025',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Paths' },
+        { href: '#metodo', label: 'Method' },
+        { href: '#note', label: 'Notes' },
+      ],
       settingsTriggerLabel: 'Open settings',
       methodologyClose: 'Close',
     },
@@ -440,7 +472,19 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Cambiar tema',
+        menuLabel: 'Menú',
+        closeMenuLabel: 'Cerrar',
+        settingsLabel: 'Ajustes',
+        languageLabel: 'Idioma',
+        textScaleLabel: 'Tamaño de texto',
+        animationsLabel: 'Animaciones',
+        tagline: 'Diseño cognitivo · 2025',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Recorridos' },
+        { href: '#metodo', label: 'Método' },
+        { href: '#note', label: 'Notas' },
+      ],
       settingsTriggerLabel: 'Abrir configuración',
       methodologyClose: 'Cerrar',
     },
@@ -544,7 +588,19 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Changer de thème',
+        menuLabel: 'Menu',
+        closeMenuLabel: 'Fermer',
+        settingsLabel: 'Paramètres',
+        languageLabel: 'Langue',
+        textScaleLabel: 'Taille du texte',
+        animationsLabel: 'Animations',
+        tagline: 'Design cognitif · 2025',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Parcours' },
+        { href: '#metodo', label: 'Méthode' },
+        { href: '#note', label: 'Notes' },
+      ],
       settingsTriggerLabel: 'Ouvrir les paramètres',
       methodologyClose: 'Fermer',
     },
@@ -648,7 +704,19 @@ export default function HomePage() {
       headerStrings: {
         animationsShort: 'Anim',
         themeLabel: 'Thema wechseln',
+        menuLabel: 'Menü',
+        closeMenuLabel: 'Schließen',
+        settingsLabel: 'Einstellungen',
+        languageLabel: 'Sprache',
+        textScaleLabel: 'Textgröße',
+        animationsLabel: 'Animationen',
+        tagline: 'Kognitives Design · 2025',
       },
+      headerNav: [
+        { href: '#percorso', label: 'Pfade' },
+        { href: '#metodo', label: 'Methode' },
+        { href: '#note', label: 'Notizen' },
+      ],
       settingsTriggerLabel: 'Einstellungen öffnen',
       methodologyClose: 'Schließen',
     },
@@ -735,6 +803,7 @@ export default function HomePage() {
         onOpenSettings={() => setSettingsOpen(true)}
         onChangeLang={handleLangChange}
         strings={t.headerStrings}
+        navItems={t.headerNav}
       />
 
       <MarketTicker errorLabel={t.tickerError} />
@@ -743,12 +812,13 @@ export default function HomePage() {
       <main>
         {/* 1. Editorial Hero */}
         <EditorialHero
+          id="percorso"
           title={t.heroTitle}
           kicker={t.heroKicker}
           lede={t.heroLede}
           badges={t.heroBadges}
           primaryCta={{ label: t.heroPrimaryCta, href: '/method' }}
-          secondaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
+          tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
         />
 
         {/* 2. Context Section */}
@@ -866,13 +936,15 @@ export default function HomePage() {
         </section>
 
         {/* 6. Method Declaration */}
-        <MethodNote
-          summary={t.methodNote}
-          href="/method"
-        />
+        <section id="metodo">
+          <MethodNote
+            summary={t.methodNote}
+            href="/method"
+          />
+        </section>
 
         {/* 6b. Microlearning modules */}
-        <section className="py-16 bg-[var(--bg-2)]">
+        <section className="py-16 bg-[var(--bg-2)]" id="note">
           <div className="mx-auto max-w-6xl px-6 lg:px-8 space-y-6">
             <div className="flex flex-col gap-3 text-left">
               <span className="section-kicker">{t.microKicker}</span>
