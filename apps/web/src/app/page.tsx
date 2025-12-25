@@ -13,6 +13,11 @@ import { loadPreferences, savePreferences } from '../lib/preferences/store'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
 
+type Translation = {
+  riskLevels: RiskLevel[]
+  [key: string]: any
+}
+
 export default function HomePage() {
   const [currentLang, setCurrentLang] = useState('it')
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
@@ -23,7 +28,7 @@ export default function HomePage() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { user } = useTrading()
 
-  const copy = {
+  const copy: Record<string, Translation> = {
     it: {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitivo · 2025',
