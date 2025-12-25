@@ -11,11 +11,11 @@ interface TradeliaHeaderProps {
 }
 
 const SUPPORTED_LANGUAGES = {
-  en: { name: 'English', flag: '🇺🇸' },
-  it: { name: 'Italiano', flag: '🇮🇹' },
-  es: { name: 'Español', flag: '🇪🇸' },
-  fr: { name: 'Français', flag: '🇫🇷' },
-  de: { name: 'Deutsch', flag: '🇩🇪' }
+  it: 'IT',
+  en: 'EN',
+  es: 'ES',
+  fr: 'FR',
+  de: 'DE'
 }
 
 export function TradeliaHeader({ lang, onToggleTheme, onChangeLang }: TradeliaHeaderProps) {
@@ -27,40 +27,42 @@ export function TradeliaHeader({ lang, onToggleTheme, onChangeLang }: TradeliaHe
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <TradeliaLogo size={32} className="text-[var(--ink)]" />
-              <span className="text-xl font-semibold text-[var(--ink)]">Tradelia</span>
+            <Link href="/" className="flex items-center space-x-3">
+              <TradeliaLogo size={36} className="text-[var(--ink)]" />
+              <span className="text-2xl font-bold text-[var(--ink)] tracking-tight">Tradelia</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/method" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+            <Link href="/method" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors font-medium">
               Metodo
             </Link>
-            <Link href="/glossary" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+            <Link href="/glossary" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors font-medium">
               Glossario
             </Link>
-            <Link href="/sources" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+            <Link href="/sources" className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors font-medium">
               Fonti
             </Link>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center space-x-4">
-            {/* Language Switcher */}
-            <div className="relative">
-              <select
-                value={lang}
-                onChange={(e) => onChangeLang(e.target.value)}
-                className="bg-[var(--surface)] border border-[var(--br)] text-[var(--ink)] px-3 py-1 rounded-md text-sm focus:ring-[var(--focus-ring)] focus:outline-none"
-              >
-                {Object.entries(SUPPORTED_LANGUAGES).map(([code, langData]) => (
-                  <option key={code} value={code}>
-                    {langData.flag} {langData.name}
-                  </option>
-                ))}
-              </select>
+          <div className="flex items-center space-x-3">
+            {/* Language Switcher - Simplified */}
+            <div className="flex items-center space-x-1">
+              {Object.entries(SUPPORTED_LANGUAGES).map(([code, label]) => (
+                <button
+                  key={code}
+                  onClick={() => onChangeLang(code)}
+                  className={`px-2 py-1 text-sm font-medium rounded transition-colors ${
+                    lang === code
+                      ? 'text-[var(--accent)] bg-[var(--surface)]'
+                      : 'text-[var(--muted)] hover:text-[var(--ink)]'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
             {/* Theme Toggle */}
@@ -81,7 +83,7 @@ export function TradeliaHeader({ lang, onToggleTheme, onChangeLang }: TradeliaHe
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -98,21 +100,21 @@ export function TradeliaHeader({ lang, onToggleTheme, onChangeLang }: TradeliaHe
             <div className="flex flex-col space-y-4">
               <Link
                 href="/method"
-                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-1"
+                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-2 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Metodo
               </Link>
               <Link
                 href="/glossary"
-                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-1"
+                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-2 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Glossario
               </Link>
               <Link
                 href="/sources"
-                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-1"
+                className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors px-2 py-2 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Fonti

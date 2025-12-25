@@ -7,8 +7,8 @@ import { WebSocketProvider } from '../lib/contexts/WebSocketContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Tradelia - AI Applied to Markets Research',
-  description: 'Advanced AI research platform for cryptocurrency trading and market analysis',
+  title: 'Tradelia',
+  description: 'Comprendere il rischio nel mondo delle criptovalute',
 }
 
 export default function RootLayout({
