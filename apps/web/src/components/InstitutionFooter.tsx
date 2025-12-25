@@ -43,8 +43,11 @@ export function InstitutionFooter({ links, disclaimer }: InstitutionFooterProps)
                   <li key={index}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+                      className="footer-link text-sm"
                     >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                       {link.label}
                     </Link>
                   </li>
@@ -61,8 +64,11 @@ export function InstitutionFooter({ links, disclaimer }: InstitutionFooterProps)
                   <li key={index}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+                      className="footer-link text-sm"
                     >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                       {link.label}
                     </Link>
                   </li>

@@ -30,9 +30,34 @@ const STREAM_ID_MAP: Record<string, string> = {
 
 interface MarketTickerProps {
   errorLabel?: string
+  reduceMotion?: boolean
 }
 
-export function MarketTicker({ errorLabel = 'Data unavailable' }: MarketTickerProps) {
+const LOGO_COLORS: Record<string, string> = {
+  btc: 'bg-gradient-to-br from-amber-400 to-orange-500',
+  eth: 'bg-gradient-to-br from-slate-300 to-slate-500',
+  bnb: 'bg-gradient-to-br from-yellow-200 to-yellow-400',
+  sol: 'bg-gradient-to-br from-indigo-400 to-fuchsia-500',
+  ada: 'bg-gradient-to-br from-blue-500 to-cyan-400',
+  dot: 'bg-gradient-to-br from-rose-400 to-amber-300',
+  link: 'bg-gradient-to-br from-blue-500 to-blue-700',
+  uni: 'bg-gradient-to-br from-pink-400 to-purple-500',
+}
+
+function getLogo(symbol: string) {
+  const base = symbol.toLowerCase()
+  const bg = LOGO_COLORS[base] || 'bg-[var(--surface-2)]'
+  return (
+    <span
+      className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-[11px] font-black text-white uppercase ${bg}`}
+      aria-hidden="true"
+    >
+      {base.slice(0, 3)}
+    </span>
+  )
+}
+
+export function MarketTicker({ errorLabel = 'Data unavailable', reduceMotion = false }: MarketTickerProps) {
   const [coins, setCoins] = useState<MarketCoin[]>(DEFAULT_COINS)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -121,8 +146,12 @@ export function MarketTicker({ errorLabel = 'Data unavailable' }: MarketTickerPr
 
   return (
     <div className="ticker-shell" aria-label="Aggiornamento mercato crypto">
-      <div className="ticker-strip">
-        <div className="ticker-track" role="list">
+      <div className={`ticker-strip ${reduceMotion ? 'overflow-x-auto' : ''}`}>
+        <div
+          className={`ticker-track ${reduceMotion ? 'ticker-track-static' : ''}`}
+          role="list"
+          style={reduceMotion ? { animation: 'none' } : undefined}
+        >
           {isLoading && (
             <>
               {Array.from({ length: 6 }).map((_, idx) => (
@@ -133,11 +162,14 @@ export function MarketTicker({ errorLabel = 'Data unavailable' }: MarketTickerPr
 
           {!isLoading && doubledCoins.map((coin, idx) => (
             <div key={`${coin.id}-${idx}`} className="ticker-item" role="listitem">
-              <div className="flex items-center gap-2">
-                <span className="pill-strong text-xs uppercase">{coin.symbol}</span>
-                <span className="text-[var(--muted)] text-xs">{coin.name}</span>
+              <div className="flex items-center gap-3">
+                {getLogo(coin.symbol)}
+                <div className="flex flex-col leading-tight">
+                  <span className="text-[var(--muted)] text-xs uppercase tracking-wide">{coin.symbol}</span>
+                  <span className="text-sm font-semibold text-[var(--ink)]">{coin.name}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-[var(--ink)]">${coin.current_price.toLocaleString('en-US', { maximumFractionDigits: 2 })}</span>
                 <span className={`text-xs font-semibold ${coin.price_change_percentage_24h >= 0 ? 'text-green-300' : 'text-red-300'}`}>
                   {coin.price_change_percentage_24h >= 0 ? '+' : ''}
