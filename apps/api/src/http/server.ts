@@ -503,8 +503,7 @@ export class EngineServer {
     app.get('/health/ready', this.getHealthReady.bind(this))
 
     // Frontend API contract routes (market snapshot served via baseRoutes plugin)
-    // Note: /runtime is handled by baseRoutes plugin to avoid duplicate route registration
-    app.get('/symbols', this.getTrackedSymbols.bind(this))
+    // Note: /runtime and /symbols are handled by baseRoutes plugin to avoid duplicate route registration
     app.get('/signals/active', this.getActiveSignals.bind(this))
     app.post('/exchange/connect', this.connectExchange.bind(this))
 
@@ -517,28 +516,7 @@ export class EngineServer {
 
 
 
-  /**
-   * Get tracked symbols for frontend
-   */
-  private async getTrackedSymbols(request: any, reply: any): Promise<any> {
-    try {
-      const symbols = env.TRACK_SYMBOLS.split(',').map(s => s.trim())
 
-      reply.send({
-        success: true,
-        symbols: symbols.map(symbol => ({
-          symbol,
-          enabled: true,
-          env: env.EXCHANGE_ENV
-        }))
-      })
-    } catch (error) {
-      reply.code(500).send({
-        success: false,
-        error: (error as Error).message
-      })
-    }
-  }
 
   /**
    * Get active signals for frontend
