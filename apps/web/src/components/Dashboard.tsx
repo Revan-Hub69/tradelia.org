@@ -37,10 +37,10 @@ export const Dashboard: React.FC = () => {
         {/* Header */}
         <Header />
 
-        {/* Continuous Widget - Main Content */}
+        {/* Main Content Area - Widget Removed */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto py-6">
-            <ContinuousWidget />
+          <div className="h-full overflow-y-auto p-6">
+            {/* Content will be added here */}
           </div>
         </main>
       </div>
