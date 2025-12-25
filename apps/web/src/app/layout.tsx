@@ -8,12 +8,43 @@ import { WebSocketProvider } from '../lib/contexts/WebSocketContext'
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
-  title: 'Tradelia',
-  description: 'Comprendere il rischio nel mondo delle criptovalute',
+  title: {
+    default: 'Tradelia · Risk-first crypto education',
+    template: '%s | Tradelia'
+  },
+  description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole. Non consulenza finanziaria.',
+  keywords: [
+    'criptovalute', 'crypto', 'bitcoin', 'ethereum', 'rischio', 'trading', 'educazione finanziaria',
+    'analisi tecnica', 'risk management', 'microlearning', 'blockchain', 'finanza digitale'
+  ],
+  authors: [{ name: 'Tradelia Team' }],
+  creator: 'Tradelia',
+  publisher: 'Tradelia',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   metadataBase: new URL('https://tradelia.ai'),
+  alternates: {
+    canonical: 'https://tradelia.ai',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: 'Tradelia · Risk-first crypto education',
-    description: 'Microlearning operativo, rischio consapevole, design cognitivo.',
+    description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole.',
     url: 'https://tradelia.ai',
     siteName: 'Tradelia',
     locale: 'it_IT',
@@ -23,16 +54,34 @@ export const metadata: Metadata = {
         url: '/og/tradelia-og.png',
         width: 1200,
         height: 630,
-        alt: 'Tradelia · Comprendere il rischio nel mondo delle criptovalute',
+        alt: 'Tradelia · Microlearning operativo per il rischio consapevole nelle criptovalute',
+        type: 'image/png',
+      },
+      {
+        url: '/og/tradelia-og-square.png',
+        width: 400,
+        height: 400,
+        alt: 'Tradelia Logo',
+        type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@tradelia_ai',
+    creator: '@tradelia_ai',
     title: 'Tradelia · Risk-first crypto education',
-    description: 'Microlearning operativo, rischio consapevole, design cognitivo.',
-    images: ['/og/tradelia-og.png'],
+    description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole.',
+    images: [{
+      url: '/og/tradelia-og.png',
+      alt: 'Tradelia · Microlearning operativo per il rischio consapevole nelle criptovalute'
+    }],
+  },
+  other: {
+    'article:author': 'Tradelia Team',
+    'article:publisher': 'https://tradelia.ai',
+    'article:section': 'Education',
+    'article:tag': 'Crypto Education',
   },
 }
 
@@ -64,6 +113,7 @@ export default function RootLayout({
         {/* Canonical URL */}
         <link rel="canonical" href="https://tradelia.ai" />
 
+        {/* Structured Data - Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -74,8 +124,97 @@ export default function RootLayout({
               url: 'https://tradelia.ai',
               logo: 'https://tradelia.ai/favicon.svg',
               description: 'Educazione al rischio crypto con microlearning operativo e design cognitivo.',
+              sameAs: [
+                'https://twitter.com/tradelia_ai'
+              ],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                url: 'https://tradelia.ai'
+              },
+              foundingDate: '2024',
+              knowsAbout: [
+                'Cryptocurrency Risk Management',
+                'Technical Analysis',
+                'Financial Education',
+                'Blockchain Technology'
+              ]
             }),
           }}
+        />
+
+        {/* Structured Data - WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Tradelia',
+              url: 'https://tradelia.ai',
+              description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute.',
+              inLanguage: 'it-IT',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://tradelia.ai/search?q={search_term_string}',
+                'query-input': 'required name=search_term_string'
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'Tradelia'
+              }
+            }),
+          }}
+        />
+
+        {/* Structured Data - Educational Content */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Course',
+              name: 'Risk Management in Cryptocurrency',
+              description: 'Corso educativo sul rischio consapevole nelle criptovalute attraverso microlearning operativo.',
+              provider: {
+                '@type': 'Organization',
+                name: 'Tradelia'
+              },
+              educationalLevel: 'intermediate',
+              teaches: [
+                'Risk Assessment',
+                'Technical Analysis',
+                'Portfolio Management',
+                'Market Psychology'
+              ],
+              educationalUse: 'professional development',
+              learningResourceType: 'interactive course'
+            }),
+          }}
+        />
+
+        {/* Security Headers */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
+
+        {/* CSP Header */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="
+            default-src 'self';
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.googletagmanager.com;
+            style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+            font-src 'self' fonts.gstatic.com;
+            img-src 'self' data: https: blob:;
+            connect-src 'self' *.supabase.co *.tradelia.ai wss: ws:;
+            frame-ancestors 'none';
+            base-uri 'self';
+            form-action 'self';
+            upgrade-insecure-requests;
+          "
         />
       </head>
       <body className={inter.className} data-theme="dark">
