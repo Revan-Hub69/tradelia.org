@@ -43,16 +43,12 @@ export class EngineServer {
     // Initialize WebSocket server
     await this.initializeWebSocket()
 
-    // Start mock data generators conditionally
-    const enableMock =
-      process.env.ENABLE_MOCK_DATA === 'true' ||
-      process.env.NODE_ENV !== 'production'
-
-    if (enableMock) {
-      console.log('🧪 Mock data generators ENABLED')
+    // Mock data generators are disabled by default; enable only via explicit env flag
+    if (env.ENABLE_MOCK_DATA) {
+      console.warn('🧪 Mock data generators ENABLED via ENABLE_MOCK_DATA=true (not recommended for production)')
       this.startMockDataGenerators()
     } else {
-      console.log('✅ Mock data generators DISABLED (production)')
+      console.log('✅ Mock data generators disabled (real data only)')
     }
 
     // Initialize autonomous trading engine (PROMPT-3)
@@ -509,7 +505,6 @@ export class EngineServer {
     // Frontend API contract routes
     app.get('/runtime', this.getRuntimeStatus.bind(this))
     app.get('/symbols', this.getTrackedSymbols.bind(this))
-    app.get('/market/snapshot', this.getMarketSnapshot.bind(this))
     app.get('/signals/active', this.getActiveSignals.bind(this))
     app.post('/exchange/connect', this.connectExchange.bind(this))
 
@@ -575,20 +570,9 @@ export class EngineServer {
   private async getMarketSnapshot(request: any, reply: any): Promise<any> {
     try {
       if (!this.prisma) {
-        // Fallback mock data when no database
-        reply.send({
-          success: true,
-          snapshot: {
-            candidatesCount: 25,
-            topKCount: 5,
-            lastUpdate: new Date().toISOString(),
-            symbols: env.TRACK_SYMBOLS.split(',').slice(0, 5).map(symbol => ({
-              symbol,
-              score: Math.random() * 100,
-              liquidity: Math.random() * 1000000,
-              volatility: Math.random() * 10
-            }))
-          }
+        reply.code(503).send({
+          success: false,
+          error: 'Database not configured; screener snapshot unavailable'
         })
         return
       }
@@ -662,21 +646,9 @@ export class EngineServer {
    */
   private async getActiveSignals(request: any, reply: any): Promise<any> {
     try {
-      // Return mock data for frontend development
-      reply.send({
-        success: true,
-        signals: [
-          {
-            id: 'signal_1',
-            symbol: 'BTCUSDT',
-            side: 'LONG',
-            entryPrice: 45000,
-            slPrice: 44000,
-            tpPrice: 47000,
-            confidence: 0.85,
-            timestamp: new Date().toISOString()
-          }
-        ]
+      reply.code(503).send({
+        success: false,
+        error: 'Active signals not available without live engine state'
       })
     } catch (error) {
       reply.code(500).send({
