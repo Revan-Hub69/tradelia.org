@@ -4,7 +4,6 @@ import React from 'react'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
-import { ContinuousWidget } from './ContinuousWidget'
 
 export const Dashboard: React.FC = () => {
   const { sidebarOpen } = useTrading()
