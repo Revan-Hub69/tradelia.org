@@ -503,7 +503,7 @@ export class EngineServer {
     app.get('/health/ready', this.getHealthReady.bind(this))
 
     // Frontend API contract routes (market snapshot served via baseRoutes plugin)
-    app.get('/runtime', this.getRuntimeStatus.bind(this))
+    // Note: /runtime is handled by baseRoutes plugin to avoid duplicate route registration
     app.get('/symbols', this.getTrackedSymbols.bind(this))
     app.get('/signals/active', this.getActiveSignals.bind(this))
     app.post('/exchange/connect', this.connectExchange.bind(this))
@@ -515,31 +515,7 @@ export class EngineServer {
     })
   }
 
-  /**
-   * Get runtime status for frontend
-   */
-  private async getRuntimeStatus(request: any, reply: any): Promise<any> {
-    try {
-      const status = {
-        exchangeEnv: env.EXCHANGE_ENV,
-        tradingEnabled: env.TRADING_ENABLED,
-        trackedSymbols: env.TRACK_SYMBOLS.split(',').map(s => s.trim()),
-        serverTime: new Date().toISOString(),
-        version: '1.1.0',
-        mode: this.prisma ? 'full' : 'demo'
-      }
 
-      reply.send({
-        success: true,
-        runtime: status
-      })
-    } catch (error) {
-      reply.code(500).send({
-        success: false,
-        error: (error as Error).message
-      })
-    }
-  }
 
   /**
    * Get tracked symbols for frontend

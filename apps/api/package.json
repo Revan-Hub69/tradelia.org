@@ -6,6 +6,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
+    "start:prod": "pnpm run migrate:deploy && node dist/index.js",
+    "migrate:deploy": "prisma migrate deploy --schema=../../prisma/schema.prisma",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:setup": "tsx scripts/setup-db.ts",
     "db:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma",
