@@ -50,6 +50,7 @@ Thumbs.db
 # Temporary folders
 tmp/
 temp/
+**/node-compile-cache/
 
 # Prisma
 prisma/migrations/
