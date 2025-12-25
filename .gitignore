@@ -11,6 +11,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Railway deployment files
+.env.railway
+
 # Build outputs
 dist/
 build/
