@@ -2,36 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tradelia Design Tokens — v1.0 baseline */
+/* Tradelia Design Tokens — v1.0 (vincolante) */
 
 @layer base {
   :root {
-    /* Surfaces */
-    --bg:           oklch(0.12 0.02 260);
-    --bg-2:         oklch(0.15 0.02 260);
-    --card:         oklch(0.17 0.02 260);
-    --card-2:       oklch(0.20 0.02 260);
+    /* Core surfaces (warm dark) */
+    --bg: oklch(0.14 0.015 260);
+    --bg-2: oklch(0.16 0.015 260);
+    --surface: oklch(0.18 0.015 260);
+    --surface-2: oklch(0.20 0.015 260);
 
-    /* Text */
-    --ink:          oklch(0.92 0.02 260);
-    --muted:        oklch(0.74 0.02 260);
-    --faint:        oklch(0.62 0.02 260);
+    /* Text (off-white, warm gray) */
+    --ink: oklch(0.92 0.015 260);
+    --muted: oklch(0.76 0.015 260);
+    --faint: oklch(0.66 0.015 260);
 
     /* Borders */
-    --br:           oklch(0.28 0.02 260);
-    --br-2:         oklch(0.34 0.02 260);
+    --br: oklch(0.30 0.015 260);
+    --br-2: oklch(0.36 0.015 260);
 
-    /* Brand */
-    --brand-500:    oklch(0.72 0.10 250);
-    --brand-600:    oklch(0.66 0.12 250);
-    --brand-700:    oklch(0.60 0.12 250);
+    /* Brand accent (single, desaturated) */
+    --accent: oklch(0.70 0.09 250);
+    --accent-2: oklch(0.64 0.10 250);
+
+    /* Focus */
+    --focus: color-mix(in oklab, var(--accent) 70%, white);
+    --focus-ring: 0 0 0 3px color-mix(in oklab, var(--focus) 45%, transparent);
 
     /* Links */
-    --link:         var(--brand-500);
-    --link-hover:   var(--brand-600);
+    --link: var(--accent);
+    --link-hover: var(--accent-2);
 
-    /* Overlays */
-    --backdrop:     color-mix(in oklab, black 70%, transparent);
+    /* Card (for backward compatibility) */
+    --card: var(--surface);
+    --card-2: var(--surface-2);
+
+    /* Overlay */
+    --backdrop: color-mix(in oklab, black 70%, transparent);
 
     /* Risk colors (desaturated) */
     --risk-low:     oklch(0.70 0.08 145);
@@ -94,7 +101,7 @@
     --ease-in:  cubic-bezier(.4,0,1,1);
 
     /* Focus ring (obbligatorio) */
-    --focus: color-mix(in oklab, var(--brand-500) 70%, white);
+    --focus: color-mix(in oklab, var(--accent) 70%, white);
     --focus-ring: 0 0 0 3px color-mix(in oklab, var(--focus) 45%, transparent);
   }
 
@@ -145,7 +152,7 @@
     font-weight: 500;
     line-height: var(--lh-tight);
     border-radius: var(--r-md);
-    background-color: var(--brand-500);
+    background-color: var(--accent);
     color: white;
     border: 1px solid transparent;
     transition: all var(--dur-1) var(--ease-out);
@@ -153,13 +160,13 @@
   }
 
   .btn-primary:hover {
-    background-color: var(--brand-600);
+    background-color: var(--accent-2);
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
   }
 
   .btn-primary:active {
-    background-color: var(--brand-700);
+    background-color: color-mix(in oklab, var(--accent) 80%, black);
     transform: translateY(0);
   }
 
@@ -217,7 +224,7 @@
 
   .input-field:focus {
     outline: none;
-    border-color: var(--brand-500);
+    border-color: var(--accent);
     box-shadow: var(--focus-ring);
   }
 
@@ -239,7 +246,7 @@
   }
 
   .card-interactive:hover {
-    border-color: var(--brand-500);
+    border-color: var(--accent);
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
