@@ -7,8 +7,8 @@ import { RiskScale, type RiskLevel } from '../components/RiskScale'
 import { MethodNote } from '../components/MethodNote'
 import { GlossaryTrigger } from '../components/GlossaryTrigger'
 import { InstitutionFooter } from '../components/InstitutionFooter'
-import { MarketTicker } from '../components/MarketTicker'
 import { MethodologyDrawer } from '../components/MethodologyDrawer'
+import { EvidenceHighlights } from '../components/EvidenceHighlights'
 import { loadPreferences, savePreferences } from '../lib/preferences/store'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
@@ -29,6 +29,13 @@ type MetricChip = {
 type CognitiveCard = {
   badge: string
   body: string
+}
+
+type EvidenceCard = {
+  title: string
+  body: string
+  sourceLabel: string
+  sourceHref: string
 }
 
 type MethodologySection = {
@@ -122,9 +129,9 @@ type Translation = {
   methodologyTrigger: string
   methodologyIntro: string
   methodologyDrawer: MethodologyDrawerStrings
+  evidenceCards: EvidenceCard[]
   disclaimer: string
   closing: string
-  tickerError: string
   settingsStrings: SettingsStrings
   headerStrings: HeaderStrings
   headerNav: { href: string; label: string }[]
@@ -221,9 +228,28 @@ export default function HomePage() {
         referencesLabel: 'Riferimenti',
         closeLabel: 'Chiudi note metodologiche',
       },
+      evidenceCards: [
+        {
+          title: 'Volatilità strutturale',
+          body: 'Il BIS Economic Report 2023 evidenzia shock di prezzo intra-day delle crypto superiori agli indici azionari tradizionali.',
+          sourceLabel: 'BIS 2023',
+          sourceHref: 'https://www.bis.org/publ/arpdf/ar2023e.htm',
+        },
+        {
+          title: 'Rischio retail',
+          body: 'ESMA 2023 classifica le cripto-attività come prodotti altamente speculativi e inadatti alla maggior parte degli investitori retail.',
+          sourceLabel: 'ESMA 2023',
+          sourceHref: 'https://www.esma.europa.eu/press-news/esma-news/esma-highlights-risks-crypto-assets',
+        },
+        {
+          title: 'Complessità operativa',
+          body: 'L’OECD DeFi Policy Note 2024 rileva rischi di liquidità e leva implicita nelle piattaforme non custodial.',
+          sourceLabel: 'OECD 2024',
+          sourceHref: 'https://www.oecd.org/finance/financial-markets/decentralised-finance-policy-issues.pdf',
+        },
+      ],
       disclaimer: 'Le informazioni fornite da Tradelia sono esclusivamente a scopo educativo e informativo. Non costituiscono consigli finanziari, raccomandazioni di investimento o sollecitazioni all’acquisto di criptovalute. Effettua sempre le tue ricerche indipendenti e consulta professionisti qualificati prima di prendere decisioni finanziarie. Le criptovalute sono altamente volatili e comportano rischi significativi, inclusa la possibile perdita totale del capitale investito.',
       closing: 'Nel mondo delle criptovalute, agire senza comprendere il contesto è spesso più rischioso che non agire. Tradelia esiste per aiutare a scegliere consapevolmente.',
-      tickerError: 'Dati non disponibili',
       settingsStrings: {
         title: 'Impostazioni',
         closeLabel: 'Chiudi impostazioni',
@@ -340,9 +366,28 @@ export default function HomePage() {
         referencesLabel: 'References',
         closeLabel: 'Close method notes',
       },
+      evidenceCards: [
+        {
+          title: 'Structural volatility',
+          body: 'The BIS Economic Report 2023 shows crypto intra-day price shocks exceed those of major equity indices.',
+          sourceLabel: 'BIS 2023',
+          sourceHref: 'https://www.bis.org/publ/arpdf/ar2023e.htm',
+        },
+        {
+          title: 'Retail risk',
+          body: 'ESMA 2023 flags crypto-assets as highly speculative and unsuitable for most retail investors.',
+          sourceLabel: 'ESMA 2023',
+          sourceHref: 'https://www.esma.europa.eu/press-news/esma-news/esma-highlights-risks-crypto-assets',
+        },
+        {
+          title: 'Operational complexity',
+          body: 'The OECD DeFi Policy Note 2024 highlights liquidity and embedded leverage risks in non-custodial platforms.',
+          sourceLabel: 'OECD 2024',
+          sourceHref: 'https://www.oecd.org/finance/financial-markets/decentralised-finance-policy-issues.pdf',
+        },
+      ],
       disclaimer: 'Information is for educational purposes only. It is not financial advice or an invitation to buy. Always do your own research and consult qualified professionals. Crypto is highly volatile and you can lose all invested capital.',
       closing: 'In crypto, acting without context is often riskier than not acting. Tradelia exists to help you choose consciously.',
-      tickerError: 'Data unavailable',
       settingsStrings: {
         title: 'Settings',
         closeLabel: 'Close settings',
@@ -459,9 +504,28 @@ export default function HomePage() {
         referencesLabel: 'Referencias',
         closeLabel: 'Cerrar notas',
       },
+      evidenceCards: [
+        {
+          title: 'Volatilidad estructural',
+          body: 'El BIS Economic Report 2023 muestra que los shocks intradía en crypto superan a los de los índices bursátiles principales.',
+          sourceLabel: 'BIS 2023',
+          sourceHref: 'https://www.bis.org/publ/arpdf/ar2023e.htm',
+        },
+        {
+          title: 'Riesgo retail',
+          body: 'ESMA 2023 clasifica los criptoactivos como altamente especulativos y poco adecuados para la mayoría de inversores minoristas.',
+          sourceLabel: 'ESMA 2023',
+          sourceHref: 'https://www.esma.europa.eu/press-news/esma-news/esma-highlights-risks-crypto-assets',
+        },
+        {
+          title: 'Complejidad operativa',
+          body: 'La OECD DeFi Policy Note 2024 subraya riesgos de liquidez y apalancamiento implícito en plataformas no custodial.',
+          sourceLabel: 'OECD 2024',
+          sourceHref: 'https://www.oecd.org/finance/financial-markets/decentralised-finance-policy-issues.pdf',
+        },
+      ],
       disclaimer: 'Información solo educativa. No es asesoría financiera ni invitación a compra. Haz tu propia investigación; la cripto es volátil y puedes perder todo el capital.',
       closing: 'Actuar sin contexto suele ser más riesgoso que no actuar. Tradelia existe para decisiones conscientes.',
-      tickerError: 'Datos no disponibles',
       settingsStrings: {
         title: 'Configuración',
         closeLabel: 'Cerrar configuración',
@@ -578,9 +642,28 @@ export default function HomePage() {
         referencesLabel: 'Références',
         closeLabel: 'Fermer les notes',
       },
+      evidenceCards: [
+        {
+          title: 'Volatilité structurelle',
+          body: 'Le BIS Economic Report 2023 montre que les chocs intrajournaliers crypto dépassent ceux des principaux indices boursiers.',
+          sourceLabel: 'BIS 2023',
+          sourceHref: 'https://www.bis.org/publ/arpdf/ar2023e.htm',
+        },
+        {
+          title: 'Risque retail',
+          body: 'L’ESMA 2023 classe les crypto-actifs comme hautement spéculatifs et inadaptés à la plupart des investisseurs particuliers.',
+          sourceLabel: 'ESMA 2023',
+          sourceHref: 'https://www.esma.europa.eu/press-news/esma-news/esma-highlights-risks-crypto-assets',
+        },
+        {
+          title: 'Complexité opérationnelle',
+          body: 'La note OCDE DeFi 2024 souligne les risques de liquidité et de levier implicite sur les plateformes non custodiales.',
+          sourceLabel: 'OCDE 2024',
+          sourceHref: 'https://www.oecd.org/finance/financial-markets/decentralised-finance-policy-issues.pdf',
+        },
+      ],
       disclaimer: 'Informations à but éducatif. Pas de conseil financier ni d’invitation à acheter. Faites vos recherches; la crypto est très volatile et peut entraîner la perte totale du capital.',
       closing: 'Agir sans contexte est souvent plus risqué que ne pas agir. Tradelia aide à choisir en connaissance de cause.',
-      tickerError: 'Données indisponibles',
       settingsStrings: {
         title: 'Paramètres',
         closeLabel: 'Fermer les paramètres',
@@ -697,9 +780,28 @@ export default function HomePage() {
         referencesLabel: 'Referenzen',
         closeLabel: 'Notizen schließen',
       },
+      evidenceCards: [
+        {
+          title: 'Strukturelle Volatilität',
+          body: 'Der BIS Economic Report 2023 zeigt, dass intraday-Kursschocks bei Krypto größer sind als bei großen Aktienindizes.',
+          sourceLabel: 'BIS 2023',
+          sourceHref: 'https://www.bis.org/publ/arpdf/ar2023e.htm',
+        },
+        {
+          title: 'Retail-Risiko',
+          body: 'Die ESMA 2023 stuft Krypto-Assets als hochspekulativ und für die meisten Privatanleger ungeeignet ein.',
+          sourceLabel: 'ESMA 2023',
+          sourceHref: 'https://www.esma.europa.eu/press-news/esma-news/esma-highlights-risks-crypto-assets',
+        },
+        {
+          title: 'Operative Komplexität',
+          body: 'Die OECD DeFi Policy Note 2024 hebt Liquiditäts- und implizite Hebelrisiken auf nicht-kustodialen Plattformen hervor.',
+          sourceLabel: 'OECD 2024',
+          sourceHref: 'https://www.oecd.org/finance/financial-markets/decentralised-finance-policy-issues.pdf',
+        },
+      ],
       disclaimer: 'Information nur zu Bildungszwecken. Kein Finanzrat oder Kaufaufruf. Eigene Recherche nötig; Krypto ist volatil und Totalverlust ist möglich.',
       closing: 'Ohne Kontext zu handeln ist oft riskanter als nicht zu handeln. Tradelia hilft bei bewussten Entscheidungen.',
-      tickerError: 'Daten nicht verfügbar',
       settingsStrings: {
         title: 'Einstellungen',
         closeLabel: 'Einstellungen schließen',
@@ -802,9 +904,9 @@ export default function HomePage() {
   const disclaimer = t.disclaimer
 
   const methodologySources = [
-    { label: 'Sweller, J. (2011) - Cognitive Load Theory', url: 'https://doi.org/10.1007/s10648-010-9145-4' },
+    { label: 'Sweller, J. (2010) - Cognitive Load Theory (Cambridge University Press)', url: 'https://doi.org/10.1017/cbo9780511844744.001' },
     { label: 'Hug, T. (2020) - Microlearning: Emerging Concepts', url: 'https://doi.org/10.1007/978-3-658-27898-7' },
-    { label: 'Bannert, M. (2021) - Instructional Design for Self-Regulated Learning', url: 'https://doi.org/10.1007/978-3-030-80087-9_10' },
+    { label: 'Azizah, S. P. (2024) - Systematic Literature Review on Microlearning', url: 'https://doi.org/10.70125/jetsar.v1i1y2024a3' },
     { label: 'ISO 27001:2022 - Information Security Controls', url: 'https://www.iso.org/standard/82875.html' },
     { label: 'OWASP ASVS 4.0 - Web Security Verification Standard', url: 'https://owasp.org/www-project-application-security-verification-standard/' },
   ]
@@ -826,8 +928,6 @@ export default function HomePage() {
         navItems={t.headerNav}
       />
 
-      <MarketTicker errorLabel={t.tickerError} reduceMotion={animations === 'reduce'} />
-
       {/* Main Content */}
       <main>
         {/* 1. Editorial Hero */}
@@ -841,22 +941,7 @@ export default function HomePage() {
           tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
         />
 
-        {/* Danger highlights */}
-        <section className="bg-[var(--bg-2)] py-6">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8 grid gap-4 md:grid-cols-3">
-            {[
-              { title: 'Liquidazioni 24h (demo)', value: '$120M', source: 'Fonte: futures public feed (placeholder)' },
-              { title: 'Drawdown medio top 10 (demo)', value: '-18%', source: 'Fonte: risk lab (placeholder)' },
-              { title: 'Volatilità annualizzata (demo)', value: '72%', source: 'Fonte: market stats (placeholder)' },
-            ].map((item, idx) => (
-              <div key={idx} className="glass-panel p-4 border border-[var(--br)]/70">
-                <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{item.title}</p>
-                <p className="text-xl font-semibold text-[var(--ink)]">{item.value}</p>
-                <p className="text-[var(--muted)] text-xs">{item.source}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <EvidenceHighlights items={t.evidenceCards} />
 
         {/* 2. Context Section */}
         <section className="py-16">

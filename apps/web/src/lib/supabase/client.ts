@@ -146,7 +146,7 @@ export const db = {
   savePreferences: async (userId: string, payload: PreferenceUpsertPayload) => {
     const { data, error } = await supabase
       .from('user_preferences')
-      .upsert({ user_id: userId, ...payload }, { onConflict: 'user_id' })
+      .upsert<PreferenceInsert>({ user_id: userId, ...payload }, { onConflict: 'user_id' })
       .select('theme, text_scale, animations')
       .returns<PreferenceSelection>()
       .single()
