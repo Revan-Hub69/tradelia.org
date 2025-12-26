@@ -115,6 +115,9 @@ type Translation = {
   metricNote: string
   cognitiveCard: CognitiveCard
   riskLevels: RiskLevel[]
+  riskTitle: string
+  riskDescription: string
+  riskActionLabel: string
   positioningTitle: string
   positioningBody: string
   positioningNote: string
@@ -155,7 +158,7 @@ export default function HomePage() {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitivo · 2025',
       heroPrimaryCta: 'Avvia un percorso guidato',
-      heroSecondaryCta: 'Esplora il glossario attivo',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprendere il rischio nel mondo delle criptovalute con percorsi micro-learning calibrati sul carico cognitivo.',
         'Un progetto educativo indipendente senza pressioni commerciali, pensato per decisioni consapevoli.',
@@ -176,6 +179,9 @@ export default function HomePage() {
         body: 'Ogni contenuto è pensato per un consumo rapido, con un’unica decisione alla volta. Spazi bianchi ampi, tipografia leggibile e CTA che anticipano l’intento riducono il carico cognitivo e aumentano la ritenzione.',
         pills: ['Sessioni da 7 minuti', 'Test di trasferimento incluso', 'Formati multi-sensory in arrivo'],
       },
+      riskTitle: 'Inizia dal tuo livello di rischio',
+      riskDescription: 'Scegli percorsi pensati per livelli diversi di esposizione, con linguaggio chiaro e senza pressioni commerciali. Ogni scheda porta a un percorso unico e guidato.',
+      riskActionLabel: 'Apri il percorso',
       centralThesisTitle: 'Trasparenza ≠ Sicurezza',
       centralThesisBody: 'Il mondo crypto non è un unico strumento. Si va da prodotti relativamente semplici e regolamentati, come ETF ed ETP, fino a strumenti complessi e ad alto rischio, come futures, opzioni e prodotti a leva. Ogni livello comporta rischi diversi, responsabilità diverse e competenze diverse.',
       metricChips: [
@@ -292,8 +298,8 @@ export default function HomePage() {
     en: {
       heroTitle: 'Tradelia',
       heroKicker: 'Cognitive design · 2025',
-      heroPrimaryCta: 'Start a guided path',
-      heroSecondaryCta: 'Browse the active glossary',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Understand crypto risk with micro-learning paths calibrated for cognitive load.',
         'An independent, non-promotional project built for deliberate decision-making.',
@@ -314,6 +320,9 @@ export default function HomePage() {
         body: 'Each piece is built for quick consumption, one decision at a time. Generous whitespace, legible typography, and intent-first CTAs lower cognitive load and improve retention.',
         pills: ['7-minute sessions', 'Transfer test included', 'Multisensory formats coming soon'],
       },
+      riskTitle: 'Start from your risk level',
+      riskDescription: 'Choose guided paths by exposure level with clear language and no commercial pressure. Each card links to a single, structured journey.',
+      riskActionLabel: 'Open the path',
       centralThesisTitle: 'Transparency ≠ Safety',
       centralThesisBody: 'Crypto is not a single instrument: from regulated ETFs to complex leveraged derivatives. Each level demands different skills, responsibilities, and risk.',
       metricChips: [
@@ -430,8 +439,8 @@ export default function HomePage() {
     es: {
       heroTitle: 'Tradelia',
       heroKicker: 'Diseño cognitivo · 2025',
-      heroPrimaryCta: 'Inicia un recorrido guiado',
-      heroSecondaryCta: 'Explora el glosario activo',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprende el riesgo cripto con rutas de microlearning calibradas para la carga cognitiva.',
         'Proyecto independiente sin presión comercial, pensado para decisiones conscientes.',
@@ -452,6 +461,9 @@ export default function HomePage() {
         body: 'Contenido para consumo rápido, una decisión a la vez. Espacios amplios, tipografía legible y CTA orientadas al propósito reducen la carga cognitiva.',
         pills: ['Sesiones de 7 minutos', 'Prueba de transferencia incluida', 'Formatos multisensoriales en camino'],
       },
+      riskTitle: 'Empieza desde tu nivel de riesgo',
+      riskDescription: 'Elige recorridos guiados según tu exposición, con lenguaje claro y sin presión comercial. Cada tarjeta abre un recorrido único y estructurado.',
+      riskActionLabel: 'Abrir recorrido',
       centralThesisTitle: 'Transparencia ≠ Seguridad',
       centralThesisBody: 'El cripto no es un solo instrumento: desde ETF regulados hasta derivados complejos con apalancamiento. Cada nivel exige habilidades, responsabilidades y riesgos distintos.',
       metricChips: [
@@ -568,8 +580,8 @@ export default function HomePage() {
     fr: {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitif · 2025',
-      heroPrimaryCta: 'Démarrer un parcours guidé',
-      heroSecondaryCta: 'Explorer le glossaire actif',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprendre le risque crypto avec des parcours micro-learning calibrés pour la charge cognitive.',
         'Projet indépendant sans pression commerciale, pensé pour des décisions éclairées.',
@@ -590,6 +602,9 @@ export default function HomePage() {
         body: 'Contenu pour une décision à la fois, consommation rapide. Espaces généreux, typographie lisible et CTA orientées intention pour réduire la charge cognitive.',
         pills: ['Sessions de 7 minutes', 'Test de transfert inclus', 'Formats multisensoriels à venir'],
       },
+      riskTitle: 'Commencez par votre niveau de risque',
+      riskDescription: 'Choisissez des parcours guidés selon votre exposition, avec un langage clair et sans pression commerciale. Chaque carte mène à un parcours unique et structuré.',
+      riskActionLabel: 'Ouvrir le parcours',
       centralThesisTitle: 'Transparence ≠ Sécurité',
       centralThesisBody: 'La crypto n’est pas un instrument unique : des ETF régulés aux dérivés complexes à effet de levier. Chaque niveau implique compétences et risques différents.',
       metricChips: [
@@ -706,8 +721,8 @@ export default function HomePage() {
     de: {
       heroTitle: 'Tradelia',
       heroKicker: 'Kognitives Design · 2025',
-      heroPrimaryCta: 'Geführten Pfad starten',
-      heroSecondaryCta: 'Aktives Glossar ansehen',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Kryptorisiken verstehen mit Microlearning-Pfaden für geringe kognitive Last.',
         'Unabhängiges, nicht-kommerzielles Projekt für bewusste Entscheidungen.',
@@ -728,6 +743,9 @@ export default function HomePage() {
         body: 'Schnell konsumierbare Inhalte, eine Entscheidung nach der anderen. Weißraum, gute Typografie und zielgerichtete CTAs senken die kognitive Last.',
         pills: ['7-Minuten-Sessions', 'Transfer-Test enthalten', 'Multisensorische Formate folgen'],
       },
+      riskTitle: 'Starte bei deinem Risikoniveau',
+      riskDescription: 'Wähle geführte Pfade nach Expositionsgrad, mit klarer Sprache und ohne kommerziellen Druck. Jede Karte führt zu einem einzigen, strukturierten Weg.',
+      riskActionLabel: 'Pfad öffnen',
       centralThesisTitle: 'Transparenz ≠ Sicherheit',
       centralThesisBody: 'Krypto ist kein Einzelinstrument: von regulierten ETFs bis komplexen Derivaten mit Hebel. Jedes Level verlangt andere Skills und Risiken.',
       metricChips: [
@@ -1006,7 +1024,12 @@ export default function HomePage() {
         </section>
 
         {/* 4. Editorial Risk Scale */}
-        <RiskScale items={riskLevels} />
+        <RiskScale
+          items={riskLevels}
+          title={t.riskTitle}
+          description={t.riskDescription}
+          actionLabel={t.riskActionLabel}
+        />
 
         {/* 5. Tradelia Positioning */}
         <section className="py-20">
