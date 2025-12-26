@@ -22,14 +22,14 @@ export const SignalsTab: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Trading Signals</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-xl font-semibold text-[var(--ink)]">Trading Signals</h2>
+          <p className="text-sm text-[var(--muted)] mt-1">
             Active trading signals and setup detection
           </p>
         </div>
         <button
           onClick={refreshSignals}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          className="btn-secondary"
         >
           <BoltIcon className="w-4 h-4 mr-2" />
           Refresh
@@ -37,16 +37,16 @@ export const SignalsTab: React.FC = () => {
       </div>
 
       {/* Active Signals */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="card">
         <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+          <h3 className="text-lg leading-6 font-medium text-[var(--ink)] mb-4">
             Active Signals
           </h3>
 
           {activeSignals.length > 0 ? (
             <div className="space-y-4">
               {activeSignals.map((signal, index) => (
-                <div key={`${signal.id}-${index}`} className="border border-gray-200 rounded-lg p-4">
+                <div key={`${signal.id}-${index}`} className="border border-[var(--br)] rounded-lg p-4 bg-[var(--surface-2)]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSignalColor(signal.confidence)}`}>
@@ -60,10 +60,10 @@ export const SignalsTab: React.FC = () => {
                         {Math.round(signal.confidence * 100)}%
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-gray-900">
+                        <h4 className="text-sm font-medium text-[var(--ink)]">
                           {signal.symbol} - {signal.side}
                         </h4>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[var(--muted)]">
                           Entry: ${signal.entryPrice.toLocaleString()} |
                           SL: ${signal.slPrice.toLocaleString()} |
                           TP: ${signal.tpPrice.toLocaleString()}
@@ -71,7 +71,7 @@ export const SignalsTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-[var(--muted)]">
                         {new Date(signal.timestamp).toLocaleString()}
                       </p>
                     </div>
@@ -81,9 +81,9 @@ export const SignalsTab: React.FC = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <BoltIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No active signals</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <BoltIcon className="mx-auto h-12 w-12 text-[var(--muted)]" />
+              <h3 className="mt-2 text-sm font-medium text-[var(--ink)]">No active signals</h3>
+              <p className="mt-1 text-sm text-[var(--muted)]">
                 Trading signals will appear here when detected by the strategy.
               </p>
             </div>
@@ -93,7 +93,7 @@ export const SignalsTab: React.FC = () => {
 
       {/* Signal Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="card">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -101,10 +101,10 @@ export const SignalsTab: React.FC = () => {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-[var(--muted)] truncate">
                     Today's Signals
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-[var(--ink)]">
                     {activeSignals.length}
                   </dd>
                 </dl>
@@ -113,7 +113,7 @@ export const SignalsTab: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="card">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -121,10 +121,10 @@ export const SignalsTab: React.FC = () => {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-[var(--muted)] truncate">
                     High Confidence
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-[var(--ink)]">
                     {activeSignals.filter(s => s.confidence >= 0.8).length}
                   </dd>
                 </dl>
@@ -133,18 +133,18 @@ export const SignalsTab: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="card">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <BoltIcon className="w-6 h-6 text-blue-600" />
+                <BoltIcon className="w-6 h-6 text-[var(--accent)]" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-[var(--muted)] truncate">
                     Average Confidence
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900">
+                  <dd className="text-lg font-medium text-[var(--ink)]">
                     {activeSignals.length > 0
                       ? Math.round((activeSignals.reduce((sum, s) => sum + s.confidence, 0) / activeSignals.length) * 100)
                       : 0

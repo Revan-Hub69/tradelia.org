@@ -523,9 +523,28 @@ export class EngineServer {
    */
   private async getActiveSignals(request: any, reply: any): Promise<any> {
     try {
-      reply.code(503).send({
-        success: false,
-        error: 'Active signals not available without live engine state'
+      if (!this.tradingEngine) {
+        return reply.send({
+          success: true,
+          signals: []
+        })
+      }
+
+      const pendingSignals = this.tradingEngine.getPendingSignals()
+      const signals = pendingSignals.map((signal: any) => ({
+        id: signal.id,
+        symbol: signal.symbol,
+        side: signal.side,
+        entryPrice: signal.entryPrice,
+        slPrice: signal.slPrice,
+        tpPrice: signal.tpPrice,
+        confidence: signal.confidence,
+        timestamp: signal.timestamp
+      }))
+
+      return reply.send({
+        success: true,
+        signals
       })
     } catch (error) {
       reply.code(500).send({

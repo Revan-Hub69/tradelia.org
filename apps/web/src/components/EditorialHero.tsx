@@ -11,6 +11,7 @@ interface EditorialHeroProps {
   primaryCta?: { label: string; href: string }
   secondaryCta?: { label: string; href: string }
   tertiaryCta?: { label: string; href: string }
+  onAiClick?: () => void
 }
 
 export function EditorialHero({
@@ -21,6 +22,7 @@ export function EditorialHero({
   primaryCta,
   secondaryCta,
   tertiaryCta,
+  onAiClick,
   id,
 }: EditorialHeroProps) {
   return (
@@ -100,6 +102,7 @@ export function EditorialHero({
                   <button
                     className="btn-ghost px-4 py-2 text-sm animate-pulse-slow bg-gradient-to-r from-[var(--accent)]/10 to-[var(--accent-2)]/10 border-[var(--accent)]/30 hover:border-[var(--accent)]/60"
                     aria-label="Open AI Assistant"
+                    onClick={onAiClick}
                   >
                     <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

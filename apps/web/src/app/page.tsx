@@ -12,6 +12,7 @@ import { EvidenceHighlights } from '../components/EvidenceHighlights'
 import { loadPreferences, savePreferences } from '../lib/preferences/store'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
+import { AIAssistantDrawer } from '../components/AIAssistantDrawer'
 
 type Language = 'it' | 'en' | 'es' | 'fr' | 'de'
 
@@ -147,6 +148,7 @@ export default function HomePage() {
   const [prefsReady, setPrefsReady] = useState(false)
   const [methodologyOpen, setMethodologyOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [aiOpen, setAiOpen] = useState(false)
   const { user } = useTrading()
   const handleLangChange = (lang: string) => setCurrentLang(lang as Language)
 
@@ -936,6 +938,7 @@ export default function HomePage() {
           badges={t.heroBadges}
           primaryCta={{ label: t.heroPrimaryCta, href: '/method' }}
           tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
+          onAiClick={() => setAiOpen(true)}
         />
 
         <EvidenceHighlights items={t.evidenceCards} />
@@ -1140,6 +1143,8 @@ export default function HomePage() {
         onAnimationsChange={setAnimations}
         strings={t.settingsStrings}
       />
+
+      <AIAssistantDrawer open={aiOpen} onClose={() => setAiOpen(false)} />
 
       {/* 8. Institutional Footer */}
       <InstitutionFooter links={footerLinks} disclaimer={disclaimer} />

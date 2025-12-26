@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTrading } from '../lib/contexts/TradingContext'
+import { TradeliaLogo } from './icons/TradeliaLogo'
 import {
   Bars3Icon,
   CheckCircleIcon,
@@ -32,26 +33,29 @@ export const Header: React.FC = () => {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <header className="bg-[var(--surface)] border-b border-[var(--br)] px-6 py-4">
       <div className="flex items-center justify-between">
-        {/* Left side - Menu button and title */}
+        {/* Left side - Menu button, logo and title */}
         <div className="flex items-center space-x-4">
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+            className="p-2 rounded-lg text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)] transition-colors"
           >
             <Bars3Icon className="w-5 h-5" />
           </button>
 
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Trading Dashboard
-            </h1>
-            {user && (
-              <p className="text-sm text-gray-500">
-                Welcome back, {user.email?.split('@')[0]}
-              </p>
-            )}
+          <div className="flex items-center gap-3">
+            <TradeliaLogo size={32} className="text-[var(--ink)]" />
+            <div>
+              <h1 className="text-2xl font-bold text-[var(--ink)]">
+                Trading Dashboard
+              </h1>
+              {user && (
+                <p className="text-sm text-[var(--muted)]">
+                  Welcome back, {user.email?.split('@')[0]}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -86,7 +90,7 @@ export const Header: React.FC = () => {
               </div>
 
               {/* Symbols count */}
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-[var(--muted)]">
                 <ClockIcon className="w-4 h-4" />
                 <span className="text-sm">
                   {runtime.trackedSymbols.length} symbols
@@ -109,8 +113,8 @@ export const Header: React.FC = () => {
           {/* User avatar */}
           {user && (
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+              <div className="w-8 h-8 bg-[var(--accent)] rounded-full flex items-center justify-center">
+                <span className="text-[var(--bg)] text-sm font-medium">
                   {user.email?.charAt(0).toUpperCase()}
                 </span>
               </div>
