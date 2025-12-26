@@ -26,6 +26,7 @@ export function EditorialHero({
   return (
     <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28" id={id}>
       <div className="absolute inset-0 grid-stroke opacity-35" aria-hidden />
+      <div className="hero-pattern" aria-hidden />
       <div className="absolute inset-0 hero-mesh" aria-hidden />
       <svg
         aria-hidden="true"
