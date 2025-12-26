@@ -13,7 +13,7 @@ export const TradeliaLogo: React.FC<TradeliaLogoProps> = ({
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox="0 0 120 120"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -21,36 +21,48 @@ export const TradeliaLogo: React.FC<TradeliaLogoProps> = ({
       aria-label="Tradelia logo"
     >
       <defs>
-        <linearGradient id="t-accent" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+        <linearGradient id="t-accent" x1="14" y1="12" x2="106" y2="108" gradientUnits="userSpaceOnUse">
           <stop stopColor="var(--accent)" />
           <stop offset="1" stopColor="var(--accent-2)" />
         </linearGradient>
+        <radialGradient id="t-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 54) rotate(90) scale(54)">
+          <stop stopColor="var(--accent)" stopOpacity="0.35" />
+          <stop offset="1" stopColor="var(--accent-2)" stopOpacity="0" />
+        </radialGradient>
       </defs>
-      <rect x="8" y="8" width="48" height="48" rx="14" fill="url(#t-accent)" opacity="0.12" />
-      <rect x="13.5" y="13.5" width="37" height="37" rx="10" fill="#0f172a" stroke="url(#t-accent)" strokeWidth="1.2" />
-      <path
-        d="M22 20.5c0-1.38 1.12-2.5 2.5-2.5h15c1.38 0 2.5 1.12 2.5 2.5v4.4c0 1.38-1.12 2.5-2.5 2.5h-6.4v16.1c0 1.38-1.12 2.5-2.5 2.5h-3.1c-1.1 0-2-.9-2-2V20.5Z"
-        fill="url(#t-accent)"
-      />
-      <path
-        d="M30 18v7.9c0 1.38-1.12 2.5-2.5 2.5H24"
-        stroke="#0f172a"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M38.5 18v5c0 1.38-1.12 2.5-2.5 2.5H30"
-        stroke="#0f172a"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M35 32c2 1.6 3.2 4.1 3.2 6.8 0 2-0.7 3.8-2 5.3"
-        stroke="#0f172a"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <circle cx="60" cy="60" r="54" fill="#0f172a" />
+      <circle cx="60" cy="60" r="52" stroke="url(#t-accent)" strokeWidth="2.2" />
+      <circle cx="60" cy="60" r="50" fill="url(#t-glow)" opacity="0.45" />
+      <g filter="url(#shadow-soft)">
+        <path
+          d="M36 30c0-2.209 1.791-4 4-4h40c2.209 0 4 1.791 4 4v14c0 2.209-1.791 4-4 4H70v31.5c0 2.209-1.791 4-4 4H50c-2.761 0-5-2.239-5-5V30Z"
+          fill="url(#t-accent)"
+          opacity="0.95"
+        />
+        <path
+          d="M52 28v12c0 2.209-1.791 4-4 4h-5"
+          stroke="#0f172a"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <path
+          d="M73 28v9c0 2.209-1.791 4-4 4H52"
+          stroke="#0f172a"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </g>
+      <defs>
+        <filter id="shadow-soft" x="22" y="16" width="82" height="92" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur" />
+          <feOffset dy="4" />
+          <feComposite in2="blur" operator="out" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.08 0 0 0 0 0.2 0 0 0 0.35 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
     </svg>
   )
 }
