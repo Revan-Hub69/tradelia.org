@@ -8,7 +8,6 @@ import { MethodNote } from '../components/MethodNote'
 import { GlossaryTrigger } from '../components/GlossaryTrigger'
 import { InstitutionFooter } from '../components/InstitutionFooter'
 import { MethodologyDrawer } from '../components/MethodologyDrawer'
-import { EvidenceHighlights } from '../components/EvidenceHighlights'
 import { loadPreferences, savePreferences } from '../lib/preferences/store'
 import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
@@ -115,6 +114,9 @@ type Translation = {
   metricNote: string
   cognitiveCard: CognitiveCard
   riskLevels: RiskLevel[]
+  riskTitle: string
+  riskDescription: string
+  riskActionLabel: string
   positioningTitle: string
   positioningBody: string
   positioningNote: string
@@ -155,7 +157,7 @@ export default function HomePage() {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitivo · 2025',
       heroPrimaryCta: 'Avvia un percorso guidato',
-      heroSecondaryCta: 'Esplora il glossario attivo',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprendere il rischio nel mondo delle criptovalute con percorsi micro-learning calibrati sul carico cognitivo.',
         'Un progetto educativo indipendente senza pressioni commerciali, pensato per decisioni consapevoli.',
@@ -176,6 +178,9 @@ export default function HomePage() {
         body: 'Ogni contenuto è pensato per un consumo rapido, con un’unica decisione alla volta. Spazi bianchi ampi, tipografia leggibile e CTA che anticipano l’intento riducono il carico cognitivo e aumentano la ritenzione.',
         pills: ['Sessioni da 7 minuti', 'Test di trasferimento incluso', 'Formati multi-sensory in arrivo'],
       },
+      riskTitle: 'Inizia dal tuo livello di rischio',
+      riskDescription: 'Scegli percorsi pensati per livelli diversi di esposizione, con linguaggio chiaro e senza pressioni commerciali. Ogni scheda porta a un percorso unico e guidato.',
+      riskActionLabel: 'Apri il percorso',
       centralThesisTitle: 'Trasparenza ≠ Sicurezza',
       centralThesisBody: 'Il mondo crypto non è un unico strumento. Si va da prodotti relativamente semplici e regolamentati, come ETF ed ETP, fino a strumenti complessi e ad alto rischio, come futures, opzioni e prodotti a leva. Ogni livello comporta rischi diversi, responsabilità diverse e competenze diverse.',
       metricChips: [
@@ -292,8 +297,8 @@ export default function HomePage() {
     en: {
       heroTitle: 'Tradelia',
       heroKicker: 'Cognitive design · 2025',
-      heroPrimaryCta: 'Start a guided path',
-      heroSecondaryCta: 'Browse the active glossary',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Understand crypto risk with micro-learning paths calibrated for cognitive load.',
         'An independent, non-promotional project built for deliberate decision-making.',
@@ -314,6 +319,9 @@ export default function HomePage() {
         body: 'Each piece is built for quick consumption, one decision at a time. Generous whitespace, legible typography, and intent-first CTAs lower cognitive load and improve retention.',
         pills: ['7-minute sessions', 'Transfer test included', 'Multisensory formats coming soon'],
       },
+      riskTitle: 'Start from your risk level',
+      riskDescription: 'Choose guided paths by exposure level with clear language and no commercial pressure. Each card links to a single, structured journey.',
+      riskActionLabel: 'Open the path',
       centralThesisTitle: 'Transparency ≠ Safety',
       centralThesisBody: 'Crypto is not a single instrument: from regulated ETFs to complex leveraged derivatives. Each level demands different skills, responsibilities, and risk.',
       metricChips: [
@@ -430,8 +438,8 @@ export default function HomePage() {
     es: {
       heroTitle: 'Tradelia',
       heroKicker: 'Diseño cognitivo · 2025',
-      heroPrimaryCta: 'Inicia un recorrido guiado',
-      heroSecondaryCta: 'Explora el glosario activo',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprende el riesgo cripto con rutas de microlearning calibradas para la carga cognitiva.',
         'Proyecto independiente sin presión comercial, pensado para decisiones conscientes.',
@@ -452,6 +460,9 @@ export default function HomePage() {
         body: 'Contenido para consumo rápido, una decisión a la vez. Espacios amplios, tipografía legible y CTA orientadas al propósito reducen la carga cognitiva.',
         pills: ['Sesiones de 7 minutos', 'Prueba de transferencia incluida', 'Formatos multisensoriales en camino'],
       },
+      riskTitle: 'Empieza desde tu nivel de riesgo',
+      riskDescription: 'Elige recorridos guiados según tu exposición, con lenguaje claro y sin presión comercial. Cada tarjeta abre un recorrido único y estructurado.',
+      riskActionLabel: 'Abrir recorrido',
       centralThesisTitle: 'Transparencia ≠ Seguridad',
       centralThesisBody: 'El cripto no es un solo instrumento: desde ETF regulados hasta derivados complejos con apalancamiento. Cada nivel exige habilidades, responsabilidades y riesgos distintos.',
       metricChips: [
@@ -568,8 +579,8 @@ export default function HomePage() {
     fr: {
       heroTitle: 'Tradelia',
       heroKicker: 'Design cognitif · 2025',
-      heroPrimaryCta: 'Démarrer un parcours guidé',
-      heroSecondaryCta: 'Explorer le glossaire actif',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Comprendre le risque crypto avec des parcours micro-learning calibrés pour la charge cognitive.',
         'Projet indépendant sans pression commerciale, pensé pour des décisions éclairées.',
@@ -590,6 +601,9 @@ export default function HomePage() {
         body: 'Contenu pour une décision à la fois, consommation rapide. Espaces généreux, typographie lisible et CTA orientées intention pour réduire la charge cognitive.',
         pills: ['Sessions de 7 minutes', 'Test de transfert inclus', 'Formats multisensoriels à venir'],
       },
+      riskTitle: 'Commencez par votre niveau de risque',
+      riskDescription: 'Choisissez des parcours guidés selon votre exposition, avec un langage clair et sans pression commerciale. Chaque carte mène à un parcours unique et structuré.',
+      riskActionLabel: 'Ouvrir le parcours',
       centralThesisTitle: 'Transparence ≠ Sécurité',
       centralThesisBody: 'La crypto n’est pas un instrument unique : des ETF régulés aux dérivés complexes à effet de levier. Chaque niveau implique compétences et risques différents.',
       metricChips: [
@@ -706,8 +720,8 @@ export default function HomePage() {
     de: {
       heroTitle: 'Tradelia',
       heroKicker: 'Kognitives Design · 2025',
-      heroPrimaryCta: 'Geführten Pfad starten',
-      heroSecondaryCta: 'Aktives Glossar ansehen',
+      heroPrimaryCta: 'Avvia un percorso guidato',
+      heroSecondaryCta: 'Esplora il glossario',
       heroLede: [
         'Kryptorisiken verstehen mit Microlearning-Pfaden für geringe kognitive Last.',
         'Unabhängiges, nicht-kommerzielles Projekt für bewusste Entscheidungen.',
@@ -728,6 +742,9 @@ export default function HomePage() {
         body: 'Schnell konsumierbare Inhalte, eine Entscheidung nach der anderen. Weißraum, gute Typografie und zielgerichtete CTAs senken die kognitive Last.',
         pills: ['7-Minuten-Sessions', 'Transfer-Test enthalten', 'Multisensorische Formate folgen'],
       },
+      riskTitle: 'Starte bei deinem Risikoniveau',
+      riskDescription: 'Wähle geführte Pfade nach Expositionsgrad, mit klarer Sprache und ohne kommerziellen Druck. Jede Karte führt zu einem einzigen, strukturierten Weg.',
+      riskActionLabel: 'Pfad öffnen',
       centralThesisTitle: 'Transparenz ≠ Sicherheit',
       centralThesisBody: 'Krypto ist kein Einzelinstrument: von regulierten ETFs bis komplexen Derivaten mit Hebel. Jedes Level verlangt andere Skills und Risiken.',
       metricChips: [
@@ -933,123 +950,103 @@ export default function HomePage() {
           title={t.heroTitle}
           kicker={t.heroKicker}
           lede={t.heroLede}
-          badges={t.heroBadges}
           primaryCta={{ label: t.heroPrimaryCta, href: '/method' }}
-          tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
+          secondaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
         />
 
-        <EvidenceHighlights items={t.evidenceCards} />
-
         {/* 2. Context Section */}
-        <section className="py-16">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] items-start">
-              <div className="space-y-6 text-lg text-[var(--muted)] leading-relaxed">
-                <p>{t.contextParagraphs[0]}</p>
-                <p>{t.contextParagraphs[1]}</p>
-                <p>
-                  {t.contextParagraphs[2]}{' '}
-                  <GlossaryTrigger termId="transparency">{t.contextRiskLink}</GlossaryTrigger>.
-                </p>
-              </div>
-              <div className="glass-panel p-6 space-y-4">
-                <h3 className="text-xl font-semibold text-[var(--ink)]">
-                  {t.microlearningCard.title}
-                </h3>
-                <p className="text-[var(--muted)] leading-relaxed">
-                  {t.microlearningCard.body}
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {t.microlearningCard.pills.map((pill, idx) => (
-                    <span key={idx} className="pill-strong">{pill}</span>
-                  ))}
-                </div>
-              </div>
+        <section className="py-14">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8 space-y-8">
+            <div className="space-y-5 text-lg text-[var(--muted)] leading-relaxed">
+              <p>{t.contextParagraphs[0]}</p>
+              <p>{t.contextParagraphs[1]}</p>
+              <p>
+                {t.contextParagraphs[2]}{' '}
+                <GlossaryTrigger termId="transparency">{t.contextRiskLink}</GlossaryTrigger>.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-xl font-semibold text-[var(--ink)]">
+                {t.microlearningCard.title}
+              </h3>
+              <p className="text-[var(--muted)] leading-relaxed">
+                {t.microlearningCard.body}
+              </p>
+              <ul className="list-disc pl-5 text-[var(--muted)] space-y-2">
+                {t.microlearningCard.pills.map((pill, idx) => (
+                  <li key={idx}>{pill}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
         {/* 3. Central Thesis */}
-        <section className="py-16 bg-[var(--bg-2)]">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-center">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold text-[var(--ink)] leading-tight">
-                  {t.centralThesisTitle}
-                </h2>
-                <p className="text-lg text-[var(--muted)] leading-relaxed">
-                  {t.centralThesisBody}
-                </p>
-              </div>
-              <div className="glass-panel p-6 space-y-4">
-                <div className="flex flex-wrap gap-4">
-                  {t.metricChips.map((chip, idx) => (
-                    <div key={idx} className="metric-chip">
-                      <strong>{chip.value}</strong>
-                      <span>{chip.label}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm text-[var(--muted)]">
-                    <span>{t.loadLabel}</span>
-                    <span>{t.loadValue}</span>
-                  </div>
-                  <div className="progress-rail">
-                    <span className="progress-fill" style={{ ['--progress' as string]: '62%' }} />
-                  </div>
-                  <p className="text-xs text-[var(--faint)] italic">{t.metricNote}</p>
-                </div>
-              </div>
+        <section className="py-14">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8 space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-semibold text-[var(--ink)] leading-tight">
+                {t.centralThesisTitle}
+              </h2>
+              <p className="text-lg text-[var(--muted)] leading-relaxed">
+                {t.centralThesisBody}
+              </p>
             </div>
+            <ul className="space-y-3 text-[var(--muted)]">
+              {t.metricChips.map((chip, idx) => (
+                <li key={idx} className="flex items-baseline gap-3">
+                  <span className="text-xl font-semibold text-[var(--ink)]">{chip.value}</span>
+                  <span>{chip.label}</span>
+                </li>
+              ))}
+              <li className="text-sm text-[var(--faint)] italic">{t.metricNote}</li>
+            </ul>
           </div>
         </section>
 
         {/* 4. Editorial Risk Scale */}
-        <RiskScale items={riskLevels} />
+        <RiskScale
+          items={riskLevels}
+          title={t.riskTitle}
+          description={t.riskDescription}
+          actionLabel={t.riskActionLabel}
+        />
 
         {/* 5. Tradelia Positioning */}
-        <section className="py-20">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="grid gap-10 lg:grid-cols-2 items-start">
-              <div className="space-y-6">
-                <h2 className="text-3xl font-bold text-[var(--ink)]">
-                  {t.positioningTitle}
-                </h2>
-                <p className="text-lg text-[var(--muted)] leading-relaxed">
-                  {t.positioningBody}
-                </p>
-                <p className="text-sm text-[var(--muted)] italic">
-                  {t.positioningNote}
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {t.positioningPills.map((pill, idx) => (
-                    <span key={idx} className="pill">{pill}</span>
-                  ))}
+        <section className="py-14">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8 space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-semibold text-[var(--ink)]">
+                {t.positioningTitle}
+              </h2>
+              <p className="text-lg text-[var(--muted)] leading-relaxed">
+                {t.positioningBody}
+              </p>
+              <p className="text-sm text-[var(--muted)] italic">
+                {t.positioningNote}
+              </p>
+              <ul className="list-disc pl-5 text-[var(--muted)] space-y-2">
+                {t.positioningPills.map((pill, idx) => (
+                  <li key={idx}>{pill}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <span className="text-sm font-semibold text-[var(--ink)]">{t.cognitiveCard.badge}</span>
+              <p className="text-[var(--muted)] leading-relaxed">
+                {t.cognitiveCard.body}
+              </p>
+            </div>
+            <div className="space-y-5">
+              {t.learningPillars.map((pillar, idx) => (
+                <div key={idx} className="space-y-2">
+                  <div className="flex items-baseline gap-3">
+                    <h3 className="text-lg font-semibold text-[var(--ink)]">{pillar.title}</h3>
+                    <span className="text-sm text-[var(--muted)]">{pillar.metric} · {pillar.label}</span>
+                  </div>
+                  <p className="text-[var(--muted)] leading-relaxed">{pillar.body}</p>
                 </div>
-              </div>
-              <div className="glass-panel p-6 space-y-6">
-                <div className="space-y-2">
-                  <span className="pill-strong inline-flex">{t.cognitiveCard.badge}</span>
-                  <p className="text-[var(--muted)] leading-relaxed">
-                    {t.cognitiveCard.body}
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  {t.learningPillars.map((pillar, idx) => (
-                    <div key={idx} className="card card-interactive p-4 space-y-2 bg-[var(--surface-2)]/60 border-[var(--br)]/70">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-[var(--ink)]">{pillar.title}</h3>
-                        <div className="metric-chip">
-                          <strong>{pillar.metric}</strong>
-                          <span>{pillar.label}</span>
-                        </div>
-                      </div>
-                      <p className="text-[var(--muted)] leading-relaxed">{pillar.body}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
@@ -1063,45 +1060,39 @@ export default function HomePage() {
         </section>
 
         {/* 6b. Microlearning modules */}
-        <section className="py-16 bg-[var(--bg-2)]" id="note">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8 space-y-6">
+        <section className="py-14" id="note">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8 space-y-6">
             <div className="flex flex-col gap-3 text-left">
-              <span className="section-kicker">{t.microKicker}</span>
-              <h2 className="text-3xl font-bold text-[var(--ink)]">{t.microTitle}</h2>
-              <p className="text-lg text-[var(--muted)] max-w-3xl">
+              <span className="text-sm text-[var(--muted)]">{t.microKicker}</span>
+              <h2 className="text-3xl font-semibold text-[var(--ink)]">{t.microTitle}</h2>
+              <p className="text-lg text-[var(--muted)]">
                 {t.microIntro}
               </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
+            <ul className="space-y-5">
               {t.microModules.map((module, idx) => (
-                <div key={idx} className="card card-interactive p-6 h-full flex flex-col justify-between glass-panel">
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold text-[var(--ink)]">{module.title}</h3>
-                    <p className="text-[var(--muted)] leading-relaxed">{module.detail}</p>
-                  </div>
-                  <div className="mt-4">
-                    <button className="btn-ghost w-full justify-center">
-                      {module.action}
-                    </button>
-                  </div>
-                </div>
+                <li key={idx} className="space-y-2">
+                  <h3 className="text-xl font-semibold text-[var(--ink)]">{module.title}</h3>
+                  <p className="text-[var(--muted)] leading-relaxed">{module.detail}</p>
+                  <p className="text-sm text-[var(--muted)] font-semibold">{module.action}</p>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
         {/* 6c. Methodology drawer trigger */}
         <section className="py-10">
-          <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center space-y-3">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8 space-y-3">
             <p className="text-[var(--muted)] text-md">
               Scopri come la homepage è stata progettata: principi cognitivi, microlearning, sicurezza e privacy.
             </p>
             <button
-              className="btn-ghost px-5 py-3 inline-flex items-center justify-center gap-2"
+              className="inline-flex items-center gap-2 text-[var(--accent)] font-semibold focus:outline-none focus:ring-[var(--focus-ring)]"
               onClick={() => setMethodologyOpen(true)}
             >
               Note metodologiche e riferimenti
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
             </button>
@@ -1109,8 +1100,8 @@ export default function HomePage() {
         </section>
 
         {/* 7. Quiet Closing Paragraph */}
-        <section className="py-20 bg-[var(--bg-2)]">
-          <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+        <section className="py-14">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8">
             <p className="text-lg text-[var(--muted)] leading-relaxed">
               {t.closing}
             </p>
