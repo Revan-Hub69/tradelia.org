@@ -15,9 +15,12 @@ export interface RiskLevel {
 
 interface RiskScaleProps {
   items: RiskLevel[]
+  title: string
+  description: string
+  actionLabel: string
 }
 
-export function RiskScale({ items }: RiskScaleProps) {
+export function RiskScale({ items, title, description, actionLabel }: RiskScaleProps) {
   const getIcon = (level: RiskLevel['level']) => {
     switch (level) {
       case 'low':
@@ -51,10 +54,13 @@ export function RiskScale({ items }: RiskScaleProps) {
   return (
     <section className="py-20 bg-[var(--bg-2)]">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-[var(--ink)] mb-4">
-            Scegli in base al rischio
+        <div className="text-center mb-16 space-y-3 max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-[var(--ink)]">
+            {title}
           </h2>
+          <p className="text-[var(--muted)]">
+            {description}
+          </p>
         </div>
 
         {/* Desktop: horizontal layout */}
@@ -74,9 +80,13 @@ export function RiskScale({ items }: RiskScaleProps) {
                     </p>
                     <Link
                       href={item.href}
-                      className="inline-flex items-center justify-center px-4 py-2 bg-[var(--accent)] text-white rounded-md hover:bg-[var(--accent-2)] transition-colors font-medium focus:ring-[var(--focus-ring)] focus:outline-none"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 font-semibold text-[var(--ink)] hover:text-[var(--accent)] transition-colors focus:ring-[var(--focus-ring)] focus:outline-none rounded-md"
+                      aria-label={`${actionLabel}: ${item.title}`}
                     >
-                      Vedi percorso
+                      {actionLabel}
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                     </Link>
                   </div>
                 </li>
@@ -102,9 +112,13 @@ export function RiskScale({ items }: RiskScaleProps) {
                     </p>
                     <Link
                       href={item.href}
-                      className="inline-flex items-center justify-center w-full px-4 py-2 bg-[var(--accent)] text-white rounded-md hover:bg-[var(--accent-2)] transition-colors font-medium focus:ring-[var(--focus-ring)] focus:outline-none"
+                      className="inline-flex items-center justify-center w-full gap-2 px-4 py-2 font-semibold text-[var(--ink)] hover:text-[var(--accent)] transition-colors focus:ring-[var(--focus-ring)] focus:outline-none rounded-md"
+                      aria-label={`${actionLabel}: ${item.title}`}
                     >
-                      Vedi percorso
+                      {actionLabel}
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                     </Link>
                   </div>
                 </li>
