@@ -10,7 +10,6 @@ import { InstitutionFooter } from '../components/InstitutionFooter'
 import { MethodologyDrawer } from '../components/MethodologyDrawer'
 import { EvidenceHighlights } from '../components/EvidenceHighlights'
 import { loadPreferences, savePreferences } from '../lib/preferences/store'
-import { useTrading } from '../lib/contexts/TradingContext'
 import { SettingsSheet } from '../components/SettingsSheet'
 import { AIAssistantDrawer } from '../components/AIAssistantDrawer'
 
@@ -149,7 +148,6 @@ export default function HomePage() {
   const [methodologyOpen, setMethodologyOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [aiOpen, setAiOpen] = useState(false)
-  const { user } = useTrading()
   const handleLangChange = (lang: string) => setCurrentLang(lang as Language)
 
   const copy: Record<Language, Translation> = {
@@ -850,7 +848,7 @@ export default function HomePage() {
   useEffect(() => {
     let cancelled = false
     const sync = async () => {
-      const prefs = await loadPreferences(user?.id)
+      const prefs = await loadPreferences()
       if (cancelled) return
       setTheme(prefs.theme)
       setTextScale(prefs.textScale)
@@ -861,7 +859,7 @@ export default function HomePage() {
     return () => {
       cancelled = true
     }
-  }, [user?.id])
+  }, [])
 
   useEffect(() => {
     if (!prefsReady) return
@@ -871,14 +869,14 @@ export default function HomePage() {
     document.documentElement.style.setProperty('--font-scale', fontScale)
     document.documentElement.dataset.motion = animations
 
-    savePreferences({ theme, textScale, animations }, user?.id)
+    savePreferences({ theme, textScale, animations })
 
     if (prefersReduced || animations === 'reduce') {
       document.documentElement.style.setProperty('--dur-1', '0ms')
       document.documentElement.style.setProperty('--dur-2', '0ms')
       document.documentElement.style.setProperty('--dur-3', '0ms')
     }
-  }, [theme, textScale, animations, prefsReady, user?.id])
+  }, [theme, textScale, animations, prefsReady])
 
   const handleThemeToggle = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
