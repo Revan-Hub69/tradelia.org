@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 
 interface TradeliaLogoProps {
   className?: string
@@ -9,6 +9,10 @@ export const TradeliaLogo: React.FC<TradeliaLogoProps> = ({
   className = '',
   size = 32
 }) => {
+  const gradientId = useId()
+  const glowId = useId()
+  const filterId = useId()
+
   return (
     <svg
       width={size}
@@ -21,48 +25,32 @@ export const TradeliaLogo: React.FC<TradeliaLogoProps> = ({
       aria-label="Tradelia logo"
     >
       <defs>
-        <linearGradient id="t-accent" x1="14" y1="12" x2="106" y2="108" gradientUnits="userSpaceOnUse">
-          <stop stopColor="var(--accent)" />
-          <stop offset="1" stopColor="var(--accent-2)" />
+        <linearGradient id={gradientId} x1="20" y1="18" x2="102" y2="104" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#4F8CFF" />
+          <stop offset="1" stopColor="#06B6D4" />
         </linearGradient>
-        <radialGradient id="t-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 54) rotate(90) scale(54)">
-          <stop stopColor="var(--accent)" stopOpacity="0.35" />
-          <stop offset="1" stopColor="var(--accent-2)" stopOpacity="0" />
+        <radialGradient id={glowId} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 58) rotate(90) scale(54)">
+          <stop stopColor="#4F8CFF" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#06B6D4" stopOpacity="0" />
         </radialGradient>
-      </defs>
-      <circle cx="60" cy="60" r="54" fill="#0f172a" />
-      <circle cx="60" cy="60" r="52" stroke="url(#t-accent)" strokeWidth="2.2" />
-      <circle cx="60" cy="60" r="50" fill="url(#t-glow)" opacity="0.45" />
-      <g filter="url(#shadow-soft)">
-        <path
-          d="M36 30c0-2.209 1.791-4 4-4h40c2.209 0 4 1.791 4 4v14c0 2.209-1.791 4-4 4H70v31.5c0 2.209-1.791 4-4 4H50c-2.761 0-5-2.239-5-5V30Z"
-          fill="url(#t-accent)"
-          opacity="0.95"
-        />
-        <path
-          d="M52 28v12c0 2.209-1.791 4-4 4h-5"
-          stroke="#0f172a"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <path
-          d="M73 28v9c0 2.209-1.791 4-4 4H52"
-          stroke="#0f172a"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-      </g>
-      <defs>
-        <filter id="shadow-soft" x="22" y="16" width="82" height="92" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <filter id={filterId} x="10" y="10" width="100" height="100" filterUnits="userSpaceOnUse">
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur" />
-          <feOffset dy="4" />
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+          <feOffset dy="2" />
           <feComposite in2="blur" operator="out" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.08 0 0 0 0 0.2 0 0 0 0.35 0" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.08 0 0 0 0 0.2 0 0 0 0.25 0" />
           <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
           <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
         </filter>
       </defs>
+
+      <rect x="10" y="10" width="100" height="100" rx="26" fill="#0B1220" />
+      <rect x="10" y="10" width="100" height="100" rx="26" stroke={`url(#${gradientId})`} strokeWidth="2" />
+      <rect x="14" y="14" width="92" height="92" rx="22" fill={`url(#${glowId})`} opacity="0.9" />
+
+      <path d="M32 38c0-2.2 1.8-4 4-4h48c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4H66v38c0 2.2-1.8 4-4 4H52c-2.8 0-5-2.2-5-5V56H36c-2.2 0-4-1.8-4-4V38Z" fill={`url(#${gradientId})`} opacity="0.95" filter={`url(#${filterId})`} />
+      <path d="M84 56l-10 10" stroke="#0B1220" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="74" cy="66" r="2.6" fill="#0B1220" />
     </svg>
   )
 }

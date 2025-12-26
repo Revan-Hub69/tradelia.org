@@ -25,8 +25,8 @@
     --br-2: oklch(0.36 0.015 260);
 
     /* Brand accent (dual hue for 2025 system) */
-    --accent: oklch(0.74 0.14 247);
-    --accent-2: oklch(0.68 0.16 252);
+    --accent: #4f8cff;
+    --accent-2: #06b6d4;
     --accent-warm: oklch(0.78 0.14 35);
 
     /* Focus */
@@ -318,8 +318,8 @@
     background-image:
       radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--accent) 12%, transparent) 0 28%, transparent 45%),
       radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--accent-2) 14%, transparent) 0 28%, transparent 45%),
-      repeating-linear-gradient(135deg, color-mix(in oklab, var(--br) 18%, transparent) 0 2px, transparent 2px 22px),
-      repeating-linear-gradient(45deg, color-mix(in oklab, var(--br) 14%, transparent) 0 1px, transparent 1px 18px);
+      radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--br) 20%, transparent) 1px, transparent 1px);
+    background-size: auto, auto, 40px 40px;
     opacity: 0.55;
     mask-image: radial-gradient(120% 120% at 50% 38%, black, transparent 70%);
     pointer-events: none;
@@ -435,10 +435,7 @@
 
   .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow:
-      0 18px 42px -20px color-mix(in oklab, var(--accent) 80%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--accent) 65%, transparent);
-    background: linear-gradient(145deg, color-mix(in oklab, var(--ink) 94%, transparent), color-mix(in oklab, var(--accent) 78%, transparent));
+    box-shadow: var(--shadow-sm);
   }
 
   .btn-primary:active {

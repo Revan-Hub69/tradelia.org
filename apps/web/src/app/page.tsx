@@ -937,8 +937,7 @@ export default function HomePage() {
           lede={t.heroLede}
           badges={t.heroBadges}
           primaryCta={{ label: t.heroPrimaryCta, href: '/method' }}
-          tertiaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
-          onAiClick={() => setAiOpen(true)}
+          secondaryCta={{ label: t.heroSecondaryCta, href: '/glossary' }}
         />
 
         <EvidenceHighlights items={t.evidenceCards} />

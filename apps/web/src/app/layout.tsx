@@ -2,8 +2,6 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
-import { TradingProvider } from '../lib/contexts/TradingContext'
-import { WebSocketProvider } from '../lib/contexts/WebSocketContext'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
@@ -110,8 +108,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://tradelia.ai" />
+
 
         {/* Structured Data - Organization */}
         <script
@@ -143,29 +140,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* Structured Data - WebSite */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: 'Tradelia',
-              url: 'https://tradelia.ai',
-              description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute.',
-              inLanguage: 'it-IT',
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: 'https://tradelia.ai/search?q={search_term_string}',
-                'query-input': 'required name=search_term_string'
-              },
-              publisher: {
-                '@type': 'Organization',
-                name: 'Tradelia'
-              }
-            }),
-          }}
-        />
+
 
         {/* Structured Data - Educational Content */}
         <script
@@ -196,13 +171,8 @@ export default function RootLayout({
         {/* Security headers should be set via server responses; avoiding meta-based policies to prevent browser console warnings */}
       </head>
       <body className={inter.className} data-theme="dark">
-        <TradingProvider>
-          <WebSocketProvider>
-            {children}
-          </WebSocketProvider>
-        </TradingProvider>
+        {children}
         <Toaster position="top-right" />
-
       </body>
     </html>
   )

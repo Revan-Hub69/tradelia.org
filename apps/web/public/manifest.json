@@ -1,14 +1,14 @@
 {
-  "name": "Tradelia AI - Academic Cryptocurrency Education",
-  "short_name": "Tradelia AI",
-  "description": "Academic excellence in cryptocurrency education with AI-powered insights and proven methods",
+  "name": "Tradelia",
+  "short_name": "Tradelia",
+  "description": "Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "oklch(0.72 0.10 250)",
+  "background_color": "#0b1220",
+  "theme_color": "#0f172a",
   "orientation": "portrait-primary",
-  "categories": ["education", "finance", "productivity"],
-  "lang": "en",
+  "categories": ["education", "finance"],
+  "lang": "it",
   "dir": "ltr",
   "icons": [
     {
@@ -22,29 +22,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Long-term HODL",
-      "short_name": "HODL",
-      "description": "Explore long-term cryptocurrency holding strategies",
-      "url": "/hodl",
-      "icons": [{ "src": "/icons/hodl-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Swing Trading",
-      "short_name": "Swing",
-      "description": "Learn medium-term swing trading techniques",
-      "url": "/swing",
-      "icons": [{ "src": "/icons/swing-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "High-frequency Scalping",
-      "short_name": "Scalp",
-      "description": "Master high-frequency scalping strategies",
-      "url": "/scalp",
-      "icons": [{ "src": "/icons/scalp-96x96.png", "sizes": "96x96" }]
     }
   ]
 }
