@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",
-  "theme_color": "#2563eb",
+  "theme_color": "oklch(0.72 0.10 250)",
   "orientation": "portrait-primary",
   "categories": ["education", "finance", "productivity"],
   "lang": "en",
