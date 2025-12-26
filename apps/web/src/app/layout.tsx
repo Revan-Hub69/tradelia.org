@@ -1,21 +1,19 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Tradelia · Risk-first crypto education',
-    template: '%s | Tradelia'
+    default: 'Tradelia · Micro-lezioni finanziarie',
+    template: '%s | Tradelia',
   },
-  description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole. Non consulenza finanziaria.',
+  description: 'Raccolta di micro-lezioni statiche per evitare errori finanziari comuni. Contenuti educativi, nessuna consulenza.',
   keywords: [
-    'criptovalute', 'crypto', 'bitcoin', 'ethereum', 'rischio', 'trading', 'educazione finanziaria',
-    'analisi tecnica', 'risk management', 'microlearning', 'blockchain', 'finanza digitale'
+    'educazione finanziaria', 'microlearning', 'errori finanziari', 'investimenti consapevoli', 'finanza personale'
   ],
-  authors: [{ name: 'Tradelia Team' }],
+  authors: [{ name: 'Tradelia' }],
   creator: 'Tradelia',
   publisher: 'Tradelia',
   formatDetection: {
@@ -23,9 +21,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://tradelia.ai'),
+  metadataBase: new URL('https://tradelia.org'),
   alternates: {
-    canonical: 'https://tradelia.ai',
+    canonical: 'https://tradelia.org',
   },
   robots: {
     index: true,
@@ -41,9 +39,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Tradelia · Risk-first crypto education',
-    description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole.',
-    url: 'https://tradelia.ai',
+    title: 'Tradelia · Micro-lezioni finanziarie',
+    description: 'Micro-lezioni statiche per ridurre errori finanziari. Nessuna consulenza, solo contenuti educativi.',
+    url: 'https://tradelia.org',
     siteName: 'Tradelia',
     locale: 'it_IT',
     type: 'website',
@@ -52,7 +50,7 @@ export const metadata: Metadata = {
         url: '/og/tradelia-og.png',
         width: 1200,
         height: 630,
-        alt: 'Tradelia · Microlearning operativo per il rischio consapevole nelle criptovalute',
+        alt: 'Tradelia · Micro-lezioni finanziarie',
         type: 'image/png',
       },
       {
@@ -68,18 +66,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@tradelia_ai',
     creator: '@tradelia_ai',
-    title: 'Tradelia · Risk-first crypto education',
-    description: 'Microlearning operativo per comprendere i rischi nel mondo delle criptovalute. Design cognitivo, analisi tecnica, gestione del rischio consapevole.',
+    title: 'Tradelia · Micro-lezioni finanziarie',
+    description: 'Micro-lezioni statiche per ridurre errori finanziari. Nessuna consulenza, solo contenuti educativi.',
     images: [{
       url: '/og/tradelia-og.png',
-      alt: 'Tradelia · Microlearning operativo per il rischio consapevole nelle criptovalute'
+      alt: 'Tradelia · Micro-lezioni finanziarie'
     }],
-  },
-  other: {
-    'article:author': 'Tradelia Team',
-    'article:publisher': 'https://tradelia.ai',
-    'article:section': 'Education',
-    'article:tag': 'Crypto Education',
   },
 }
 
@@ -91,26 +83,20 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
-        {/* PWA Meta Tags */}
         <meta name="theme-color" content="#0f172a" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Tradelia AI" />
+        <meta name="apple-mobile-web-app-title" content="Tradelia" />
 
-        {/* Favicon and Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="manifest" href="/manifest.json" />
 
-        {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
-
-
-        {/* Structured Data - Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -118,61 +104,30 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'Tradelia',
-              url: 'https://tradelia.ai',
-              logo: 'https://tradelia.ai/favicon.svg',
-              description: 'Educazione al rischio crypto con microlearning operativo e design cognitivo.',
+              url: 'https://tradelia.org',
+              logo: 'https://tradelia.org/favicon.svg',
+              description: 'Raccolta di micro-lezioni educative sugli errori finanziari.',
               sameAs: [
                 'https://twitter.com/tradelia_ai'
               ],
               contactPoint: {
                 '@type': 'ContactPoint',
                 contactType: 'customer service',
-                url: 'https://tradelia.ai'
+                url: 'https://tradelia.org'
               },
-              foundingDate: '2024',
+              foundingDate: '2025',
               knowsAbout: [
-                'Cryptocurrency Risk Management',
-                'Technical Analysis',
-                'Financial Education',
-                'Blockchain Technology'
+                'Educazione finanziaria',
+                'Gestione del rischio personale',
+                'Errori di investimento',
+                'Decisioni consapevoli'
               ]
             }),
           }}
         />
-
-
-
-        {/* Structured Data - Educational Content */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Course',
-              name: 'Risk Management in Cryptocurrency',
-              description: 'Corso educativo sul rischio consapevole nelle criptovalute attraverso microlearning operativo.',
-              provider: {
-                '@type': 'Organization',
-                name: 'Tradelia'
-              },
-              educationalLevel: 'intermediate',
-              teaches: [
-                'Risk Assessment',
-                'Technical Analysis',
-                'Portfolio Management',
-                'Market Psychology'
-              ],
-              educationalUse: 'professional development',
-              learningResourceType: 'interactive course'
-            }),
-          }}
-        />
-
-        {/* Security headers should be set via server responses; avoiding meta-based policies to prevent browser console warnings */}
       </head>
       <body className={inter.className} data-theme="dark">
         {children}
-        <Toaster position="top-right" />
       </body>
     </html>
   )
