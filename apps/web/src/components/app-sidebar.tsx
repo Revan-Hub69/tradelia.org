@@ -15,6 +15,9 @@ import {
   CreditCard,
   LayoutTemplate,
   Users,
+  Sparkles,
+  Plus,
+  LifeBuoy,
 } from "lucide-react"
 import Link from "next/link"
 import { Logo } from "@/components/logo"
@@ -27,9 +30,11 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar"
 
 const data = {
@@ -212,29 +217,55 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="gap-3 border-b border-sidebar-border/60 px-4 py-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-primary-foreground shadow-sm">
                   <Logo size={24} className="text-current" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">ShadcnStore</span>
-                  <span className="truncate text-xs">Admin Dashboard</span>
+                  <span className="truncate text-xs text-muted-foreground">Admin Dashboard</span>
                 </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SidebarInput placeholder="Search across workspace..." />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="cursor-pointer" tooltip="Quick action">
+              <Sparkles />
+              <span>Quick actions</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="cursor-pointer" tooltip="Create new">
+              <Plus />
+              <span>Create new</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="cursor-pointer" tooltip="Support">
+              <LifeBuoy />
+              <span>Support center</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        {data.navGroups.map((group) => (
-          <NavMain key={group.label} label={group.label} items={group.items} />
+      <SidebarContent className="pt-2">
+        {data.navGroups.map((group, index) => (
+          <React.Fragment key={group.label}>
+            <NavMain label={group.label} items={group.items} />
+            {index < data.navGroups.length - 1 && (
+              <SidebarSeparator className="mx-4 my-1" />
+            )}
+          </React.Fragment>
         ))}
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/60">
         <SidebarNotification />
         <NavUser user={data.user} />
       </SidebarFooter>
